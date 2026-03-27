@@ -1,0 +1,423 @@
+from __future__ import annotations
+
+import json
+from datetime import datetime
+from pathlib import Path
+
+import pytest
+
+from mz_ai_backend.modules.business_cases.application import (
+    CreateBusinessCaseCommand,
+    ReplaceBusinessCaseCommand,
+)
+from mz_ai_backend.modules.business_cases.domain import (
+    BusinessCase,
+    BusinessCaseDocument,
+    BusinessCaseDocumentType,
+    BusinessCaseDocuments,
+    BusinessCaseStatus,
+)
+from mz_ai_backend.modules.business_cases.infrastructure.importing import (
+    BusinessCaseDirectoryImporter,
+    CaseImportCloudBaseSettings,
+    CloudBaseStorageClient,
+)
+from mz_ai_backend.modules.business_cases.infrastructure.importing.directory_loader import (
+    extract_markdown_title,
+    load_case_import_config,
+    rewrite_markdown_local_images,
+)
+
+
+CASE_ID = "case-4"
+CLOUDBASE_ENV_ID = "rlink-5g3hqx773b8980a1"
+
+
+class StubRepository:
+    def __init__(self, *, existing_case: BusinessCase | None) -> None:
+        self._existing_case = existing_case
+        self.requested_case_ids: list[str] = []
+
+    async def get_by_case_id(self, case_id: str) -> BusinessCase | None:
+        self.requested_case_ids.append(case_id)
+        return self._existing_case
+
+
+class StubReplaceBusinessCaseUseCase:
+    def __init__(self) -> None:
+        self.executed_command: ReplaceBusinessCaseCommand | None = None
+
+    async def execute(self, command: ReplaceBusinessCaseCommand):
+        self.executed_command = command
+        return None
+
+
+class StubCreateBusinessCaseUseCase:
+    def __init__(self) -> None:
+        self.executed_command: CreateBusinessCaseCommand | None = None
+
+    async def execute(self, command: CreateBusinessCaseCommand):
+        self.executed_command = command
+        return None
+
+
+class StubAssetUploader:
+    def __init__(self) -> None:
+        self.calls: list[tuple[Path, str]] = []
+
+    def upload_file(self, *, local_path: Path, object_key: str) -> str:
+        self.calls.append((local_path, object_key))
+        return f"cloud://{CLOUDBASE_ENV_ID}.bucket/{object_key}"
+
+
+def test_load_case_import_config_reads_expected_fields(tmp_path: Path) -> None:
+    _write_case_directory(
+        tmp_path,
+        config_text=(
+            "case_id: case-4\n"
+            "title: 宠物新零售行业创业案例\n"
+            "desc: 围绕宠物健康知识输出和社群运营\n"
+            "cover: images\\rework_cover\\image_01.png\n"
+            "tags:\n"
+            "  - 宠物\n"
+            "  - 新零售\n"
+            "rework:\n"
+            "  file: rework.md\n"
+            "  cover: images\\rework_cover\\image_01.png\n"
+            "ai_driven_analysis:\n"
+            "  file: ai_driven_analysis.md\n"
+            "  cover: images\\ai_cover\\image_01.png\n"
+            "market:\n"
+            "  file: market_analysis_report.md\n"
+            "  cover: images\\market_cover\\image_01.png\n"
+        ),
+    )
+
+    config = load_case_import_config(tmp_path)
+
+    assert config.case_id == CASE_ID
+    assert config.title == "宠物新零售行业创业案例"
+    assert config.tags == ("宠物", "新零售")
+    assert config.rework.file == "rework.md"
+
+
+def test_load_case_import_config_rejects_missing_case_id(tmp_path: Path) -> None:
+    _write_case_directory(
+        tmp_path,
+        config_text=(
+            "title: 宠物新零售行业创业案例\n"
+            "desc: 围绕宠物健康知识输出和社群运营\n"
+            "cover: images/rework_cover/image_01.png\n"
+            "tags:\n"
+            "  - 宠物\n"
+            "rework:\n"
+            "  file: rework.md\n"
+            "  cover: images/rework_cover/image_01.png\n"
+            "ai_driven_analysis:\n"
+            "  file: ai_driven_analysis.md\n"
+            "  cover: images/ai_cover/image_01.png\n"
+            "market:\n"
+            "  file: market_analysis_report.md\n"
+            "  cover: images/market_cover/image_01.png\n"
+        ),
+    )
+
+    with pytest.raises(Exception) as exc_info:
+        load_case_import_config(tmp_path)
+
+    assert "case_id" in str(exc_info.value)
+
+
+def test_extract_markdown_title_returns_first_h1() -> None:
+    markdown_content = "\nIntro\n# Main Title\n## Secondary\n"
+
+    assert extract_markdown_title(markdown_content) == "Main Title"
+
+
+def test_rewrite_markdown_local_images_updates_only_local_references() -> None:
+    markdown_content = (
+        "![Local](images/local.png)\n"
+        "![Remote](https://example.com/remote.png)\n"
+    )
+
+    rewritten_markdown = rewrite_markdown_local_images(
+        markdown_content,
+        resolve_uploaded_url=lambda reference: f"cloud://demo.bucket/{reference}",
+    )
+
+    assert "cloud://demo.bucket/images/local.png" in rewritten_markdown
+    assert "https://example.com/remote.png" in rewritten_markdown
+
+
+@pytest.mark.asyncio
+async def test_business_case_directory_importer_rewrites_markdown_and_reuses_uploads(
+    tmp_path: Path,
+) -> None:
+    _write_case_directory(tmp_path)
+    uploader = StubAssetUploader()
+    create_use_case = StubCreateBusinessCaseUseCase()
+    replace_use_case = StubReplaceBusinessCaseUseCase()
+    importer = BusinessCaseDirectoryImporter(
+        business_case_repository=StubRepository(existing_case=_build_existing_case()),
+        create_use_case=create_use_case,
+        replace_use_case=replace_use_case,
+        asset_uploader=uploader,
+    )
+
+    result = await importer.import_case(case_dir=tmp_path)
+
+    assert result.case_id == CASE_ID
+    assert result.uploaded_asset_count == 6
+    assert create_use_case.executed_command is None
+    assert replace_use_case.executed_command is not None
+    command = replace_use_case.executed_command
+    assert command.case_id == CASE_ID
+    assert command.status == BusinessCaseStatus.PUBLISHED
+    assert command.documents[0].document_type == BusinessCaseDocumentType.BUSINESS_CASE
+    assert (
+        f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
+        f"{CASE_ID}/images/rework_chart1/chart.png"
+        in command.documents[0].markdown_content
+    )
+    assert command.cover_image_url == (
+        f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
+        f"{CASE_ID}/images/rework_cover/image_01.png"
+    )
+
+
+@pytest.mark.asyncio
+async def test_business_case_directory_importer_creates_missing_case(
+    tmp_path: Path,
+) -> None:
+    _write_case_directory(tmp_path)
+    create_use_case = StubCreateBusinessCaseUseCase()
+    replace_use_case = StubReplaceBusinessCaseUseCase()
+    importer = BusinessCaseDirectoryImporter(
+        business_case_repository=StubRepository(existing_case=None),
+        create_use_case=create_use_case,
+        replace_use_case=replace_use_case,
+        asset_uploader=StubAssetUploader(),
+    )
+
+    result = await importer.import_case(case_dir=tmp_path)
+
+    assert result.case_id == CASE_ID
+    assert result.uploaded_asset_count == 6
+    assert replace_use_case.executed_command is None
+    assert create_use_case.executed_command is not None
+    assert create_use_case.executed_command.case_id == CASE_ID
+    assert create_use_case.executed_command.status == BusinessCaseStatus.PUBLISHED
+
+
+def test_cloudbase_settings_from_env_reads_required_values(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("MZ_AI_CASE_IMPORT_CLOUDBASE_ENV_ID", CLOUDBASE_ENV_ID)
+    monkeypatch.setenv("MZ_AI_CASE_IMPORT_CLOUDBASE_API_KEY", "api-key")
+
+    settings = CaseImportCloudBaseSettings.from_env()
+
+    assert settings.env_id == CLOUDBASE_ENV_ID
+    assert settings.api_key == "api-key"
+
+
+def test_cloudbase_storage_client_requests_upload_ticket_and_uploads_file(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    asset_path = tmp_path / "cover.png"
+    asset_path.write_bytes(b"png")
+    request_log: list[dict[str, object]] = []
+
+    class FakeResponse:
+        def __init__(self, *, status_code: int, payload: bytes = b"") -> None:
+            self._status_code = status_code
+            self._payload = payload
+
+        def __enter__(self) -> "FakeResponse":
+            return self
+
+        def __exit__(self, exc_type, exc, tb) -> None:
+            return None
+
+        def getcode(self) -> int:
+            return self._status_code
+
+        def read(self) -> bytes:
+            return self._payload
+
+    def fake_urlopen(request, timeout: int):
+        request_log.append(
+            {
+                "url": request.full_url,
+                "method": request.get_method(),
+                "headers": {key.lower(): value for key, value in request.header_items()},
+                "data": request.data,
+                "timeout": timeout,
+            }
+        )
+        if request.get_method() == "POST":
+            return FakeResponse(
+                status_code=200,
+                payload=json.dumps(
+                    [
+                        {
+                            "objectId": "business-cases/case-4/images/cover.png",
+                            "uploadUrl": "https://upload.example.com/cover.png",
+                            "authorization": "upload-auth",
+                            "token": "upload-token",
+                            "cloudObjectMeta": "cloud-meta",
+                            "cloudObjectId": (
+                                f"cloud://{CLOUDBASE_ENV_ID}.bucket/"
+                                "business-cases/case-4/images/cover.png"
+                            ),
+                        }
+                    ]
+                ).encode("utf-8"),
+            )
+        return FakeResponse(status_code=200)
+
+    monkeypatch.setattr(
+        "mz_ai_backend.modules.business_cases.infrastructure.importing."
+        "cloudbase_client.urllib.request.urlopen",
+        fake_urlopen,
+    )
+
+    client = CloudBaseStorageClient(
+        settings=CaseImportCloudBaseSettings(
+            env_id=CLOUDBASE_ENV_ID,
+            api_key="api-key",
+        )
+    )
+
+    uploaded_reference = client.upload_file(
+        local_path=asset_path,
+        object_key="business-cases/case-4/images/cover.png",
+    )
+
+    assert uploaded_reference == (
+        f"cloud://{CLOUDBASE_ENV_ID}.bucket/"
+        "business-cases/case-4/images/cover.png"
+    )
+    assert request_log[0]["url"] == (
+        f"https://{CLOUDBASE_ENV_ID}.api.tcloudbasegateway.com"
+        "/v1/storages/get-objects-upload-info"
+    )
+    assert request_log[0]["method"] == "POST"
+    assert request_log[0]["headers"]["authorization"] == "Bearer api-key"
+    assert json.loads(request_log[0]["data"].decode("utf-8")) == [
+        {"objectId": "business-cases/case-4/images/cover.png"}
+    ]
+    assert request_log[1]["url"] == "https://upload.example.com/cover.png"
+    assert request_log[1]["method"] == "PUT"
+    assert request_log[1]["headers"]["authorization"] == "upload-auth"
+    assert request_log[1]["headers"]["x-cos-security-token"] == "upload-token"
+    assert request_log[1]["headers"]["x-cos-meta-fileid"] == "cloud-meta"
+    assert request_log[1]["headers"]["content-type"] == "image/png"
+
+
+def _write_case_directory(
+    case_dir: Path,
+    *,
+    config_text: str | None = None,
+) -> None:
+    (case_dir / "images" / "rework_cover").mkdir(parents=True, exist_ok=True)
+    (case_dir / "images" / "market_cover").mkdir(parents=True, exist_ok=True)
+    (case_dir / "images" / "ai_cover").mkdir(parents=True, exist_ok=True)
+    (case_dir / "images" / "rework_chart1").mkdir(parents=True, exist_ok=True)
+    (case_dir / "images" / "market_chart1").mkdir(parents=True, exist_ok=True)
+    (case_dir / "images" / "ai_chart1").mkdir(parents=True, exist_ok=True)
+    for path in (
+        case_dir / "images" / "rework_cover" / "image_01.png",
+        case_dir / "images" / "market_cover" / "image_01.png",
+        case_dir / "images" / "ai_cover" / "image_01.png",
+        case_dir / "images" / "rework_chart1" / "chart.png",
+        case_dir / "images" / "market_chart1" / "chart.png",
+        case_dir / "images" / "ai_chart1" / "chart.png",
+    ):
+        path.write_bytes(b"png")
+
+    (case_dir / "rework.md").write_text(
+        "# Rework Title\n\n![Chart](images/rework_chart1/chart.png)\n",
+        encoding="utf-8",
+    )
+    (case_dir / "market_analysis_report.md").write_text(
+        "# Market Title\n\n![Chart](images/market_chart1/chart.png)\n",
+        encoding="utf-8",
+    )
+    (case_dir / "ai_driven_analysis.md").write_text(
+        "# AI Title\n\n![Chart](images/ai_chart1/chart.png)\n",
+        encoding="utf-8",
+    )
+    (case_dir / "config.yml").write_text(
+        config_text
+        or (
+            "case_id: case-4\n"
+            "title: 宠物新零售行业创业案例\n"
+            "desc: 围绕宠物健康知识输出和社群运营\n"
+            "cover: images\\rework_cover\\image_01.png\n"
+            "tags:\n"
+            "  - 宠物\n"
+            "  - 新零售\n"
+            "rework:\n"
+            "  file: rework.md\n"
+            "  cover: images\\rework_cover\\image_01.png\n"
+            "ai_driven_analysis:\n"
+            "  file: ai_driven_analysis.md\n"
+            "  cover: images\\ai_cover\\image_01.png\n"
+            "market:\n"
+            "  file: market_analysis_report.md\n"
+            "  cover: images\\market_cover\\image_01.png\n"
+        ),
+        encoding="utf-8",
+    )
+
+
+def _build_existing_case() -> BusinessCase:
+    return BusinessCase(
+        case_id=CASE_ID,
+        title="Existing Title",
+        summary="Existing Summary",
+        tags=("旧标签",),
+        cover_image_url="https://example.com/old-cover.png",
+        status=BusinessCaseStatus.DRAFT,
+        published_at=None,
+        created_at=_fixed_datetime(),
+        updated_at=_fixed_datetime(),
+        documents=BusinessCaseDocuments(
+            business_case=_build_document(
+                document_id=2001,
+                document_type=BusinessCaseDocumentType.BUSINESS_CASE,
+            ),
+            market_research=_build_document(
+                document_id=2002,
+                document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
+            ),
+            ai_business_upgrade=_build_document(
+                document_id=2003,
+                document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
+            ),
+        ),
+        is_deleted=False,
+    )
+
+
+def _build_document(
+    *,
+    document_id: int,
+    document_type: BusinessCaseDocumentType,
+) -> BusinessCaseDocument:
+    return BusinessCaseDocument(
+        document_id=document_id,
+        document_type=document_type,
+        title="Existing",
+        markdown_content="# Existing",
+        cover_image_url="https://example.com/existing.png",
+        is_deleted=False,
+        created_at=_fixed_datetime(),
+        updated_at=_fixed_datetime(),
+    )
+
+
+def _fixed_datetime() -> datetime:
+    return datetime(2026, 1, 1, 8, 0, 0)

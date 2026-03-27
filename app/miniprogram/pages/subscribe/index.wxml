@@ -1,0 +1,41 @@
+<view class="tab-page">
+  <view class="tab-hero">
+    <view class="tab-hero__eyebrow">订阅中心</view>
+    <view class="tab-hero__title">订阅更新与精选内容</view>
+    <view class="tab-hero__text">课程更新、案例解读、活动通知和专题推送会集中展示在这里。</view>
+  </view>
+
+  <view class="info-card info-card--loading" wx:if="{{authState === authPageState.CHECKING}}">
+    <view class="info-card__title">正在确认登录状态</view>
+    <view class="info-card__text">请稍候，正在同步你的微信身份与授权资料。</view>
+  </view>
+
+  <view class="feedback-panel" wx:elif="{{authState === authPageState.ERROR}}">
+    <view class="feedback-panel__title">订阅中心暂时不可用</view>
+    <view class="feedback-panel__text">当前无法确认你的登录状态，请检查后端服务后重试。</view>
+    <view class="feedback-panel__button" bindtap="handleRetryAuth">重新检查</view>
+  </view>
+
+  <view class="auth-gate" wx:elif="{{authState === authPageState.UNAUTHORIZED}}">
+    <view class="auth-gate__eyebrow">订阅授权</view>
+    <view class="auth-gate__title">完成微信授权后再管理订阅</view>
+    <view class="auth-gate__text">
+      授权后可保存你的头像昵称，并在这里管理案例更新、课程通知和专题提醒。
+    </view>
+    <button
+      class="auth-gate__button"
+      bindtap="handleAuthorize"
+      loading="{{isAuthorizing}}"
+    >
+      微信授权登录
+    </button>
+  </view>
+
+  <view class="tab-section" wx:else>
+    <view class="tab-section__title">最近更新</view>
+    <view class="info-card">
+      <view class="info-card__title">内容订阅即将开放</view>
+      <view class="info-card__text">后续会支持按专题、课程和案例栏目进行订阅管理。</view>
+    </view>
+  </view>
+</view>

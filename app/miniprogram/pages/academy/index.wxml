@@ -1,0 +1,21 @@
+<view class="tab-page">
+  <view class="tab-hero">
+    <view class="tab-hero__eyebrow">学院内容</view>
+    <view class="tab-hero__title">系统化课程与专题栏目</view>
+    <view class="tab-hero__text">围绕 AI 商业应用、案例拆解和实战方法，逐步整理成学院内容体系。</view>
+  </view>
+
+  <view class="card-grid">
+    <view class="academy-card">
+      <view class="academy-card__label">专题一</view>
+      <view class="academy-card__title">AI 商业认知</view>
+      <view class="academy-card__text">聚焦 AI 工具、场景判断和商业落地基础方法。</view>
+    </view>
+
+    <view class="academy-card">
+      <view class="academy-card__label">专题二</view>
+      <view class="academy-card__title">案例拆解</view>
+      <view class="academy-card__text">整理可复用的经营动作、增长策略与转化路径。</view>
+    </view>
+  </view>
+</view>

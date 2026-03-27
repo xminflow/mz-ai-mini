@@ -1,0 +1,6 @@
+<view class="story-tags story-tags--{{size}}" wx:if="{{normalizedTags.length}}">
+  <view class="story-tags__item" wx:for="{{normalizedTags}}" wx:key="*this">
+    <view class="story-tags__dot"></view>
+    <text class="story-tags__text">{{item}}</text>
+  </view>
+</view>

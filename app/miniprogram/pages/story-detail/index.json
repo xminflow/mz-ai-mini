@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "案例详情",
+  "usingComponents": {
+    "markdown-renderer": "/components/markdown-renderer/index",
+    "story-tags": "/components/story-tags/index"
+  }
+}

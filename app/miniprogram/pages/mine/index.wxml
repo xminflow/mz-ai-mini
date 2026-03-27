@@ -1,0 +1,56 @@
+<view class="tab-page">
+  <view class="profile-card profile-card--loading" wx:if="{{authState === authPageState.CHECKING}}">
+    <image class="profile-card__avatar" src="/images/avatar.png" mode="aspectFill"></image>
+    <view class="profile-card__content">
+      <view class="profile-card__name">正在同步登录状态</view>
+      <view class="profile-card__text">请稍候，正在确认当前微信身份与授权信息。</view>
+    </view>
+  </view>
+
+  <view class="feedback-panel" wx:elif="{{authState === authPageState.ERROR}}">
+    <view class="feedback-panel__title">当前无法确认登录状态</view>
+    <view class="feedback-panel__text">请检查后端服务是否可用，然后重新尝试。</view>
+    <view class="feedback-panel__button" bindtap="handleRetryAuth">重新检查</view>
+  </view>
+
+  <view class="auth-gate" wx:elif="{{authState === authPageState.UNAUTHORIZED}}">
+    <view class="auth-gate__eyebrow">会员登录</view>
+    <view class="auth-gate__title">完成微信授权后再查看个人中心</view>
+    <view class="auth-gate__text">
+      授权后会同步你的头像与昵称，用于展示个人资料、订阅偏好和后续会员能力。
+    </view>
+    <button
+      class="auth-gate__button"
+      bindtap="handleAuthorize"
+      loading="{{isAuthorizing}}"
+    >
+      微信授权登录
+    </button>
+  </view>
+
+  <block wx:else>
+    <view class="profile-card">
+      <image
+        class="profile-card__avatar"
+        src="{{currentUser.avatar_url || '/images/avatar.png'}}"
+        mode="aspectFill"
+      ></image>
+      <view class="profile-card__content">
+        <view class="profile-card__name">{{currentUser.nickname}}</view>
+        <view class="profile-card__text">已完成微信授权，可在这里管理学习记录、订阅偏好与会员资料。</view>
+        <view class="profile-card__meta">会员编号 {{currentUser.user_id}}</view>
+      </view>
+    </view>
+
+    <view class="menu-list">
+      <view class="menu-item">
+        <view class="menu-item__title">我的学习记录</view>
+        <view class="menu-item__text">后续会聚合最近浏览的案例、课程进度和专题学习轨迹。</view>
+      </view>
+      <view class="menu-item">
+        <view class="menu-item__title">我的订阅</view>
+        <view class="menu-item__text">管理案例更新、课程通知、专题提醒和会员消息触达。</view>
+      </view>
+    </view>
+  </block>
+</view>

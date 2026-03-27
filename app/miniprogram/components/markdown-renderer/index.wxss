@@ -1,0 +1,133 @@
+.markdown-renderer {
+  color: #2f2a24;
+}
+
+.markdown-renderer__heading,
+.markdown-renderer__paragraph,
+.markdown-renderer__quote,
+.markdown-renderer__horizontal-rule,
+.markdown-renderer__list,
+.markdown-renderer__image-block {
+  margin-top: 24rpx;
+}
+
+.markdown-renderer__heading:first-child,
+.markdown-renderer__paragraph:first-child,
+.markdown-renderer__quote:first-child,
+.markdown-renderer__horizontal-rule:first-child,
+.markdown-renderer__list:first-child,
+.markdown-renderer__image-block:first-child {
+  margin-top: 0;
+}
+
+.markdown-renderer__heading {
+  color: #1f1c18;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.markdown-renderer__heading--h1 {
+  font-size: 38rpx;
+}
+
+.markdown-renderer__heading--h2 {
+  font-size: 35rpx;
+}
+
+.markdown-renderer__heading--h3 {
+  font-size: 32rpx;
+}
+
+.markdown-renderer__heading--h4,
+.markdown-renderer__heading--h5,
+.markdown-renderer__heading--h6 {
+  font-size: 30rpx;
+}
+
+.markdown-renderer__paragraph,
+.markdown-renderer__quote,
+.markdown-renderer__list-text {
+  font-size: 30rpx;
+  line-height: 1.96;
+}
+
+.markdown-renderer__quote {
+  padding: 18rpx 20rpx;
+  border-left: 6rpx solid #d1d5db;
+  border-radius: 8rpx;
+  background: #f8fafc;
+  color: #4b5563;
+}
+
+.markdown-renderer__horizontal-rule {
+  height: 2rpx;
+  background: #e5e7eb;
+  border-radius: 999rpx;
+}
+
+.markdown-renderer__list-item {
+  margin-top: 16rpx;
+}
+
+.markdown-renderer__list-item:first-child {
+  margin-top: 0;
+}
+
+.markdown-renderer__list-text {
+  display: block;
+  color: #2f2a24;
+}
+
+.markdown-renderer__list-marker {
+  font-size: 30rpx;
+  line-height: 1.96;
+  color: #111827;
+}
+
+.markdown-renderer__text-flow {
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.markdown-renderer__inline {
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.markdown-renderer__inline--strong {
+  font-weight: 600;
+}
+
+.markdown-renderer__inline--emphasis {
+  font-style: italic;
+}
+
+.markdown-renderer__inline--code {
+  padding: 4rpx 8rpx;
+  margin: 0 4rpx;
+  border-radius: 6rpx;
+  background: #f3f4f6;
+  color: #b45309;
+  font-size: 28rpx;
+}
+
+.markdown-renderer__inline--link {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.markdown-renderer__image {
+  width: 100%;
+  border-radius: 10rpx;
+  background: #e5e7eb;
+}
+
+.markdown-renderer__image-alt {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  line-height: 1.7;
+  color: #6b7280;
+  text-align: center;
+}

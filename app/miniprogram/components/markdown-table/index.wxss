@@ -1,0 +1,139 @@
+.markdown-table {
+  margin-top: 28rpx;
+}
+
+.markdown-table__hint {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16rpx;
+}
+
+.markdown-table__hint-chip {
+  padding: 8rpx 16rpx;
+  border: 1rpx solid rgba(148, 163, 184, 0.18);
+  border-radius: 999rpx;
+  background: #ffffff;
+  font-size: 22rpx;
+  line-height: 1.6;
+  color: #64748b;
+  letter-spacing: 0.4rpx;
+}
+
+.markdown-table__shell {
+  padding: 10rpx;
+  border-radius: 28rpx;
+  background: #f8fafc;
+  box-shadow:
+    0 18rpx 38rpx rgba(15, 23, 42, 0.06),
+    inset 0 1rpx 0 rgba(255, 255, 255, 0.9);
+}
+
+.markdown-table__viewport {
+  width: 100%;
+}
+
+.markdown-table__surface {
+  overflow: hidden;
+  border: 1rpx solid rgba(148, 163, 184, 0.18);
+  border-radius: 22rpx;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    0 12rpx 24rpx rgba(15, 23, 42, 0.05),
+    0 28rpx 56rpx rgba(15, 23, 42, 0.06);
+}
+
+.markdown-table__row {
+  display: flex;
+  min-width: 100%;
+  border-top: 1rpx solid rgba(226, 232, 240, 0.82);
+}
+
+.markdown-table__row--header {
+  border-top: none;
+  background: #eef4ff;
+}
+
+.markdown-table__row--odd {
+  background: rgba(248, 250, 252, 0.78);
+}
+
+.markdown-table__row--even {
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.markdown-table__cell {
+  box-sizing: border-box;
+  min-width: 232rpx;
+  flex: 1 0 232rpx;
+  padding: 24rpx 22rpx;
+  border-left: 1rpx solid rgba(226, 232, 240, 0.82);
+}
+
+.markdown-table__cell:first-child {
+  border-left: none;
+}
+
+.markdown-table__cell--header {
+  color: #0f172a;
+  font-weight: 600;
+  letter-spacing: 0.4rpx;
+}
+
+.markdown-table__cell--primary {
+  background: rgba(248, 250, 252, 0.58);
+}
+
+.markdown-table__row--header .markdown-table__cell--primary {
+  background: rgba(255, 255, 255, 0.38);
+}
+
+.markdown-table__cell--tail {
+  padding-right: 28rpx;
+}
+
+.markdown-table__cell--left {
+  text-align: left;
+}
+
+.markdown-table__cell--center {
+  text-align: center;
+}
+
+.markdown-table__cell--right {
+  text-align: right;
+}
+
+.markdown-table__cell-flow {
+  color: inherit;
+  font-size: 25rpx;
+  line-height: 1.78;
+}
+
+.markdown-table__inline {
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.markdown-table__inline--strong {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.markdown-table__inline--emphasis {
+  font-style: italic;
+}
+
+.markdown-table__inline--code {
+  padding: 4rpx 10rpx;
+  margin: 0 4rpx;
+  border-radius: 999rpx;
+  background: rgba(15, 23, 42, 0.06);
+  color: #b45309;
+  font-size: 24rpx;
+}
+
+.markdown-table__inline--link {
+  color: #1d4ed8;
+  text-decoration: underline;
+}

@@ -1,0 +1,32 @@
+<view class="story-card" bindtap="handleTap">
+  <image
+    class="story-card__cover"
+    src="{{story.coverImage}}"
+    mode="aspectFill"
+  ></image>
+
+  <view class="story-card__body">
+    <view class="story-card__meta" wx:if="{{story.metaItems.length}}">
+      <text
+        class="story-card__meta-item"
+        wx:for="{{story.metaItems}}"
+        wx:key="*this"
+      >
+        {{item}}
+      </text>
+    </view>
+
+    <view class="story-card__title">{{story.title}}</view>
+    <view class="story-card__summary" wx:if="{{story.summary}}">{{story.summary}}</view>
+
+    <view class="story-card__tags" wx:if="{{story.tags.length}}">
+      <story-tags tags="{{story.tags}}" size="sm"></story-tags>
+    </view>
+
+    <view class="story-card__footer" wx:if="{{story.resultText}}">
+      <view class="story-card__result" wx:if="{{story.resultText}}">
+        {{story.resultText}}
+      </view>
+    </view>
+  </view>
+</view>

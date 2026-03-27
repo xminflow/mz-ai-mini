@@ -1,0 +1,214 @@
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+
+const PAGE_PATH = require.resolve("../../miniprogram/pages/story-detail/index");
+const STORY_SERVICE_PATH = require.resolve("../../miniprogram/services/story");
+const AUTH_SERVICE_PATH = require.resolve("../../miniprogram/services/auth");
+const BUSINESS_CASE_ID_PATH = require.resolve("../../miniprogram/utils/businessCaseId");
+const USER_AUTH_PATH = require.resolve("../../miniprogram/utils/userAuth");
+const PAGE_TEMPLATE_PATH = require.resolve("../../miniprogram/pages/story-detail/index.wxml");
+
+const AUTH_PAGE_STATE = {
+  CHECKING: "checking",
+  READY: "ready",
+  UNAUTHORIZED: "unauthorized",
+  ERROR: "error",
+};
+
+const STORY_DETAIL = {
+  id: "case-4",
+  title: "宠物新零售行业创业案例",
+  summary: "案例摘要",
+  coverImage: "/images/test_cover.jpg",
+  tags: ["宠物零售"],
+  metaItems: ["3 份专题文档"],
+  resultText: "",
+  publishedAtText: "2026.03.27",
+  defaultDocumentKey: "business_case",
+  documentTabs: [
+    {
+      key: "business_case",
+      label: "商业案例",
+    },
+    {
+      key: "market_research",
+      label: "市场调研",
+    },
+    {
+      key: "ai_business_upgrade",
+      label: "AI 升级",
+    },
+  ],
+  documentMap: {
+    business_case: {
+      key: "business_case",
+      label: "商业案例",
+      title: "Rework 文档",
+      markdownContent: "# 商业案例\n\n第一段\n\n第二段",
+    },
+    market_research: {
+      key: "market_research",
+      label: "市场调研",
+      title: "市场文档",
+      markdownContent: "## 市场调研\n\n市场段落",
+    },
+    ai_business_upgrade: {
+      key: "ai_business_upgrade",
+      label: "AI 升级",
+      title: "AI 文档",
+      markdownContent: "### AI 升级\n\nAI 段落",
+    },
+  },
+};
+
+const clearStoryDetailPageModules = () => {
+  delete require.cache[PAGE_PATH];
+  delete require.cache[STORY_SERVICE_PATH];
+  delete require.cache[AUTH_SERVICE_PATH];
+  delete require.cache[BUSINESS_CASE_ID_PATH];
+  delete require.cache[USER_AUTH_PATH];
+};
+
+const mockModule = (modulePath, exports) => {
+  require.cache[modulePath] = {
+    id: modulePath,
+    filename: modulePath,
+    loaded: true,
+    exports,
+  };
+};
+
+const loadStoryDetailPage = ({
+  fetchStoryDetail = async () => STORY_DETAIL,
+} = {}) => {
+  clearStoryDetailPageModules();
+
+  let pageConfig = null;
+  global.Page = (config) => {
+    pageConfig = config;
+  };
+
+  mockModule(STORY_SERVICE_PATH, {
+    fetchStoryDetail,
+  });
+  mockModule(AUTH_SERVICE_PATH, {
+    authorizeCurrentMiniProgramUserProfile: async () => {},
+    isUserProfileAuthorizationDenied: () => false,
+    syncCurrentMiniProgramUser: async () => ({
+      user: {
+        profileAuthorized: true,
+      },
+    }),
+  });
+  mockModule(BUSINESS_CASE_ID_PATH, {
+    decodeBusinessCaseRouteId: (value) => value,
+  });
+  mockModule(USER_AUTH_PATH, {
+    AUTH_PAGE_STATE,
+    hasAuthorizedUserProfile: (user) => Boolean(user?.profileAuthorized),
+  });
+
+  require(PAGE_PATH);
+  return pageConfig;
+};
+
+const createPageInstance = (pageConfig) => {
+  const instance = {
+    data: {
+      ...pageConfig.data,
+    },
+    storyId: "",
+    setData(update) {
+      this.data = {
+        ...this.data,
+        ...update,
+      };
+    },
+  };
+
+  Object.entries(pageConfig).forEach(([key, value]) => {
+    if (typeof value === "function") {
+      instance[key] = value;
+    }
+  });
+
+  return instance;
+};
+
+test.afterEach(() => {
+  clearStoryDetailPageModules();
+  delete global.Page;
+  delete global.wx;
+});
+
+test("story detail page opens rework document by default after loading story", async () => {
+  const pageConfig = loadStoryDetailPage();
+  const page = createPageInstance(pageConfig);
+
+  global.wx = {
+    hideNavigationBarLoading() {},
+    setNavigationBarTitle() {},
+    showNavigationBarLoading() {},
+    showToast() {},
+  };
+
+  page.storyId = "case-4";
+  page.setData({
+    authState: AUTH_PAGE_STATE.READY,
+  });
+
+  await page.loadStoryDetail();
+
+  assert.equal(page.data.story, STORY_DETAIL);
+  assert.equal(page.data.activeDocumentKey, "business_case");
+  assert.deepEqual(page.data.activeDocument, STORY_DETAIL.documentMap.business_case);
+});
+
+test("story detail page switches active document from the keyed document map", () => {
+  const pageConfig = loadStoryDetailPage();
+  const page = createPageInstance(pageConfig);
+
+  page.setData({
+    story: STORY_DETAIL,
+    activeDocumentKey: "business_case",
+    activeDocument: STORY_DETAIL.documentMap.business_case,
+  });
+
+  page.handleDocumentTabTap({
+    currentTarget: {
+      dataset: {
+        key: "market_research",
+      },
+    },
+  });
+
+  assert.equal(page.data.activeDocumentKey, "market_research");
+  assert.deepEqual(page.data.activeDocument, STORY_DETAIL.documentMap.market_research);
+});
+
+test("story detail template does not render the removed meta row above the title", () => {
+  const template = fs.readFileSync(PAGE_TEMPLATE_PATH, "utf8");
+
+  assert.equal(template.includes("detail-article__meta"), false);
+  assert.equal(template.includes("detail-article__meta-item"), false);
+  assert.equal(template.includes("detail-article__read-time"), false);
+  assert.equal(template.includes("story.readTimeText"), false);
+  assert.equal(template.includes("detail-section__label"), false);
+  assert.equal(template.includes("activeDocument.label"), false);
+});
+
+test("story detail template uses the shared markdown renderer for active documents", () => {
+  const template = fs.readFileSync(PAGE_TEMPLATE_PATH, "utf8");
+  const pageConfig = JSON.parse(fs.readFileSync(require.resolve("../../miniprogram/pages/story-detail/index.json"), "utf8"));
+
+  assert.equal(template.includes("<markdown-renderer"), true);
+  assert.equal(template.includes("activeDocument.markdownContent"), true);
+  assert.equal(template.includes("activeDocument.paragraphs"), false);
+  assert.equal(template.includes("activeDocument.title"), false);
+  assert.equal(template.includes("detail-section__title"), false);
+  assert.equal(
+    pageConfig.usingComponents["markdown-renderer"],
+    "/components/markdown-renderer/index"
+  );
+});

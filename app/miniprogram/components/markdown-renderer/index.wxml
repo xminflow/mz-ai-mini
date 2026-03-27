@@ -1,0 +1,44 @@
+<template name="markdown-inline"><block wx:for="{{inlines}}" wx:key="id" wx:for-item="inline"><text wx:if="{{inline.type === 'text'}}" class="markdown-renderer__inline">{{inline.text}}</text><text wx:elif="{{inline.type === 'strong'}}" class="markdown-renderer__inline markdown-renderer__inline--strong">{{inline.text}}</text><text wx:elif="{{inline.type === 'emphasis'}}" class="markdown-renderer__inline markdown-renderer__inline--emphasis">{{inline.text}}</text><text wx:elif="{{inline.type === 'inline-code'}}" class="markdown-renderer__inline markdown-renderer__inline--code">{{inline.text}}</text><text wx:elif="{{inline.type === 'link'}}" class="markdown-renderer__inline markdown-renderer__inline--link" data-url="{{inline.url}}" bindtap="handleLinkTap">{{inline.text}}</text></block></template>
+
+<view class="markdown-renderer">
+  <block wx:for="{{blocks}}" wx:key="id" wx:for-item="block">
+    <view
+      wx:if="{{block.type === 'heading'}}"
+      class="markdown-renderer__heading markdown-renderer__heading--h{{block.level}}"
+    >
+      <text class="markdown-renderer__text-flow"><template is="markdown-inline" data="{{inlines: block.inlines}}" /></text>
+    </view>
+
+    <view wx:elif="{{block.type === 'paragraph'}}" class="markdown-renderer__paragraph">
+      <text class="markdown-renderer__text-flow"><template is="markdown-inline" data="{{inlines: block.inlines}}" /></text>
+    </view>
+
+    <view wx:elif="{{block.type === 'quote'}}" class="markdown-renderer__quote">
+      <text class="markdown-renderer__text-flow"><template is="markdown-inline" data="{{inlines: block.inlines}}" /></text>
+    </view>
+
+    <view wx:elif="{{block.type === 'horizontal-rule'}}" class="markdown-renderer__horizontal-rule"></view>
+
+    <markdown-table wx:elif="{{block.type === 'table'}}" table="{{block}}"></markdown-table>
+
+    <view wx:elif="{{block.type === 'list'}}" class="markdown-renderer__list">
+      <view
+        wx:for="{{block.items}}"
+        wx:key="id"
+        wx:for-item="listItem"
+        class="markdown-renderer__list-item"
+      >
+        <text class="markdown-renderer__list-text"><text class="markdown-renderer__list-marker">{{listItem.marker}} </text><template is="markdown-inline" data="{{inlines: listItem.inlines}}" /></text>
+      </view>
+    </view>
+
+    <view wx:elif="{{block.type === 'image'}}" class="markdown-renderer__image-block">
+      <image
+        class="markdown-renderer__image"
+        src="{{block.src}}"
+        mode="widthFix"
+      ></image>
+      <view wx:if="{{block.alt}}" class="markdown-renderer__image-alt">{{block.alt}}</view>
+    </view>
+  </block>
+</view>

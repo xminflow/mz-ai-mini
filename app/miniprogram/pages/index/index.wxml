@@ -1,0 +1,108 @@
+<view class="page-shell">
+  <view class="page-banner">
+    <swiper
+      class="page-banner__swiper"
+      indicator-dots="{{bannerImageList.length > 1}}"
+      autoplay="{{bannerImageList.length > 1}}"
+      circular="{{bannerImageList.length > 1}}"
+      interval="4200"
+      duration="500"
+    >
+      <swiper-item wx:for="{{bannerImageList}}" wx:key="*this">
+        <image
+          class="page-banner__image"
+          src="{{item}}"
+          mode="aspectFill"
+        ></image>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <scroll-view
+    class="story-tabs"
+    scroll-x="true"
+    enable-flex="true"
+    show-scrollbar="false"
+  >
+    <view class="story-tabs__list">
+      <view
+        class="story-tabs__item {{item.value === selectedTag ? 'story-tabs__item--active' : ''}}"
+        wx:for="{{tabList}}"
+        wx:key="value"
+        data-tag="{{item.value}}"
+        bindtap="handleSelectTab"
+      >
+        {{item.label}}
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="feed-grid" wx:if="{{isLoadingInitial}}">
+    <view class="feed-column">
+      <view class="skeleton-card" wx:for="{{leftSkeletonList}}" wx:key="*this">
+        <view class="skeleton-card__cover"></view>
+        <view class="skeleton-card__line skeleton-card__line--title"></view>
+        <view class="skeleton-card__line"></view>
+        <view class="skeleton-card__line skeleton-card__line--short"></view>
+      </view>
+    </view>
+
+    <view class="feed-column">
+      <view class="skeleton-card" wx:for="{{rightSkeletonList}}" wx:key="*this">
+        <view class="skeleton-card__cover"></view>
+        <view class="skeleton-card__line skeleton-card__line--title"></view>
+        <view class="skeleton-card__line"></view>
+        <view class="skeleton-card__line skeleton-card__line--short"></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="feedback feedback--center" wx:elif="{{initialLoadError}}">
+    <view class="feedback__title">暂时无法加载案例内容</view>
+    <view class="feedback__text">请检查本地后端服务与数据库是否可用，然后重新尝试。</view>
+    <view class="feedback__button" bindtap="handleRetryInitial">重新加载</view>
+  </view>
+
+  <view class="feedback feedback--center" wx:elif="{{!storyList.length}}">
+    <view class="feedback__title" wx:if="{{selectedTag}}">该分类下还没有案例</view>
+    <view class="feedback__title" wx:else>还没有发布案例</view>
+    <view class="feedback__text" wx:if="{{selectedTag}}">
+      切换其他分类，或补充该标签对应的案例内容。
+    </view>
+    <view class="feedback__text" wx:else>
+      发布第一篇创业案例后，这里会自动形成首页阅读流。
+    </view>
+  </view>
+
+  <view class="feed-grid" wx:else>
+    <view class="feed-column">
+      <story-card
+        wx:for="{{leftColumnStoryList}}"
+        wx:key="id"
+        story="{{item}}"
+        bind:select="handleSelectStory"
+      ></story-card>
+    </view>
+
+    <view class="feed-column">
+      <story-card
+        wx:for="{{rightColumnStoryList}}"
+        wx:key="id"
+        story="{{item}}"
+        bind:select="handleSelectStory"
+      ></story-card>
+    </view>
+  </view>
+
+  <view class="feed-footer" wx:if="{{storyList.length}}">
+    <view class="feed-footer__text" wx:if="{{isLoadingMore}}">
+      正在加载更多案例...
+    </view>
+    <view class="feed-footer__action" wx:elif="{{loadMoreError}}" bindtap="handleRetryMore">
+      加载失败，点击重试
+    </view>
+    <view class="feed-footer__text" wx:elif="{{!hasMore}}">
+      已经到底了
+    </view>
+  </view>
+</view>

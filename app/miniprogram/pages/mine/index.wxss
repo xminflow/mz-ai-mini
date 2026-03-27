@@ -1,0 +1,83 @@
+page {
+  background: #f7f8fa;
+  color: #111827;
+}
+
+.tab-page {
+  padding: 24rpx 20rpx 56rpx;
+}
+
+.profile-card,
+.menu-item {
+  background: #ffffff;
+  border-radius: 10rpx;
+  box-shadow: 0 14rpx 30rpx rgba(15, 23, 42, 0.05);
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+  padding: 24rpx 20rpx;
+}
+
+.profile-card__avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 8rpx;
+  flex-shrink: 0;
+}
+
+.profile-card__content {
+  min-width: 0;
+}
+
+.profile-card__name {
+  font-size: 30rpx;
+  line-height: 1.4;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.profile-card__text {
+  margin-top: 8rpx;
+  font-size: 22rpx;
+  line-height: 1.8;
+  color: #7b8794;
+}
+
+.profile-card__meta {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  line-height: 1.6;
+  color: #9ca3af;
+}
+
+.profile-card--loading {
+  opacity: 0.82;
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-top: 20rpx;
+}
+
+.menu-item {
+  padding: 22rpx 20rpx;
+}
+
+.menu-item__title {
+  font-size: 28rpx;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.menu-item__text {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  line-height: 1.8;
+  color: #7b8794;
+}

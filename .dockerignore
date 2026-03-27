@@ -1,0 +1,13 @@
+.git
+.zed
+app
+specs
+
+server/.env
+server/.venv
+server/__pycache__
+server/.pytest_cache
+server/build
+server/dist
+server/wheels
+server/*.egg-info

@@ -1,0 +1,42 @@
+<template name="markdown-table-inline"><block wx:for="{{inlines}}" wx:key="id" wx:for-item="inline"><text wx:if="{{inline.type === 'text'}}" class="markdown-table__inline">{{inline.text}}</text><text wx:elif="{{inline.type === 'strong'}}" class="markdown-table__inline markdown-table__inline--strong">{{inline.text}}</text><text wx:elif="{{inline.type === 'emphasis'}}" class="markdown-table__inline markdown-table__inline--emphasis">{{inline.text}}</text><text wx:elif="{{inline.type === 'inline-code'}}" class="markdown-table__inline markdown-table__inline--code">{{inline.text}}</text><text wx:elif="{{inline.type === 'link'}}" class="markdown-table__inline markdown-table__inline--link" data-url="{{inline.url}}" bindtap="handleLinkTap">{{inline.text}}</text></block></template>
+
+<view class="markdown-table" wx:if="{{table}}">
+  <view class="markdown-table__hint" wx:if="{{table.columns > 2}}">
+    <text class="markdown-table__hint-chip">左右滑动查看更多列</text>
+  </view>
+  <view class="markdown-table__shell">
+    <scroll-view class="markdown-table__viewport" scroll-x="true" enhanced="true" show-scrollbar="false">
+      <view class="markdown-table__surface">
+        <view class="markdown-table__row markdown-table__row--header">
+          <view
+            wx:for="{{table.header}}"
+            wx:key="id"
+            wx:for-item="cell"
+            wx:for-index="cellIndex"
+            class="markdown-table__cell markdown-table__cell--header markdown-table__cell--{{cell.align}} {{cellIndex === 0 ? 'markdown-table__cell--primary' : ''}} {{cellIndex === table.columns - 1 ? 'markdown-table__cell--tail' : ''}}"
+          >
+            <text class="markdown-table__cell-flow"><template is="markdown-table-inline" data="{{inlines: cell.inlines}}" /></text>
+          </view>
+        </view>
+
+        <view
+          wx:for="{{table.rows}}"
+          wx:key="id"
+          wx:for-item="row"
+          wx:for-index="rowIndex"
+          class="markdown-table__row {{rowIndex % 2 === 0 ? 'markdown-table__row--odd' : 'markdown-table__row--even'}}"
+        >
+          <view
+            wx:for="{{row.cells}}"
+            wx:key="id"
+            wx:for-item="cell"
+            wx:for-index="cellIndex"
+            class="markdown-table__cell markdown-table__cell--{{cell.align}} {{cellIndex === 0 ? 'markdown-table__cell--primary' : ''}} {{cellIndex === table.columns - 1 ? 'markdown-table__cell--tail' : ''}}"
+          >
+            <text class="markdown-table__cell-flow"><template is="markdown-table-inline" data="{{inlines: cell.inlines}}" /></text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>

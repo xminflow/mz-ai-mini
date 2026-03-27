@@ -1,0 +1,82 @@
+<view class="detail-page">
+  <view class="detail-skeleton" wx:if="{{authState === authPageState.CHECKING}}">
+    <view class="detail-skeleton__cover"></view>
+    <view class="detail-skeleton__line detail-skeleton__line--title"></view>
+    <view class="detail-skeleton__line"></view>
+    <view class="detail-skeleton__line detail-skeleton__line--short"></view>
+  </view>
+
+  <view class="auth-gate" wx:elif="{{authState === authPageState.UNAUTHORIZED}}">
+    <view class="auth-gate__eyebrow">案例解锁</view>
+    <view class="auth-gate__title">完成微信授权后再阅读完整案例</view>
+    <view class="auth-gate__text">
+      授权成功后会原地继续打开当前案例，并同步你的头像昵称用于会员资料展示。
+    </view>
+    <button
+      class="auth-gate__button"
+      bindtap="handleAuthorize"
+      loading="{{isAuthorizing}}"
+    >
+      微信授权登录
+    </button>
+  </view>
+
+  <view class="detail-feedback" wx:elif="{{authState === authPageState.ERROR}}">
+    <view class="detail-feedback__title">当前无法确认登录状态</view>
+    <view class="detail-feedback__text">
+      请检查后端服务是否可用，然后重新尝试。
+    </view>
+    <view class="detail-feedback__button" bindtap="handleRetry">重新检查</view>
+  </view>
+
+  <view class="detail-skeleton" wx:elif="{{isLoading}}">
+    <view class="detail-skeleton__cover"></view>
+    <view class="detail-skeleton__line detail-skeleton__line--title"></view>
+    <view class="detail-skeleton__line"></view>
+    <view class="detail-skeleton__line detail-skeleton__line--short"></view>
+  </view>
+
+  <view class="detail-feedback" wx:elif="{{loadError}}">
+    <view class="detail-feedback__title">当前案例暂时无法打开</view>
+    <view class="detail-feedback__text">
+      请检查本地后端服务、数据库以及案例数据是否可用，然后重新尝试。
+    </view>
+    <view class="detail-feedback__button" bindtap="handleRetry">重新加载</view>
+  </view>
+
+  <view class="detail-article" wx:elif="{{story}}">
+    <image class="detail-article__cover" src="{{story.coverImage}}" mode="aspectFill"></image>
+
+    <view class="detail-article__head">
+      <view class="detail-article__title">{{story.title}}</view>
+      <view class="detail-article__summary">{{story.summary}}</view>
+
+      <view class="detail-article__tags" wx:if="{{story.tags.length}}">
+        <story-tags tags="{{story.tags}}" size="md"></story-tags>
+      </view>
+
+      <view class="detail-article__result" wx:if="{{story.resultText}}">
+        {{story.resultText}}
+      </view>
+
+    </view>
+
+    <view class="detail-article__content">
+      <view class="detail-tabs" wx:if="{{story.documentTabs.length > 1}}">
+        <view
+          class="detail-tabs__item {{item.key === activeDocumentKey ? 'detail-tabs__item--active' : ''}}"
+          wx:for="{{story.documentTabs}}"
+          wx:key="key"
+          data-key="{{item.key}}"
+          bindtap="handleDocumentTabTap"
+        >
+          {{item.label}}
+        </view>
+      </view>
+
+      <view class="detail-section" wx:if="{{activeDocument}}">
+        <markdown-renderer markdown="{{activeDocument.markdownContent}}"></markdown-renderer>
+      </view>
+    </view>
+  </view>
+</view>
