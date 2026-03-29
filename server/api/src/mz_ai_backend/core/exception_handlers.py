@@ -44,6 +44,7 @@ def _resolve_request_id(request: Request) -> str:
 
 
 def _log_app_exception(exc: AppException, *, request_id: str) -> None:
+    log_message = f"application.exception: {exc.message}"
     extra = {
         "request_id": request_id,
         "error_code": exc.error_code,
@@ -53,12 +54,12 @@ def _log_app_exception(exc: AppException, *, request_id: str) -> None:
         "status_code": exc.http_status,
     }
     if isinstance(exc, SystemException):
-        error_logger.error("application.exception", extra=extra)
+        error_logger.error(log_message, extra=extra)
         return
     if isinstance(exc, BusinessException):
-        error_logger.warning("application.exception", extra=extra)
+        error_logger.warning(log_message, extra=extra)
         return
-    error_logger.error("application.exception", extra=extra)
+    error_logger.error(log_message, extra=extra)
 
 
 def register_exception_handlers(app: FastAPI) -> None:
