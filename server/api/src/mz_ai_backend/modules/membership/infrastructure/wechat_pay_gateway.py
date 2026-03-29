@@ -46,6 +46,8 @@ class WechatPayV3Gateway:
         apiv3_key: str,
         notify_url: str,
         cert_dir: str | None,
+        public_key: str | None,
+        public_key_id: str | None,
     ) -> None:
         from wechatpayv3 import WeChatPay, WeChatPayType
 
@@ -60,6 +62,8 @@ class WechatPayV3Gateway:
             notify_url=notify_url,
             cert_dir=cert_dir,
             partner_mode=False,
+            public_key=public_key,
+            public_key_id=public_key_id,
         )
 
     async def create_order(

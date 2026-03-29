@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     wechat_pay_appid: str | None = Field(default=None)
     wechat_pay_notify_url: str | None = Field(default=None)
     wechat_pay_cert_dir: str | None = Field(default=None)
+    wechat_pay_public_key: str | None = Field(default=None)
+    wechat_pay_public_key_path: str | None = Field(default=None)
+    wechat_pay_public_key_id: str | None = Field(default=None)
 
     @model_validator(mode="after")
     def apply_development_defaults(self) -> "Settings":

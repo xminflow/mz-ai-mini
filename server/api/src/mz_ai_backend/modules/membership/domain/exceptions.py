@@ -86,9 +86,13 @@ class WechatPayOrderCreateFailedException(SystemException):
 class WechatPayConfigMissingException(SystemException):
     """Raised when WeChat Pay runtime configuration is missing."""
 
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        *,
+        message: str = "WeChat Pay configuration is missing.",
+    ) -> None:
         super().__init__(
             error_code=ErrorCode.PAYMENT_WECHAT_CONFIG_MISSING,
-            message="WeChat Pay configuration is missing.",
+            message=message,
             http_status=HTTPStatus.INTERNAL_SERVER_ERROR,
         )

@@ -33,7 +33,12 @@ class SystemCurrentTimeProvider:
         return datetime.now(UTC).replace(tzinfo=None)
 
 
-def _normalize_private_key_text(value: str) -> str:
+def _normalize_pem_body(
+    *,
+    value: str,
+    begin_marker: str,
+    end_marker: str,
+) -> str:
     normalized = value.strip()
     if normalized == "":
         raise WechatPayConfigMissingException()
@@ -48,7 +53,9 @@ def _normalize_private_key_text(value: str) -> str:
         normalized.replace("\\n", "\n").replace("\r\n", "\n").replace("\r", "\n")
     )
 
-    marker_pattern = re.compile(r"-----BEGIN [A-Z ]+-----|-----END [A-Z ]+-----")
+    marker_pattern = re.compile(
+        rf"{re.escape(begin_marker)}|{re.escape(end_marker)}",
+    )
     normalized = marker_pattern.sub("\n", normalized)
 
     body_lines = [
@@ -62,6 +69,22 @@ def _normalize_private_key_text(value: str) -> str:
     return body
 
 
+def _normalize_private_key_text(value: str) -> str:
+    return _normalize_pem_body(
+        value=value,
+        begin_marker="-----BEGIN PRIVATE KEY-----",
+        end_marker="-----END PRIVATE KEY-----",
+    )
+
+
+def _normalize_public_key_text(value: str) -> str:
+    return _normalize_pem_body(
+        value=value,
+        begin_marker="-----BEGIN PUBLIC KEY-----",
+        end_marker="-----END PUBLIC KEY-----",
+    )
+
+
 def _resolve_private_key(settings: Settings) -> str:
     if settings.wechat_pay_private_key and settings.wechat_pay_private_key.strip():
         return _normalize_private_key_text(settings.wechat_pay_private_key)
@@ -72,6 +95,37 @@ def _resolve_private_key(settings: Settings) -> str:
             return _normalize_private_key_text(key_path.read_text(encoding="utf-8"))
 
     raise WechatPayConfigMissingException()
+
+
+def _resolve_optional_public_key(settings: Settings) -> tuple[str | None, str | None]:
+    public_key: str | None = None
+    if settings.wechat_pay_public_key and settings.wechat_pay_public_key.strip():
+        public_key = _normalize_public_key_text(settings.wechat_pay_public_key)
+    elif (
+        settings.wechat_pay_public_key_path
+        and settings.wechat_pay_public_key_path.strip()
+    ):
+        key_path = Path(settings.wechat_pay_public_key_path).resolve()
+        if key_path.exists():
+            public_key = _normalize_public_key_text(
+                key_path.read_text(encoding="utf-8"),
+            )
+
+    public_key_id = (
+        settings.wechat_pay_public_key_id.strip()
+        if settings.wechat_pay_public_key_id
+        and settings.wechat_pay_public_key_id.strip()
+        else None
+    )
+
+    if (public_key is None) != (public_key_id is None):
+        raise WechatPayConfigMissingException(
+            message=(
+                "WeChat Pay platform public key and public key id must be configured together."
+            ),
+        )
+
+    return public_key, public_key_id
 
 
 def get_membership_repository(
@@ -133,17 +187,31 @@ def get_wechat_pay_gateway(
     if any(value is None or value.strip() == "" for value in required_values):
         raise WechatPayConfigMissingException()
 
-    return WechatPayV3Gateway(
-        mchid=settings.wechat_pay_mchid.strip(),
-        appid=settings.wechat_pay_appid.strip(),
-        private_key=_resolve_private_key(settings).strip(),
-        cert_serial_no=settings.wechat_pay_cert_serial_no.strip(),
-        apiv3_key=settings.wechat_pay_apiv3_key.strip(),
-        notify_url=settings.wechat_pay_notify_url.strip(),
-        cert_dir=settings.wechat_pay_cert_dir.strip()
-        if settings.wechat_pay_cert_dir
-        else None,
-    )
+    public_key, public_key_id = _resolve_optional_public_key(settings)
+
+    try:
+        return WechatPayV3Gateway(
+            mchid=settings.wechat_pay_mchid.strip(),
+            appid=settings.wechat_pay_appid.strip(),
+            private_key=_resolve_private_key(settings).strip(),
+            cert_serial_no=settings.wechat_pay_cert_serial_no.strip(),
+            apiv3_key=settings.wechat_pay_apiv3_key.strip(),
+            notify_url=settings.wechat_pay_notify_url.strip(),
+            cert_dir=settings.wechat_pay_cert_dir.strip()
+            if settings.wechat_pay_cert_dir
+            else None,
+            public_key=public_key,
+            public_key_id=public_key_id,
+        )
+    except Exception as exc:  # noqa: BLE001
+        raise WechatPayConfigMissingException(
+            message=(
+                "Failed to initialize WeChat Pay gateway. Configure either "
+                "MZ_AI_BACKEND_WECHAT_PAY_PUBLIC_KEY + "
+                "MZ_AI_BACKEND_WECHAT_PAY_PUBLIC_KEY_ID, or ensure "
+                "MZ_AI_BACKEND_WECHAT_PAY_CERT_DIR has valid platform certificates."
+            ),
+        ) from exc
 
 
 def get_create_membership_order_use_case(
