@@ -7,6 +7,41 @@ const {
 const { decodeBusinessCaseRouteId } = require("../../utils/businessCaseId");
 const { AUTH_PAGE_STATE, hasAuthorizedUserProfile } = require("../../utils/userAuth");
 
+const DOUBLE_TAP_INTERVAL_MS = 320;
+const isPromiseLike = (value) => Boolean(value) && typeof value.then === "function";
+const isWithinDoubleTapWindow = (lastTapTimestamp, currentTapTimestamp) => {
+  if (typeof lastTapTimestamp !== "number" || lastTapTimestamp <= 0) {
+    return false;
+  }
+
+  const delta = currentTapTimestamp - lastTapTimestamp;
+  return delta > 0 && delta <= DOUBLE_TAP_INTERVAL_MS;
+};
+
+const waitForAppCurrentUserReady = async () => {
+  if (typeof getApp !== "function") {
+    return null;
+  }
+
+  const app = getApp();
+  const globalData =
+    app && typeof app === "object" && app.globalData && typeof app.globalData === "object"
+      ? app.globalData
+      : null;
+
+  if (!globalData || !isPromiseLike(globalData.currentUserReady)) {
+    return null;
+  }
+
+  const result = await globalData.currentUserReady;
+
+  if (globalData.currentUserSyncError) {
+    throw globalData.currentUserSyncError;
+  }
+
+  return result;
+};
+
 const resolveDefaultDocumentKey = (story = {}) => {
   if (story.defaultDocumentKey && story.documentMap?.[story.defaultDocumentKey]) {
     return story.defaultDocumentKey;
@@ -38,9 +73,14 @@ Page({
 
   onLoad(options) {
     this.storyId = decodeBusinessCaseRouteId(options.id);
+    this._coverImageLastTapTimestamp = 0;
   },
 
   onShow() {
+    if (this.data.authState === AUTH_PAGE_STATE.READY && this.data.story) {
+      return
+    }
+
     this.refreshAuthorizationState();
   },
 
@@ -55,6 +95,10 @@ Page({
     });
 
     try {
+      if (!forceRefresh) {
+        await waitForAppCurrentUserReady();
+      }
+
       const result = await syncCurrentMiniProgramUser({ forceRefresh });
       const currentUser = result ? result.user : null;
       const authState = hasAuthorizedUserProfile(currentUser)
@@ -167,6 +211,27 @@ Page({
       activeDocumentKey: key,
       activeDocument,
     });
+  },
+
+  handleCoverImageTap() {
+    const coverImage = this.data.story?.coverImage;
+    if (typeof coverImage !== "string" || coverImage.trim() === "") {
+      return;
+    }
+
+    const currentTapTimestamp = Date.now();
+    if (
+      isWithinDoubleTapWindow(this._coverImageLastTapTimestamp, currentTapTimestamp)
+    ) {
+      this._coverImageLastTapTimestamp = 0;
+      wx.previewImage({
+        current: coverImage,
+        urls: [coverImage],
+      });
+      return;
+    }
+
+    this._coverImageLastTapTimestamp = currentTapTimestamp;
   },
 
   async handleAuthorize() {

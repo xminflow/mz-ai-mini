@@ -2,10 +2,13 @@ const {
   formatDateLabel,
   formatReadTime,
 } = require("../utils/format");
+const {
+  isCloudFileId,
+  resolveCloudFileTempUrlMap,
+} = require("../utils/cloudFile");
 const { request } = require("../core/apiClient");
 
 const STORY_PAGE_SIZE = 6;
-const UNIFIED_TEST_COVER_IMAGE = "/images/test_cover.jpg";
 const DEFAULT_DOCUMENT_KEY = "business_case";
 const DOCUMENT_DEFINITIONS = Object.freeze([
   {
@@ -60,6 +63,29 @@ const buildMetaItems = (story) => {
 };
 
 const resolvePublishedAt = (story = {}) => story.published_at || story.publishedAt || "";
+const resolveRawCoverImage = (story = {}) =>
+  typeof story.cover_image_url === "string"
+    ? story.cover_image_url.trim()
+    : typeof story.coverImageUrl === "string"
+      ? story.coverImageUrl.trim()
+      : "";
+
+const buildCoverImageTempUrlMap = (stories = []) =>
+  resolveCloudFileTempUrlMap(stories.map(resolveRawCoverImage));
+
+const resolveCoverImage = (story = {}, coverImageTempUrlMap = {}) => {
+  const rawCoverImage = resolveRawCoverImage(story);
+
+  if (rawCoverImage === "") {
+    return "";
+  }
+
+  if (isCloudFileId(rawCoverImage)) {
+    return coverImageTempUrlMap[rawCoverImage] || "";
+  }
+
+  return rawCoverImage;
+};
 
 const buildStoryListMetaItems = (story = {}) => {
   const metaItems = buildMetaItems(story);
@@ -129,11 +155,11 @@ const resolveDefaultDocumentKey = (documentMap = {}) => {
   return documentKeys.length > 0 ? documentKeys[0] : "";
 };
 
-const normalizeStoryListItem = (story = {}) => ({
+const normalizeStoryListItem = (story = {}, coverImageTempUrlMap = {}) => ({
   id: story.case_id ? String(story.case_id) : story._id || "",
   title: story.title || "",
   summary: story.summary || "",
-  coverImage: UNIFIED_TEST_COVER_IMAGE,
+  coverImage: resolveCoverImage(story, coverImageTempUrlMap),
   tags: normalizeTags(story.tags),
   metaItems: buildStoryListMetaItems(story),
   resultText: story.resultText || "",
@@ -141,7 +167,7 @@ const normalizeStoryListItem = (story = {}) => ({
   publishedAtText: formatDateLabel(resolvePublishedAt(story)),
 });
 
-const normalizeStoryDetail = (story = {}) => {
+const normalizeStoryDetail = (story = {}, coverImageTempUrlMap = {}) => {
   const documentMap = story.documents
     ? buildDocumentMap(story.documents)
     : buildLegacyDocumentMap(story);
@@ -158,7 +184,7 @@ const normalizeStoryDetail = (story = {}) => {
     id: story.case_id ? String(story.case_id) : story._id || "",
     title: story.title || "",
     summary: story.summary || "",
-    coverImage: UNIFIED_TEST_COVER_IMAGE,
+    coverImage: resolveCoverImage(story, coverImageTempUrlMap),
     tags: normalizeTags(story.tags),
     metaItems: normalizedMetaItems,
     resultText: story.resultText || "",
@@ -169,8 +195,8 @@ const normalizeStoryDetail = (story = {}) => {
   };
 };
 
-const fetchStoryList = ({ pageSize = STORY_PAGE_SIZE, cursor = "", tag = "" } = {}) =>
-  request({
+const fetchStoryList = async ({ pageSize = STORY_PAGE_SIZE, cursor = "", tag = "" } = {}) => {
+  const result = await request({
     path: "/business-cases",
     method: "GET",
     query: {
@@ -178,18 +204,27 @@ const fetchStoryList = ({ pageSize = STORY_PAGE_SIZE, cursor = "", tag = "" } = 
       cursor,
       tag,
     },
-  }).then((result) => ({
-    list: (result.items || []).map(normalizeStoryListItem),
+  });
+  const itemList = Array.isArray(result.items) ? result.items : [];
+  const coverImageTempUrlMap = await buildCoverImageTempUrlMap(itemList);
+
+  return {
+    list: itemList.map((item) => normalizeStoryListItem(item, coverImageTempUrlMap)),
     nextCursor: result.next_cursor || "",
     hasMore: Boolean(result.next_cursor),
     availableTags: normalizeAvailableTags(result.available_tags),
-  }));
+  };
+};
 
-const fetchStoryDetail = (id) =>
-  request({
+const fetchStoryDetail = async (id) => {
+  const result = await request({
     path: `/business-cases/${id}`,
     method: "GET",
-  }).then(normalizeStoryDetail);
+  });
+  const coverImageTempUrlMap = await buildCoverImageTempUrlMap([result]);
+
+  return normalizeStoryDetail(result, coverImageTempUrlMap);
+};
 
 module.exports = {
   STORY_PAGE_SIZE,

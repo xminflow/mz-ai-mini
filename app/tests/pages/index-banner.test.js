@@ -70,8 +70,9 @@ test("app config uses the native tab bar configuration", () => {
 
   assert.equal("custom" in appConfig.tabBar, false);
   assert.equal(appConfig.tabBar.list.length, 4);
-  assert.equal(appConfig.tabBar.backgroundColor, "#FCFCFD");
-  assert.equal(appConfig.tabBar.selectedColor, "#101828");
+  assert.equal(appConfig.tabBar.backgroundColor, "#FFFFFF");
+  assert.equal(appConfig.tabBar.color, "#667085");
+  assert.equal(appConfig.tabBar.selectedColor, "#111827");
 });
 
 test("app initializes cloud environment on launch", () => {

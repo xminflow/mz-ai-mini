@@ -16,6 +16,10 @@ test("markdown table uses horizontal scroll and inline cell rendering", () => {
   );
 
   assert.equal(template.includes('<scroll-view class="markdown-table__viewport" scroll-x="true"'), true);
+  assert.equal(
+    template.includes('class="markdown-table__surface" style="min-width: {{table.columns * 232}}rpx;"'),
+    true
+  );
   assert.equal(template.includes('class="markdown-table__hint"'), true);
   assert.equal(template.includes('<template name="markdown-table-inline"><block'), true);
   assert.equal(

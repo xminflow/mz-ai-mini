@@ -3,7 +3,38 @@ const {
   isUserProfileAuthorizationDenied,
   syncCurrentMiniProgramUser,
 } = require("../../services/auth");
+const { formatDateLabel } = require("../../utils/format");
 const { AUTH_PAGE_STATE, hasAuthorizedUserProfile } = require("../../utils/userAuth");
+
+const MEMBERSHIP_TIER_NORMAL = "normal";
+const MEMBERSHIP_TIER_PLATINUM = "platinum";
+
+const resolveMembershipStatusText = (user) => {
+  const membership =
+    user && typeof user === "object" && user.membership && typeof user.membership === "object"
+      ? user.membership
+      : null;
+
+  if (!membership || membership.is_active !== true) {
+    return "当前为非会员，可前往订阅页开通普通会员。";
+  }
+
+  if (membership.tier === MEMBERSHIP_TIER_NORMAL) {
+    const expiresAtText = formatDateLabel(membership.expires_at);
+    return expiresAtText
+      ? `普通会员（有效期至 ${expiresAtText}）`
+      : "普通会员";
+  }
+
+  if (membership.tier === MEMBERSHIP_TIER_PLATINUM) {
+    const expiresAtText = formatDateLabel(membership.expires_at);
+    return expiresAtText
+      ? `白金会员（有效期至 ${expiresAtText}）`
+      : "白金会员";
+  }
+
+  return "当前为非会员，可前往订阅页开通普通会员。";
+};
 
 Page({
   data: {
@@ -11,6 +42,7 @@ Page({
     authState: AUTH_PAGE_STATE.CHECKING,
     currentUser: null,
     isAuthorizing: false,
+    membershipStatusText: "当前为非会员，可前往订阅页开通普通会员。",
   },
 
   onShow() {
@@ -28,6 +60,7 @@ Page({
 
       this.setData({
         currentUser,
+        membershipStatusText: resolveMembershipStatusText(currentUser),
         authState: hasAuthorizedUserProfile(currentUser)
           ? AUTH_PAGE_STATE.READY
           : AUTH_PAGE_STATE.UNAUTHORIZED,
@@ -37,6 +70,7 @@ Page({
       this.setData({
         currentUser: null,
         authState: AUTH_PAGE_STATE.ERROR,
+        membershipStatusText: "当前为非会员，可前往订阅页开通普通会员。",
       });
     }
   },
@@ -54,6 +88,7 @@ Page({
       const currentUser = await authorizeCurrentMiniProgramUserProfile();
       this.setData({
         currentUser,
+        membershipStatusText: resolveMembershipStatusText(currentUser),
         authState: AUTH_PAGE_STATE.READY,
       });
       wx.showToast({

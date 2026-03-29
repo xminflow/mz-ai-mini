@@ -4,8 +4,7 @@ const {
   isUserProfileAuthorizationDenied,
   syncCurrentMiniProgramUser,
 } = require("./services/auth");
-
-const CLOUD_ENV_ID = "rlink-5g3hqx773b8980a1";
+const { CLOUD_ENV_ID } = require("./core/runtime-config");
 
 const authorizeCurrentUserOnLaunchIfNeeded = async () => {
   const result = await syncCurrentMiniProgramUser();

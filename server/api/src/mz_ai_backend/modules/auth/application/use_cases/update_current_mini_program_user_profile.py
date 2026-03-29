@@ -7,6 +7,7 @@ from ..dtos import (
     AuthenticatedUserSummary,
     UpdateCurrentMiniProgramUserProfileCommand,
     UpdateCurrentMiniProgramUserProfileResult,
+    build_membership_summary,
 )
 from ..ports import UserRepository
 
@@ -48,5 +49,10 @@ class UpdateCurrentMiniProgramUserProfileUseCase:
                 nickname=updated_user.nickname,
                 avatar_url=updated_user.avatar_url,
                 status=updated_user.status,
+                membership=build_membership_summary(
+                    membership_tier=updated_user.membership_tier,
+                    membership_started_at=updated_user.membership_started_at,
+                    membership_expires_at=updated_user.membership_expires_at,
+                ),
             )
         )

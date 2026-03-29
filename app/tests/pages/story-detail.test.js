@@ -20,7 +20,7 @@ const STORY_DETAIL = {
   id: "case-4",
   title: "宠物新零售行业创业案例",
   summary: "案例摘要",
-  coverImage: "/images/test_cover.jpg",
+  coverImage: "https://example.com/case-4.png",
   tags: ["宠物零售"],
   metaItems: ["3 份专题文档"],
   resultText: "",
@@ -81,6 +81,15 @@ const mockModule = (modulePath, exports) => {
 
 const loadStoryDetailPage = ({
   fetchStoryDetail = async () => STORY_DETAIL,
+  authorizeCurrentMiniProgramUserProfile = async () => {},
+  isUserProfileAuthorizationDenied = () => false,
+  syncCurrentMiniProgramUser = async () => ({
+    user: {
+      profileAuthorized: true,
+    },
+  }),
+  hasAuthorizedUserProfile = (user) => Boolean(user?.profileAuthorized),
+  decodeBusinessCaseRouteId = (value) => value,
 } = {}) => {
   clearStoryDetailPageModules();
 
@@ -93,20 +102,16 @@ const loadStoryDetailPage = ({
     fetchStoryDetail,
   });
   mockModule(AUTH_SERVICE_PATH, {
-    authorizeCurrentMiniProgramUserProfile: async () => {},
-    isUserProfileAuthorizationDenied: () => false,
-    syncCurrentMiniProgramUser: async () => ({
-      user: {
-        profileAuthorized: true,
-      },
-    }),
+    authorizeCurrentMiniProgramUserProfile,
+    isUserProfileAuthorizationDenied,
+    syncCurrentMiniProgramUser,
   });
   mockModule(BUSINESS_CASE_ID_PATH, {
-    decodeBusinessCaseRouteId: (value) => value,
+    decodeBusinessCaseRouteId,
   });
   mockModule(USER_AUTH_PATH, {
     AUTH_PAGE_STATE,
-    hasAuthorizedUserProfile: (user) => Boolean(user?.profileAuthorized),
+    hasAuthorizedUserProfile,
   });
 
   require(PAGE_PATH);
@@ -139,6 +144,7 @@ const createPageInstance = (pageConfig) => {
 test.afterEach(() => {
   clearStoryDetailPageModules();
   delete global.Page;
+  delete global.getApp;
   delete global.wx;
 });
 
@@ -187,6 +193,85 @@ test("story detail page switches active document from the keyed document map", (
   assert.deepEqual(page.data.activeDocument, STORY_DETAIL.documentMap.market_research);
 });
 
+test("story detail page waits for app launch auth before checking current user", async () => {
+  let resolveCurrentUserReady = () => {};
+  let syncCallCount = 0;
+  const app = {
+    globalData: {
+      currentUserReady: new Promise((resolve) => {
+        resolveCurrentUserReady = resolve;
+      }),
+      currentUserSyncError: null,
+    },
+  };
+  global.getApp = () => app;
+
+  const pageConfig = loadStoryDetailPage({
+    syncCurrentMiniProgramUser: async () => {
+      syncCallCount += 1;
+      return {
+        user: {
+          profileAuthorized: true,
+        },
+      };
+    },
+  });
+  const page = createPageInstance(pageConfig);
+
+  global.wx = {
+    hideNavigationBarLoading() {},
+    setNavigationBarTitle() {},
+    showNavigationBarLoading() {},
+    showToast() {},
+  };
+
+  page.storyId = "case-4";
+  const refreshPromise = page.refreshAuthorizationState();
+
+  await Promise.resolve();
+  assert.equal(syncCallCount, 0);
+  assert.equal(page.data.authState, AUTH_PAGE_STATE.CHECKING);
+
+  resolveCurrentUserReady({
+    user: {
+      profileAuthorized: true,
+    },
+  });
+  await refreshPromise;
+
+  assert.equal(syncCallCount, 1);
+  assert.equal(page.data.authState, AUTH_PAGE_STATE.READY);
+});
+
+test("story detail page keeps current content on show after image preview return", () => {
+  let syncCallCount = 0
+
+  const pageConfig = loadStoryDetailPage({
+    syncCurrentMiniProgramUser: async () => {
+      syncCallCount += 1
+      return {
+        user: {
+          profileAuthorized: true,
+        },
+      }
+    },
+  })
+  const page = createPageInstance(pageConfig)
+
+  page.setData({
+    authState: AUTH_PAGE_STATE.READY,
+    story: STORY_DETAIL,
+    activeDocumentKey: "business_case",
+    activeDocument: STORY_DETAIL.documentMap.business_case,
+  })
+
+  page.onShow()
+
+  assert.equal(syncCallCount, 0)
+  assert.equal(page.data.story, STORY_DETAIL)
+  assert.equal(page.data.authState, AUTH_PAGE_STATE.READY)
+})
+
 test("story detail template does not render the removed meta row above the title", () => {
   const template = fs.readFileSync(PAGE_TEMPLATE_PATH, "utf8");
 
@@ -211,4 +296,49 @@ test("story detail template uses the shared markdown renderer for active documen
     pageConfig.usingComponents["markdown-renderer"],
     "/components/markdown-renderer/index"
   );
+});
+
+test("story detail page previews cover image only on double tap", () => {
+  const pageConfig = loadStoryDetailPage();
+  const page = createPageInstance(pageConfig);
+  const previewCalls = [];
+  const originalDateNow = Date.now;
+
+  global.wx = {
+    previewImage(options) {
+      previewCalls.push(options);
+    },
+  };
+
+  page.onLoad({
+    id: "case-4",
+  });
+  page.setData({
+    story: STORY_DETAIL,
+  });
+
+  let now = 1000;
+  Date.now = () => now;
+
+  try {
+    page.handleCoverImageTap();
+    assert.equal(previewCalls.length, 0);
+
+    now = 1200;
+    page.handleCoverImageTap();
+
+    assert.equal(previewCalls.length, 1);
+    assert.deepEqual(previewCalls[0], {
+      current: STORY_DETAIL.coverImage,
+      urls: [STORY_DETAIL.coverImage],
+    });
+  } finally {
+    Date.now = originalDateNow;
+  }
+});
+
+test("story detail template binds cover image tap handler", () => {
+  const template = fs.readFileSync(PAGE_TEMPLATE_PATH, "utf8");
+
+  assert.equal(template.includes('bindtap="handleCoverImageTap"'), true);
 });

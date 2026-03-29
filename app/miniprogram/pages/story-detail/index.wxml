@@ -45,7 +45,7 @@
   </view>
 
   <view class="detail-article" wx:elif="{{story}}">
-    <image class="detail-article__cover" src="{{story.coverImage}}" mode="aspectFill"></image>
+    <image class="detail-article__cover" src="{{story.coverImage}}" mode="aspectFill" bindtap="handleCoverImageTap"></image>
 
     <view class="detail-article__head">
       <view class="detail-article__title">{{story.title}}</view>
@@ -80,3 +80,4 @@
     </view>
   </view>
 </view>
+

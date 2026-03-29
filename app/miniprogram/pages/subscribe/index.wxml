@@ -1,8 +1,8 @@
 <view class="tab-page">
   <view class="tab-hero">
     <view class="tab-hero__eyebrow">订阅中心</view>
-    <view class="tab-hero__title">订阅更新与精选内容</view>
-    <view class="tab-hero__text">课程更新、案例解读、活动通知和专题推送会集中展示在这里。</view>
+    <view class="tab-hero__title">会员中心</view>
+    <view class="tab-hero__text">开通会员后可解锁更多学习内容与持续更新服务。</view>
   </view>
 
   <view class="info-card info-card--loading" wx:if="{{authState === authPageState.CHECKING}}">
@@ -18,9 +18,9 @@
 
   <view class="auth-gate" wx:elif="{{authState === authPageState.UNAUTHORIZED}}">
     <view class="auth-gate__eyebrow">订阅授权</view>
-    <view class="auth-gate__title">完成微信授权后再管理订阅</view>
+    <view class="auth-gate__title">完成微信授权后再开通会员</view>
     <view class="auth-gate__text">
-      授权后可保存你的头像昵称，并在这里管理案例更新、课程通知和专题提醒。
+      授权后可保存你的头像昵称，并在这里完成会员开通与后续会员管理。
     </view>
     <button
       class="auth-gate__button"
@@ -32,10 +32,32 @@
   </view>
 
   <view class="tab-section" wx:else>
-    <view class="tab-section__title">最近更新</view>
-    <view class="info-card">
-      <view class="info-card__title">内容订阅即将开放</view>
-      <view class="info-card__text">后续会支持按专题、课程和案例栏目进行订阅管理。</view>
+    <view class="tab-section__title">会员档位</view>
+    <view class="membership-card">
+      <view class="membership-card__header">
+        <view class="membership-card__title">普通会员</view>
+        <view class="membership-card__price">¥0.1 / 365天</view>
+      </view>
+      <view class="membership-card__text">{{normalMembershipStatusText}}</view>
+      <button
+        class="membership-card__button"
+        bindtap="handleOpenNormalMembership"
+        loading="{{isPurchasingMembership}}"
+        disabled="{{isNormalMembershipActive || isPurchasingMembership}}"
+      >
+        {{isNormalMembershipActive ? '已开通' : '立即开通'}}
+      </button>
+    </view>
+
+    <view class="membership-card membership-card--disabled">
+      <view class="membership-card__header">
+        <view class="membership-card__title">白金会员</view>
+        <view class="membership-card__price">暂未开放</view>
+      </view>
+      <view class="membership-card__text">白金会员权益正在筹备中，后续开放后可在这里直接升级。</view>
+      <button class="membership-card__button membership-card__button--disabled" disabled>
+        暂未开放
+      </button>
     </view>
   </view>
 </view>

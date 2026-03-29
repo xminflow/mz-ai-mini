@@ -51,6 +51,10 @@
         <view class="menu-item__title">我的订阅</view>
         <view class="menu-item__text">管理案例更新、课程通知、专题提醒和会员消息触达。</view>
       </view>
+      <view class="menu-item">
+        <view class="menu-item__title">会员状态</view>
+        <view class="menu-item__text">{{membershipStatusText}}</view>
+      </view>
     </view>
   </block>
 </view>

@@ -8,7 +8,7 @@ Development rules:
 - Raise domain exceptions for business failures.
 """
 
-from .entities import User, UserStatus
+from .entities import User, UserMembershipTier, UserStatus
 from .exceptions import (
     CloudIdentityMissingException,
     UserAlreadyExistsException,
@@ -19,6 +19,7 @@ from .exceptions import (
 __all__ = [
     "CloudIdentityMissingException",
     "User",
+    "UserMembershipTier",
     "UserAlreadyExistsException",
     "UserDisabledException",
     "UserNotFoundException",

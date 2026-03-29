@@ -38,7 +38,6 @@ const storeCurrentUserResult = (result) => {
   if (globalData) {
     globalData.currentUser = result ? result.user : null;
     globalData.currentUserSyncError = null;
-    globalData.currentUserReady = Promise.resolve(result);
   }
   return result;
 };
@@ -123,11 +122,6 @@ const syncCurrentMiniProgramUser = async ({ forceRefresh = false } = {}) => {
       syncCurrentMiniProgramUserPromise = null;
       return storeCurrentUserError(error);
     });
-
-  const globalData = resolveAppGlobalData();
-  if (globalData) {
-    globalData.currentUserReady = syncCurrentMiniProgramUserPromise;
-  }
 
   return syncCurrentMiniProgramUserPromise;
 };

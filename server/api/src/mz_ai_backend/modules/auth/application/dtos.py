@@ -1,8 +1,10 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict
+from datetime import UTC, datetime
 
-from ..domain import UserStatus
+from pydantic import BaseModel, ConfigDict, Field
+
+from ..domain import UserMembershipTier, UserStatus
 
 
 class MiniProgramIdentity(BaseModel):
@@ -34,6 +36,40 @@ class UserRegistration(BaseModel):
     nickname: str | None = None
     avatar_url: str | None = None
     status: UserStatus
+    membership_tier: UserMembershipTier = UserMembershipTier.NONE
+    membership_started_at: datetime | None = None
+    membership_expires_at: datetime | None = None
+
+
+class UserMembershipSummary(BaseModel):
+    """Public membership summary returned with the user profile."""
+
+    model_config = ConfigDict(frozen=True)
+
+    tier: UserMembershipTier
+    is_active: bool
+    started_at: datetime | None
+    expires_at: datetime | None
+
+
+def build_membership_summary(
+    *,
+    membership_tier: UserMembershipTier,
+    membership_started_at: datetime | None,
+    membership_expires_at: datetime | None,
+) -> UserMembershipSummary:
+    now = datetime.now(UTC).replace(tzinfo=None)
+    is_active = (
+        membership_tier != UserMembershipTier.NONE
+        and membership_expires_at is not None
+        and membership_expires_at > now
+    )
+    return UserMembershipSummary(
+        tier=membership_tier,
+        is_active=is_active,
+        started_at=membership_started_at,
+        expires_at=membership_expires_at,
+    )
 
 
 class AuthenticatedUserSummary(BaseModel):
@@ -47,6 +83,14 @@ class AuthenticatedUserSummary(BaseModel):
     nickname: str | None
     avatar_url: str | None
     status: UserStatus
+    membership: UserMembershipSummary = Field(
+        default_factory=lambda: UserMembershipSummary(
+            tier=UserMembershipTier.NONE,
+            is_active=False,
+            started_at=None,
+            expires_at=None,
+        )
+    )
 
 
 class EnsureCurrentMiniProgramUserResult(BaseModel):

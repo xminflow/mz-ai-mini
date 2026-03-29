@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from fastapi import FastAPI
 
-from ..modules import auth_router, business_cases_router, system_router
+from ..modules import auth_router, business_cases_router, membership_router, system_router
 from .config import get_settings
 from .exception_handlers import register_exception_handlers
 from .logging import configure_logging
@@ -24,6 +24,7 @@ def create_app() -> FastAPI:
     register_exception_handlers(app)
     app.include_router(auth_router, prefix=settings.api_prefix)
     app.include_router(business_cases_router, prefix=settings.api_prefix)
+    app.include_router(membership_router, prefix=settings.api_prefix)
     app.include_router(system_router, prefix=settings.api_prefix)
     return app
 

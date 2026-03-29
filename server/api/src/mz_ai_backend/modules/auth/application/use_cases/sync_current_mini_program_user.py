@@ -8,6 +8,7 @@ from ..dtos import (
     EnsureCurrentMiniProgramUserCommand,
     EnsureCurrentMiniProgramUserResult,
     UserRegistration,
+    build_membership_summary,
 )
 from ..ports import SnowflakeIdGenerator, UserRepository
 
@@ -88,5 +89,10 @@ class EnsureCurrentMiniProgramUserUseCase:
                 nickname=user.nickname,
                 avatar_url=user.avatar_url,
                 status=user.status,
+                membership=build_membership_summary(
+                    membership_tier=user.membership_tier,
+                    membership_started_at=user.membership_started_at,
+                    membership_expires_at=user.membership_expires_at,
+                ),
             ),
         )

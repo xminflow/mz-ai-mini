@@ -75,6 +75,8 @@ Page({
         isLoadingInitial: false,
       });
     } catch (error) {
+      console.warn("Failed to load initial stories.", error);
+
       this.setData({
         ...buildFeedData(),
         nextCursor: "",
@@ -126,6 +128,8 @@ Page({
         isLoadingMore: false,
       });
     } catch (error) {
+      console.warn("Failed to load more stories.", error);
+
       this.setData({
         isLoadingMore: false,
         loadMoreError: true,

@@ -4,19 +4,27 @@ const assert = require("node:assert/strict");
 const STORY_SERVICE_PATH = require.resolve("../../miniprogram/services/story");
 const API_CLIENT_PATH = require.resolve("../../miniprogram/core/apiClient");
 const RUNTIME_CONFIG_PATH = require.resolve("../../miniprogram/core/runtime-config");
+const LOCAL_RUNTIME_CONFIG_PATH = require.resolve(
+  "../../miniprogram/core/runtime-config.local"
+);
 const RUNTIME_MODE_PATH = require.resolve("../../miniprogram/core/runtime-mode");
-
-const UNIFIED_TEST_COVER_IMAGE = "/images/test_cover.jpg";
 
 const clearStoryModules = () => {
   delete require.cache[STORY_SERVICE_PATH];
   delete require.cache[API_CLIENT_PATH];
   delete require.cache[RUNTIME_CONFIG_PATH];
+  delete require.cache[LOCAL_RUNTIME_CONFIG_PATH];
   delete require.cache[RUNTIME_MODE_PATH];
 };
 
-const loadStoryService = () => {
+const loadStoryService = ({ localRuntimeConfig = {} } = {}) => {
   clearStoryModules();
+  require.cache[LOCAL_RUNTIME_CONFIG_PATH] = {
+    id: LOCAL_RUNTIME_CONFIG_PATH,
+    filename: LOCAL_RUNTIME_CONFIG_PATH,
+    loaded: true,
+    exports: localRuntimeConfig,
+  };
   return require("../../miniprogram/services/story");
 };
 
@@ -25,7 +33,7 @@ test.afterEach(() => {
   delete global.wx;
 });
 
-test("fetchStoryList maps backend business cases and sends local identity headers in develop", async () => {
+test("fetchStoryList maps backend business cases and keeps direct cover image urls in develop", async () => {
   global.wx = {
     getAccountInfoSync() {
       return {
@@ -81,7 +89,7 @@ test("fetchStoryList maps backend business cases and sends local identity header
     id: "1001",
     title: "案例 A",
     summary: "案例摘要",
-    coverImage: UNIFIED_TEST_COVER_IMAGE,
+    coverImage: "https://example.com/case-a.png",
     tags: ["连锁增长", "AI 提效"],
     metaItems: [],
     resultText: "",
@@ -140,6 +148,7 @@ test("fetchStoryDetail maps keyed documents and ordered tabs over HTTP in develo
   const result = await fetchStoryDetail("1001");
 
   assert.equal(result.id, "1001");
+  assert.equal(result.coverImage, "https://example.com/case-a.png");
   assert.equal(result.publishedAtText, "2026.03.20");
   assert.deepEqual(result.tags, ["连锁增长", "AI 提效"]);
   assert.deepEqual(result.metaItems, ["3 份专题文档"]);
@@ -171,24 +180,16 @@ test("fetchStoryDetail maps keyed documents and ordered tabs over HTTP in develo
   );
 });
 
-test("fetchStoryList stays on HTTP and omits local identity headers in release", async () => {
+test("fetchStoryList resolves cloud cover image ids through CloudBase temp urls", async () => {
   global.wx = {
     getAccountInfoSync() {
       return {
         miniProgram: {
-          envVersion: "release",
+          envVersion: "develop",
         },
       };
     },
     request(options) {
-      assert.equal(
-        options.url,
-        "https://your-http-api-origin.example.com/api/v1/business-cases?limit=6"
-      );
-      assert.equal(options.method, "GET");
-      assert.equal(options.header["X-WX-OPENID"], undefined);
-      assert.equal(options.header["X-WX-APPID"], undefined);
-
       options.success({
         statusCode: 200,
         data: {
@@ -197,23 +198,144 @@ test("fetchStoryList stays on HTTP and omits local identity headers in release",
           data: {
             items: [
               {
-                case_id: 1002,
-                title: "案例 B",
-                summary: "线上接口摘要",
-                tags: ["门店升级"],
-                cover_image_url: "https://example.com/case-b.png",
-                published_at: "2026-03-25T08:00:00Z",
+                case_id: 1003,
+                title: "案例 C",
+                summary: "案例摘要",
+                tags: ["宠物"],
+                cover_image_url: "cloud://demo-env.bucket/path/case-c.png",
+                published_at: "2026-03-20T08:00:00Z",
               },
             ],
             next_cursor: null,
-            available_tags: ["门店升级"],
+            available_tags: [],
           },
         },
       });
     },
+    cloud: {
+      getTempFileURL(options) {
+        assert.deepEqual(options.fileList, [
+          "cloud://demo-env.bucket/path/case-c.png",
+        ]);
+        options.success({
+          fileList: [
+            {
+              fileID: "cloud://demo-env.bucket/path/case-c.png",
+              status: 0,
+              tempFileURL: "https://temp.example.com/case-c.png",
+            },
+          ],
+        });
+      },
+    },
   };
 
   const { fetchStoryList } = loadStoryService();
+  const result = await fetchStoryList();
+
+  assert.equal(result.list[0].coverImage, "https://temp.example.com/case-c.png");
+});
+
+test("fetchStoryList uses fixed production backend in trial", async () => {
+  global.wx = {
+    getAccountInfoSync() {
+      return {
+        miniProgram: {
+          envVersion: "trial",
+        },
+      };
+    },
+    cloud: {
+      async callContainer(options) {
+        assert.deepEqual(options.config, {
+          env: "rlink-5g3hqx773b8980a1",
+        });
+        assert.equal(options.path, "/api/v1/business-cases?limit=6");
+        assert.equal(options.method, "GET");
+        assert.equal(options.header["X-WX-SERVICE"], "mz-ai");
+        assert.equal(options.header["X-WX-OPENID"], undefined);
+        assert.equal(options.header["X-WX-APPID"], undefined);
+
+        return {
+          statusCode: 200,
+          data: {
+            code: "COMMON.SUCCESS",
+            message: "success",
+            data: {
+              items: [],
+              next_cursor: null,
+              available_tags: [],
+            },
+          },
+        };
+      },
+    },
+  };
+
+  const { fetchStoryList } = loadStoryService({
+    localRuntimeConfig: {
+      target: "remote",
+    },
+  });
+  const result = await fetchStoryList({
+    pageSize: 6,
+  });
+
+  assert.equal(result.hasMore, false);
+  assert.equal(result.nextCursor, "");
+  assert.deepEqual(result.availableTags, []);
+});
+
+test("fetchStoryList uses production backend and omits local identity headers in release", async () => {
+  global.wx = {
+    getAccountInfoSync() {
+      return {
+        miniProgram: {
+          envVersion: "release",
+        },
+      };
+    },
+    cloud: {
+      async callContainer(options) {
+        assert.deepEqual(options.config, {
+          env: "rlink-5g3hqx773b8980a1",
+        });
+        assert.equal(options.path, "/api/v1/business-cases?limit=6");
+        assert.equal(options.method, "GET");
+        assert.equal(options.header["X-WX-SERVICE"], "mz-ai");
+        assert.equal(options.header["X-WX-OPENID"], undefined);
+        assert.equal(options.header["X-WX-APPID"], undefined);
+
+        return {
+          statusCode: 200,
+          data: {
+            code: "COMMON.SUCCESS",
+            message: "success",
+            data: {
+              items: [
+                {
+                  case_id: 1002,
+                  title: "案例 B",
+                  summary: "线上接口摘要",
+                  tags: ["门店升级"],
+                  cover_image_url: "https://example.com/case-b.png",
+                  published_at: "2026-03-25T08:00:00Z",
+                },
+              ],
+              next_cursor: null,
+              available_tags: ["门店升级"],
+            },
+          },
+        };
+      },
+    },
+  };
+
+  const { fetchStoryList } = loadStoryService({
+    localRuntimeConfig: {
+      target: "remote",
+    },
+  });
   const result = await fetchStoryList({
     pageSize: 6,
   });
@@ -222,5 +344,6 @@ test("fetchStoryList stays on HTTP and omits local identity headers in release",
   assert.equal(result.nextCursor, "");
   assert.deepEqual(result.availableTags, ["门店升级"]);
   assert.equal(result.list[0].id, "1002");
+  assert.equal(result.list[0].coverImage, "https://example.com/case-b.png");
   assert.deepEqual(result.list[0].tags, ["门店升级"]);
 });

@@ -5,7 +5,13 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..application.dtos import AuthorizedUserProfile, UserRegistration
-from ..domain import User, UserAlreadyExistsException, UserNotFoundException, UserStatus
+from ..domain import (
+    User,
+    UserAlreadyExistsException,
+    UserMembershipTier,
+    UserNotFoundException,
+    UserStatus,
+)
 from .models import UserModel
 
 
@@ -17,6 +23,11 @@ def _to_domain_entity(model: UserModel) -> User:
         nickname=model.nickname,
         avatar_url=model.avatar_url,
         status=UserStatus(model.status),
+        membership_tier=UserMembershipTier(
+            model.membership_tier or UserMembershipTier.NONE.value
+        ),
+        membership_started_at=model.membership_started_at,
+        membership_expires_at=model.membership_expires_at,
         is_deleted=model.is_deleted,
         created_at=model.created_at,
         updated_at=model.updated_at,
@@ -48,6 +59,9 @@ class SqlAlchemyUserRepository:
             nickname=registration.nickname,
             avatar_url=registration.avatar_url,
             status=registration.status.value,
+            membership_tier=registration.membership_tier.value,
+            membership_started_at=registration.membership_started_at,
+            membership_expires_at=registration.membership_expires_at,
             is_deleted=False,
         )
         self._session.add(model)

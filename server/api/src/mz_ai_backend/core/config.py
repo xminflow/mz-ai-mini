@@ -34,6 +34,14 @@ class Settings(BaseSettings):
     production_database_url: str | None = Field(default=None)
     snowflake_worker_id: int = Field(default=0, ge=0, le=31)
     snowflake_datacenter_id: int = Field(default=0, ge=0, le=31)
+    wechat_pay_mchid: str | None = Field(default=None)
+    wechat_pay_private_key: str | None = Field(default=None)
+    wechat_pay_private_key_path: str | None = Field(default=None)
+    wechat_pay_cert_serial_no: str | None = Field(default=None)
+    wechat_pay_apiv3_key: str | None = Field(default=None)
+    wechat_pay_appid: str | None = Field(default=None)
+    wechat_pay_notify_url: str | None = Field(default=None)
+    wechat_pay_cert_dir: str | None = Field(default=None)
 
     @model_validator(mode="after")
     def apply_development_defaults(self) -> "Settings":

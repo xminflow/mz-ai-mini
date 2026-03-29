@@ -14,9 +14,11 @@ from .dtos import (
     EnsureCurrentMiniProgramUserCommand,
     EnsureCurrentMiniProgramUserResult,
     MiniProgramIdentity,
+    UserMembershipSummary,
     UpdateCurrentMiniProgramUserProfileCommand,
     UpdateCurrentMiniProgramUserProfileResult,
     UserRegistration,
+    build_membership_summary,
 )
 from .use_cases import (
     EnsureCurrentMiniProgramUserUseCase,
@@ -30,8 +32,10 @@ __all__ = [
     "EnsureCurrentMiniProgramUserResult",
     "EnsureCurrentMiniProgramUserUseCase",
     "MiniProgramIdentity",
+    "UserMembershipSummary",
     "UpdateCurrentMiniProgramUserProfileCommand",
     "UpdateCurrentMiniProgramUserProfileResult",
     "UpdateCurrentMiniProgramUserProfileUseCase",
     "UserRegistration",
+    "build_membership_summary",
 ]

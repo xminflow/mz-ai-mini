@@ -37,8 +37,11 @@
         class="markdown-renderer__image"
         src="{{block.src}}"
         mode="widthFix"
+        data-src="{{block.src}}"
+        bindtap="handleImageTap"
       ></image>
       <view wx:if="{{block.alt}}" class="markdown-renderer__image-alt">{{block.alt}}</view>
     </view>
   </block>
 </view>
+

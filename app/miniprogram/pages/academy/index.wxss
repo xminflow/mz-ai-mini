@@ -10,7 +10,7 @@ page {
 .tab-hero {
   padding: 24rpx;
   background: #ffffff;
-  border-radius: 10rpx;
+  border-radius: 16rpx;
   box-shadow: 0 14rpx 30rpx rgba(15, 23, 42, 0.05);
 }
 
@@ -35,18 +35,95 @@ page {
   color: #6b7280;
 }
 
-.card-grid {
+.overview-grid {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 16rpx;
   margin-top: 20rpx;
 }
 
-.academy-card {
-  padding: 22rpx 20rpx;
+.overview-card,
+.section-block {
   background: #ffffff;
-  border-radius: 10rpx;
+  border-radius: 16rpx;
   box-shadow: 0 14rpx 30rpx rgba(15, 23, 42, 0.05);
+}
+
+.overview-card {
+  box-sizing: border-box;
+  width: calc((100% - 16rpx) / 2);
+  padding: 22rpx 20rpx;
+}
+
+.overview-card__label {
+  font-size: 20rpx;
+  line-height: 1.4;
+  color: #94a3b8;
+}
+
+.overview-card__value {
+  margin-top: 10rpx;
+  font-size: 28rpx;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #111827;
+}
+
+.section-block {
+  margin-top: 20rpx;
+  padding: 24rpx 20rpx;
+}
+
+.section-block__title {
+  font-size: 30rpx;
+  line-height: 1.4;
+  font-weight: 600;
+  color: #111827;
+}
+
+.section-block__text {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  line-height: 1.7;
+  color: #6b7280;
+}
+
+.highlight-list,
+.card-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-top: 18rpx;
+}
+
+.highlight-card,
+.academy-card,
+.outcome-card {
+  padding: 22rpx 20rpx;
+  background: #f8fafc;
+  border-radius: 14rpx;
+}
+
+.highlight-card__title,
+.outcome-card__title {
+  font-size: 26rpx;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.highlight-card__text,
+.outcome-card__text {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  line-height: 1.8;
+  color: #64748b;
+}
+
+.academy-card__topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .academy-card__label {
@@ -55,11 +132,17 @@ page {
   color: #94a3b8;
 }
 
+.academy-card__duration {
+  font-size: 20rpx;
+  line-height: 1.4;
+  color: #2563eb;
+}
+
 .academy-card__title {
   margin-top: 8rpx;
   font-size: 28rpx;
   line-height: 1.5;
-  font-weight: 500;
+  font-weight: 600;
   color: #1f2937;
 }
 
@@ -68,4 +151,34 @@ page {
   font-size: 22rpx;
   line-height: 1.8;
   color: #7b8794;
+}
+
+.lesson-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.outcome-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  margin-top: 18rpx;
+}
+
+.lesson-tag {
+  padding: 8rpx 14rpx;
+  border-radius: 999rpx;
+  background: #e2e8f0;
+  font-size: 20rpx;
+  line-height: 1.4;
+  color: #334155;
+}
+
+.academy-card__deliverable {
+  margin-top: 16rpx;
+  font-size: 22rpx;
+  line-height: 1.7;
+  color: #1d4ed8;
 }

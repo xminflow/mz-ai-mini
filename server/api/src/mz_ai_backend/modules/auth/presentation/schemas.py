@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict, HttpUrl, field_validator
 
 from ..application import (
@@ -16,6 +18,17 @@ def _serialize_business_id(value: int) -> str:
     return str(value)
 
 
+class MembershipSummaryResponse(BaseModel):
+    """HTTP membership summary returned with the authenticated user."""
+
+    model_config = ConfigDict(frozen=True)
+
+    tier: str
+    is_active: bool
+    started_at: datetime | None
+    expires_at: datetime | None
+
+
 class AuthenticatedUserResponse(BaseModel):
     """HTTP user summary returned after cloud identity sync."""
 
@@ -27,6 +40,7 @@ class AuthenticatedUserResponse(BaseModel):
     nickname: str | None
     avatar_url: str | None
     status: str
+    membership: MembershipSummaryResponse
 
     @classmethod
     def from_summary(

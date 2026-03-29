@@ -1,21 +1,67 @@
 <view class="tab-page">
   <view class="tab-hero">
-    <view class="tab-hero__eyebrow">学院内容</view>
-    <view class="tab-hero__title">系统化课程与专题栏目</view>
-    <view class="tab-hero__text">围绕 AI 商业应用、案例拆解和实战方法，逐步整理成学院内容体系。</view>
+    <view class="tab-hero__eyebrow">{{hero.eyebrow}}</view>
+    <view class="tab-hero__title">{{hero.title}}</view>
+    <view class="tab-hero__text">{{hero.text}}</view>
   </view>
 
-  <view class="card-grid">
-    <view class="academy-card">
-      <view class="academy-card__label">专题一</view>
-      <view class="academy-card__title">AI 商业认知</view>
-      <view class="academy-card__text">聚焦 AI 工具、场景判断和商业落地基础方法。</view>
+  <view class="overview-grid">
+    <view class="overview-card" wx:for="{{overviewList}}" wx:key="label">
+      <view class="overview-card__label">{{item.label}}</view>
+      <view class="overview-card__value">{{item.value}}</view>
     </view>
+  </view>
 
-    <view class="academy-card">
-      <view class="academy-card__label">专题二</view>
-      <view class="academy-card__title">案例拆解</view>
-      <view class="academy-card__text">整理可复用的经营动作、增长策略与转化路径。</view>
+  <view class="section-block">
+    <view class="section-block__title">课程亮点</view>
+    <view class="section-block__text">这一版内容先承担页面占位和信息结构展示，后续可以直接替换成真实课程。</view>
+
+    <view class="highlight-list">
+      <view class="highlight-card" wx:for="{{highlightList}}" wx:key="title">
+        <view class="highlight-card__title">{{item.title}}</view>
+        <view class="highlight-card__text">{{item.text}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-block">
+    <view class="section-block__title">培训模块</view>
+    <view class="section-block__text">按“认知建立 -> 原型搭建 -> 协作实战 -> 上线交付”的顺序组织。</view>
+
+    <view class="card-grid">
+      <view class="academy-card" wx:for="{{moduleList}}" wx:key="id">
+        <view class="academy-card__topline">
+          <view class="academy-card__label">{{item.phase}}</view>
+          <view class="academy-card__duration">{{item.duration}}</view>
+        </view>
+        <view class="academy-card__title">{{item.title}}</view>
+        <view class="academy-card__text">{{item.description}}</view>
+
+        <view class="lesson-tag-list">
+          <view
+            class="lesson-tag"
+            wx:for="{{item.lessonList}}"
+            wx:for-item="lesson"
+            wx:key="*this"
+          >
+            {{lesson}}
+          </view>
+        </view>
+
+        <view class="academy-card__deliverable">模块产出：{{item.deliverable}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-block">
+    <view class="section-block__title">学完可得到</view>
+    <view class="section-block__text">页面底部展示最终学习成果，也方便后续接入报名页或课程详情页。</view>
+
+    <view class="outcome-list">
+      <view class="outcome-card" wx:for="{{outcomeList}}" wx:key="title">
+        <view class="outcome-card__title">{{item.title}}</view>
+        <view class="outcome-card__text">{{item.text}}</view>
+      </view>
     </view>
   </view>
 </view>

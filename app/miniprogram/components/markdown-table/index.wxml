@@ -6,7 +6,7 @@
   </view>
   <view class="markdown-table__shell">
     <scroll-view class="markdown-table__viewport" scroll-x="true" enhanced="true" show-scrollbar="false">
-      <view class="markdown-table__surface">
+      <view class="markdown-table__surface" style="min-width: {{table.columns * 232}}rpx;">
         <view class="markdown-table__row markdown-table__row--header">
           <view
             wx:for="{{table.header}}"

@@ -72,3 +72,58 @@ page {
   line-height: 1.8;
   color: #7b8794;
 }
+
+.membership-card {
+  margin-top: 16rpx;
+  padding: 22rpx 20rpx;
+  background: #ffffff;
+  border-radius: 10rpx;
+  box-shadow: 0 14rpx 30rpx rgba(15, 23, 42, 0.05);
+}
+
+.membership-card--disabled {
+  opacity: 0.78;
+}
+
+.membership-card__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.membership-card__title {
+  font-size: 30rpx;
+  line-height: 1.4;
+  font-weight: 600;
+  color: #111827;
+}
+
+.membership-card__price {
+  font-size: 24rpx;
+  line-height: 1.5;
+  color: #4b5563;
+}
+
+.membership-card__text {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  line-height: 1.8;
+  color: #7b8794;
+}
+
+.membership-card__button {
+  margin-top: 18rpx;
+  border-radius: 999rpx;
+  background: #111827;
+  color: #ffffff;
+  font-size: 24rpx;
+  line-height: 1.2;
+  padding: 0 24rpx;
+}
+
+.membership-card__button[disabled],
+.membership-card__button--disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+}

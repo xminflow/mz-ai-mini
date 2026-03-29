@@ -4,10 +4,18 @@ const {
   resolveCloudFileTempUrlMap,
 } = require("../../utils/cloudFile")
 
+const DOUBLE_TAP_INTERVAL_MS = 320
+
 const collectCloudImageFileIds = (blocks = []) =>
   blocks
     .filter((block) => block?.type === "image" && isCloudFileId(block.src))
     .map((block) => block.src)
+
+const collectImagePreviewUrls = (blocks = []) =>
+  blocks
+    .filter((block) => block?.type === "image" && typeof block.src === "string")
+    .map((block) => block.src.trim())
+    .filter((src) => src !== "")
 
 const rewriteImageBlockSources = (blocks = [], tempUrlMap = {}) =>
   blocks.map((block) => {
@@ -26,6 +34,15 @@ const rewriteImageBlockSources = (blocks = [], tempUrlMap = {}) =>
     }
   })
 
+const isDoubleTapOnSameImage = (tapState, source, currentTapTimestamp) => {
+  if (!tapState || tapState.source !== source) {
+    return false
+  }
+
+  const delta = currentTapTimestamp - tapState.timestamp
+  return delta > 0 && delta <= DOUBLE_TAP_INTERVAL_MS
+}
+
 Component({
   properties: {
     markdown: {
@@ -38,12 +55,21 @@ Component({
     blocks: [],
   },
 
+  created() {
+    this._markdownRenderToken = 0
+    this._imageTapState = {
+      source: "",
+      timestamp: 0,
+    }
+  },
+
   lifetimes: {
-    attached() {
-      this._markdownRenderToken = 0
-    },
     detached() {
       this._markdownRenderToken = (this._markdownRenderToken || 0) + 1
+      this._imageTapState = {
+        source: "",
+        timestamp: 0,
+      }
     },
   },
 
@@ -78,6 +104,38 @@ Component({
       })
     },
 
+    handleImageTap(event) {
+      const { src } = event.currentTarget.dataset
+      if (typeof src !== "string" || src.trim() === "") {
+        return
+      }
+
+      const source = src.trim()
+      const currentTapTimestamp = Date.now()
+      if (isDoubleTapOnSameImage(this._imageTapState, source, currentTapTimestamp)) {
+        this._imageTapState = {
+          source: "",
+          timestamp: 0,
+        }
+
+        const urls = collectImagePreviewUrls(this.data.blocks)
+        if (urls.length === 0) {
+          return
+        }
+
+        wx.previewImage({
+          current: source,
+          urls,
+        })
+        return
+      }
+
+      this._imageTapState = {
+        source,
+        timestamp: currentTapTimestamp,
+      }
+    },
+
     handleLinkTap(event) {
       const { url } = event.currentTarget.dataset
 
@@ -91,4 +149,3 @@ Component({
     },
   },
 })
-
