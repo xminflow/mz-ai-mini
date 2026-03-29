@@ -4,6 +4,7 @@ import json
 import time
 import uuid
 from datetime import datetime
+from typing import Any
 
 from fastapi.concurrency import run_in_threadpool
 
@@ -31,6 +32,24 @@ def _parse_iso_datetime(value: str | None) -> datetime | None:
     if parsed.tzinfo is not None:
         return parsed.replace(tzinfo=None)
     return parsed
+
+
+def _safe_payload_preview(payload: Any) -> str:
+    if isinstance(payload, dict):
+        return json.dumps(payload, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+    return str(payload)
+
+
+def _extract_wechat_error(payload: Any) -> tuple[str | None, str | None]:
+    if not isinstance(payload, dict):
+        return None, None
+    code = payload.get("code")
+    message = payload.get("message")
+    normalized_code = code.strip() if isinstance(code, str) and code.strip() else None
+    normalized_message = (
+        message.strip() if isinstance(message, str) and message.strip() else None
+    )
+    return normalized_code, normalized_message
 
 
 class WechatPayV3Gateway:
@@ -80,23 +99,33 @@ class WechatPayV3Gateway:
             status_code, payload = await run_in_threadpool(self._wxpay.pay, **params)
         except Exception as exc:  # noqa: BLE001
             raise WechatPayOrderCreateFailedException(
-                message="Calling WeChat Pay create order failed.",
+                message=f"Calling WeChat Pay create order failed: {exc!s}",
             ) from exc
+
+        payload_code, payload_message = _extract_wechat_error(payload)
+        if payload_code is not None:
+            details = payload_code
+            if payload_message:
+                details = f"{details}: {payload_message}"
+            raise WechatPayOrderCreateFailedException(
+                message=f"WeChat Pay create order failed: {details}",
+            )
 
         if status_code != 200 or not isinstance(payload, dict):
             raise WechatPayOrderCreateFailedException(
-                message="Unexpected response from WeChat Pay create order.",
-            )
-
-        if payload.get("code") == "FAIL":
-            raise WechatPayOrderCreateFailedException(
-                message=f"WeChat Pay create order failed: {payload.get('message', '')}".strip(),
+                message=(
+                    "Unexpected response from WeChat Pay create order: "
+                    f"HTTP {status_code}, payload={_safe_payload_preview(payload)}"
+                ),
             )
 
         prepay_id = payload.get("prepay_id")
         if not isinstance(prepay_id, str) or prepay_id.strip() == "":
             raise WechatPayOrderCreateFailedException(
-                message="WeChat Pay response does not contain prepay_id.",
+                message=(
+                    "WeChat Pay response does not contain prepay_id: "
+                    f"{_safe_payload_preview(payload)}"
+                ),
             )
 
         payment_params = self._build_payment_params(prepay_id=prepay_id.strip())

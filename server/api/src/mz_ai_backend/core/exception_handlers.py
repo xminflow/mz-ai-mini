@@ -48,6 +48,7 @@ def _log_app_exception(exc: AppException, *, request_id: str) -> None:
         "request_id": request_id,
         "error_code": exc.error_code,
         "exception_type": exc.__class__.__name__,
+        "exception_message": exc.message,
         "details": exc.details,
         "status_code": exc.http_status,
     }
