@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated
@@ -47,12 +48,13 @@ def _normalize_private_key_text(value: str) -> str:
         normalized.replace("\\n", "\n").replace("\r\n", "\n").replace("\r", "\n")
     )
 
-    begin_marker = "-----BEGIN PRIVATE KEY-----"
-    end_marker = "-----END PRIVATE KEY-----"
+    marker_pattern = re.compile(r"-----BEGIN [A-Z ]+-----|-----END [A-Z ]+-----")
+    normalized = marker_pattern.sub("\n", normalized)
+
     body_lines = [
         line.strip()
         for line in normalized.split("\n")
-        if line.strip() and line.strip() not in {begin_marker, end_marker}
+        if line.strip()
     ]
     body = "".join(body_lines).strip()
     if body == "":

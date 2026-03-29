@@ -16,6 +16,10 @@ from mz_ai_backend.modules.membership.infrastructure.dependencies import (
             "ABCDEF",
         ),
         (
+            "-----BEGIN PRIVATE KEY-----ABCDEF-----END PRIVATE KEY-----",
+            "ABCDEF",
+        ),
+        (
             "-----BEGIN PRIVATE KEY-----\r\nABC\r\nDEF\r\n-----END PRIVATE KEY-----",
             "ABCDEF",
         ),
