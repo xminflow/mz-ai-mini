@@ -32,14 +32,42 @@ class SystemCurrentTimeProvider:
         return datetime.now(UTC).replace(tzinfo=None)
 
 
+def _normalize_private_key_text(value: str) -> str:
+    normalized = value.strip()
+    if normalized == "":
+        raise WechatPayConfigMissingException()
+
+    if (
+        (normalized.startswith('"') and normalized.endswith('"'))
+        or (normalized.startswith("'") and normalized.endswith("'"))
+    ) and len(normalized) >= 2:
+        normalized = normalized[1:-1].strip()
+
+    normalized = (
+        normalized.replace("\\n", "\n").replace("\r\n", "\n").replace("\r", "\n")
+    )
+
+    begin_marker = "-----BEGIN PRIVATE KEY-----"
+    end_marker = "-----END PRIVATE KEY-----"
+    body_lines = [
+        line.strip()
+        for line in normalized.split("\n")
+        if line.strip() and line.strip() not in {begin_marker, end_marker}
+    ]
+    body = "".join(body_lines).strip()
+    if body == "":
+        raise WechatPayConfigMissingException()
+    return body
+
+
 def _resolve_private_key(settings: Settings) -> str:
     if settings.wechat_pay_private_key and settings.wechat_pay_private_key.strip():
-        return settings.wechat_pay_private_key
+        return _normalize_private_key_text(settings.wechat_pay_private_key)
 
     if settings.wechat_pay_private_key_path and settings.wechat_pay_private_key_path.strip():
         key_path = Path(settings.wechat_pay_private_key_path).resolve()
         if key_path.exists():
-            return key_path.read_text(encoding="utf-8")
+            return _normalize_private_key_text(key_path.read_text(encoding="utf-8"))
 
     raise WechatPayConfigMissingException()
 
