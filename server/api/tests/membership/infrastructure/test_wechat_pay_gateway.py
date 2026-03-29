@@ -65,6 +65,31 @@ async def test_create_order_raises_wechat_error_from_payload(
 
 
 @pytest.mark.asyncio
+async def test_create_order_raises_wechat_error_from_json_string_payload(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def _fake_run_in_threadpool(func, **kwargs):  # noqa: ANN001, ANN202
+        return func(**kwargs)
+
+    monkeypatch.setattr(
+        "mz_ai_backend.modules.membership.infrastructure.wechat_pay_gateway.run_in_threadpool",
+        _fake_run_in_threadpool,
+    )
+    gateway = _build_gateway(
+        (
+            400,
+            '{"code":"PARAM_ERROR","message":"openid and appid not match"}',
+        )
+    )
+
+    with pytest.raises(
+        WechatPayOrderCreateFailedException,
+        match="PARAM_ERROR: openid and appid not match",
+    ):
+        await gateway.create_order(_build_request())
+
+
+@pytest.mark.asyncio
 async def test_create_order_raises_network_error_message(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -137,3 +162,38 @@ async def test_create_order_returns_payment_params_when_successful(
     result = await gateway.create_order(_build_request())
     assert result.prepay_id == "wx-prepay-10001"
     assert result.payment_params.package == "prepay_id=wx-prepay-10001"
+
+
+@pytest.mark.asyncio
+async def test_create_order_returns_payment_params_when_json_string_payload(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def _fake_run_in_threadpool(func, **kwargs):  # noqa: ANN001, ANN202
+        return func(**kwargs)
+
+    monkeypatch.setattr(
+        "mz_ai_backend.modules.membership.infrastructure.wechat_pay_gateway.run_in_threadpool",
+        _fake_run_in_threadpool,
+    )
+
+    gateway = _build_gateway((200, '{"prepay_id":"wx-prepay-20002"}'))
+
+    def _stub_build_payment_params(self, *, prepay_id: str) -> WechatPayPaymentParams:
+        assert prepay_id == "wx-prepay-20002"
+        return WechatPayPaymentParams(
+            time_stamp="12345",
+            nonce_str="nonce",
+            package=f"prepay_id={prepay_id}",
+            sign_type="RSA",
+            pay_sign="sign",
+        )
+
+    monkeypatch.setattr(
+        WechatPayV3Gateway,
+        "_build_payment_params",
+        _stub_build_payment_params,
+    )
+
+    result = await gateway.create_order(_build_request())
+    assert result.prepay_id == "wx-prepay-20002"
+    assert result.payment_params.package == "prepay_id=wx-prepay-20002"

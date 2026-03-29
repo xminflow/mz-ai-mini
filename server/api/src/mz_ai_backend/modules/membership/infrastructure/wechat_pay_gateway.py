@@ -40,6 +40,18 @@ def _safe_payload_preview(payload: Any) -> str:
     return str(payload)
 
 
+def _normalize_wechat_payload(payload: Any) -> Any:
+    if not isinstance(payload, str):
+        return payload
+    normalized = payload.strip()
+    if normalized == "":
+        return payload
+    try:
+        return json.loads(normalized)
+    except json.JSONDecodeError:
+        return payload
+
+
 def _extract_wechat_error(payload: Any) -> tuple[str | None, str | None]:
     if not isinstance(payload, dict):
         return None, None
@@ -102,7 +114,9 @@ class WechatPayV3Gateway:
                 message=f"Calling WeChat Pay create order failed: {exc!s}",
             ) from exc
 
-        payload_code, payload_message = _extract_wechat_error(payload)
+        parsed_payload = _normalize_wechat_payload(payload)
+
+        payload_code, payload_message = _extract_wechat_error(parsed_payload)
         if payload_code is not None:
             details = payload_code
             if payload_message:
@@ -111,20 +125,20 @@ class WechatPayV3Gateway:
                 message=f"WeChat Pay create order failed: {details}",
             )
 
-        if status_code != 200 or not isinstance(payload, dict):
+        if status_code != 200 or not isinstance(parsed_payload, dict):
             raise WechatPayOrderCreateFailedException(
                 message=(
                     "Unexpected response from WeChat Pay create order: "
-                    f"HTTP {status_code}, payload={_safe_payload_preview(payload)}"
+                    f"HTTP {status_code}, payload={_safe_payload_preview(parsed_payload)}"
                 ),
             )
 
-        prepay_id = payload.get("prepay_id")
+        prepay_id = parsed_payload.get("prepay_id")
         if not isinstance(prepay_id, str) or prepay_id.strip() == "":
             raise WechatPayOrderCreateFailedException(
                 message=(
                     "WeChat Pay response does not contain prepay_id: "
-                    f"{_safe_payload_preview(payload)}"
+                    f"{_safe_payload_preview(parsed_payload)}"
                 ),
             )
 
