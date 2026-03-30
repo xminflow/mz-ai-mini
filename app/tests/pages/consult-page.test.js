@@ -185,8 +185,10 @@ test("consult page template includes reply expectation and conditional other bus
   assert.equal(template.includes('wx:if="{{businessType === \'other\'}}"'), true);
   assert.equal(template.includes('bindtap="handleAuthorize"'), true);
   assert.equal(template.includes("当前提交身份"), false);
-  assert.equal(template.includes("form-card__headline"), true);
-  assert.equal(template.includes("tab-hero"), false);
   assert.equal(template.includes('placeholder-style="color: #9CA3AF;"'), true);
   assert.equal(template.includes("form-field__control"), true);
+  assert.equal(template.includes("images/solution.png"), true);
+  assert.equal(template.includes("consult-banner"), true);
+  assert.equal(template.includes('mode="widthFix"'), true);
+  assert.equal(template.includes("form-card__banner"), false);
 });
