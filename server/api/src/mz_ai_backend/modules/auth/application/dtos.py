@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from ..domain import UserMembershipTier, UserStatus
 
@@ -107,8 +107,24 @@ class AuthorizedUserProfile(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    nickname: str
-    avatar_url: str
+    nickname: str | None = None
+    avatar_url: str | None = None
+
+    @field_validator("nickname", "avatar_url")
+    @classmethod
+    def validate_optional_text(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        normalized = value.strip()
+        if normalized == "":
+            raise ValueError("Profile fields must not be blank.")
+        return normalized
+
+    @model_validator(mode="after")
+    def validate_has_at_least_one_field(self) -> "AuthorizedUserProfile":
+        if self.nickname is None and self.avatar_url is None:
+            raise ValueError("At least one profile field must be provided.")
+        return self
 
 
 class UpdateCurrentMiniProgramUserProfileCommand(BaseModel):

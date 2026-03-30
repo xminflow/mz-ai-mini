@@ -85,10 +85,12 @@ const loadStoryDetailPage = ({
   isUserProfileAuthorizationDenied = () => false,
   syncCurrentMiniProgramUser = async () => ({
     user: {
-      profileAuthorized: true,
+      openid: "wechat-openid",
+      nickname: "妙智学员",
+      avatar_url: "cloud://env-id.bucket/avatars/avatar.png",
     },
   }),
-  hasAuthorizedUserProfile = (user) => Boolean(user?.profileAuthorized),
+  hasAuthenticatedMiniProgramUser = (user) => Boolean(user?.openid),
   decodeBusinessCaseRouteId = (value) => value,
 } = {}) => {
   clearStoryDetailPageModules();
@@ -111,7 +113,7 @@ const loadStoryDetailPage = ({
   });
   mockModule(USER_AUTH_PATH, {
     AUTH_PAGE_STATE,
-    hasAuthorizedUserProfile,
+    hasAuthenticatedMiniProgramUser,
   });
 
   require(PAGE_PATH);
@@ -211,7 +213,9 @@ test("story detail page waits for app launch auth before checking current user",
       syncCallCount += 1;
       return {
         user: {
-          profileAuthorized: true,
+          openid: "wechat-openid",
+          nickname: "妙智学员",
+          avatar_url: "cloud://env-id.bucket/avatars/avatar.png",
         },
       };
     },
@@ -234,7 +238,9 @@ test("story detail page waits for app launch auth before checking current user",
 
   resolveCurrentUserReady({
     user: {
-      profileAuthorized: true,
+      openid: "wechat-openid",
+      nickname: "妙智学员",
+      avatar_url: "cloud://env-id.bucket/avatars/avatar.png",
     },
   });
   await refreshPromise;
@@ -251,7 +257,9 @@ test("story detail page keeps current content on show after image preview return
       syncCallCount += 1
       return {
         user: {
-          profileAuthorized: true,
+          openid: "wechat-openid",
+          nickname: "妙智学员",
+          avatar_url: "cloud://env-id.bucket/avatars/avatar.png",
         },
       }
     },

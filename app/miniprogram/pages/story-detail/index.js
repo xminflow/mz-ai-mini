@@ -1,11 +1,12 @@
 const { fetchStoryDetail } = require("../../services/story");
 const {
-  authorizeCurrentMiniProgramUserProfile,
-  isUserProfileAuthorizationDenied,
   syncCurrentMiniProgramUser,
 } = require("../../services/auth");
 const { decodeBusinessCaseRouteId } = require("../../utils/businessCaseId");
-const { AUTH_PAGE_STATE, hasAuthorizedUserProfile } = require("../../utils/userAuth");
+const {
+  AUTH_PAGE_STATE,
+  hasAuthenticatedMiniProgramUser,
+} = require("../../utils/userAuth");
 
 const DOUBLE_TAP_INTERVAL_MS = 320;
 const isPromiseLike = (value) => Boolean(value) && typeof value.then === "function";
@@ -63,7 +64,6 @@ Page({
   data: {
     authPageState: AUTH_PAGE_STATE,
     authState: AUTH_PAGE_STATE.CHECKING,
-    isAuthorizing: false,
     story: null,
     activeDocumentKey: "",
     activeDocument: null,
@@ -101,7 +101,7 @@ Page({
 
       const result = await syncCurrentMiniProgramUser({ forceRefresh });
       const currentUser = result ? result.user : null;
-      const authState = hasAuthorizedUserProfile(currentUser)
+      const authState = hasAuthenticatedMiniProgramUser(currentUser)
         ? AUTH_PAGE_STATE.READY
         : AUTH_PAGE_STATE.UNAUTHORIZED;
 
@@ -234,48 +234,9 @@ Page({
     this._coverImageLastTapTimestamp = currentTapTimestamp;
   },
 
-  async handleAuthorize() {
-    if (this.data.isAuthorizing) {
-      return;
-    }
-
-    this.setData({
-      isAuthorizing: true,
+  handleAuthorize() {
+    wx.switchTab({
+      url: "/pages/mine/index",
     });
-
-    try {
-      await authorizeCurrentMiniProgramUserProfile();
-      this.setData({
-        authState: AUTH_PAGE_STATE.READY,
-      });
-      wx.showToast({
-        title: "授权成功",
-        icon: "success",
-      });
-      this.loadStoryDetail();
-    } catch (error) {
-      if (isUserProfileAuthorizationDenied(error)) {
-        this.setData({
-          authState: AUTH_PAGE_STATE.UNAUTHORIZED,
-        });
-        wx.showToast({
-          title: "你已取消授权",
-          icon: "none",
-        });
-      } else {
-        console.warn("Failed to authorize from story detail page.", error);
-        this.setData({
-          authState: AUTH_PAGE_STATE.ERROR,
-        });
-        wx.showToast({
-          title: "授权失败，请稍后重试",
-          icon: "none",
-        });
-      }
-    } finally {
-      this.setData({
-        isAuthorizing: false,
-      });
-    }
   },
 });

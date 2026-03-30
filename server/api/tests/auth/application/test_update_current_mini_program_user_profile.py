@@ -31,12 +31,16 @@ class InMemoryUserRepository:
         if user is None:
             raise UserNotFoundException()
 
+        updates = {
+            "updated_at": datetime.now(UTC),
+        }
+        if profile.nickname is not None:
+            updates["nickname"] = profile.nickname
+        if profile.avatar_url is not None:
+            updates["avatar_url"] = profile.avatar_url
+
         updated_user = user.model_copy(
-            update={
-                "nickname": profile.nickname,
-                "avatar_url": profile.avatar_url,
-                "updated_at": datetime.now(UTC),
-            }
+            update=updates
         )
         self._users[openid] = updated_user
         self.updated_profiles.append((openid, profile))
@@ -44,13 +48,13 @@ class InMemoryUserRepository:
 
 
 @pytest.mark.asyncio
-async def test_update_profile_overwrites_authorized_profile() -> None:
+async def test_update_profile_updates_nickname_without_overwriting_avatar() -> None:
     existing_user = User(
         user_id=20002,
         openid="openid-existing",
         union_id="union-1",
-        nickname=None,
-        avatar_url=None,
+        nickname="旧昵称",
+        avatar_url="cloud://env-id.bucket/avatars/original.png",
         status=UserStatus.ACTIVE,
         is_deleted=False,
         created_at=datetime.now(UTC),
@@ -68,19 +72,58 @@ async def test_update_profile_overwrites_authorized_profile() -> None:
             ),
             profile=AuthorizedUserProfile(
                 nickname="妙智学员",
-                avatar_url="https://example.com/avatar.png",
             ),
         )
     )
 
     assert result.user.nickname == "妙智学员"
-    assert result.user.avatar_url == "https://example.com/avatar.png"
+    assert result.user.avatar_url == "cloud://env-id.bucket/avatars/original.png"
     assert repository.updated_profiles == [
         (
             "openid-existing",
             AuthorizedUserProfile(
                 nickname="妙智学员",
-                avatar_url="https://example.com/avatar.png",
+            ),
+        )
+    ]
+
+
+@pytest.mark.asyncio
+async def test_update_profile_updates_avatar_without_overwriting_nickname() -> None:
+    existing_user = User(
+        user_id=20002,
+        openid="openid-existing",
+        union_id="union-1",
+        nickname="妙智学员",
+        avatar_url="cloud://env-id.bucket/avatars/original.png",
+        status=UserStatus.ACTIVE,
+        is_deleted=False,
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
+    )
+    repository = InMemoryUserRepository(existing_users={existing_user.openid: existing_user})
+    use_case = UpdateCurrentMiniProgramUserProfileUseCase(user_repository=repository)
+
+    result = await use_case.execute(
+        UpdateCurrentMiniProgramUserProfileCommand(
+            identity=MiniProgramIdentity(
+                openid="openid-existing",
+                union_id="union-1",
+                app_id="wx-app-id",
+            ),
+            profile=AuthorizedUserProfile(
+                avatar_url="cloud://env-id.bucket/avatars/avatar.png",
+            ),
+        )
+    )
+
+    assert result.user.nickname == "妙智学员"
+    assert result.user.avatar_url == "cloud://env-id.bucket/avatars/avatar.png"
+    assert repository.updated_profiles == [
+        (
+            "openid-existing",
+            AuthorizedUserProfile(
+                avatar_url="cloud://env-id.bucket/avatars/avatar.png",
             ),
         )
     ]
@@ -101,7 +144,7 @@ async def test_update_profile_rejects_missing_current_user() -> None:
                 ),
                 profile=AuthorizedUserProfile(
                     nickname="妙智学员",
-                    avatar_url="https://example.com/avatar.png",
+                    avatar_url="cloud://env-id.bucket/avatars/avatar.png",
                 ),
             )
         )
@@ -133,7 +176,7 @@ async def test_update_profile_rejects_disabled_user() -> None:
                 ),
                 profile=AuthorizedUserProfile(
                     nickname="妙智学员",
-                    avatar_url="https://example.com/avatar.png",
+                    avatar_url="cloud://env-id.bucket/avatars/avatar.png",
                 ),
             )
         )

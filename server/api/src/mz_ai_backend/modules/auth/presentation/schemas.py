@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, HttpUrl, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 from ..application import (
     AuthorizedUserProfile,
@@ -83,13 +83,28 @@ class UpdateCurrentMiniProgramUserProfileRequest(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
-    nickname: str
-    avatar_url: HttpUrl
+    nickname: str | None = None
+    avatar_url: str | None = None
 
     @field_validator("nickname")
     @classmethod
-    def validate_nickname(cls, value: str) -> str:
+    def validate_nickname(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
         return _strip_required_text(value, field_name="nickname")
+
+    @field_validator("avatar_url")
+    @classmethod
+    def validate_avatar_url(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        return _strip_required_text(value, field_name="avatar_url")
+
+    @model_validator(mode="after")
+    def validate_has_profile_patch(self) -> "UpdateCurrentMiniProgramUserProfileRequest":
+        if self.nickname is None and self.avatar_url is None:
+            raise ValueError("At least one profile field must be provided.")
+        return self
 
     def to_command(
         self,
@@ -100,7 +115,7 @@ class UpdateCurrentMiniProgramUserProfileRequest(BaseModel):
             identity=identity,
             profile=AuthorizedUserProfile(
                 nickname=self.nickname,
-                avatar_url=str(self.avatar_url),
+                avatar_url=self.avatar_url,
             ),
         )
 

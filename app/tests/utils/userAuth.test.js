@@ -3,32 +3,40 @@ const assert = require("node:assert/strict");
 
 const {
   AUTH_PAGE_STATE,
-  hasAuthorizedUserProfile,
+  hasAuthenticatedMiniProgramUser,
 } = require("../../miniprogram/utils/userAuth");
 
-test("hasAuthorizedUserProfile returns true only when nickname and avatar_url are both present", () => {
+test("hasAuthenticatedMiniProgramUser returns true when openid is present", () => {
   assert.equal(
-    hasAuthorizedUserProfile({
-      nickname: "妙智学员",
-      avatar_url: "https://example.com/avatar.png",
+    hasAuthenticatedMiniProgramUser({
+      openid: "wechat-openid",
+      nickname: "",
+      avatar_url: "",
     }),
     true
   );
   assert.equal(
-    hasAuthorizedUserProfile({
+    hasAuthenticatedMiniProgramUser({
+      openid: "",
       nickname: "妙智学员",
-      avatar_url: "",
     }),
     false
   );
   assert.equal(
-    hasAuthorizedUserProfile({
+    hasAuthenticatedMiniProgramUser({
+      openid: "wechat-openid",
       nickname: "",
-      avatar_url: "https://example.com/avatar.png",
+      avatar_url: "",
+    }),
+    true
+  );
+  assert.equal(
+    hasAuthenticatedMiniProgramUser({
+      openid: "   ",
     }),
     false
   );
-  assert.equal(hasAuthorizedUserProfile(null), false);
+  assert.equal(hasAuthenticatedMiniProgramUser(null), false);
 });
 
 test("AUTH_PAGE_STATE exposes stable authorization state labels", () => {

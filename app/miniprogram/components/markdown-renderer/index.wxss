@@ -1,5 +1,5 @@
 .markdown-renderer {
-  color: #2f2a24;
+  color: #1F1F1F;
 }
 
 .markdown-renderer__heading,
@@ -21,7 +21,7 @@
 }
 
 .markdown-renderer__heading {
-  color: #1f1c18;
+  color: #0B0B0B;
   font-weight: 600;
   line-height: 1.6;
 }
@@ -53,15 +53,15 @@
 
 .markdown-renderer__quote {
   padding: 18rpx 20rpx;
-  border-left: 6rpx solid #d1d5db;
+  border-left: 6rpx solid #E5E7EB;
   border-radius: 8rpx;
   background: #f8fafc;
-  color: #4b5563;
+  color: #6B7280;
 }
 
 .markdown-renderer__horizontal-rule {
   height: 2rpx;
-  background: #e5e7eb;
+  background: #E5E7EB;
   border-radius: 999rpx;
 }
 
@@ -75,13 +75,13 @@
 
 .markdown-renderer__list-text {
   display: block;
-  color: #2f2a24;
+  color: #1F1F1F;
 }
 
 .markdown-renderer__list-marker {
   font-size: 30rpx;
   line-height: 1.96;
-  color: #111827;
+  color: #0B0B0B;
 }
 
 .markdown-renderer__text-flow {
@@ -114,20 +114,20 @@
 }
 
 .markdown-renderer__inline--link {
-  color: #2563eb;
+  color: #1F1F1F;
   text-decoration: underline;
 }
 
 .markdown-renderer__image {
   width: 100%;
   border-radius: 10rpx;
-  background: #e5e7eb;
+  background: #E5E7EB;
 }
 
 .markdown-renderer__image-alt {
   margin-top: 12rpx;
   font-size: 24rpx;
   line-height: 1.7;
-  color: #6b7280;
+  color: #6B7280;
   text-align: center;
 }

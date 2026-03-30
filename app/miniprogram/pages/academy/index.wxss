@@ -1,6 +1,6 @@
 page {
   background: #f7f8fa;
-  color: #111827;
+  color: #0B0B0B;
 }
 
 .tab-page {
@@ -9,16 +9,16 @@ page {
 
 .tab-hero {
   padding: 24rpx;
-  background: #ffffff;
+  background: #FFFFFF;
   border-radius: 16rpx;
-  box-shadow: 0 14rpx 30rpx rgba(15, 23, 42, 0.05);
+  box-shadow: 0 14rpx 30rpx rgba(11, 11, 11, 0.05);
 }
 
 .tab-hero__eyebrow {
   font-size: 22rpx;
   line-height: 1.4;
   letter-spacing: 4rpx;
-  color: #9ca3af;
+  color: #6B7280;
 }
 
 .tab-hero__title {
@@ -32,7 +32,7 @@ page {
   margin-top: 14rpx;
   font-size: 24rpx;
   line-height: 1.8;
-  color: #6b7280;
+  color: #6B7280;
 }
 
 .overview-grid {
@@ -44,9 +44,9 @@ page {
 
 .overview-card,
 .section-block {
-  background: #ffffff;
+  background: #FFFFFF;
   border-radius: 16rpx;
-  box-shadow: 0 14rpx 30rpx rgba(15, 23, 42, 0.05);
+  box-shadow: 0 14rpx 30rpx rgba(11, 11, 11, 0.05);
 }
 
 .overview-card {
@@ -58,7 +58,7 @@ page {
 .overview-card__label {
   font-size: 20rpx;
   line-height: 1.4;
-  color: #94a3b8;
+  color: #6B7280;
 }
 
 .overview-card__value {
@@ -66,7 +66,7 @@ page {
   font-size: 28rpx;
   line-height: 1.5;
   font-weight: 600;
-  color: #111827;
+  color: #0B0B0B;
 }
 
 .section-block {
@@ -78,14 +78,14 @@ page {
   font-size: 30rpx;
   line-height: 1.4;
   font-weight: 600;
-  color: #111827;
+  color: #0B0B0B;
 }
 
 .section-block__text {
   margin-top: 10rpx;
   font-size: 22rpx;
   line-height: 1.7;
-  color: #6b7280;
+  color: #6B7280;
 }
 
 .highlight-list,
@@ -109,7 +109,7 @@ page {
   font-size: 26rpx;
   line-height: 1.5;
   font-weight: 600;
-  color: #1f2937;
+  color: #1F1F1F;
 }
 
 .highlight-card__text,
@@ -117,7 +117,7 @@ page {
   margin-top: 10rpx;
   font-size: 22rpx;
   line-height: 1.8;
-  color: #64748b;
+  color: #6B7280;
 }
 
 .academy-card__topline {
@@ -129,13 +129,13 @@ page {
 .academy-card__label {
   font-size: 20rpx;
   line-height: 1.4;
-  color: #94a3b8;
+  color: #6B7280;
 }
 
 .academy-card__duration {
   font-size: 20rpx;
   line-height: 1.4;
-  color: #2563eb;
+  color: #1F1F1F;
 }
 
 .academy-card__title {
@@ -143,14 +143,14 @@ page {
   font-size: 28rpx;
   line-height: 1.5;
   font-weight: 600;
-  color: #1f2937;
+  color: #1F1F1F;
 }
 
 .academy-card__text {
   margin-top: 10rpx;
   font-size: 22rpx;
   line-height: 1.8;
-  color: #7b8794;
+  color: #6B7280;
 }
 
 .lesson-tag-list {
@@ -170,15 +170,15 @@ page {
 .lesson-tag {
   padding: 8rpx 14rpx;
   border-radius: 999rpx;
-  background: #e2e8f0;
+  background: #E5E7EB;
   font-size: 20rpx;
   line-height: 1.4;
-  color: #334155;
+  color: #1F1F1F;
 }
 
 .academy-card__deliverable {
   margin-top: 16rpx;
   font-size: 22rpx;
   line-height: 1.7;
-  color: #1d4ed8;
+  color: #1F1F1F;
 }

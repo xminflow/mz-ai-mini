@@ -1,20 +1,18 @@
 const { request } = require("../core/apiClient");
-const { hasAuthorizedUserProfile } = require("../utils/userAuth");
-
-const USER_PROFILE_DENIED_CODE = "AUTH.USER_PROFILE_DENIED";
-const USER_PROFILE_API_UNAVAILABLE_CODE = "AUTH.USER_PROFILE_API_UNAVAILABLE";
-const USER_PROFILE_INCOMPLETE_CODE = "AUTH.USER_PROFILE_INCOMPLETE";
-
-class MiniProgramAuthorizeError extends Error {
-  constructor(message, { code = "" } = {}) {
-    super(message);
-    this.name = "MiniProgramAuthorizeError";
-    this.code = code;
-  }
-}
+const { hasAuthenticatedMiniProgramUser } = require("../utils/userAuth");
 
 let syncCurrentMiniProgramUserPromise = null;
-let authorizeCurrentMiniProgramUserProfilePromise = null;
+const USER_PROFILE_AUTHORIZATION_DENIED_CODE = "USER_PROFILE_AUTHORIZATION_DENIED";
+const USER_PROFILE_DATA_INVALID_CODE = "USER_PROFILE_DATA_INVALID";
+
+class UserProfileAuthorizationError extends Error {
+  constructor(message, { code, cause = null } = {}) {
+    super(message);
+    this.name = "UserProfileAuthorizationError";
+    this.code = code || "";
+    this.cause = cause;
+  }
+}
 
 const resolveAppGlobalData = () => {
   if (typeof getApp !== "function") {
@@ -64,52 +62,54 @@ const updateCurrentMiniProgramUserProfile = (profile) =>
     data: profile,
   });
 
-const requestMiniProgramUserProfile = () =>
-  new Promise((resolve, reject) => {
-    if (typeof wx === "undefined" || typeof wx.getUserProfile !== "function") {
-      reject(
-        new MiniProgramAuthorizeError("wx.getUserProfile is unavailable.", {
-          code: USER_PROFILE_API_UNAVAILABLE_CODE,
-        })
-      );
-      return;
-    }
+const normalizeAuthorizedProfile = (profileResponse) => {
+  const profile =
+    profileResponse && typeof profileResponse === "object" ? profileResponse : null;
+  const nickname =
+    typeof profile?.nickname === "string"
+      ? profile.nickname.trim()
+      : typeof profile?.nickName === "string"
+        ? profile.nickName.trim()
+        : "";
+  const avatarUrl =
+    typeof profile?.avatar_url === "string"
+      ? profile.avatar_url.trim()
+      : typeof profile?.avatarUrl === "string"
+      ? profile.avatarUrl.trim()
+      : "";
 
-    wx.getUserProfile({
-      desc: "用于完善你的会员资料",
-      success(response) {
-        const userInfo = response.userInfo || {};
-        const nickname =
-          typeof userInfo.nickName === "string" ? userInfo.nickName.trim() : "";
-        const avatarUrl =
-          typeof userInfo.avatarUrl === "string" ? userInfo.avatarUrl.trim() : "";
+  if (nickname === "" && avatarUrl === "") {
+    throw new UserProfileAuthorizationError(
+      "Mini program user profile patch is empty.",
+      {
+        code: USER_PROFILE_DATA_INVALID_CODE,
+      }
+    );
+  }
 
-        if (nickname === "" || avatarUrl === "") {
-          reject(
-            new MiniProgramAuthorizeError("Authorized user profile is incomplete.", {
-              code: USER_PROFILE_INCOMPLETE_CODE,
-            })
-          );
-          return;
-        }
+  const normalizedProfile = {};
+  if (nickname !== "") {
+    normalizedProfile.nickname = nickname;
+  }
+  if (avatarUrl !== "") {
+    normalizedProfile.avatar_url = avatarUrl;
+  }
 
-        resolve({
-          nickname,
-          avatar_url: avatarUrl,
-        });
-      },
-      fail(error) {
-        reject(
-          new MiniProgramAuthorizeError(
-            error?.errMsg || "Mini program user profile authorization was denied.",
-            {
-              code: USER_PROFILE_DENIED_CODE,
-            }
-          )
-        );
-      },
-    });
-  });
+  return normalizedProfile;
+};
+
+const isUserProfileAuthorizationDenied = (error) =>
+  Boolean(error) &&
+  (error.code === USER_PROFILE_AUTHORIZATION_DENIED_CODE ||
+    (typeof error.errMsg === "string" && error.errMsg.includes("auth deny")) ||
+    (typeof error.errMsg === "string" && error.errMsg.includes("auth denied")));
+
+const authorizeCurrentMiniProgramUserProfile = async (profileResponse) =>
+  storeCurrentUserResult(
+    await updateCurrentMiniProgramUserProfile(
+      normalizeAuthorizedProfile(profileResponse)
+    )
+  );
 
 const syncCurrentMiniProgramUser = async ({ forceRefresh = false } = {}) => {
   if (!forceRefresh && syncCurrentMiniProgramUserPromise !== null) {
@@ -126,47 +126,17 @@ const syncCurrentMiniProgramUser = async ({ forceRefresh = false } = {}) => {
   return syncCurrentMiniProgramUserPromise;
 };
 
-const authorizeCurrentMiniProgramUserProfile = async () => {
-  if (authorizeCurrentMiniProgramUserProfilePromise !== null) {
-    return authorizeCurrentMiniProgramUserProfilePromise;
-  }
-
-  authorizeCurrentMiniProgramUserProfilePromise = syncCurrentMiniProgramUser()
-    .then(async (result) => {
-      if (result?.user && hasAuthorizedUserProfile(result.user)) {
-        return result.user;
-      }
-
-      const profile = await requestMiniProgramUserProfile();
-      const updatedProfileResult = await updateCurrentMiniProgramUserProfile(profile);
-      const syncedResult = storeCurrentUserResult({
-        is_new_user: result ? Boolean(result.is_new_user) : false,
-        user: updatedProfileResult.user,
-      });
-      syncCurrentMiniProgramUserPromise = Promise.resolve(syncedResult);
-      return syncedResult.user;
-    })
-    .finally(() => {
-      authorizeCurrentMiniProgramUserProfilePromise = null;
-    });
-
-  return authorizeCurrentMiniProgramUserProfilePromise;
-};
-
 const getCurrentMiniProgramUser = () => {
   const globalData = resolveAppGlobalData();
   return globalData ? globalData.currentUser || null : null;
 };
 
-const isUserProfileAuthorizationDenied = (error) =>
-  error instanceof MiniProgramAuthorizeError &&
-  error.code === USER_PROFILE_DENIED_CODE;
-
 module.exports = {
   authorizeCurrentMiniProgramUserProfile,
   getCurrentMiniProgramUser,
-  hasAuthorizedUserProfile,
+  hasAuthenticatedMiniProgramUser,
   isUserProfileAuthorizationDenied,
-  MiniProgramAuthorizeError,
   syncCurrentMiniProgramUser,
+  updateCurrentMiniProgramUserProfile,
+  UserProfileAuthorizationError,
 };

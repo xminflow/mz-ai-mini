@@ -44,14 +44,16 @@ class StubUpdateCurrentMiniProgramUserProfileUseCase:
         *,
         result: UpdateCurrentMiniProgramUserProfileResult | None = None,
         error: Exception | None = None,
+        expected_profile: dict[str, str | None] | None = None,
     ) -> None:
         self._result = result
         self._error = error
+        self._expected_profile = expected_profile or {}
 
     async def execute(self, command) -> UpdateCurrentMiniProgramUserProfileResult:
         assert command.identity.openid == "openid-10001"
-        assert command.profile.nickname == "妙智学员"
-        assert command.profile.avatar_url == "https://example.com/avatar.png"
+        assert command.profile.nickname == self._expected_profile.get("nickname")
+        assert command.profile.avatar_url == self._expected_profile.get("avatar_url")
         if self._error is not None:
             raise self._error
         assert self._result is not None
@@ -120,13 +122,16 @@ def test_auth_router_returns_standard_error_when_cloud_identity_is_missing() -> 
 
 def test_auth_router_updates_current_mini_program_user_profile() -> None:
     profile_use_case = StubUpdateCurrentMiniProgramUserProfileUseCase(
+        expected_profile={
+            "avatar_url": "cloud://env-id.bucket/avatars/avatar.png",
+        },
         result=UpdateCurrentMiniProgramUserProfileResult(
             user=AuthenticatedUserSummary(
                 user_id=USER_ID,
                 openid="openid-10001",
                 union_id="union-10001",
                 nickname="妙智学员",
-                avatar_url="https://example.com/avatar.png",
+                avatar_url="cloud://env-id.bucket/avatars/avatar.png",
                 status=UserStatus.ACTIVE,
             )
         )
@@ -141,8 +146,7 @@ def test_auth_router_updates_current_mini_program_user_profile() -> None:
                 "X-Request-Id": "auth-profile-request",
             },
             json={
-                "nickname": "妙智学员",
-                "avatar_url": "https://example.com/avatar.png",
+                "avatar_url": "cloud://env-id.bucket/avatars/avatar.png",
             },
         )
 
@@ -151,7 +155,23 @@ def test_auth_router_updates_current_mini_program_user_profile() -> None:
     assert body["request_id"] == "auth-profile-request"
     assert body["data"]["user"]["user_id"] == str(USER_ID)
     assert body["data"]["user"]["nickname"] == "妙智学员"
-    assert body["data"]["user"]["avatar_url"] == "https://example.com/avatar.png"
+    assert body["data"]["user"]["avatar_url"] == "cloud://env-id.bucket/avatars/avatar.png"
+
+
+def test_auth_router_rejects_empty_profile_patch() -> None:
+    with _build_client() as client:
+        response = client.put(
+            "/api/v1/auth/wechat-mini-program/users/current/profile",
+            headers={
+                "X-WX-OPENID": "openid-10001",
+                "X-WX-APPID": "wx-app-id",
+            },
+            json={},
+        )
+
+    body = response.json()
+    assert response.status_code == 422
+    assert body["code"] == "COMMON.VALIDATION_ERROR"
 
 
 def test_auth_router_rejects_profile_update_when_cloud_identity_is_missing() -> None:
@@ -160,7 +180,7 @@ def test_auth_router_rejects_profile_update_when_cloud_identity_is_missing() -> 
             "/api/v1/auth/wechat-mini-program/users/current/profile",
             json={
                 "nickname": "妙智学员",
-                "avatar_url": "https://example.com/avatar.png",
+                "avatar_url": "cloud://env-id.bucket/avatars/avatar.png",
             },
         )
 

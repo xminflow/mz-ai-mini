@@ -8,15 +8,14 @@ const AUTH_PAGE_STATE = Object.freeze({
 const isNonEmptyText = (value) =>
   typeof value === "string" && value.trim() !== "";
 
-const hasAuthorizedUserProfile = (user) =>
+const hasAuthenticatedMiniProgramUser = (user) =>
   Boolean(
     user &&
       typeof user === "object" &&
-      isNonEmptyText(user.nickname) &&
-      isNonEmptyText(user.avatar_url)
+      isNonEmptyText(user.openid)
   );
 
 module.exports = {
   AUTH_PAGE_STATE,
-  hasAuthorizedUserProfile,
+  hasAuthenticatedMiniProgramUser,
 };

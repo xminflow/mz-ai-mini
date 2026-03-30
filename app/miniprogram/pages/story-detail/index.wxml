@@ -7,21 +7,21 @@
   </view>
 
   <view class="auth-gate" wx:elif="{{authState === authPageState.UNAUTHORIZED}}">
-    <view class="auth-gate__eyebrow">案例解锁</view>
-    <view class="auth-gate__title">完成微信授权后再阅读完整案例</view>
-    <view class="auth-gate__text">
-      授权成功后会原地继续打开当前案例，并同步你的头像昵称用于会员资料展示。
+    <view class="auth-gate__hero">
+      <view class="auth-gate__eyebrow">案例解锁</view>
+      <view class="auth-gate__title">完成微信登录后再阅读完整案例</view>
+      <view class="auth-gate__text">
+        当前还无法识别你的微信身份，请重新同步登录状态后再继续阅读。
+      </view>
     </view>
-    <button
-      class="auth-gate__button"
-      bindtap="handleAuthorize"
-      loading="{{isAuthorizing}}"
-    >
-      微信授权登录
-    </button>
+
+    <view class="auth-gate__body">
+      <button class="auth-gate__button" bindtap="handleAuthorize">前往我的页</button>
+    </view>
   </view>
 
   <view class="detail-feedback" wx:elif="{{authState === authPageState.ERROR}}">
+    <view class="feedback-panel__eyebrow">案例详情</view>
     <view class="detail-feedback__title">当前无法确认登录状态</view>
     <view class="detail-feedback__text">
       请检查后端服务是否可用，然后重新尝试。
@@ -37,6 +37,7 @@
   </view>
 
   <view class="detail-feedback" wx:elif="{{loadError}}">
+    <view class="feedback-panel__eyebrow">案例详情</view>
     <view class="detail-feedback__title">当前案例暂时无法打开</view>
     <view class="detail-feedback__text">
       请检查本地后端服务、数据库以及案例数据是否可用，然后重新尝试。

@@ -1,6 +1,6 @@
 page {
   background: #f7f8fa;
-  color: #111827;
+  color: #0B0B0B;
 }
 
 .tab-page {
@@ -9,9 +9,9 @@ page {
 
 .tab-hero,
 .info-card {
-  background: #ffffff;
+  background: #FFFFFF;
   border-radius: 10rpx;
-  box-shadow: 0 14rpx 30rpx rgba(15, 23, 42, 0.05);
+  box-shadow: 0 14rpx 30rpx rgba(11, 11, 11, 0.05);
 }
 
 .tab-hero {
@@ -22,7 +22,7 @@ page {
   font-size: 22rpx;
   line-height: 1.4;
   letter-spacing: 4rpx;
-  color: #9ca3af;
+  color: #6B7280;
 }
 
 .tab-hero__title {
@@ -36,7 +36,7 @@ page {
   margin-top: 14rpx;
   font-size: 24rpx;
   line-height: 1.8;
-  color: #6b7280;
+  color: #6B7280;
 }
 
 .tab-section {
@@ -47,7 +47,7 @@ page {
   margin-bottom: 12rpx;
   font-size: 24rpx;
   line-height: 1.5;
-  color: #6b7280;
+  color: #6B7280;
 }
 
 .info-card {
@@ -63,22 +63,22 @@ page {
   font-size: 28rpx;
   line-height: 1.5;
   font-weight: 500;
-  color: #1f2937;
+  color: #1F1F1F;
 }
 
 .info-card__text {
   margin-top: 10rpx;
   font-size: 22rpx;
   line-height: 1.8;
-  color: #7b8794;
+  color: #6B7280;
 }
 
 .membership-card {
   margin-top: 16rpx;
   padding: 22rpx 20rpx;
-  background: #ffffff;
+  background: #FFFFFF;
   border-radius: 10rpx;
-  box-shadow: 0 14rpx 30rpx rgba(15, 23, 42, 0.05);
+  box-shadow: 0 14rpx 30rpx rgba(11, 11, 11, 0.05);
 }
 
 .membership-card--disabled {
@@ -96,34 +96,45 @@ page {
   font-size: 30rpx;
   line-height: 1.4;
   font-weight: 600;
-  color: #111827;
+  color: #0B0B0B;
 }
 
 .membership-card__price {
   font-size: 24rpx;
   line-height: 1.5;
-  color: #4b5563;
+  color: #6B7280;
 }
 
 .membership-card__text {
   margin-top: 10rpx;
   font-size: 22rpx;
   line-height: 1.8;
-  color: #7b8794;
+  color: #6B7280;
 }
 
 .membership-card__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  height: 80rpx;
+  line-height: 80rpx;
   margin-top: 18rpx;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
   border-radius: 999rpx;
-  background: #111827;
-  color: #ffffff;
-  font-size: 24rpx;
-  line-height: 1.2;
-  padding: 0 24rpx;
+  background: #0B0B0B;
+  color: #FFFFFF;
+  font-size: 26rpx;
+  font-weight: 500;
+  text-align: center;
 }
 
 .membership-card__button[disabled],
 .membership-card__button--disabled {
-  background: #e5e7eb;
-  color: #9ca3af;
+  background: #E5E7EB;
+  color: #6B7280;
+  box-shadow: none;
 }

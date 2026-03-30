@@ -84,8 +84,10 @@ class SqlAlchemyUserRepository:
         if model is None:
             raise UserNotFoundException()
 
-        model.nickname = profile.nickname
-        model.avatar_url = profile.avatar_url
+        if profile.nickname is not None:
+            model.nickname = profile.nickname
+        if profile.avatar_url is not None:
+            model.avatar_url = profile.avatar_url
         await self._session.commit()
         await self._session.refresh(model)
         return _to_domain_entity(model)

@@ -190,57 +190,14 @@ test("syncCurrentMiniProgramUser keeps app launch currentUserReady promise intac
   assert.equal(app.globalData.currentUserReady, currentUserReady);
 });
 
-test("authorizeCurrentMiniProgramUserProfile requests profile and syncs it to backend", async () => {
-  const app = {
-    globalData: {},
-  };
-  let requestCount = 0;
+test("updateCurrentMiniProgramUserProfile sends profile to backend and returns updated user", async () => {
+  const app = { globalData: {} };
   global.getApp = () => app;
   global.wx = {
     getAccountInfoSync() {
-      return {
-        miniProgram: {
-          envVersion: "develop",
-        },
-      };
-    },
-    getUserProfile(options) {
-      options.success({
-        userInfo: {
-          nickName: "妙智学员",
-          avatarUrl: "https://example.com/avatar.png",
-        },
-      });
+      return { miniProgram: { envVersion: "develop" } };
     },
     request(options) {
-      requestCount += 1;
-
-      if (requestCount === 1) {
-        assert.equal(
-          options.url,
-          "http://127.0.0.1:8000/api/v1/auth/wechat-mini-program/users/current"
-        );
-        options.success({
-          statusCode: 200,
-          data: {
-            code: "COMMON.SUCCESS",
-            message: "success",
-            data: {
-              is_new_user: false,
-              user: {
-                user_id: "10001",
-                openid: "local-dev-openid",
-                union_id: null,
-                nickname: null,
-                avatar_url: null,
-                status: "active",
-              },
-            },
-          },
-        });
-        return;
-      }
-
       assert.equal(
         options.url,
         "http://127.0.0.1:8000/api/v1/auth/wechat-mini-program/users/current/profile"
@@ -248,7 +205,7 @@ test("authorizeCurrentMiniProgramUserProfile requests profile and syncs it to ba
       assert.equal(options.method, "PUT");
       assert.deepEqual(options.data, {
         nickname: "妙智学员",
-        avatar_url: "https://example.com/avatar.png",
+        avatar_url: "cloud://env-id.xxx/avatars/123.jpg",
       });
 
       options.success({
@@ -262,59 +219,7 @@ test("authorizeCurrentMiniProgramUserProfile requests profile and syncs it to ba
               openid: "local-dev-openid",
               union_id: null,
               nickname: "妙智学员",
-              avatar_url: "https://example.com/avatar.png",
-              status: "active",
-            },
-          },
-        },
-      });
-    },
-  };
-
-  const { authorizeCurrentMiniProgramUserProfile, hasAuthorizedUserProfile } =
-    loadAuthService();
-  const currentUser = await authorizeCurrentMiniProgramUserProfile();
-
-  assert.equal(requestCount, 2);
-  assert.equal(currentUser.nickname, "妙智学员");
-  assert.equal(hasAuthorizedUserProfile(currentUser), true);
-  assert.equal(app.globalData.currentUser.nickname, "妙智学员");
-});
-
-test("authorizeCurrentMiniProgramUserProfile surfaces explicit denial without profile sync request", async () => {
-  const app = {
-    globalData: {},
-  };
-  let requestCount = 0;
-  global.getApp = () => app;
-  global.wx = {
-    getAccountInfoSync() {
-      return {
-        miniProgram: {
-          envVersion: "develop",
-        },
-      };
-    },
-    getUserProfile(options) {
-      options.fail({
-        errMsg: "getUserProfile:fail auth deny",
-      });
-    },
-    request(options) {
-      requestCount += 1;
-      options.success({
-        statusCode: 200,
-        data: {
-          code: "COMMON.SUCCESS",
-          message: "success",
-          data: {
-            is_new_user: false,
-            user: {
-              user_id: "10001",
-              openid: "local-dev-openid",
-              union_id: null,
-              nickname: null,
-              avatar_url: null,
+              avatar_url: "cloud://env-id.xxx/avatars/123.jpg",
               status: "active",
             },
           },
@@ -324,14 +229,85 @@ test("authorizeCurrentMiniProgramUserProfile surfaces explicit denial without pr
   };
 
   const {
-    authorizeCurrentMiniProgramUserProfile,
-    isUserProfileAuthorizationDenied,
+    updateCurrentMiniProgramUserProfile,
+    hasAuthenticatedMiniProgramUser,
   } = loadAuthService();
+  const result = await updateCurrentMiniProgramUserProfile({
+    nickname: "妙智学员",
+    avatar_url: "cloud://env-id.xxx/avatars/123.jpg",
+  });
+
+  assert.equal(result.user.nickname, "妙智学员");
+  assert.equal(hasAuthenticatedMiniProgramUser(result.user), true);
+});
+
+test("authorizeCurrentMiniProgramUserProfile submits a partial profile patch and stores updated user", async () => {
+  const app = { globalData: {} };
+  global.getApp = () => app;
+
+  global.wx = {
+    getAccountInfoSync() {
+      return { miniProgram: { envVersion: "develop" } };
+    },
+    request(options) {
+      assert.equal(
+        options.url,
+        "http://127.0.0.1:8000/api/v1/auth/wechat-mini-program/users/current/profile"
+      );
+      assert.deepEqual(options.data, {
+        avatar_url: "cloud://env-id.xxx/avatars/authorized.jpg",
+      });
+
+      options.success({
+        statusCode: 200,
+        data: {
+          code: "COMMON.SUCCESS",
+          message: "success",
+          data: {
+            user: {
+              user_id: "10001",
+              openid: "local-dev-openid",
+              union_id: null,
+              nickname: "妙智学员",
+              avatar_url: "cloud://env-id.xxx/avatars/authorized.jpg",
+              status: "active",
+            },
+          },
+        },
+      });
+    },
+  };
+
+  const { authorizeCurrentMiniProgramUserProfile } = loadAuthService();
+  const result = await authorizeCurrentMiniProgramUserProfile({
+    avatar_url: " cloud://env-id.xxx/avatars/authorized.jpg ",
+  });
+
+  assert.equal(result.user.nickname, "妙智学员");
+  assert.equal(app.globalData.currentUser.nickname, "妙智学员");
+  assert.equal(
+    app.globalData.currentUser.avatar_url,
+    "cloud://env-id.xxx/avatars/authorized.jpg"
+  );
+});
+
+test("authorizeCurrentMiniProgramUserProfile rejects an empty profile patch", async () => {
+  const { authorizeCurrentMiniProgramUserProfile } = loadAuthService();
 
   await assert.rejects(
-    () => authorizeCurrentMiniProgramUserProfile(),
-    (error) => isUserProfileAuthorizationDenied(error)
+    authorizeCurrentMiniProgramUserProfile({}),
+    (error) => error.code === "USER_PROFILE_DATA_INVALID"
   );
-  assert.equal(requestCount, 1);
-  assert.equal(app.globalData.currentUser.nickname, null);
+});
+
+test("isUserProfileAuthorizationDenied identifies auth deny errors", () => {
+  const { isUserProfileAuthorizationDenied } = loadAuthService();
+
+  assert.equal(
+    isUserProfileAuthorizationDenied({
+      errMsg: "getUserProfile:fail auth deny",
+    }),
+    true
+  );
+  assert.equal(isUserProfileAuthorizationDenied(new Error("nope")), false);
 });

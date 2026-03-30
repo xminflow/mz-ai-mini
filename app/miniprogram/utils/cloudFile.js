@@ -78,8 +78,52 @@ const resolveCloudFileTempUrlMap = async (fileIds = []) => {
   })
 }
 
+const _resolveUploadApi = () => {
+  if (typeof wx === "undefined" || !wx.cloud) {
+    return null
+  }
+  if (typeof wx.cloud.uploadFile !== "function") {
+    return null
+  }
+  return wx.cloud
+}
+
+const _extractFileExt = (filePath) => {
+  const name = filePath.split("?")[0]
+  const parts = name.split(".")
+  return parts.length > 1 ? parts.pop().toLowerCase() : "jpg"
+}
+
+const uploadFileToCloud = (tempFilePath, cloudPath) =>
+  new Promise((resolve, reject) => {
+    const cloudApi = _resolveUploadApi()
+    if (!cloudApi) {
+      reject(new Error("CloudBase upload API is unavailable."))
+      return
+    }
+
+    cloudApi.uploadFile({
+      cloudPath,
+      filePath: tempFilePath,
+      success(response) {
+        resolve(response.fileID)
+      },
+      fail(error) {
+        reject(error)
+      },
+    })
+  })
+
+const generateAvatarCloudPath = (tempFilePath) => {
+  const ext = _extractFileExt(tempFilePath)
+  const id = `${Date.now()}_${Math.random().toString(36).slice(2, 9)}`
+  return `avatars/${id}.${ext}`
+}
+
 module.exports = {
   isCloudFileId,
   resolveCloudFileTempUrlMap,
+  uploadFileToCloud,
+  generateAvatarCloudPath,
 }
 

@@ -142,6 +142,39 @@ async def test_user_repository_updates_profile_and_returns_domain_entity() -> No
 
 
 @pytest.mark.asyncio
+async def test_user_repository_updates_only_supplied_profile_fields() -> None:
+    now = datetime.now(UTC)
+    model = UserModel(
+        user_id=4004,
+        openid="openid-update",
+        union_id="union-update",
+        nickname="旧昵称",
+        avatar_url="https://example.com/original.png",
+        status=UserStatus.ACTIVE.value,
+        is_deleted=False,
+        created_at=now,
+        updated_at=now,
+    )
+    session = AsyncMock(spec=AsyncSession)
+    session.execute.return_value = FakeScalarResult(model)
+    repository = SqlAlchemyUserRepository(session=session)
+
+    user = await repository.update_profile(
+        openid="openid-update",
+        profile=AuthorizedUserProfile(
+            nickname="新昵称",
+        ),
+    )
+
+    session.commit.assert_awaited_once()
+    session.refresh.assert_awaited_once_with(model)
+    assert model.nickname == "新昵称"
+    assert model.avatar_url == "https://example.com/original.png"
+    assert user.nickname == "新昵称"
+    assert user.avatar_url == "https://example.com/original.png"
+
+
+@pytest.mark.asyncio
 async def test_user_repository_update_profile_rejects_missing_user() -> None:
     session = AsyncMock(spec=AsyncSession)
     session.execute.return_value = FakeScalarResult(None)

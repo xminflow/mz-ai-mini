@@ -2,8 +2,10 @@ const test = require("node:test")
 const assert = require("node:assert/strict")
 
 const {
+  generateAvatarCloudPath,
   isCloudFileId,
   resolveCloudFileTempUrlMap,
+  uploadFileToCloud,
 } = require("../../miniprogram/utils/cloudFile")
 
 test.afterEach(() => {
@@ -97,3 +99,29 @@ test("resolveCloudFileTempUrlMap ignores failed cloud file entries", async () =>
   })
 })
 
+test("uploadFileToCloud uploads temp file to cloud path", async () => {
+  global.wx = {
+    cloud: {
+      uploadFile(options) {
+        assert.equal(options.cloudPath, "avatars/demo-avatar.png")
+        assert.equal(options.filePath, "http://tmp/demo-avatar.png")
+        options.success({
+          fileID: "cloud://demo-env.bucket/avatars/demo-avatar.png",
+        })
+      },
+    },
+  }
+
+  const result = await uploadFileToCloud(
+    "http://tmp/demo-avatar.png",
+    "avatars/demo-avatar.png"
+  )
+
+  assert.equal(result, "cloud://demo-env.bucket/avatars/demo-avatar.png")
+})
+
+test("generateAvatarCloudPath preserves file extension", () => {
+  const cloudPath = generateAvatarCloudPath("http://tmp/demo-avatar.png?foo=1")
+
+  assert.match(cloudPath, /^avatars\/[0-9]+_[a-z0-9]{7}\.png$/)
+})

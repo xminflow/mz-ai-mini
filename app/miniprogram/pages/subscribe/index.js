@@ -1,6 +1,4 @@
 const {
-  authorizeCurrentMiniProgramUserProfile,
-  isUserProfileAuthorizationDenied,
   syncCurrentMiniProgramUser,
 } = require("../../services/auth");
 const {
@@ -9,7 +7,10 @@ const {
   purchaseNormalMembership,
 } = require("../../services/membership");
 const { formatDateLabel } = require("../../utils/format");
-const { AUTH_PAGE_STATE, hasAuthorizedUserProfile } = require("../../utils/userAuth");
+const {
+  AUTH_PAGE_STATE,
+  hasAuthenticatedMiniProgramUser,
+} = require("../../utils/userAuth");
 
 const MEMBERSHIP_TIER_NORMAL = "normal";
 
@@ -65,7 +66,7 @@ Page({
       const normalMembershipState = resolveNormalMembershipState(currentUser);
       this.setData({
         currentUser,
-        authState: hasAuthorizedUserProfile(currentUser)
+        authState: hasAuthenticatedMiniProgramUser(currentUser)
           ? AUTH_PAGE_STATE.READY
           : AUTH_PAGE_STATE.UNAUTHORIZED,
         isNormalMembershipActive: normalMembershipState.isNormalMembershipActive,
@@ -82,52 +83,8 @@ Page({
     }
   },
 
-  async handleAuthorize() {
-    if (this.data.isAuthorizing) {
-      return;
-    }
-
-    this.setData({
-      isAuthorizing: true,
-    });
-
-    try {
-      const currentUser = await authorizeCurrentMiniProgramUserProfile();
-      const normalMembershipState = resolveNormalMembershipState(currentUser);
-      this.setData({
-        currentUser,
-        authState: AUTH_PAGE_STATE.READY,
-        isNormalMembershipActive: normalMembershipState.isNormalMembershipActive,
-        normalMembershipStatusText: normalMembershipState.normalMembershipStatusText,
-      });
-      wx.showToast({
-        title: "授权成功",
-        icon: "success",
-      });
-    } catch (error) {
-      if (isUserProfileAuthorizationDenied(error)) {
-        this.setData({
-          authState: AUTH_PAGE_STATE.UNAUTHORIZED,
-        });
-        wx.showToast({
-          title: "你已取消授权",
-          icon: "none",
-        });
-      } else {
-        console.warn("Failed to authorize from subscribe page.", error);
-        this.setData({
-          authState: AUTH_PAGE_STATE.ERROR,
-        });
-        wx.showToast({
-          title: "授权失败，请稍后重试",
-          icon: "none",
-        });
-      }
-    } finally {
-      this.setData({
-        isAuthorizing: false,
-      });
-    }
+  handleAuthorize() {
+    wx.switchTab({ url: "/pages/mine/index" });
   },
 
   handleRetryAuth() {

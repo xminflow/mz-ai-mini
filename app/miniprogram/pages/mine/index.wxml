@@ -3,58 +3,123 @@
     <image class="profile-card__avatar" src="/images/avatar.png" mode="aspectFill"></image>
     <view class="profile-card__content">
       <view class="profile-card__name">正在同步登录状态</view>
-      <view class="profile-card__text">请稍候，正在确认当前微信身份与授权信息。</view>
+      <view class="profile-card__badge">请稍候，正在确认当前微信身份与授权信息。</view>
     </view>
   </view>
 
   <view class="feedback-panel" wx:elif="{{authState === authPageState.ERROR}}">
     <view class="feedback-panel__title">当前无法确认登录状态</view>
-    <view class="feedback-panel__text">请检查后端服务是否可用，然后重新尝试。</view>
+    <view class="feedback-panel__text">请检查后端服务是否可用，然后重新尝试</view>
     <view class="feedback-panel__button" bindtap="handleRetryAuth">重新检查</view>
   </view>
 
   <view class="auth-gate" wx:elif="{{authState === authPageState.UNAUTHORIZED}}">
-    <view class="auth-gate__eyebrow">会员登录</view>
-    <view class="auth-gate__title">完成微信授权后再查看个人中心</view>
-    <view class="auth-gate__text">
-      授权后会同步你的头像与昵称，用于展示个人资料、订阅偏好和后续会员能力。
+    <view class="auth-gate__hero">
+      <view class="auth-gate__title">请先完成微信登录</view>
+      <view class="auth-gate__text">当前还无法识别你的微信身份，请重新同步登录状态后再继续使用</view>
     </view>
-    <button
-      class="auth-gate__button"
-      bindtap="handleAuthorize"
-      loading="{{isAuthorizing}}"
-    >
-      微信授权登录
-    </button>
+
+    <view class="auth-gate__body">
+      <button class="auth-gate__button" bindtap="handleRetryAuth">重新同步登录</button>
+    </view>
   </view>
 
   <block wx:else>
     <view class="profile-card">
       <image
         class="profile-card__avatar"
-        src="{{currentUser.avatar_url || '/images/avatar.png'}}"
+        src="{{currentUserAvatarUrl}}"
         mode="aspectFill"
       ></image>
       <view class="profile-card__content">
-        <view class="profile-card__name">{{currentUser.nickname}}</view>
-        <view class="profile-card__text">已完成微信授权，可在这里管理学习记录、订阅偏好与会员资料。</view>
-        <view class="profile-card__meta">会员编号 {{currentUser.user_id}}</view>
+        <view class="profile-card__name">{{currentUserDisplayName}}</view>
+        <view class="profile-card__badge">{{membershipBadge}}</view>
       </view>
     </view>
 
-    <view class="menu-list">
-      <view class="menu-item">
-        <view class="menu-item__title">我的学习记录</view>
-        <view class="menu-item__text">后续会聚合最近浏览的案例、课程进度和专题学习轨迹。</view>
+    <view class="section-label">个人资料</view>
+
+    <view class="membership-card">
+      <view class="membership-card__header">
+        <view class="membership-card__title">微信资料</view>
+        <view
+          class="membership-card__action"
+          bindtap="handleStartProfileEdit"
+          wx:if="{{!isEditingProfile}}"
+        >
+          修改资料
+        </view>
+        <view
+          class="membership-card__action"
+          bindtap="handleCancelProfileEdit"
+          wx:else
+        >
+          收起
+        </view>
       </view>
-      <view class="menu-item">
-        <view class="menu-item__title">我的订阅</view>
-        <view class="menu-item__text">管理案例更新、课程通知、专题提醒和会员消息触达。</view>
+
+      <view class="profile-editor" wx:if="{{isEditingProfile}}">
+        <button
+          class="profile-editor__row profile-editor__row--button"
+          open-type="chooseAvatar"
+          bindchooseavatar="handleChooseAvatar"
+          loading="{{isUpdatingAvatar}}"
+          disabled="{{isUpdatingAvatar}}"
+        >
+          <view class="profile-editor__meta">
+            <view class="profile-editor__label">头像</view>
+          </view>
+          <view class="profile-editor__status" wx:if="{{isUpdatingAvatar}}">上传中</view>
+          <image
+            class="profile-editor__avatar"
+            src="{{authorizationAvatarPreviewUrl}}"
+            mode="aspectFill"
+          ></image>
+        </button>
+
+        <view class="profile-editor__row">
+          <view class="profile-editor__meta">
+            <view class="profile-editor__label">昵称</view>
+          </view>
+          <input
+            class="profile-editor__input"
+            type="nickname"
+            placeholder="设置昵称"
+            maxlength="20"
+            value="{{authorizationNickname}}"
+            bindinput="handleNicknameInput"
+            bindblur="handleNicknameBlur"
+            disabled="{{isUpdatingNickname}}"
+          />
+        </view>
       </view>
-      <view class="menu-item">
-        <view class="menu-item__title">会员状态</view>
-        <view class="menu-item__text">{{membershipStatusText}}</view>
+    </view>
+
+    <view class="section-label">会员权益</view>
+
+    <view class="membership-card">
+      <view class="membership-card__header">
+        <view class="membership-card__title">普通会员</view>
+        <view class="membership-card__active-badge" wx:if="{{isNormalMembershipActive}}">已开通</view>
+        <view class="membership-card__price" wx:else>¥0.1 / 365天</view>
       </view>
+      <view class="membership-card__text">{{normalMembershipStatusText}}</view>
+      <button
+        class="membership-card__button"
+        bindtap="handleOpenNormalMembership"
+        loading="{{isPurchasingMembership}}"
+        wx:if="{{!isNormalMembershipActive}}"
+      >
+        立即开通
+      </button>
+    </view>
+
+    <view class="membership-card membership-card--locked">
+      <view class="membership-card__header">
+        <view class="membership-card__title">白金会员</view>
+        <view class="membership-card__price">暂未开放</view>
+      </view>
+      <view class="membership-card__text">白金会员权益正在筹备中，后续开放后可在这里直接升级。</view>
     </view>
   </block>
 </view>

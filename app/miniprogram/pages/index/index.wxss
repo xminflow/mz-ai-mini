@@ -1,6 +1,6 @@
 page {
   background: #f7f8fa;
-  color: #111827;
+  color: #0B0B0B;
 }
 
 .page-shell {
@@ -10,8 +10,8 @@ page {
 .page-banner {
   overflow: hidden;
   border-radius: 10rpx;
-  background: #ffffff;
-  box-shadow: 0 14rpx 32rpx rgba(15, 23, 42, 0.06);
+  background: #FFFFFF;
+  box-shadow: 0 14rpx 32rpx rgba(11, 11, 11, 0.06);
 }
 
 .page-banner__swiper {
@@ -28,9 +28,9 @@ page {
 .story-tabs {
   margin-top: 18rpx;
   padding: 20rpx 24rpx;
-  background: #ffffff;
+  background: #FFFFFF;
   border-radius: 10rpx;
-  box-shadow: 0 14rpx 32rpx rgba(15, 23, 42, 0.06);
+  box-shadow: 0 14rpx 32rpx rgba(11, 11, 11, 0.06);
 }
 
 .story-tabs__list {
@@ -47,18 +47,18 @@ page {
   flex-shrink: 0;
   padding: 14rpx 28rpx;
   border-radius: 999rpx;
-  border: 1rpx solid rgba(148, 163, 184, 0.22);
-  background: #ffffff;
-  color: #6b7280;
+  border: 1rpx solid rgba(11, 11, 11, 0.1);
+  background: #FFFFFF;
+  color: #6B7280;
   font-size: 24rpx;
   line-height: 1.4;
 }
 
 .story-tabs__item--active {
-  border-color: #111827;
-  background: #111827;
-  color: #ffffff;
-  box-shadow: 0 12rpx 24rpx rgba(15, 23, 42, 0.16);
+  border-color: #0B0B0B;
+  background: #0B0B0B;
+  color: #FFFFFF;
+  box-shadow: 0 12rpx 24rpx rgba(11, 11, 11, 0.16);
 }
 
 .feed-grid {
@@ -78,23 +78,23 @@ page {
 
 .skeleton-card {
   padding: 18rpx;
-  background: #ffffff;
+  background: #FFFFFF;
   border-radius: 8rpx;
   box-shadow:
-    0 10rpx 20rpx rgba(15, 23, 42, 0.04),
-    0 24rpx 44rpx rgba(15, 23, 42, 0.08);
+    0 10rpx 20rpx rgba(11, 11, 11, 0.04),
+    0 24rpx 44rpx rgba(11, 11, 11, 0.08);
 }
 
 .skeleton-card__cover {
   height: 228rpx;
   border-radius: 6rpx;
-  background: linear-gradient(90deg, #e5e7eb 25%, #f7f8fa 50%, #e5e7eb 75%);
+  background: linear-gradient(90deg, #E5E7EB 25%, #f7f8fa 50%, #E5E7EB 75%);
 }
 
 .skeleton-card__line {
   height: 22rpx;
   border-radius: 6rpx;
-  background: #e5e7eb;
+  background: #E5E7EB;
   margin-top: 16rpx;
 }
 
@@ -112,8 +112,8 @@ page {
   margin-top: 24rpx;
   padding: 72rpx 34rpx;
   border-radius: 10rpx;
-  background: #ffffff;
-  box-shadow: 0 14rpx 30rpx rgba(15, 23, 42, 0.05);
+  background: #FFFFFF;
+  box-shadow: 0 14rpx 30rpx rgba(11, 11, 11, 0.05);
 }
 
 .feedback--center {
@@ -130,7 +130,7 @@ page {
   margin-top: 16rpx;
   font-size: 28rpx;
   line-height: 1.75;
-  color: #6b7280;
+  color: #6B7280;
 }
 
 .feedback__button {
@@ -141,8 +141,8 @@ page {
   margin-top: 28rpx;
   padding: 20rpx 28rpx;
   border-radius: 8rpx;
-  background: #111827;
-  color: #ffffff;
+  background: #0B0B0B;
+  color: #FFFFFF;
   font-size: 26rpx;
 }
 
@@ -155,9 +155,9 @@ page {
 .feed-footer__action {
   font-size: 24rpx;
   line-height: 1.6;
-  color: #9ca3af;
+  color: #6B7280;
 }
 
 .feed-footer__action {
-  color: #374151;
+  color: #1F1F1F;
 }

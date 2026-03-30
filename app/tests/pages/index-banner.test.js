@@ -69,10 +69,10 @@ test("app config uses the native tab bar configuration", () => {
   const appConfig = JSON.parse(fs.readFileSync(APP_CONFIG_PATH, "utf8"));
 
   assert.equal("custom" in appConfig.tabBar, false);
-  assert.equal(appConfig.tabBar.list.length, 4);
+  assert.equal(appConfig.tabBar.list.length, 3);
   assert.equal(appConfig.tabBar.backgroundColor, "#FFFFFF");
-  assert.equal(appConfig.tabBar.color, "#667085");
-  assert.equal(appConfig.tabBar.selectedColor, "#111827");
+  assert.equal(appConfig.tabBar.color, "#6B7280");
+  assert.equal(appConfig.tabBar.selectedColor, "#0B0B0B");
 });
 
 test("app initializes cloud environment on launch", () => {
@@ -85,7 +85,7 @@ test("app initializes cloud environment on launch", () => {
     exports: {
       syncCurrentMiniProgramUser: async () => null,
       authorizeCurrentMiniProgramUserProfile: async () => null,
-      hasAuthorizedUserProfile: () => true,
+      hasAuthenticatedMiniProgramUser: () => true,
       isUserProfileAuthorizationDenied: () => false,
     },
   };
@@ -109,8 +109,7 @@ test("app initializes cloud environment on launch", () => {
   ]);
 });
 
-test("app triggers user profile authorization on launch when current user is incomplete", async () => {
-  let authorizeCallCount = 0;
+test("app keeps the current user sync result on launch without forcing profile completion", async () => {
   clearAppModules();
   require.cache[AUTH_SERVICE_PATH] = {
     id: AUTH_SERVICE_PATH,
@@ -121,19 +120,13 @@ test("app triggers user profile authorization on launch when current user is inc
         is_new_user: true,
         user: {
           user_id: "10001",
+          openid: "local-dev-openid",
           nickname: "",
           avatar_url: "",
         },
       }),
-      authorizeCurrentMiniProgramUserProfile: async () => {
-        authorizeCallCount += 1;
-        return {
-          user_id: "10001",
-          nickname: "妙智学员",
-          avatar_url: "https://example.com/avatar.png",
-        };
-      },
-      hasAuthorizedUserProfile: (user) => Boolean(user?.nickname && user?.avatar_url),
+      authorizeCurrentMiniProgramUserProfile: async () => null,
+      hasAuthenticatedMiniProgramUser: (user) => Boolean(user?.openid),
       isUserProfileAuthorizationDenied: () => false,
     },
   };
@@ -148,6 +141,6 @@ test("app triggers user profile authorization on launch when current user is inc
   appConfig.onLaunch();
   const result = await appConfig.globalData.currentUserReady;
 
-  assert.equal(authorizeCallCount, 1);
-  assert.equal(result.user.nickname, "妙智学员");
+  assert.equal(result.user.openid, "local-dev-openid");
+  assert.equal(result.user.nickname, "");
 });
