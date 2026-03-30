@@ -1,0 +1,171 @@
+page {
+  background: #f7f8fa;
+  color: #0B0B0B;
+}
+
+.tab-page {
+  padding: 24rpx 20rpx 56rpx;
+}
+
+.info-card,
+.form-card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  box-shadow: 0 14rpx 30rpx rgba(11, 11, 11, 0.05);
+}
+
+.info-card {
+  padding: 22rpx 20rpx;
+}
+
+.info-card--loading {
+  margin-top: 20rpx;
+  opacity: 0.82;
+}
+
+.info-card__title {
+  font-size: 28rpx;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #1F1F1F;
+}
+
+.info-card__text {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  line-height: 1.8;
+  color: #6B7280;
+}
+
+.form-section {
+  margin-top: 20rpx;
+}
+
+.form-card {
+  padding: 24rpx 20rpx;
+}
+
+.form-card__eyebrow {
+  font-size: 22rpx;
+  line-height: 1.4;
+  letter-spacing: 4rpx;
+  color: #6B7280;
+}
+
+.form-card__headline {
+  margin-top: 10rpx;
+  font-size: 40rpx;
+  line-height: 1.3;
+  font-weight: 600;
+  color: #0B0B0B;
+}
+
+.form-card__intro {
+  margin-top: 14rpx;
+  font-size: 24rpx;
+  line-height: 1.8;
+  color: #6B7280;
+}
+
+.form-card__title {
+  margin-top: 24rpx;
+  font-size: 30rpx;
+  line-height: 1.4;
+  font-weight: 600;
+  color: #0B0B0B;
+}
+
+.form-field {
+  margin-top: 20rpx;
+}
+
+.form-field__label {
+  font-size: 24rpx;
+  line-height: 1.5;
+  color: #1F1F1F;
+}
+
+.form-field__control,
+.picker-field,
+.form-field__control--textarea {
+  box-sizing: border-box;
+  width: 100%;
+  margin-top: 10rpx;
+  background: #F8FAFC;
+  border-radius: 14rpx;
+}
+
+.form-field__control {
+  display: flex;
+  align-items: center;
+  min-height: 88rpx;
+  padding: 0 20rpx;
+}
+
+.form-field__control--textarea {
+  padding: 20rpx;
+}
+
+.form-field__input,
+.picker-field,
+.form-field__textarea {
+  font-size: 24rpx;
+  color: #111827;
+}
+
+.form-field__input {
+  width: 100%;
+  height: 88rpx;
+  line-height: 88rpx;
+}
+
+.picker-field {
+  display: flex;
+  align-items: center;
+  min-height: 88rpx;
+  padding: 0 20rpx;
+}
+
+.picker-field__text {
+  width: 100%;
+  line-height: 1.6;
+}
+
+.form-field__textarea {
+  display: block;
+  width: 100%;
+  min-height: 220rpx;
+  line-height: 1.7;
+}
+
+.form-card__tip {
+  margin-top: 20rpx;
+  font-size: 22rpx;
+  line-height: 1.8;
+  color: #6B7280;
+}
+
+.form-card__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  height: 88rpx;
+  line-height: 88rpx;
+  margin-top: 24rpx;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
+  border-radius: 999rpx;
+  background: #0B0B0B;
+  color: #FFFFFF;
+  font-size: 26rpx;
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-card__button[disabled] {
+  background: #E5E7EB;
+  color: #6B7280;
+}

@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/subscribe/index",
     "pages/academy/index",
+    "pages/consult/index",
     "pages/mine/index",
     "pages/story-detail/index"
   ],
@@ -10,7 +11,7 @@
     "backgroundColor": "#F7F8FA",
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#F7F8FA",
-    "navigationBarTitleText": "妙智AI商学院",
+    "navigationBarTitleText": "妙智AI商业圈",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
@@ -30,6 +31,12 @@
         "text": "学院",
         "iconPath": "images/icons/business.png",
         "selectedIconPath": "images/icons/business-active.png"
+      },
+      {
+        "pagePath": "pages/consult/index",
+        "text": "咨询",
+        "iconPath": "images/icons/consult.png",
+        "selectedIconPath": "images/icons/consult-active.png"
       },
       {
         "pagePath": "pages/mine/index",

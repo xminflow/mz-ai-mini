@@ -1,0 +1,135 @@
+<view class="tab-page">
+  <view class="info-card info-card--loading" wx:if="{{authState === authPageState.CHECKING}}">
+    <view class="info-card__title">正在确认登录状态</view>
+    <view class="info-card__text">请稍候，正在同步你的微信身份信息。</view>
+  </view>
+
+  <view class="feedback-panel" wx:elif="{{authState === authPageState.ERROR}}">
+    <view class="feedback-panel__title">咨询页面暂时不可用</view>
+    <view class="feedback-panel__text">当前无法确认你的登录状态，请稍后重新尝试。</view>
+    <view class="feedback-panel__button" bindtap="handleRetryAuth">重新检查</view>
+  </view>
+
+  <view class="auth-gate" wx:elif="{{authState === authPageState.UNAUTHORIZED}}">
+    <view class="auth-gate__hero">
+      <view class="auth-gate__eyebrow">先完成登录</view>
+      <view class="auth-gate__title">登录后才可以提交咨询申请</view>
+      <view class="auth-gate__text">
+        该页面会绑定当前微信身份保存咨询记录，请先前往“我的”页完成登录同步。
+      </view>
+    </view>
+
+    <view class="auth-gate__body">
+      <button class="auth-gate__button" bindtap="handleAuthorize">前往我的页</button>
+    </view>
+  </view>
+
+  <view class="feedback-panel" wx:elif="{{hasSubmitted}}">
+    <view class="feedback-panel__eyebrow">已收到申请</view>
+    <view class="feedback-panel__title">咨询请求提交成功</view>
+    <view class="feedback-panel__text">
+      我们会结合你填写的业务情况进行评估，并在 1-3 个工作日内与你联系。
+    </view>
+    <view class="feedback-panel__button" bindtap="handleCreateAnother">继续提交其他咨询</view>
+  </view>
+
+  <view class="form-section" wx:else>
+    <view class="form-card">
+      <view class="form-card__headline">AI赋能业务咨询</view>
+      <view class="form-card__intro">
+        我们团队长期致力于提供高性价比的AI业务转型/辅助咨询服务，如果您想借助AI来提升业务效率，改造工作流程，或打通产品关键环节等需求，
+        留下您的联系方式、业务类型和具体诉求，我们将为您提供一对一的咨询服务，针对您的业务，基于当前AI能力，为您分析最有价值的，定制化的AI全流程解决方案
+      </view>
+
+      <view class="form-card__title">填写咨询信息</view>
+
+      <view class="form-field">
+        <view class="form-field__label">手机号</view>
+        <view class="form-field__control">
+          <input
+            class="form-field__input"
+            type="number"
+            maxlength="11"
+            placeholder="请输入手机号"
+            placeholder-style="color: #9CA3AF;"
+            value="{{phone}}"
+            bindinput="handlePhoneInput"
+          />
+        </view>
+      </view>
+
+      <view class="form-field">
+        <view class="form-field__label">邮箱</view>
+        <view class="form-field__control">
+          <input
+            class="form-field__input"
+            type="text"
+            placeholder="请输入邮箱地址"
+            placeholder-style="color: #9CA3AF;"
+            value="{{email}}"
+            bindinput="handleEmailInput"
+          />
+        </view>
+      </view>
+
+      <view class="form-field">
+        <view class="form-field__label">咨询的业务类型</view>
+        <picker
+          mode="selector"
+          range="{{businessTypeOptions}}"
+          range-key="label"
+          value="{{businessTypeIndex}}"
+          bindchange="handleBusinessTypeChange"
+        >
+          <view class="picker-field">
+            <view class="picker-field__text">
+              {{businessTypeOptions[businessTypeIndex].label}}
+            </view>
+          </view>
+        </picker>
+      </view>
+
+      <view class="form-field" wx:if="{{businessType === 'other'}}">
+        <view class="form-field__label">补充业务类型</view>
+        <view class="form-field__control">
+          <input
+            class="form-field__input"
+            type="text"
+            maxlength="64"
+            placeholder="请补充你的业务类型"
+            placeholder-style="color: #9CA3AF;"
+            value="{{businessTypeOther}}"
+            bindinput="handleBusinessTypeOtherInput"
+          />
+        </view>
+      </view>
+
+      <view class="form-field form-field--textarea">
+        <view class="form-field__label">具体业务描述</view>
+        <view class="form-field__control form-field__control--textarea">
+          <textarea
+            class="form-field__textarea"
+            maxlength="500"
+            placeholder="请描述你的业务现状、转型目标、希望借助 AI 解决的问题。"
+            placeholder-style="color: #9CA3AF;"
+            value="{{businessDescription}}"
+            bindinput="handleBusinessDescriptionInput"
+          ></textarea>
+        </view>
+      </view>
+
+      <view class="form-card__tip">
+        提交后我们会在 1-3 个工作日内给予回复，请保持联系方式可用。
+      </view>
+
+      <button
+        class="form-card__button"
+        bindtap="handleSubmit"
+        loading="{{isSubmitting}}"
+        disabled="{{isSubmitting}}"
+      >
+        提交咨询申请
+      </button>
+    </view>
+  </view>
+</view>

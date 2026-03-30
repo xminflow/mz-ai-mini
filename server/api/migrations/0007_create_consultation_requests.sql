@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS `consultation_requests` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `consultation_id` BIGINT UNSIGNED NOT NULL,
+    `user_id` BIGINT UNSIGNED NOT NULL,
+    `openid` VARCHAR(64) NOT NULL,
+    `phone` VARCHAR(32) NOT NULL,
+    `email` VARCHAR(256) NOT NULL,
+    `business_type` VARCHAR(64) NOT NULL,
+    `business_type_other` VARCHAR(128) NULL,
+    `business_description` TEXT NOT NULL,
+    `is_deleted` TINYINT(1) NOT NULL DEFAULT 0,
+    `created_at` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    `updated_at` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_consultation_requests_consultation_id` (`consultation_id`),
+    KEY `idx_consultation_requests_user_id` (`user_id`),
+    KEY `idx_consultation_requests_openid` (`openid`),
+    KEY `idx_consultation_requests_business_type` (`business_type`),
+    KEY `idx_consultation_requests_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

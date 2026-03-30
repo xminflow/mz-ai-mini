@@ -4,10 +4,10 @@ from mz_ai_backend.core.logging import get_logger
 from mz_ai_backend.modules.auth.domain import UserNotFoundException
 
 from ...domain import (
+    NORMAL_MEMBERSHIP_PRICE_FEN,
     MembershipAlreadyActiveException,
     MembershipPlanNotOpenException,
     MembershipTier,
-    NORMAL_MEMBERSHIP_PRICE_FEN,
 )
 from ..dtos import (
     CreateMembershipOrderCommand,
@@ -21,7 +21,6 @@ from ..ports import (
     SnowflakeIdGenerator,
     WechatPayGateway,
 )
-
 
 membership_logger = get_logger("mz_ai_backend.membership")
 
@@ -50,9 +49,11 @@ class CreateMembershipOrderUseCase:
             raise MembershipPlanNotOpenException()
 
         now = self._current_time_provider.now()
-        user_membership = await self._membership_repository.get_user_membership_by_openid(
-            openid=command.identity.openid,
-            now=now,
+        user_membership = (
+            await self._membership_repository.get_user_membership_by_openid(
+                openid=command.identity.openid,
+                now=now,
+            )
         )
         if user_membership is None:
             raise UserNotFoundException()
@@ -78,7 +79,7 @@ class CreateMembershipOrderUseCase:
             WechatPayCreateOrderRequest(
                 order_no=order_no,
                 amount_fen=amount_fen,
-                description="妙智AI商学院普通会员",
+                description="妙智AI商业圈普通会员",
                 payer_openid=command.identity.openid,
             )
         )

@@ -37,6 +37,7 @@ const storeCurrentUserResult = (result) => {
     globalData.currentUser = result ? result.user : null;
     globalData.currentUserSyncError = null;
   }
+  syncCurrentMiniProgramUserPromise = Promise.resolve(result);
   return result;
 };
 
@@ -46,6 +47,7 @@ const storeCurrentUserError = (error) => {
     globalData.currentUser = null;
     globalData.currentUserSyncError = error;
   }
+  syncCurrentMiniProgramUserPromise = null;
   throw error;
 };
 

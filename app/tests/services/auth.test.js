@@ -291,6 +291,84 @@ test("authorizeCurrentMiniProgramUserProfile submits a partial profile patch and
   );
 });
 
+test("authorizeCurrentMiniProgramUserProfile refreshes the cached current user result", async () => {
+  const app = { globalData: {} };
+  let requestCount = 0;
+  global.getApp = () => app;
+  global.wx = {
+    getAccountInfoSync() {
+      return { miniProgram: { envVersion: "develop" } };
+    },
+    request(options) {
+      requestCount += 1;
+
+      if (requestCount === 1) {
+        assert.equal(
+          options.url,
+          "http://127.0.0.1:8000/api/v1/auth/wechat-mini-program/users/current"
+        );
+        options.success({
+          statusCode: 200,
+          data: {
+            code: "COMMON.SUCCESS",
+            message: "success",
+            data: {
+              is_new_user: false,
+              user: {
+                user_id: "10001",
+                openid: "local-dev-openid",
+                union_id: null,
+                nickname: "旧昵称",
+                avatar_url: "cloud://env-id.xxx/avatars/original.jpg",
+                status: "active",
+              },
+            },
+          },
+        });
+        return;
+      }
+
+      assert.equal(
+        options.url,
+        "http://127.0.0.1:8000/api/v1/auth/wechat-mini-program/users/current/profile"
+      );
+      options.success({
+        statusCode: 200,
+        data: {
+          code: "COMMON.SUCCESS",
+          message: "success",
+          data: {
+            user: {
+              user_id: "10001",
+              openid: "local-dev-openid",
+              union_id: null,
+              nickname: "新昵称",
+              avatar_url: "cloud://env-id.xxx/avatars/original.jpg",
+              status: "active",
+            },
+          },
+        },
+      });
+    },
+  };
+
+  const {
+    authorizeCurrentMiniProgramUserProfile,
+    syncCurrentMiniProgramUser,
+  } = loadAuthService();
+
+  const initialResult = await syncCurrentMiniProgramUser();
+  assert.equal(initialResult.user.nickname, "旧昵称");
+
+  await authorizeCurrentMiniProgramUserProfile({
+    nickname: "新昵称",
+  });
+
+  const cachedResult = await syncCurrentMiniProgramUser();
+  assert.equal(cachedResult.user.nickname, "新昵称");
+  assert.equal(requestCount, 2);
+});
+
 test("authorizeCurrentMiniProgramUserProfile rejects an empty profile patch", async () => {
   const { authorizeCurrentMiniProgramUserProfile } = loadAuthService();
 
