@@ -2,7 +2,8 @@
 
 Usage:
 - Import `router` to expose business case HTTP endpoints.
-- Validate case-level `tags` at the HTTP boundary.
+- Validate case-level `industry`, `tags`, and one shared case cover at the HTTP
+  boundary.
 
 Development rules:
 - Keep request validation and response mapping here.

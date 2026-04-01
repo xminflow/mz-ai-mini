@@ -13,6 +13,22 @@ class BusinessCaseStatus(StrEnum):
     PUBLISHED = "published"
 
 
+class BusinessCaseIndustry(StrEnum):
+    """Supported business case industries."""
+
+    TECHNOLOGY = "科技"
+    CONSUMER = "消费"
+    FINANCE = "金融"
+    HEALTHCARE = "医疗"
+    EDUCATION = "教育"
+    ENTERPRISE_SERVICES = "企业服务"
+    CONTENT_AND_CREATOR = "自媒体"
+    ENTERTAINMENT = "娱乐"
+    LOCAL_SERVICES = "本地生活"
+    INDUSTRY_AND_SUPPLY_CHAIN = "工业与供应链"
+    OTHER = "其他"
+
+
 class BusinessCaseDocumentType(StrEnum):
     """Fixed document types belonging to one business case."""
 
@@ -30,7 +46,6 @@ class BusinessCaseDocument(BaseModel):
     document_type: BusinessCaseDocumentType
     title: str
     markdown_content: str
-    cover_image_url: str
     is_deleted: bool
     created_at: datetime
     updated_at: datetime
@@ -63,6 +78,7 @@ class BusinessCaseSummary(BaseModel):
     case_id: str
     title: str
     summary: str
+    industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
     status: BusinessCaseStatus

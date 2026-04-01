@@ -21,6 +21,7 @@ from ..application import (
     ReplaceBusinessCaseUseCase,
 )
 from ..domain import BusinessCaseStatus
+from ..domain import BusinessCaseIndustry
 from ..infrastructure import (
     get_create_business_case_use_case,
     get_delete_business_case_use_case,
@@ -156,7 +157,8 @@ async def list_public_business_cases(
     ],
     limit: Annotated[int, Query(ge=1, le=50)] = 20,
     cursor: Annotated[str | None, Query()] = None,
-    tag: Annotated[str | None, Query()] = None,
+    industry: Annotated[str | None, Query()] = None,
+    keyword: Annotated[str | None, Query()] = None,
 ) -> ApiResponse[BusinessCaseListResponse]:
     """Return one public-facing business case list slice."""
 
@@ -164,7 +166,8 @@ async def list_public_business_cases(
         ListPublicBusinessCasesQuery(
             limit=limit,
             cursor=cursor,
-            tag=_normalize_public_tag(tag),
+            industry=_normalize_public_industry(industry),
+            keyword=_normalize_public_keyword(keyword),
         )
     )
     return success_response(data=BusinessCaseListResponse.from_result(result))
@@ -200,11 +203,27 @@ def _resolve_admin_status_filter(
     return BusinessCaseStatus(status.value)
 
 
-def _normalize_public_tag(tag: str | None) -> str | None:
-    if tag is None:
+def _normalize_public_industry(
+    industry: str | None,
+) -> BusinessCaseIndustry | None:
+    if industry is None:
         return None
 
-    normalized_tag = tag.strip()
-    if normalized_tag == "":
-        raise ValidationException(message="Tag filter must not be blank.")
-    return normalized_tag
+    normalized_industry = industry.strip()
+    if normalized_industry == "":
+        return None
+
+    try:
+        return BusinessCaseIndustry(normalized_industry)
+    except ValueError as exc:
+        raise ValidationException(message="Industry filter is invalid.") from exc
+
+
+def _normalize_public_keyword(keyword: str | None) -> str | None:
+    if keyword is None:
+        return None
+
+    normalized_keyword = keyword.strip()
+    if normalized_keyword == "":
+        return None
+    return normalized_keyword

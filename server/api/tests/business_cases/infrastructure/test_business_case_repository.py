@@ -4,11 +4,14 @@ from datetime import datetime
 from unittest.mock import AsyncMock
 
 import pytest
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from mz_ai_backend.core import InternalServerException
-from mz_ai_backend.modules.business_cases.application.dtos import BusinessCaseReplacement
-from mz_ai_backend.modules.business_cases.domain import BusinessCaseStatus
+from mz_ai_backend.modules.business_cases.application.dtos import (
+    BusinessCaseReplacement,
+)
+from mz_ai_backend.modules.business_cases.domain import (
+    BusinessCaseIndustry,
+    BusinessCaseStatus,
+)
 from mz_ai_backend.modules.business_cases.infrastructure.models import (
     BusinessCaseDocumentModel,
     BusinessCaseModel,
@@ -16,6 +19,7 @@ from mz_ai_backend.modules.business_cases.infrastructure.models import (
 from mz_ai_backend.modules.business_cases.infrastructure.repositories import (
     SqlAlchemyBusinessCaseRepository,
 )
+from sqlalchemy.ext.asyncio import AsyncSession
 
 
 class FakeScalarOneResult:
@@ -46,15 +50,19 @@ def _build_case_model(
     *,
     case_id: str,
     published_at: datetime | None = None,
+    industry: str = "消费",
     tags: tuple[str, ...] = ("连锁增长",),
 ) -> BusinessCaseModel:
     return BusinessCaseModel(
         case_id=case_id,
         title=f"Case {case_id}",
         summary=f"Summary {case_id}",
+        industry=industry,
         tags=list(tags),
         cover_image_url=f"https://example.com/{case_id}.png",
-        status=BusinessCaseStatus.PUBLISHED.value if published_at else BusinessCaseStatus.DRAFT.value,
+        status=BusinessCaseStatus.PUBLISHED.value
+        if published_at
+        else BusinessCaseStatus.DRAFT.value,
         published_at=published_at,
         is_deleted=False,
         created_at=datetime(2026, 1, 1, 8, 0, 0),
@@ -70,7 +78,6 @@ def _build_document_models(case_id: str) -> list[BusinessCaseDocumentModel]:
             document_type="business_case",
             title="Business Case",
             markdown_content="# Business Case",
-            cover_image_url="https://example.com/business-case.png",
             is_deleted=False,
             created_at=datetime(2026, 1, 1, 8, 0, 0),
             updated_at=datetime(2026, 1, 1, 8, 0, 0),
@@ -81,7 +88,6 @@ def _build_document_models(case_id: str) -> list[BusinessCaseDocumentModel]:
             document_type="market_research",
             title="Market Research",
             markdown_content="# Market Research",
-            cover_image_url="https://example.com/market-research.png",
             is_deleted=False,
             created_at=datetime(2026, 1, 1, 8, 0, 0),
             updated_at=datetime(2026, 1, 1, 8, 0, 0),
@@ -92,7 +98,6 @@ def _build_document_models(case_id: str) -> list[BusinessCaseDocumentModel]:
             document_type="ai_business_upgrade",
             title="AI Upgrade",
             markdown_content="# AI Upgrade",
-            cover_image_url="https://example.com/ai-upgrade.png",
             is_deleted=False,
             created_at=datetime(2026, 1, 1, 8, 0, 0),
             updated_at=datetime(2026, 1, 1, 8, 0, 0),
@@ -101,7 +106,9 @@ def _build_document_models(case_id: str) -> list[BusinessCaseDocumentModel]:
 
 
 @pytest.mark.asyncio
-async def test_business_case_repository_returns_domain_aggregate_for_case_lookup() -> None:
+async def test_business_case_repository_returns_domain_aggregate_for_case_lookup() -> (
+    None
+):
     session = AsyncMock(spec=AsyncSession)
     session.execute.side_effect = [
         FakeScalarOneResult(_build_case_model(case_id="1001")),
@@ -113,6 +120,7 @@ async def test_business_case_repository_returns_domain_aggregate_for_case_lookup
 
     assert case is not None
     assert case.case_id == "1001"
+    assert case.industry == BusinessCaseIndustry.CONSUMER
     assert case.tags == ("连锁增长",)
     assert case.documents.business_case.title == "Business Case"
     assert case.documents.market_research.document_id == 2002
@@ -134,67 +142,74 @@ async def test_business_case_repository_list_admin_returns_page_slice() -> None:
 
     assert len(page.items) == 2
     assert page.items[0].case_id == "1003"
+    assert page.items[0].industry == BusinessCaseIndustry.CONSUMER
     assert page.items[0].tags == ("连锁增长",)
     assert page.items[1].case_id == "1002"
     assert page.has_more is True
 
 
 @pytest.mark.asyncio
-async def test_business_case_repository_list_public_returns_available_tags() -> None:
+async def test_business_case_repository_list_public_filters_by_industry_and_keyword() -> (
+    None
+):
     session = AsyncMock(spec=AsyncSession)
-    session.execute.side_effect = [
-        FakeManyResult(
-            [
-                _build_case_model(
-                    case_id="1003",
-                    published_at=datetime(2026, 1, 3, 8, 0, 0),
-                    tags=("连锁增长", "AI 提效"),
-                ),
-                _build_case_model(
-                    case_id="1002",
-                    published_at=datetime(2026, 1, 2, 8, 0, 0),
-                    tags=("连锁增长",),
-                ),
-                _build_case_model(
-                    case_id="1001",
-                    published_at=datetime(2026, 1, 1, 8, 0, 0),
-                    tags=("门店升级",),
-                ),
-            ]
-        ),
-        FakeManyResult(
-            [
-                _build_case_model(
-                    case_id="1003",
-                    published_at=datetime(2026, 1, 3, 8, 0, 0),
-                    tags=("连锁增长", "AI 提效"),
-                ),
-                _build_case_model(
-                    case_id="1002",
-                    published_at=datetime(2026, 1, 2, 8, 0, 0),
-                    tags=("连锁增长",),
-                ),
-                _build_case_model(
-                    case_id="1001",
-                    published_at=datetime(2026, 1, 1, 8, 0, 0),
-                    tags=("门店升级",),
-                ),
-            ]
-        ),
-    ]
+    session.execute.return_value = FakeManyResult(
+        [
+            _build_case_model(
+                case_id="1003",
+                published_at=datetime(2026, 1, 3, 8, 0, 0),
+                industry="消费",
+                tags=("连锁增长", "AI 提效"),
+            ),
+            _build_case_model(
+                case_id="1002",
+                published_at=datetime(2026, 1, 2, 8, 0, 0),
+                industry="消费",
+                tags=("连锁增长",),
+            ),
+            _build_case_model(
+                case_id="1001",
+                published_at=datetime(2026, 1, 1, 8, 0, 0),
+                industry="金融",
+                tags=("门店升级",),
+            ),
+        ]
+    )
     repository = SqlAlchemyBusinessCaseRepository(session=session)
 
-    page = await repository.list_public(limit=2, cursor=None, tag="连锁增长")
+    page = await repository.list_public(
+        limit=2,
+        cursor=None,
+        industry=BusinessCaseIndustry.CONSUMER,
+        keyword="增长",
+    )
 
     assert len(page.items) == 2
     assert page.items[0].case_id == "1003"
-    assert page.available_tags == ("连锁增长", "AI 提效", "门店升级")
+    assert page.available_industries == (
+        "科技",
+        "消费",
+        "金融",
+        "医疗",
+        "教育",
+        "企业服务",
+        "自媒体",
+        "娱乐",
+        "本地生活",
+        "工业与供应链",
+        "其他",
+    )
     assert page.has_more is True
-    assert "json_contains" in str(session.execute.await_args_list[0].args[0]).lower()
+    statement_text = str(session.execute.await_args.args[0]).lower()
+    assert "business_cases.industry" in statement_text
+    assert "business_case_documents" in statement_text
+    assert "like" in statement_text
 
 
 @pytest.mark.asyncio
-async def test_business_case_repository_delete_marks_aggregate_and_documents_as_deleted() -> None:
+async def test_business_case_repository_delete_marks_aggregate_and_documents_as_deleted() -> (
+    None
+):
     case_model = _build_case_model(case_id="1001")
     document_models = _build_document_models("1001")
     session = AsyncMock(spec=AsyncSession)
@@ -213,7 +228,30 @@ async def test_business_case_repository_delete_marks_aggregate_and_documents_as_
 
 
 @pytest.mark.asyncio
-async def test_business_case_repository_replace_raises_for_incomplete_document_set() -> None:
+async def test_business_case_repository_hard_delete_removes_case_and_documents() -> None:
+    case_model = _build_case_model(case_id="1001")
+    document_models = _build_document_models("1001")
+    session = AsyncMock(spec=AsyncSession)
+    session.execute.side_effect = [
+        FakeScalarOneResult(case_model),
+        FakeManyResult(document_models),
+    ]
+    repository = SqlAlchemyBusinessCaseRepository(session=session)
+
+    deleted = await repository.hard_delete_by_case_id("1001")
+
+    assert deleted is True
+    assert session.delete.await_args_list[0].args == (document_models[0],)
+    assert session.delete.await_args_list[1].args == (document_models[1],)
+    assert session.delete.await_args_list[2].args == (document_models[2],)
+    assert session.delete.await_args_list[3].args == (case_model,)
+    session.commit.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_business_case_repository_replace_raises_for_incomplete_document_set() -> (
+    None
+):
     session = AsyncMock(spec=AsyncSession)
     session.execute.side_effect = [
         FakeScalarOneResult(_build_case_model(case_id="1001")),
@@ -227,6 +265,7 @@ async def test_business_case_repository_replace_raises_for_incomplete_document_s
                 case_id="1001",
                 title="Case Updated",
                 summary="Summary Updated",
+                industry=BusinessCaseIndustry.OTHER,
                 tags=("私域增长",),
                 cover_image_url="https://example.com/case-updated.png",
                 status=BusinessCaseStatus.DRAFT,

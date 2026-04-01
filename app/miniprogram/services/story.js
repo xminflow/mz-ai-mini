@@ -33,29 +33,37 @@ const normalizeTags = (tags) => {
   return tags.filter(Boolean).slice(0, 3);
 };
 
-const normalizeAvailableTags = (tags) => {
-  if (!Array.isArray(tags)) {
+const normalizeIndustry = (industry) => {
+  if (typeof industry !== "string") {
+    return "";
+  }
+
+  return industry.trim();
+};
+
+const normalizeAvailableIndustries = (industries) => {
+  if (!Array.isArray(industries)) {
     return [];
   }
 
-  const normalizedTags = [];
+  const normalizedIndustries = [];
   const seen = new Set();
 
-  tags.forEach((tag) => {
-    if (typeof tag !== "string") {
+  industries.forEach((industry) => {
+    if (typeof industry !== "string") {
       return;
     }
 
-    const normalizedTag = tag.trim();
-    if (!normalizedTag || seen.has(normalizedTag)) {
+    const normalizedIndustry = industry.trim();
+    if (!normalizedIndustry || seen.has(normalizedIndustry)) {
       return;
     }
 
-    seen.add(normalizedTag);
-    normalizedTags.push(normalizedTag);
+    seen.add(normalizedIndustry);
+    normalizedIndustries.push(normalizedIndustry);
   });
 
-  return normalizedTags;
+  return normalizedIndustries;
 };
 
 const buildMetaItems = (story) => {
@@ -159,6 +167,7 @@ const normalizeStoryListItem = (story = {}, coverImageTempUrlMap = {}) => ({
   id: story.case_id ? String(story.case_id) : story._id || "",
   title: story.title || "",
   summary: story.summary || "",
+  industry: normalizeIndustry(story.industry),
   coverImage: resolveCoverImage(story, coverImageTempUrlMap),
   tags: normalizeTags(story.tags),
   metaItems: buildStoryListMetaItems(story),
@@ -184,6 +193,7 @@ const normalizeStoryDetail = (story = {}, coverImageTempUrlMap = {}) => {
     id: story.case_id ? String(story.case_id) : story._id || "",
     title: story.title || "",
     summary: story.summary || "",
+    industry: normalizeIndustry(story.industry),
     coverImage: resolveCoverImage(story, coverImageTempUrlMap),
     tags: normalizeTags(story.tags),
     metaItems: normalizedMetaItems,
@@ -195,14 +205,20 @@ const normalizeStoryDetail = (story = {}, coverImageTempUrlMap = {}) => {
   };
 };
 
-const fetchStoryList = async ({ pageSize = STORY_PAGE_SIZE, cursor = "", tag = "" } = {}) => {
+const fetchStoryList = async ({
+  pageSize = STORY_PAGE_SIZE,
+  cursor = "",
+  industry = "",
+  keyword = "",
+} = {}) => {
   const result = await request({
     path: "/business-cases",
     method: "GET",
     query: {
       limit: pageSize,
       cursor,
-      tag,
+      industry,
+      keyword,
     },
   });
   const itemList = Array.isArray(result.items) ? result.items : [];
@@ -212,7 +228,7 @@ const fetchStoryList = async ({ pageSize = STORY_PAGE_SIZE, cursor = "", tag = "
     list: itemList.map((item) => normalizeStoryListItem(item, coverImageTempUrlMap)),
     nextCursor: result.next_cursor || "",
     hasMore: Boolean(result.next_cursor),
-    availableTags: normalizeAvailableTags(result.available_tags),
+    availableIndustries: normalizeAvailableIndustries(result.available_industries),
   };
 };
 

@@ -15,6 +15,7 @@ from mz_ai_backend.modules.business_cases.application import (
     ListBusinessCasesResult,
 )
 from mz_ai_backend.modules.business_cases.domain import (
+    BusinessCaseIndustry,
     BusinessCaseNotFoundException,
     BusinessCaseStatus,
 )
@@ -35,6 +36,7 @@ DOCUMENT_ID_AI_BUSINESS_UPGRADE = 162758122237067267
 class StubCreateBusinessCaseUseCase:
     async def execute(self, command) -> BusinessCaseDetailResult:
         assert command.title == "Case A"
+        assert command.industry == BusinessCaseIndustry.CONSUMER
         assert command.tags == ("连锁增长", "AI 提效")
         assert command.documents[0].document_type.value == "business_case"
         return _build_detail_result(case_id=CASE_ID, status=BusinessCaseStatus.DRAFT)
@@ -51,6 +53,7 @@ class StubListAdminBusinessCasesUseCase:
                     case_id=CASE_ID,
                     title="Case A",
                     summary="Summary A",
+                    industry=BusinessCaseIndustry.CONSUMER,
                     tags=("连锁增长",),
                     cover_image_url="https://example.com/case-a.png",
                     status=BusinessCaseStatus.DRAFT,
@@ -67,13 +70,15 @@ class StubListPublicBusinessCasesUseCase:
     async def execute(self, query) -> ListBusinessCasesResult:
         assert query.limit == 10
         assert query.cursor == "cursor-1"
-        assert query.tag == "AI 提效"
+        assert query.industry == BusinessCaseIndustry.CONSUMER
+        assert query.keyword == "增长"
         return ListBusinessCasesResult(
             items=(
                 BusinessCaseListItemResult(
                     case_id=CASE_ID,
                     title="Case A",
                     summary="Summary A",
+                    industry=BusinessCaseIndustry.CONSUMER,
                     tags=("AI 提效",),
                     cover_image_url="https://example.com/case-a.png",
                     status=BusinessCaseStatus.PUBLISHED,
@@ -83,7 +88,7 @@ class StubListPublicBusinessCasesUseCase:
                 ),
             ),
             next_cursor="cursor-3",
-            available_tags=("连锁增长", "AI 提效"),
+            available_industries=("科技", "消费"),
         )
 
 
@@ -113,6 +118,7 @@ def _build_detail_result(
         case_id=case_id,
         title="Case A",
         summary="Summary A",
+        industry=BusinessCaseIndustry.CONSUMER,
         tags=("连锁增长", "AI 提效"),
         cover_image_url="https://example.com/case-a.png",
         status=status,
@@ -126,19 +132,16 @@ def _build_detail_result(
                 document_id=DOCUMENT_ID_BUSINESS_CASE,
                 title="Business Case",
                 markdown_content="# Business Case",
-                cover_image_url="https://example.com/business-case.png",
             ),
             market_research=BusinessCaseDocumentResult(
                 document_id=DOCUMENT_ID_MARKET_RESEARCH,
                 title="Market Research",
                 markdown_content="# Market Research",
-                cover_image_url="https://example.com/market-research.png",
             ),
             ai_business_upgrade=BusinessCaseDocumentResult(
                 document_id=DOCUMENT_ID_AI_BUSINESS_UPGRADE,
                 title="AI Upgrade",
                 markdown_content="# AI Upgrade",
-                cover_image_url="https://example.com/ai-upgrade.png",
             ),
         ),
     )
@@ -183,6 +186,7 @@ def test_business_case_router_creates_business_case() -> None:
             json={
                 "title": "Case A",
                 "summary": "Summary A",
+                "industry": "消费",
                 "tags": ["连锁增长", "AI 提效"],
                 "cover_image_url": "https://example.com/case-a.png",
                 "status": "draft",
@@ -190,17 +194,14 @@ def test_business_case_router_creates_business_case() -> None:
                     "business_case": {
                         "title": "Business Case",
                         "markdown_content": "# Business Case",
-                        "cover_image_url": "https://example.com/business-case.png",
                     },
                     "market_research": {
                         "title": "Market Research",
                         "markdown_content": "# Market Research",
-                        "cover_image_url": "https://example.com/market-research.png",
                     },
                     "ai_business_upgrade": {
                         "title": "AI Upgrade",
                         "markdown_content": "# AI Upgrade",
-                        "cover_image_url": "https://example.com/ai-upgrade.png",
                     },
                 },
             },
@@ -211,6 +212,7 @@ def test_business_case_router_creates_business_case() -> None:
     assert response.status_code == 200
     assert body["request_id"] == "business-case-create"
     assert body["data"]["case_id"] == str(CASE_ID)
+    assert body["data"]["industry"] == "消费"
     assert body["data"]["tags"] == ["连锁增长", "AI 提效"]
     assert body["data"]["documents"]["business_case"]["document_id"] == str(
         DOCUMENT_ID_BUSINESS_CASE
@@ -232,19 +234,20 @@ def test_business_case_router_lists_admin_business_cases() -> None:
     assert body["data"]["next_cursor"] == "cursor-2"
 
 
-def test_business_case_router_lists_public_business_cases_by_tag() -> None:
+def test_business_case_router_lists_public_business_cases_by_industry_and_keyword() -> None:
     with _build_client(
         list_public_use_case=StubListPublicBusinessCasesUseCase()
     ) as client:
         response = client.get(
-            "/api/v1/business-cases?limit=10&cursor=cursor-1&tag=AI%20%E6%8F%90%E6%95%88"
+            "/api/v1/business-cases?limit=10&cursor=cursor-1&industry=%E6%B6%88%E8%B4%B9&keyword=%E5%A2%9E%E9%95%BF"
         )
 
     body = response.json()
     assert response.status_code == 200
+    assert body["data"]["items"][0]["industry"] == "消费"
     assert body["data"]["items"][0]["tags"] == ["AI 提效"]
     assert body["data"]["next_cursor"] == "cursor-3"
-    assert body["data"]["available_tags"] == ["连锁增长", "AI 提效"]
+    assert body["data"]["available_industries"] == ["科技", "消费"]
 
 
 def test_business_case_router_returns_not_found_for_unpublished_public_detail() -> None:
@@ -274,17 +277,14 @@ def test_business_case_router_returns_validation_error_for_invalid_payload() -> 
                     "business_case": {
                         "title": "Business Case",
                         "markdown_content": "# Business Case",
-                        "cover_image_url": "https://example.com/business-case.png",
                     },
                     "market_research": {
                         "title": "Market Research",
                         "markdown_content": "# Market Research",
-                        "cover_image_url": "https://example.com/market-research.png",
                     },
                     "ai_business_upgrade": {
                         "title": "AI Upgrade",
                         "markdown_content": "# AI Upgrade",
-                        "cover_image_url": "https://example.com/ai-upgrade.png",
                     },
                 },
             },

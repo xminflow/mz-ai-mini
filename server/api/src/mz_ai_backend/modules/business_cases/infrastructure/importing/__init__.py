@@ -2,14 +2,17 @@
 
 Usage:
 - Import `BusinessCaseDirectoryImporter` to turn one local case directory into
-  a published business case replacement.
+  a published business case recreation.
 - Import `CaseImportCloudBaseSettings` and `CloudBaseStorageClient` to configure
-  CloudBase asset uploads for the importer.
+  CloudBase asset uploads and cleanup for the importer.
+- Import config supports case-level `industry`, `tags`, and one shared case
+  cover image. Document entries only carry markdown file references.
 
 Development rules:
 - Keep filesystem parsing and object storage details inside this package.
-- Reuse business case application use cases instead of duplicating replace
-  semantics in scripts.
+- Recreate duplicate `case_id` imports by deleting the whole
+  `business-cases/{case_id}` directory and persisted rows before creating the
+  new business case.
 """
 
 from .cloudbase_client import CloudBaseStorageClient

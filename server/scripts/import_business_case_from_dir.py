@@ -7,6 +7,11 @@ Usage checklist:
 2. Ensure CloudBase credentials are available in `.env`:
    - `MZ_AI_CASE_IMPORT_CLOUDBASE_ENV_ID=...`
    - `MZ_AI_CASE_IMPORT_CLOUDBASE_API_KEY=...`
+   - Duplicate `case_id` recreation additionally requires either:
+     - an existing `tcb login` session, or
+     - `MZ_AI_CASE_IMPORT_CLOUDBASE_CLI_API_KEY_ID=...`
+     - `MZ_AI_CASE_IMPORT_CLOUDBASE_CLI_API_KEY=...`
+     - optional `MZ_AI_CASE_IMPORT_CLOUDBASE_CLI_TOKEN=...`
 3. Ensure database schema migrations are already applied:
    - `uv run python api/migrations/run_sql_migrations.py`
 4. Run the importer:
@@ -19,27 +24,29 @@ Required `<CASE_DIR>` structure:
   assets/...  (optional local images referenced from markdown/config)
 
 `config.yml` minimum shape:
-case_id: "case-001"
-title: "Case title"
-desc: "Case summary"
-cover: "./assets/cover.png"        # local path or remote URL
+case_id: case-05
+title: 喜茶（HEYTEA）新茶饮高端品牌创业案例
+desc: 从广东街头小店到估值600亿的新茶饮标杆，喜茶以产品创新驱动品类革命，在高端定位与规模扩张的张力中寻找属于自己的第三条路
+cover: images\\cover\\image_01.png
+industry: 消费
 tags:
-  - "TagA"
-  - "TagB"
+  - 新茶饮
+  - 品牌溢价
+  - 出海
+  - 加盟模式
+  - 健康消费
 rework:
-  file: "./docs/rework.md"
-  cover: "./assets/rework-cover.png"
+  file: rework.md
 ai_driven_analysis:
-  file: "./docs/ai.md"
-  cover: "./assets/ai-cover.png"
+  file: ai_driven_analysis.md
 market:
-  file: "./docs/market.md"
-  cover: "./assets/market-cover.png"
+  file: market_analysis_report.md
 
 Notes:
 - Every markdown file should contain one level-1 heading (`# Title`).
 - Local image references in markdown are uploaded to CloudBase and rewritten.
-- The importer upserts by `case_id`: existing case data is replaced.
+- Duplicate `case_id` imports recreate the case: old database rows and
+  referenced CloudBase assets are deleted before the new case is created.
 """
 
 from __future__ import annotations
@@ -62,7 +69,6 @@ if str(API_SRC) not in sys.path:
 from mz_ai_backend.core import get_settings
 from mz_ai_backend.modules.business_cases.application import (
     CreateBusinessCaseUseCase,
-    ReplaceBusinessCaseUseCase,
 )
 from mz_ai_backend.modules.business_cases.infrastructure import (
     SqlAlchemyBusinessCaseRepository,
@@ -80,7 +86,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse command-line arguments for the case directory importer."""
 
     parser = argparse.ArgumentParser(
-        description="Import one local business case directory into an existing case."
+        description="Import one local business case directory into the backend."
     )
     parser.add_argument(
         "--case-dir",
@@ -114,17 +120,12 @@ async def run_import(*, case_dir: Path) -> int:
                 snowflake_id_generator=snowflake_id_generator,
                 current_time_provider=current_time_provider,
             )
-            replace_use_case = ReplaceBusinessCaseUseCase(
-                business_case_repository=repository,
-                current_time_provider=current_time_provider,
-            )
             importer = BusinessCaseDirectoryImporter(
                 business_case_repository=repository,
                 create_use_case=create_use_case,
-                replace_use_case=replace_use_case,
-                asset_uploader=CloudBaseStorageClient(settings=cloudbase_settings),
+                asset_manager=CloudBaseStorageClient(settings=cloudbase_settings),
             )
-            # Import one case directory and upsert data plus referenced assets.
+            # Import one case directory by recreating any existing case_id first.
             result = await importer.import_case(case_dir=case_dir.resolve())
     finally:
         await engine.dispose()

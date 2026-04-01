@@ -8,11 +8,11 @@ import pytest
 
 from mz_ai_backend.modules.business_cases.application import (
     CreateBusinessCaseCommand,
-    ReplaceBusinessCaseCommand,
 )
 from mz_ai_backend.modules.business_cases.domain import (
     BusinessCase,
     BusinessCaseDocument,
+    BusinessCaseIndustry,
     BusinessCaseDocumentType,
     BusinessCaseDocuments,
     BusinessCaseStatus,
@@ -37,19 +37,15 @@ class StubRepository:
     def __init__(self, *, existing_case: BusinessCase | None) -> None:
         self._existing_case = existing_case
         self.requested_case_ids: list[str] = []
+        self.hard_deleted_case_ids: list[str] = []
 
     async def get_by_case_id(self, case_id: str) -> BusinessCase | None:
         self.requested_case_ids.append(case_id)
         return self._existing_case
 
-
-class StubReplaceBusinessCaseUseCase:
-    def __init__(self) -> None:
-        self.executed_command: ReplaceBusinessCaseCommand | None = None
-
-    async def execute(self, command: ReplaceBusinessCaseCommand):
-        self.executed_command = command
-        return None
+    async def hard_delete_by_case_id(self, case_id: str) -> bool:
+        self.hard_deleted_case_ids.append(case_id)
+        return self._existing_case is not None
 
 
 class StubCreateBusinessCaseUseCase:
@@ -64,10 +60,14 @@ class StubCreateBusinessCaseUseCase:
 class StubAssetUploader:
     def __init__(self) -> None:
         self.calls: list[tuple[Path, str]] = []
+        self.deleted_cloud_directories: list[str] = []
 
     def upload_file(self, *, local_path: Path, object_key: str) -> str:
         self.calls.append((local_path, object_key))
         return f"cloud://{CLOUDBASE_ENV_ID}.bucket/{object_key}"
+
+    def delete_directory(self, *, cloud_directory: str) -> None:
+        self.deleted_cloud_directories.append(cloud_directory)
 
 
 def test_load_case_import_config_reads_expected_fields(tmp_path: Path) -> None:
@@ -77,19 +77,17 @@ def test_load_case_import_config_reads_expected_fields(tmp_path: Path) -> None:
             "case_id: case-4\n"
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
-            "cover: images\\rework_cover\\image_01.png\n"
+            "cover: images\\cover\\image_01.png\n"
+            "industry: 消费\n"
             "tags:\n"
             "  - 宠物\n"
             "  - 新零售\n"
             "rework:\n"
             "  file: rework.md\n"
-            "  cover: images\\rework_cover\\image_01.png\n"
             "ai_driven_analysis:\n"
             "  file: ai_driven_analysis.md\n"
-            "  cover: images\\ai_cover\\image_01.png\n"
             "market:\n"
             "  file: market_analysis_report.md\n"
-            "  cover: images\\market_cover\\image_01.png\n"
         ),
     )
 
@@ -97,6 +95,7 @@ def test_load_case_import_config_reads_expected_fields(tmp_path: Path) -> None:
 
     assert config.case_id == CASE_ID
     assert config.title == "宠物新零售行业创业案例"
+    assert config.industry == BusinessCaseIndustry.CONSUMER
     assert config.tags == ("宠物", "新零售")
     assert config.rework.file == "rework.md"
 
@@ -107,18 +106,15 @@ def test_load_case_import_config_rejects_missing_case_id(tmp_path: Path) -> None
         config_text=(
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
-            "cover: images/rework_cover/image_01.png\n"
+            "cover: images/cover/image_01.png\n"
             "tags:\n"
             "  - 宠物\n"
             "rework:\n"
             "  file: rework.md\n"
-            "  cover: images/rework_cover/image_01.png\n"
             "ai_driven_analysis:\n"
             "  file: ai_driven_analysis.md\n"
-            "  cover: images/ai_cover/image_01.png\n"
             "market:\n"
             "  file: market_analysis_report.md\n"
-            "  cover: images/market_cover/image_01.png\n"
         ),
     )
 
@@ -150,29 +146,30 @@ def test_rewrite_markdown_local_images_updates_only_local_references() -> None:
 
 
 @pytest.mark.asyncio
-async def test_business_case_directory_importer_rewrites_markdown_and_reuses_uploads(
+async def test_business_case_directory_importer_recreates_existing_case_and_cleans_assets(
     tmp_path: Path,
 ) -> None:
     _write_case_directory(tmp_path)
     uploader = StubAssetUploader()
     create_use_case = StubCreateBusinessCaseUseCase()
-    replace_use_case = StubReplaceBusinessCaseUseCase()
+    repository = StubRepository(existing_case=_build_existing_case())
     importer = BusinessCaseDirectoryImporter(
-        business_case_repository=StubRepository(existing_case=_build_existing_case()),
+        business_case_repository=repository,
         create_use_case=create_use_case,
-        replace_use_case=replace_use_case,
-        asset_uploader=uploader,
+        asset_manager=uploader,
     )
 
     result = await importer.import_case(case_dir=tmp_path)
 
     assert result.case_id == CASE_ID
-    assert result.uploaded_asset_count == 6
-    assert create_use_case.executed_command is None
-    assert replace_use_case.executed_command is not None
-    command = replace_use_case.executed_command
+    assert result.uploaded_asset_count == 4
+    assert repository.hard_deleted_case_ids == [CASE_ID]
+    assert uploader.deleted_cloud_directories == [f"business-cases/{CASE_ID}"]
+    assert create_use_case.executed_command is not None
+    command = create_use_case.executed_command
     assert command.case_id == CASE_ID
     assert command.status == BusinessCaseStatus.PUBLISHED
+    assert command.industry == BusinessCaseIndustry.CONSUMER
     assert command.documents[0].document_type == BusinessCaseDocumentType.BUSINESS_CASE
     assert (
         f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
@@ -181,7 +178,7 @@ async def test_business_case_directory_importer_rewrites_markdown_and_reuses_upl
     )
     assert command.cover_image_url == (
         f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
-        f"{CASE_ID}/images/rework_cover/image_01.png"
+        f"{CASE_ID}/images/cover/image_01.png"
     )
 
 
@@ -191,21 +188,23 @@ async def test_business_case_directory_importer_creates_missing_case(
 ) -> None:
     _write_case_directory(tmp_path)
     create_use_case = StubCreateBusinessCaseUseCase()
-    replace_use_case = StubReplaceBusinessCaseUseCase()
+    uploader = StubAssetUploader()
+    repository = StubRepository(existing_case=None)
     importer = BusinessCaseDirectoryImporter(
-        business_case_repository=StubRepository(existing_case=None),
+        business_case_repository=repository,
         create_use_case=create_use_case,
-        replace_use_case=replace_use_case,
-        asset_uploader=StubAssetUploader(),
+        asset_manager=uploader,
     )
 
     result = await importer.import_case(case_dir=tmp_path)
 
     assert result.case_id == CASE_ID
-    assert result.uploaded_asset_count == 6
-    assert replace_use_case.executed_command is None
+    assert result.uploaded_asset_count == 4
+    assert repository.hard_deleted_case_ids == []
+    assert uploader.deleted_cloud_directories == []
     assert create_use_case.executed_command is not None
     assert create_use_case.executed_command.case_id == CASE_ID
+    assert create_use_case.executed_command.industry == BusinessCaseIndustry.CONSUMER
     assert create_use_case.executed_command.status == BusinessCaseStatus.PUBLISHED
 
 
@@ -316,21 +315,275 @@ def test_cloudbase_storage_client_requests_upload_ticket_and_uploads_file(
     assert request_log[1]["headers"]["content-type"] == "image/png"
 
 
+def test_cloudbase_storage_client_deletes_files_in_batches_and_ignores_missing_items(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    request_log: list[dict[str, object]] = []
+
+    class FakeResponse:
+        def __init__(self, *, status_code: int, payload: bytes) -> None:
+            self._status_code = status_code
+            self._payload = payload
+
+        def __enter__(self) -> "FakeResponse":
+            return self
+
+        def __exit__(self, exc_type, exc, tb) -> None:
+            return None
+
+        def getcode(self) -> int:
+            return self._status_code
+
+        def read(self) -> bytes:
+            return self._payload
+
+    def fake_urlopen(request, timeout: int):
+        request_log.append(
+            {
+                "url": request.full_url,
+                "method": request.get_method(),
+                "headers": {key.lower(): value for key, value in request.header_items()},
+                "data": request.data,
+                "timeout": timeout,
+            }
+        )
+        payload = [
+            {"cloudObjectId": item["cloudObjectId"]}
+            for item in json.loads(request.data.decode("utf-8"))
+        ]
+        if len(payload) > 1:
+            payload[-1] = {
+                "cloudObjectId": payload[-1]["cloudObjectId"],
+                "code": "OBJECT_NOT_EXIST",
+                "message": "Storage object not exists.",
+            }
+        return FakeResponse(status_code=200, payload=json.dumps(payload).encode("utf-8"))
+
+    monkeypatch.setattr(
+        "mz_ai_backend.modules.business_cases.infrastructure.importing."
+        "cloudbase_client.urllib.request.urlopen",
+        fake_urlopen,
+    )
+
+    client = CloudBaseStorageClient(
+        settings=CaseImportCloudBaseSettings(
+            env_id=CLOUDBASE_ENV_ID,
+            api_key="api-key",
+        )
+    )
+
+    client.delete_files(
+        cloud_object_ids=(
+            f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/case-4/images/a.png",
+            f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/case-4/images/b.png",
+            f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/case-4/images/c.png",
+        )
+    )
+
+    assert len(request_log) == 1
+    assert request_log[0]["url"] == (
+        f"https://{CLOUDBASE_ENV_ID}.api.tcloudbasegateway.com"
+        "/v1/storages/delete-objects"
+    )
+    assert request_log[0]["method"] == "POST"
+    assert request_log[0]["headers"]["authorization"] == "Bearer api-key"
+    assert json.loads(request_log[0]["data"].decode("utf-8")) == [
+        {
+            "cloudObjectId": (
+                f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/case-4/images/a.png"
+            )
+        },
+        {
+            "cloudObjectId": (
+                f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/case-4/images/b.png"
+            )
+        },
+        {
+            "cloudObjectId": (
+                f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/case-4/images/c.png"
+            )
+        },
+    ]
+
+
+def test_cloudbase_storage_client_deletes_directory_via_tcb_cli(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    executed_commands: list[list[str]] = []
+
+    def fake_run(command: list[str], **kwargs) -> object:
+        executed_commands.append(command)
+
+        class Result:
+            returncode = 0
+            stdout = "ok"
+            stderr = ""
+
+        return Result()
+
+    monkeypatch.setattr(
+        "mz_ai_backend.modules.business_cases.infrastructure.importing."
+        "cloudbase_client.shutil.which",
+        lambda executable: "C:/mock/tcb.cmd" if executable == "tcb" else None,
+    )
+    monkeypatch.setattr(
+        "mz_ai_backend.modules.business_cases.infrastructure.importing."
+        "cloudbase_client.subprocess.run",
+        fake_run,
+    )
+
+    client = CloudBaseStorageClient(
+        settings=CaseImportCloudBaseSettings(
+            env_id=CLOUDBASE_ENV_ID,
+            api_key="api-key",
+        )
+    )
+
+    client.delete_directory(cloud_directory=f"business-cases/{CASE_ID}")
+
+    assert executed_commands == [
+        [
+            "C:/mock/tcb.cmd",
+            "storage",
+            "delete",
+            f"business-cases/{CASE_ID}",
+            "--dir",
+            "-e",
+            CLOUDBASE_ENV_ID,
+        ]
+    ]
+
+
+def test_cloudbase_storage_client_retries_directory_delete_after_cli_login(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    executed_commands: list[list[str]] = []
+
+    def fake_run(command: list[str], **kwargs) -> object:
+        executed_commands.append(command)
+
+        class Result:
+            def __init__(self, *, returncode: int, stdout: str = "", stderr: str = "") -> None:
+                self.returncode = returncode
+                self.stdout = stdout
+                self.stderr = stderr
+
+        if command[1:] == [
+            "storage",
+            "delete",
+            f"business-cases/{CASE_ID}",
+            "--dir",
+            "-e",
+            CLOUDBASE_ENV_ID,
+        ] and len(executed_commands) == 1:
+            return Result(
+                returncode=1,
+                stderr="No valid identity information, please use cloudbase login to login",
+            )
+        if command[1:3] == ["login", "--apiKeyId"]:
+            return Result(returncode=0, stdout="login ok")
+        return Result(returncode=0, stdout="delete ok")
+
+    monkeypatch.setattr(
+        "mz_ai_backend.modules.business_cases.infrastructure.importing."
+        "cloudbase_client.shutil.which",
+        lambda executable: "C:/mock/tcb.cmd" if executable == "tcb" else None,
+    )
+    monkeypatch.setattr(
+        "mz_ai_backend.modules.business_cases.infrastructure.importing."
+        "cloudbase_client.subprocess.run",
+        fake_run,
+    )
+
+    client = CloudBaseStorageClient(
+        settings=CaseImportCloudBaseSettings(
+            env_id=CLOUDBASE_ENV_ID,
+            api_key="api-key",
+            cli_api_key_id="secret-id",
+            cli_api_key="secret-key",
+        )
+    )
+
+    client.delete_directory(cloud_directory=f"business-cases/{CASE_ID}")
+
+    assert executed_commands == [
+        [
+            "C:/mock/tcb.cmd",
+            "storage",
+            "delete",
+            f"business-cases/{CASE_ID}",
+            "--dir",
+            "-e",
+            CLOUDBASE_ENV_ID,
+        ],
+        [
+            "C:/mock/tcb.cmd",
+            "login",
+            "--apiKeyId",
+            "secret-id",
+            "--apiKey",
+            "secret-key",
+        ],
+        [
+            "C:/mock/tcb.cmd",
+            "storage",
+            "delete",
+            f"business-cases/{CASE_ID}",
+            "--dir",
+            "-e",
+            CLOUDBASE_ENV_ID,
+        ],
+    ]
+
+
+def test_cloudbase_storage_client_raises_when_cli_login_is_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fake_run(command: list[str], **kwargs) -> object:
+        class Result:
+            returncode = 1
+            stdout = ""
+            stderr = "No valid identity information, please use cloudbase login to login"
+
+        if command[1:3] == ["login", "--apiKeyId"]:
+            return Result()
+        return Result()
+
+    monkeypatch.setattr(
+        "mz_ai_backend.modules.business_cases.infrastructure.importing."
+        "cloudbase_client.shutil.which",
+        lambda executable: "C:/mock/tcb.cmd" if executable == "tcb" else None,
+    )
+    monkeypatch.setattr(
+        "mz_ai_backend.modules.business_cases.infrastructure.importing."
+        "cloudbase_client.subprocess.run",
+        fake_run,
+    )
+
+    client = CloudBaseStorageClient(
+        settings=CaseImportCloudBaseSettings(
+            env_id=CLOUDBASE_ENV_ID,
+            api_key="api-key",
+        )
+    )
+
+    with pytest.raises(RuntimeError) as exc_info:
+        client.delete_directory(cloud_directory=f"business-cases/{CASE_ID}")
+
+    assert "Failed to authenticate CloudBase CLI" in str(exc_info.value)
+
+
 def _write_case_directory(
     case_dir: Path,
     *,
     config_text: str | None = None,
 ) -> None:
-    (case_dir / "images" / "rework_cover").mkdir(parents=True, exist_ok=True)
-    (case_dir / "images" / "market_cover").mkdir(parents=True, exist_ok=True)
-    (case_dir / "images" / "ai_cover").mkdir(parents=True, exist_ok=True)
+    (case_dir / "images" / "cover").mkdir(parents=True, exist_ok=True)
     (case_dir / "images" / "rework_chart1").mkdir(parents=True, exist_ok=True)
     (case_dir / "images" / "market_chart1").mkdir(parents=True, exist_ok=True)
     (case_dir / "images" / "ai_chart1").mkdir(parents=True, exist_ok=True)
     for path in (
-        case_dir / "images" / "rework_cover" / "image_01.png",
-        case_dir / "images" / "market_cover" / "image_01.png",
-        case_dir / "images" / "ai_cover" / "image_01.png",
+        case_dir / "images" / "cover" / "image_01.png",
         case_dir / "images" / "rework_chart1" / "chart.png",
         case_dir / "images" / "market_chart1" / "chart.png",
         case_dir / "images" / "ai_chart1" / "chart.png",
@@ -355,19 +608,17 @@ def _write_case_directory(
             "case_id: case-4\n"
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
-            "cover: images\\rework_cover\\image_01.png\n"
+            "cover: images\\cover\\image_01.png\n"
+            "industry: 消费\n"
             "tags:\n"
             "  - 宠物\n"
             "  - 新零售\n"
             "rework:\n"
             "  file: rework.md\n"
-            "  cover: images\\rework_cover\\image_01.png\n"
             "ai_driven_analysis:\n"
             "  file: ai_driven_analysis.md\n"
-            "  cover: images\\ai_cover\\image_01.png\n"
             "market:\n"
             "  file: market_analysis_report.md\n"
-            "  cover: images\\market_cover\\image_01.png\n"
         ),
         encoding="utf-8",
     )
@@ -378,8 +629,12 @@ def _build_existing_case() -> BusinessCase:
         case_id=CASE_ID,
         title="Existing Title",
         summary="Existing Summary",
+        industry=BusinessCaseIndustry.OTHER,
         tags=("旧标签",),
-        cover_image_url="https://example.com/old-cover.png",
+        cover_image_url=(
+            f"cloud://{CLOUDBASE_ENV_ID}.bucket/"
+            f"business-cases/{CASE_ID}/images/cover/image_01.png"
+        ),
         status=BusinessCaseStatus.DRAFT,
         published_at=None,
         created_at=_fixed_datetime(),
@@ -407,12 +662,20 @@ def _build_document(
     document_id: int,
     document_type: BusinessCaseDocumentType,
 ) -> BusinessCaseDocument:
+    document_slug = {
+        BusinessCaseDocumentType.BUSINESS_CASE: "rework",
+        BusinessCaseDocumentType.MARKET_RESEARCH: "market",
+        BusinessCaseDocumentType.AI_BUSINESS_UPGRADE: "ai",
+    }[document_type]
     return BusinessCaseDocument(
         document_id=document_id,
         document_type=document_type,
         title="Existing",
-        markdown_content="# Existing",
-        cover_image_url="https://example.com/existing.png",
+        markdown_content=(
+            "# Existing\n\n"
+            f"![Chart](cloud://{CLOUDBASE_ENV_ID}.bucket/"
+            f"business-cases/{CASE_ID}/images/{document_slug}_chart1/chart.png)\n"
+        ),
         is_deleted=False,
         created_at=_fixed_datetime(),
         updated_at=_fixed_datetime(),

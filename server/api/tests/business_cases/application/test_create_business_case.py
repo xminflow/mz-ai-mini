@@ -12,6 +12,7 @@ from mz_ai_backend.modules.business_cases.application import (
 from mz_ai_backend.modules.business_cases.domain import (
     BusinessCase,
     BusinessCaseDocument,
+    BusinessCaseIndustry,
     BusinessCaseDocumentType,
     BusinessCaseDocuments,
     BusinessCaseInvalidDocumentSetException,
@@ -48,7 +49,6 @@ class FakeBusinessCaseRepository:
                 document_type=registration.documents[0].document_type,
                 title=registration.documents[0].title,
                 markdown_content=registration.documents[0].markdown_content,
-                cover_image_url=registration.documents[0].cover_image_url,
                 is_deleted=False,
                 created_at=created_at,
                 updated_at=created_at,
@@ -58,7 +58,6 @@ class FakeBusinessCaseRepository:
                 document_type=registration.documents[1].document_type,
                 title=registration.documents[1].title,
                 markdown_content=registration.documents[1].markdown_content,
-                cover_image_url=registration.documents[1].cover_image_url,
                 is_deleted=False,
                 created_at=created_at,
                 updated_at=created_at,
@@ -68,7 +67,6 @@ class FakeBusinessCaseRepository:
                 document_type=registration.documents[2].document_type,
                 title=registration.documents[2].title,
                 markdown_content=registration.documents[2].markdown_content,
-                cover_image_url=registration.documents[2].cover_image_url,
                 is_deleted=False,
                 created_at=created_at,
                 updated_at=created_at,
@@ -78,6 +76,7 @@ class FakeBusinessCaseRepository:
             case_id=registration.case_id,
             title=registration.title,
             summary=registration.summary,
+            industry=registration.industry,
             tags=registration.tags,
             cover_image_url=registration.cover_image_url,
             status=registration.status,
@@ -95,19 +94,16 @@ def _build_document_contents() -> tuple[BusinessCaseDocumentContent, ...]:
             document_type=BusinessCaseDocumentType.BUSINESS_CASE,
             title="Business Case",
             markdown_content="# Business Case",
-            cover_image_url="https://example.com/business-case.png",
         ),
         BusinessCaseDocumentContent(
             document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
             title="Market Research",
             markdown_content="# Market Research",
-            cover_image_url="https://example.com/market-research.png",
         ),
         BusinessCaseDocumentContent(
             document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
             title="AI Upgrade",
             markdown_content="# AI Upgrade",
-            cover_image_url="https://example.com/ai-upgrade.png",
         ),
     )
 
@@ -125,6 +121,7 @@ async def test_create_business_case_use_case_generates_ids_and_published_at() ->
         CreateBusinessCaseCommand(
             title="Case A",
             summary="Summary A",
+            industry=BusinessCaseIndustry.CONSUMER,
             tags=("连锁增长", "AI 提效"),
             cover_image_url="https://example.com/case-a.png",
             status=BusinessCaseStatus.PUBLISHED,
@@ -135,6 +132,7 @@ async def test_create_business_case_use_case_generates_ids_and_published_at() ->
     assert repository.registration is not None
     assert repository.registration.case_id == "1001"
     assert repository.registration.published_at == datetime(2026, 1, 1, 8, 0, 0)
+    assert repository.registration.industry == BusinessCaseIndustry.CONSUMER
     assert repository.registration.tags == ("连锁增长", "AI 提效")
     assert [document.document_id for document in repository.registration.documents] == [
         2001,
@@ -142,6 +140,7 @@ async def test_create_business_case_use_case_generates_ids_and_published_at() ->
         2003,
     ]
     assert result.case_id == "1001"
+    assert result.industry == BusinessCaseIndustry.CONSUMER
     assert result.status == BusinessCaseStatus.PUBLISHED
     assert result.tags == ("连锁增长", "AI 提效")
     assert result.documents.business_case.document_id == 2001
@@ -161,6 +160,7 @@ async def test_create_business_case_use_case_preserves_supplied_case_id() -> Non
             case_id="case-4",
             title="Case A",
             summary="Summary A",
+            industry=BusinessCaseIndustry.ENTERTAINMENT,
             tags=("连锁增长", "AI 提效"),
             cover_image_url="https://example.com/case-a.png",
             status=BusinessCaseStatus.PUBLISHED,
@@ -170,6 +170,7 @@ async def test_create_business_case_use_case_preserves_supplied_case_id() -> Non
 
     assert repository.registration is not None
     assert repository.registration.case_id == "case-4"
+    assert repository.registration.industry == BusinessCaseIndustry.ENTERTAINMENT
     assert [document.document_id for document in repository.registration.documents] == [
         2001,
         2002,
@@ -192,6 +193,7 @@ async def test_create_business_case_use_case_rejects_invalid_document_set() -> N
             CreateBusinessCaseCommand(
                 title="Case A",
                 summary="Summary A",
+                industry=BusinessCaseIndustry.OTHER,
                 tags=("连锁增长",),
                 cover_image_url="https://example.com/case-a.png",
                 status=BusinessCaseStatus.DRAFT,
@@ -200,19 +202,16 @@ async def test_create_business_case_use_case_rejects_invalid_document_set() -> N
                         document_type=BusinessCaseDocumentType.BUSINESS_CASE,
                         title="Business Case",
                         markdown_content="# Business Case",
-                        cover_image_url="https://example.com/business-case.png",
                     ),
                     BusinessCaseDocumentContent(
                         document_type=BusinessCaseDocumentType.BUSINESS_CASE,
                         title="Business Case 2",
                         markdown_content="# Business Case 2",
-                        cover_image_url="https://example.com/business-case-2.png",
                     ),
                     BusinessCaseDocumentContent(
                         document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
                         title="Market Research",
                         markdown_content="# Market Research",
-                        cover_image_url="https://example.com/market-research.png",
                     ),
                 ),
             )

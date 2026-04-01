@@ -2,8 +2,10 @@
 
 Usage:
 - Import dependency factories and repository implementations from this package.
-- Persist case-level `tags` on the business case aggregate.
+- Persist case-level `industry` and `tags` on the business case aggregate.
+- Persist document title and markdown content without per-document cover data.
 - Import case directory tooling through the `importing` subpackage.
+- Repository implementations support importer-driven case recreation cleanup.
 
 Development rules:
 - Keep framework and persistence details here.

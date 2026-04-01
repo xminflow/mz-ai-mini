@@ -67,7 +67,6 @@ def build_registration(
             document_type=document.document_type,
             title=document.title,
             markdown_content=document.markdown_content,
-            cover_image_url=document.cover_image_url,
         )
         for document in validate_document_contents(command.documents)
     )
@@ -75,6 +74,7 @@ def build_registration(
         case_id=case_id,
         title=command.title,
         summary=command.summary,
+        industry=command.industry,
         tags=command.tags,
         cover_image_url=command.cover_image_url,
         status=command.status,
@@ -95,7 +95,6 @@ def build_replacement(
             document_type=document.document_type,
             title=document.title,
             markdown_content=document.markdown_content,
-            cover_image_url=document.cover_image_url,
         )
         for document in validate_document_contents(command.documents)
     )
@@ -103,6 +102,7 @@ def build_replacement(
         case_id=command.case_id,
         title=command.title,
         summary=command.summary,
+        industry=command.industry,
         tags=command.tags,
         cover_image_url=command.cover_image_url,
         status=command.status,
@@ -116,7 +116,6 @@ def _document_result(document: BusinessCaseDocument) -> BusinessCaseDocumentResu
         document_id=document.document_id,
         title=document.title,
         markdown_content=document.markdown_content,
-        cover_image_url=document.cover_image_url,
     )
 
 
@@ -137,6 +136,7 @@ def build_detail_result(case: BusinessCase) -> BusinessCaseDetailResult:
         case_id=case.case_id,
         title=case.title,
         summary=case.summary,
+        industry=case.industry,
         tags=case.tags,
         cover_image_url=case.cover_image_url,
         status=case.status,
@@ -204,7 +204,7 @@ def build_list_result(
     return ListBusinessCasesResult(
         items=page.items,
         next_cursor=next_cursor,
-        available_tags=page.available_tags,
+        available_industries=page.available_industries,
     )
 
 

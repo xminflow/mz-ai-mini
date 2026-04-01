@@ -12,6 +12,7 @@ from mz_ai_backend.modules.business_cases.application import (
 from mz_ai_backend.modules.business_cases.domain import (
     BusinessCase,
     BusinessCaseDocument,
+    BusinessCaseIndustry,
     BusinessCaseDocumentType,
     BusinessCaseDocuments,
     BusinessCaseNotFoundException,
@@ -59,7 +60,6 @@ def _build_case(
             document_type=BusinessCaseDocumentType.BUSINESS_CASE,
             title="Business Case",
             markdown_content="# Business Case",
-            cover_image_url="https://example.com/business-case.png",
             is_deleted=False,
             created_at=created_at,
             updated_at=created_at,
@@ -69,7 +69,6 @@ def _build_case(
             document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
             title="Market Research",
             markdown_content="# Market Research",
-            cover_image_url="https://example.com/market-research.png",
             is_deleted=False,
             created_at=created_at,
             updated_at=created_at,
@@ -79,7 +78,6 @@ def _build_case(
             document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
             title="AI Upgrade",
             markdown_content="# AI Upgrade",
-            cover_image_url="https://example.com/ai-upgrade.png",
             is_deleted=False,
             created_at=created_at,
             updated_at=created_at,
@@ -89,6 +87,7 @@ def _build_case(
         case_id=case_id,
         title="Case A",
         summary="Summary A",
+        industry=BusinessCaseIndustry.CONTENT_AND_CREATOR,
         tags=("连锁增长", "AI 提效"),
         cover_image_url="https://example.com/case-a.png",
         status=status,
@@ -106,19 +105,16 @@ def _build_documents() -> tuple[BusinessCaseDocumentContent, ...]:
             document_type=BusinessCaseDocumentType.BUSINESS_CASE,
             title="Business Case Updated",
             markdown_content="# Business Case Updated",
-            cover_image_url="https://example.com/business-case-updated.png",
         ),
         BusinessCaseDocumentContent(
             document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
             title="Market Research Updated",
             markdown_content="# Market Research Updated",
-            cover_image_url="https://example.com/market-research-updated.png",
         ),
         BusinessCaseDocumentContent(
             document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
             title="AI Upgrade Updated",
             markdown_content="# AI Upgrade Updated",
-            cover_image_url="https://example.com/ai-upgrade-updated.png",
         ),
     )
 
@@ -149,6 +145,7 @@ async def test_replace_business_case_use_case_preserves_existing_published_at() 
             case_id="1001",
             title="Case A Updated",
             summary="Summary A Updated",
+            industry=BusinessCaseIndustry.CONSUMER,
             tags=("私域增长", "门店升级"),
             cover_image_url="https://example.com/case-a-updated.png",
             status=BusinessCaseStatus.PUBLISHED,
@@ -158,6 +155,7 @@ async def test_replace_business_case_use_case_preserves_existing_published_at() 
 
     assert repository.replacement is not None
     assert repository.replacement.published_at == datetime(2026, 1, 1, 9, 0, 0)
+    assert repository.replacement.industry == BusinessCaseIndustry.CONSUMER
     assert repository.replacement.tags == ("私域增长", "门店升级")
     assert result.status == BusinessCaseStatus.PUBLISHED
 
@@ -188,6 +186,7 @@ async def test_replace_business_case_use_case_clears_published_at_when_moving_to
             case_id="1001",
             title="Case A Updated",
             summary="Summary A Updated",
+            industry=BusinessCaseIndustry.EDUCATION,
             tags=("私域增长",),
             cover_image_url="https://example.com/case-a-updated.png",
             status=BusinessCaseStatus.DRAFT,
@@ -197,6 +196,7 @@ async def test_replace_business_case_use_case_clears_published_at_when_moving_to
 
     assert repository.replacement is not None
     assert repository.replacement.published_at is None
+    assert repository.replacement.industry == BusinessCaseIndustry.EDUCATION
     assert repository.replacement.tags == ("私域增长",)
     assert result.status == BusinessCaseStatus.DRAFT
 
@@ -215,6 +215,7 @@ async def test_replace_business_case_use_case_raises_not_found_for_missing_case(
                 case_id="1001",
                 title="Case A Updated",
                 summary="Summary A Updated",
+                industry=BusinessCaseIndustry.OTHER,
                 tags=("私域增长",),
                 cover_image_url="https://example.com/case-a-updated.png",
                 status=BusinessCaseStatus.DRAFT,

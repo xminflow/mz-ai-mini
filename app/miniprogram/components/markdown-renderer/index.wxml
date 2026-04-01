@@ -42,6 +42,17 @@
       ></image>
       <view wx:if="{{block.alt}}" class="markdown-renderer__image-alt">{{block.alt}}</view>
     </view>
+
+    <view wx:elif="{{block.type === 'footnotes'}}" class="markdown-renderer__footnotes">
+      <view
+        wx:for="{{block.items}}"
+        wx:key="id"
+        wx:for-item="footnote"
+        class="markdown-renderer__footnote-item"
+      >
+        <text class="markdown-renderer__footnote-text"><text class="markdown-renderer__footnote-marker">{{footnote.marker}} </text><template is="markdown-inline" data="{{inlines: footnote.inlines}}" /></text>
+      </view>
+    </view>
   </block>
 </view>
 

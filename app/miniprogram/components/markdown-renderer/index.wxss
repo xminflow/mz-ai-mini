@@ -7,7 +7,8 @@
 .markdown-renderer__quote,
 .markdown-renderer__horizontal-rule,
 .markdown-renderer__list,
-.markdown-renderer__image-block {
+.markdown-renderer__image-block,
+.markdown-renderer__footnotes {
   margin-top: 24rpx;
 }
 
@@ -16,7 +17,8 @@
 .markdown-renderer__quote:first-child,
 .markdown-renderer__horizontal-rule:first-child,
 .markdown-renderer__list:first-child,
-.markdown-renderer__image-block:first-child {
+.markdown-renderer__image-block:first-child,
+.markdown-renderer__footnotes:first-child {
   margin-top: 0;
 }
 
@@ -130,4 +132,32 @@
   line-height: 1.7;
   color: #6B7280;
   text-align: center;
+}
+
+.markdown-renderer__footnotes {
+  padding-top: 24rpx;
+  border-top: 2rpx solid #E5E7EB;
+}
+
+.markdown-renderer__footnote-item {
+  margin-top: 16rpx;
+}
+
+.markdown-renderer__footnote-item:first-child {
+  margin-top: 0;
+}
+
+.markdown-renderer__footnote-text,
+.markdown-renderer__footnote-marker {
+  font-size: 24rpx;
+  line-height: 1.8;
+}
+
+.markdown-renderer__footnote-text {
+  display: block;
+  color: #4B5563;
+}
+
+.markdown-renderer__footnote-marker {
+  color: #0B0B0B;
 }

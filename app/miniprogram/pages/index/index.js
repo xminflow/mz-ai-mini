@@ -1,6 +1,12 @@
 const { STORY_PAGE_SIZE, fetchStoryList } = require("../../services/story");
 const { encodeBusinessCaseRouteId } = require("../../utils/businessCaseId");
-const { buildStoryTabs, buildWaterfallColumns } = require("./layout");
+const {
+  DEFAULT_AVAILABLE_INDUSTRIES,
+  MORE_INDUSTRY_TAB_VALUE,
+  buildIndustryOptions,
+  buildIndustryTabs,
+  buildWaterfallColumns,
+} = require("./layout");
 
 const HOME_BANNER_IMAGE_LIST = Object.freeze([
   "cloud://rlink-5g3hqx773b8980a1.726c-rlink-5g3hqx773b8980a1-1415950630/images/banner1.png",
@@ -12,9 +18,13 @@ const buildFeedData = (storyList = []) => ({
   ...buildWaterfallColumns(storyList),
 });
 
-const buildTabData = (availableTags = []) => ({
-  availableTags,
-  tabList: buildStoryTabs(availableTags),
+const buildIndustryData = ({
+  availableIndustries = DEFAULT_AVAILABLE_INDUSTRIES,
+  selectedIndustry = "",
+} = {}) => ({
+  availableIndustries,
+  tabList: buildIndustryTabs(selectedIndustry),
+  industryOptionList: buildIndustryOptions(availableIndustries, selectedIndustry),
 });
 
 Page({
@@ -23,9 +33,11 @@ Page({
     storyList: [],
     leftColumnStoryList: [],
     rightColumnStoryList: [],
-    availableTags: [],
-    tabList: buildStoryTabs(),
-    selectedTag: "",
+    ...buildIndustryData(),
+    selectedIndustry: "",
+    keywordInput: "",
+    submittedKeyword: "",
+    isIndustrySelectorVisible: false,
     nextCursor: "",
     hasMore: true,
     isLoadingInitial: true,
@@ -48,10 +60,25 @@ Page({
     this.loadMoreStories();
   },
 
-  async loadInitialStories({ tag = this.data.selectedTag } = {}) {
+  async loadInitialStories({
+    industry = this.data.selectedIndustry,
+    keyword = this.data.submittedKeyword,
+  } = {}) {
+    const normalizedIndustry =
+      typeof industry === "string" ? industry.trim() : "";
+    const normalizedKeyword =
+      typeof keyword === "string" ? keyword.trim() : "";
+
     this.setData({
       ...buildFeedData(),
-      selectedTag: tag,
+      ...buildIndustryData({
+        availableIndustries: this.data.availableIndustries,
+        selectedIndustry: normalizedIndustry,
+      }),
+      selectedIndustry: normalizedIndustry,
+      keywordInput: normalizedKeyword,
+      submittedKeyword: normalizedKeyword,
+      isIndustrySelectorVisible: false,
       isLoadingInitial: true,
       initialLoadError: false,
       isLoadingMore: false,
@@ -63,13 +90,19 @@ Page({
     try {
       const response = await fetchStoryList({
         pageSize: STORY_PAGE_SIZE,
-        tag,
+        industry: normalizedIndustry,
+        keyword: normalizedKeyword,
       });
 
       this.setData({
         ...buildFeedData(response.list),
-        ...buildTabData(response.availableTags),
-        selectedTag: tag,
+        ...buildIndustryData({
+          availableIndustries: response.availableIndustries,
+          selectedIndustry: normalizedIndustry,
+        }),
+        selectedIndustry: normalizedIndustry,
+        keywordInput: normalizedKeyword,
+        submittedKeyword: normalizedKeyword,
         nextCursor: response.nextCursor,
         hasMore: response.hasMore,
         isLoadingInitial: false,
@@ -116,13 +149,17 @@ Page({
       const response = await fetchStoryList({
         pageSize: STORY_PAGE_SIZE,
         cursor: this.data.nextCursor,
-        tag: this.data.selectedTag,
+        industry: this.data.selectedIndustry,
+        keyword: this.data.submittedKeyword,
       });
       const storyList = this.data.storyList.concat(response.list);
 
       this.setData({
         ...buildFeedData(storyList),
-        ...buildTabData(response.availableTags),
+        ...buildIndustryData({
+          availableIndustries: response.availableIndustries,
+          selectedIndustry: this.data.selectedIndustry,
+        }),
         nextCursor: response.nextCursor,
         hasMore: response.hasMore,
         isLoadingMore: false,
@@ -151,14 +188,75 @@ Page({
   },
 
   handleSelectTab(event) {
-    const { tag = "" } = event.currentTarget.dataset;
+    const { industry = "" } = event.currentTarget.dataset;
 
-    if (tag === this.data.selectedTag) {
+    if (industry === MORE_INDUSTRY_TAB_VALUE) {
+      this.setData({
+        isIndustrySelectorVisible: true,
+      });
       return;
     }
 
-    this.loadInitialStories({ tag });
+    if (industry === this.data.selectedIndustry) {
+      return;
+    }
+
+    return this.loadInitialStories({
+      industry,
+      keyword: this.data.submittedKeyword,
+    });
   },
+
+  handleKeywordInput(event) {
+    this.setData({
+      keywordInput: event.detail.value || "",
+    });
+  },
+
+  handleSubmitKeywordSearch(event) {
+    const keywordSource =
+      typeof event?.detail?.value === "string"
+        ? event.detail.value
+        : this.data.keywordInput;
+    const keyword = keywordSource.trim();
+
+    if (keyword === this.data.submittedKeyword) {
+      this.setData({
+        keywordInput: keyword,
+      });
+      return;
+    }
+
+    return this.loadInitialStories({
+      industry: this.data.selectedIndustry,
+      keyword,
+    });
+  },
+
+  handleHideIndustrySelector() {
+    this.setData({
+      isIndustrySelectorVisible: false,
+    });
+  },
+
+  handleSelectIndustryOption(event) {
+    const { industry = "" } = event.currentTarget.dataset;
+
+    this.setData({
+      isIndustrySelectorVisible: false,
+    });
+
+    if (industry === this.data.selectedIndustry) {
+      return;
+    }
+
+    return this.loadInitialStories({
+      industry,
+      keyword: this.data.submittedKeyword,
+    });
+  },
+
+  handleStopPropagation() {},
 
   handleSelectStory(event) {
     const { id } = event.detail;

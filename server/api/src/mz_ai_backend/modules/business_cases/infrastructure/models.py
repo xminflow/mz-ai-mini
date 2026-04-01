@@ -26,12 +26,19 @@ class BusinessCaseModel(Base):
     __table_args__ = (
         Index("idx_business_cases_status_created_at", "status", "created_at"),
         Index("idx_business_cases_published_at", "published_at"),
+        Index(
+            "idx_business_cases_public_listing",
+            "status",
+            "industry",
+            "published_at",
+        ),
     )
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     case_id: Mapped[str] = mapped_column(String(128), unique=True, nullable=False, index=True)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     summary: Mapped[str] = mapped_column(Text, nullable=False)
+    industry: Mapped[str] = mapped_column(String(32), nullable=False)
     tags: Mapped[list[str]] = mapped_column(JSON, nullable=False)
     cover_image_url: Mapped[str] = mapped_column(String(2048), nullable=False)
     status: Mapped[str] = mapped_column(String(16), nullable=False)
@@ -77,7 +84,6 @@ class BusinessCaseDocumentModel(Base):
     document_type: Mapped[str] = mapped_column(String(32), nullable=False)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     markdown_content: Mapped[str] = mapped_column(LONGTEXT, nullable=False)
-    cover_image_url: Mapped[str] = mapped_column(String(2048), nullable=False)
     is_deleted: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False),

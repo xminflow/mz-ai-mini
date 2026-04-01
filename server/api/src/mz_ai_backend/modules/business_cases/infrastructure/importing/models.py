@@ -5,8 +5,7 @@ from pathlib import Path
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from ...domain import BusinessCaseDocumentType
-
+from ...domain import BusinessCaseDocumentType, BusinessCaseIndustry
 
 SERVER_ENV_FILE = Path(__file__).resolve().parents[7] / ".env"
 
@@ -31,8 +30,8 @@ def _normalize_tags(tags: tuple[str, ...]) -> tuple[str, ...]:
 
     if not normalized_tags:
         raise ValueError("tags must not be empty.")
-    if len(normalized_tags) > 3:
-        raise ValueError("tags must contain at most 3 items.")
+    if len(normalized_tags) > 10:
+        raise ValueError("tags must contain at most 10 items.")
     return tuple(normalized_tags)
 
 
@@ -49,9 +48,8 @@ class CaseImportDocumentConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     file: str
-    cover: str
 
-    @field_validator("file", "cover")
+    @field_validator("file")
     @classmethod
     def validate_required_fields(cls, value: str, info) -> str:
         return _strip_required_text(value, field_name=info.field_name)
@@ -66,6 +64,7 @@ class CaseImportConfig(BaseModel):
     title: str
     desc: str
     cover: str
+    industry: BusinessCaseIndustry = BusinessCaseIndustry.OTHER
     tags: tuple[str, ...]
     rework: CaseImportDocumentConfig
     ai_driven_analysis: CaseImportDocumentConfig
@@ -95,9 +94,8 @@ class CaseImportDocumentPayload(BaseModel):
     document_type: BusinessCaseDocumentType
     title: str
     markdown_content: str
-    cover_image_url: str
 
-    @field_validator("title", "markdown_content", "cover_image_url")
+    @field_validator("title", "markdown_content")
     @classmethod
     def validate_required_fields(cls, value: str, info) -> str:
         return _strip_required_text(value, field_name=info.field_name)
@@ -111,6 +109,7 @@ class CaseImportPayload(BaseModel):
     case_id: str
     title: str
     summary: str
+    industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
     documents: tuple[CaseImportDocumentPayload, ...]
@@ -155,10 +154,29 @@ class CaseImportCloudBaseSettings(BaseSettings):
 
     env_id: str = Field(validation_alias="MZ_AI_CASE_IMPORT_CLOUDBASE_ENV_ID")
     api_key: str = Field(validation_alias="MZ_AI_CASE_IMPORT_CLOUDBASE_API_KEY")
+    cli_api_key_id: str | None = Field(
+        default=None,
+        validation_alias="MZ_AI_CASE_IMPORT_CLOUDBASE_CLI_API_KEY_ID",
+    )
+    cli_api_key: str | None = Field(
+        default=None,
+        validation_alias="MZ_AI_CASE_IMPORT_CLOUDBASE_CLI_API_KEY",
+    )
+    cli_token: str | None = Field(
+        default=None,
+        validation_alias="MZ_AI_CASE_IMPORT_CLOUDBASE_CLI_TOKEN",
+    )
 
     @field_validator("env_id", "api_key")
     @classmethod
     def validate_required_fields(cls, value: str, info) -> str:
+        return _strip_required_text(value, field_name=info.field_name)
+
+    @field_validator("cli_api_key_id", "cli_api_key", "cli_token")
+    @classmethod
+    def validate_optional_fields(cls, value: str | None, info) -> str | None:
+        if value is None:
+            return None
         return _strip_required_text(value, field_name=info.field_name)
 
     @classmethod
@@ -182,6 +200,10 @@ class CaseImportCloudBaseSettings(BaseSettings):
             raise ValueError(
                 f"Missing CloudBase environment variables: {joined_keys}."
             ) from exc
+
+    @property
+    def has_cli_credentials(self) -> bool:
+        return self.cli_api_key_id is not None and self.cli_api_key is not None
 
 
 class CloudBaseUploadTicket(BaseModel):

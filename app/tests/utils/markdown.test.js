@@ -354,3 +354,141 @@ test("parseMarkdownToBlocks keeps fenced code syntax as plain paragraph text", (
     },
   ]);
 });
+
+test("parseMarkdownToBlocks hides inline footnote markers and appends footnotes in first reference order", () => {
+  const blocks = parseMarkdownToBlocks(
+    "## 标题[^h]\n\n正文[^1]继续。\n\n- 列表项[^2]\n\n> 引用[^3]\n\n| 列[^4] | 值 |\n| --- | --- |\n| 数据[^1] | [链接](https://example.com) |\n\n[^4]: 第四条\n[^1]: 第一条**脚注**\n[^h]: 标题脚注\n[^3]: 第三条\n[^2]: 第二条"
+  );
+
+  assert.deepEqual(
+    blocks.map((block) => block.type),
+    ["heading", "paragraph", "list", "quote", "table", "footnotes"]
+  );
+  assert.deepEqual(blocks[0].inlines, [
+    {
+      id: "inline-0",
+      type: "text",
+      text: "标题",
+    },
+  ]);
+  assert.deepEqual(blocks[1].inlines, [
+    {
+      id: "inline-0",
+      type: "text",
+      text: "正文继续。",
+    },
+  ]);
+  assert.deepEqual(blocks[2].items[0].inlines, [
+    {
+      id: "inline-0",
+      type: "text",
+      text: "列表项",
+    },
+  ]);
+  assert.deepEqual(blocks[3].inlines, [
+    {
+      id: "inline-0",
+      type: "text",
+      text: "引用",
+    },
+  ]);
+  assert.deepEqual(blocks[4].header[0].inlines, [
+    {
+      id: "inline-0",
+      type: "text",
+      text: "列",
+    },
+  ]);
+  assert.deepEqual(blocks[4].rows[0].cells[0].inlines, [
+    {
+      id: "inline-0",
+      type: "text",
+      text: "数据",
+    },
+  ]);
+  assert.deepEqual(blocks[5], {
+    id: "footnotes-5",
+    type: "footnotes",
+    items: [
+      {
+        id: "footnote-item-0",
+        label: "h",
+        marker: "h.",
+        inlines: [
+          {
+            id: "inline-0",
+            type: "text",
+            text: "标题脚注",
+          },
+        ],
+      },
+      {
+        id: "footnote-item-1",
+        label: "1",
+        marker: "1.",
+        inlines: [
+          {
+            id: "inline-0",
+            type: "text",
+            text: "第一条",
+          },
+          {
+            id: "inline-1",
+            type: "strong",
+            text: "脚注",
+          },
+        ],
+      },
+      {
+        id: "footnote-item-2",
+        label: "2",
+        marker: "2.",
+        inlines: [
+          {
+            id: "inline-0",
+            type: "text",
+            text: "第二条",
+          },
+        ],
+      },
+      {
+        id: "footnote-item-3",
+        label: "3",
+        marker: "3.",
+        inlines: [
+          {
+            id: "inline-0",
+            type: "text",
+            text: "第三条",
+          },
+        ],
+      },
+      {
+        id: "footnote-item-4",
+        label: "4",
+        marker: "4.",
+        inlines: [
+          {
+            id: "inline-0",
+            type: "text",
+            text: "第四条",
+          },
+        ],
+      },
+    ],
+  });
+});
+
+test("parseMarkdownToBlocks throws when a footnote reference is missing", () => {
+  assert.throws(
+    () => parseMarkdownToBlocks("正文[^9]"),
+    /Markdown footnote reference "9" is not defined\./
+  );
+});
+
+test("parseMarkdownToBlocks throws when a footnote definition is duplicated", () => {
+  assert.throws(
+    () => parseMarkdownToBlocks("[^1]: 第一条\n[^1]: 第二条"),
+    /Markdown footnote definition "1" is duplicated\./
+  );
+});

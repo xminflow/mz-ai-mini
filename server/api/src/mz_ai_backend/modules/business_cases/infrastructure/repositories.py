@@ -1,10 +1,8 @@
 from __future__ import annotations
-
-import json
 from collections.abc import Iterable
 from datetime import datetime
 
-from sqlalchemy import Select, and_, desc, func, or_, select
+from sqlalchemy import Select, and_, desc, or_, select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -20,11 +18,15 @@ from ..application.dtos import (
 from ..domain import (
     BusinessCase,
     BusinessCaseDocument,
+    BusinessCaseIndustry,
     BusinessCaseDocumentType,
     BusinessCaseDocuments,
     BusinessCaseStatus,
 )
 from .models import BusinessCaseDocumentModel, BusinessCaseModel
+
+
+_AVAILABLE_INDUSTRIES = tuple(industry.value for industry in BusinessCaseIndustry)
 
 
 def _normalize_loaded_tags(tags: object) -> tuple[str, ...]:
@@ -44,13 +46,32 @@ def _normalize_loaded_tags(tags: object) -> tuple[str, ...]:
     return tuple(normalized_tags)
 
 
+def _normalize_loaded_industry(industry: object) -> BusinessCaseIndustry:
+    if not isinstance(industry, str):
+        raise InternalServerException(message="Business case industry is invalid.")
+
+    normalized_industry = industry.strip()
+    if normalized_industry == "":
+        raise InternalServerException(message="Business case industry is invalid.")
+
+    try:
+        return BusinessCaseIndustry(normalized_industry)
+    except ValueError as exc:
+        raise InternalServerException(
+            message="Business case industry is invalid."
+        ) from exc
+
+
+def _escape_like_pattern(value: str) -> str:
+    return value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+
+
 def _to_document(model: BusinessCaseDocumentModel) -> BusinessCaseDocument:
     return BusinessCaseDocument(
         document_id=model.document_id,
         document_type=BusinessCaseDocumentType(model.document_type),
         title=model.title,
         markdown_content=model.markdown_content,
-        cover_image_url=model.cover_image_url,
         is_deleted=model.is_deleted,
         created_at=model.created_at,
         updated_at=model.updated_at,
@@ -92,6 +113,7 @@ def _to_aggregate(
         case_id=model.case_id,
         title=model.title,
         summary=model.summary,
+        industry=_normalize_loaded_industry(model.industry),
         tags=_normalize_loaded_tags(model.tags),
         cover_image_url=model.cover_image_url,
         status=BusinessCaseStatus(model.status),
@@ -108,6 +130,7 @@ def _to_list_item(model: BusinessCaseModel) -> BusinessCaseListItemResult:
         case_id=model.case_id,
         title=model.title,
         summary=model.summary,
+        industry=_normalize_loaded_industry(model.industry),
         tags=_normalize_loaded_tags(model.tags),
         cover_image_url=model.cover_image_url,
         status=BusinessCaseStatus(model.status),
@@ -148,6 +171,7 @@ class SqlAlchemyBusinessCaseRepository:
             case_id=registration.case_id,
             title=registration.title,
             summary=registration.summary,
+            industry=registration.industry.value,
             tags=list(registration.tags),
             cover_image_url=registration.cover_image_url,
             status=registration.status.value,
@@ -161,7 +185,6 @@ class SqlAlchemyBusinessCaseRepository:
                 document_type=document.document_type.value,
                 title=document.title,
                 markdown_content=document.markdown_content,
-                cover_image_url=document.cover_image_url,
                 is_deleted=False,
             )
             for document in registration.documents
@@ -229,6 +252,7 @@ class SqlAlchemyBusinessCaseRepository:
 
         case_model.title = replacement.title
         case_model.summary = replacement.summary
+        case_model.industry = replacement.industry.value
         case_model.tags = list(replacement.tags)
         case_model.cover_image_url = replacement.cover_image_url
         case_model.status = replacement.status.value
@@ -238,7 +262,6 @@ class SqlAlchemyBusinessCaseRepository:
             model = document_model_map[document.document_type]
             model.title = document.title
             model.markdown_content = document.markdown_content
-            model.cover_image_url = document.cover_image_url
 
         await self._commit_or_raise("Failed to replace business case.")
         return await self.get_by_case_id(replacement.case_id)
@@ -265,6 +288,28 @@ class SqlAlchemyBusinessCaseRepository:
             document_model.is_deleted = True
 
         await self._commit_or_raise("Failed to delete business case.")
+        return True
+
+    async def hard_delete_by_case_id(self, case_id: str) -> bool:
+        case_statement = select(BusinessCaseModel).where(
+            BusinessCaseModel.case_id == case_id
+        )
+        case_result = await self._session.execute(case_statement)
+        case_model = case_result.scalar_one_or_none()
+        if case_model is None:
+            return False
+
+        document_statement = select(BusinessCaseDocumentModel).where(
+            BusinessCaseDocumentModel.case_id == case_id
+        )
+        document_result = await self._session.execute(document_statement)
+        document_models = document_result.scalars().all()
+
+        for document_model in document_models:
+            await self._session.delete(document_model)
+        await self._session.delete(case_model)
+
+        await self._commit_or_raise("Failed to hard delete business case.")
         return True
 
     async def list_admin(
@@ -299,9 +344,13 @@ class SqlAlchemyBusinessCaseRepository:
         *,
         limit: int,
         cursor: BusinessCaseCursor | None,
-        tag: str | None,
+        industry: BusinessCaseIndustry | None,
+        keyword: str | None,
     ) -> BusinessCasePageSlice:
-        statement = self._build_public_list_statement(tag=tag)
+        statement = self._build_public_list_statement(
+            industry=industry,
+            keyword=keyword,
+        )
         statement = _apply_cursor(
             statement,
             sort_column=BusinessCaseModel.published_at,
@@ -314,47 +363,55 @@ class SqlAlchemyBusinessCaseRepository:
         result = await self._session.execute(statement)
         models = result.scalars().all()
         items = tuple(_to_list_item(model) for model in models[:limit])
-        available_tags = await self._list_public_available_tags()
         return BusinessCasePageSlice(
             items=items,
             has_more=len(models) > limit,
-            available_tags=available_tags,
+            available_industries=_AVAILABLE_INDUSTRIES,
         )
 
-    def _build_public_list_statement(self, *, tag: str | None) -> Select[tuple[BusinessCaseModel]]:
+    def _build_public_list_statement(
+        self,
+        *,
+        industry: BusinessCaseIndustry | None,
+        keyword: str | None,
+    ) -> Select[tuple[BusinessCaseModel]]:
         statement = select(BusinessCaseModel).where(
             BusinessCaseModel.is_deleted.is_(False),
             BusinessCaseModel.status == BusinessCaseStatus.PUBLISHED.value,
             BusinessCaseModel.published_at.is_not(None),
         )
-        if tag is None:
+        if industry is not None:
+            statement = statement.where(BusinessCaseModel.industry == industry.value)
+
+        if keyword is None:
             return statement
 
-        return statement.where(
-            func.json_contains(
-                BusinessCaseModel.tags,
-                json.dumps(tag, ensure_ascii=False),
+        keyword_pattern = f"%{_escape_like_pattern(keyword)}%"
+        document_match_exists = (
+            select(BusinessCaseDocumentModel.case_id)
+            .where(
+                BusinessCaseDocumentModel.case_id == BusinessCaseModel.case_id,
+                BusinessCaseDocumentModel.is_deleted.is_(False),
+                or_(
+                    BusinessCaseDocumentModel.title.like(
+                        keyword_pattern,
+                        escape="\\",
+                    ),
+                    BusinessCaseDocumentModel.markdown_content.like(
+                        keyword_pattern,
+                        escape="\\",
+                    ),
+                ),
             )
-            == 1
+            .exists()
         )
-
-    async def _list_public_available_tags(self) -> tuple[str, ...]:
-        statement = self._build_public_list_statement(tag=None).order_by(
-            desc(BusinessCaseModel.published_at),
-            desc(BusinessCaseModel.case_id),
+        return statement.where(
+            or_(
+                BusinessCaseModel.title.like(keyword_pattern, escape="\\"),
+                BusinessCaseModel.summary.like(keyword_pattern, escape="\\"),
+                document_match_exists,
+            )
         )
-        result = await self._session.execute(statement)
-        models = result.scalars().all()
-
-        tags: list[str] = []
-        seen: set[str] = set()
-        for model in models:
-            for tag in _normalize_loaded_tags(model.tags):
-                if tag in seen:
-                    continue
-                seen.add(tag)
-                tags.append(tag)
-        return tuple(tags)
 
     async def _commit_or_raise(self, message: str) -> None:
         try:

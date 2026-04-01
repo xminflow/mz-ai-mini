@@ -17,6 +17,7 @@ from mz_ai_backend.modules.business_cases.application.use_cases._common import (
     encode_cursor,
 )
 from mz_ai_backend.modules.business_cases.domain import BusinessCaseStatus
+from mz_ai_backend.modules.business_cases.domain import BusinessCaseIndustry
 
 
 class FakeBusinessCaseRepository:
@@ -32,10 +33,11 @@ class FakeBusinessCaseRepository:
         self.admin_status = status
         return self._page
 
-    async def list_public(self, *, limit: int, cursor, tag):
+    async def list_public(self, *, limit: int, cursor, industry, keyword):
         self.public_cursor = cursor
         self.public_limit = limit
-        self.public_tag = tag
+        self.public_industry = industry
+        self.public_keyword = keyword
         return self._page
 
 
@@ -49,6 +51,7 @@ def _build_list_item(
         case_id=case_id,
         title=f"Case {case_id}",
         summary=f"Summary {case_id}",
+        industry=BusinessCaseIndustry.CONSUMER,
         tags=("连锁增长",),
         cover_image_url=f"https://example.com/{case_id}.png",
         status=BusinessCaseStatus.PUBLISHED if published_at else BusinessCaseStatus.DRAFT,
@@ -75,7 +78,7 @@ async def test_list_admin_business_cases_use_case_returns_next_cursor() -> None:
                 ),
             ),
             has_more=True,
-            available_tags=(),
+            available_industries=(),
         )
     )
     use_case = ListAdminBusinessCasesUseCase(business_case_repository=repository)
@@ -124,7 +127,7 @@ async def test_list_public_business_cases_use_case_decodes_cursor_before_query()
                 ),
             ),
             has_more=False,
-            available_tags=("连锁增长", "AI 提效"),
+            available_industries=("科技", "消费"),
         )
     )
     use_case = ListPublicBusinessCasesUseCase(business_case_repository=repository)
@@ -137,12 +140,18 @@ async def test_list_public_business_cases_use_case_decodes_cursor_before_query()
     )
 
     result = await use_case.execute(
-        ListPublicBusinessCasesQuery(limit=20, cursor=cursor, tag="AI 提效")
+        ListPublicBusinessCasesQuery(
+            limit=20,
+            cursor=cursor,
+            industry=BusinessCaseIndustry.CONSUMER,
+            keyword="增长",
+        )
     )
 
     assert repository.public_cursor is not None
     assert repository.public_cursor.case_id == "999"
     assert repository.public_cursor.sort_value == datetime(2026, 1, 4, 8, 0, 0)
-    assert repository.public_tag == "AI 提效"
+    assert repository.public_industry == BusinessCaseIndustry.CONSUMER
+    assert repository.public_keyword == "增长"
     assert result.next_cursor is None
-    assert result.available_tags == ("连锁增长", "AI 提效")
+    assert result.available_industries == ("科技", "消费")

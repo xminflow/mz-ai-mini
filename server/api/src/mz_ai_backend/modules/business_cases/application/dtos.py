@@ -4,7 +4,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
-from ..domain import BusinessCaseDocumentType, BusinessCaseStatus
+from ..domain import BusinessCaseDocumentType, BusinessCaseIndustry, BusinessCaseStatus
 
 
 class BusinessCaseDocumentContent(BaseModel):
@@ -15,7 +15,6 @@ class BusinessCaseDocumentContent(BaseModel):
     document_type: BusinessCaseDocumentType
     title: str
     markdown_content: str
-    cover_image_url: str
 
 
 class CreateBusinessCaseCommand(BaseModel):
@@ -26,6 +25,7 @@ class CreateBusinessCaseCommand(BaseModel):
     case_id: str | None = None
     title: str
     summary: str
+    industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
     status: BusinessCaseStatus
@@ -40,6 +40,7 @@ class ReplaceBusinessCaseCommand(BaseModel):
     case_id: str
     title: str
     summary: str
+    industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
     status: BusinessCaseStatus
@@ -79,7 +80,8 @@ class ListPublicBusinessCasesQuery(BaseModel):
 
     limit: int
     cursor: str | None
-    tag: str | None
+    industry: BusinessCaseIndustry | None
+    keyword: str | None
 
 
 class BusinessCaseDocumentRegistration(BaseModel):
@@ -91,7 +93,6 @@ class BusinessCaseDocumentRegistration(BaseModel):
     document_type: BusinessCaseDocumentType
     title: str
     markdown_content: str
-    cover_image_url: str
 
 
 class BusinessCaseRegistration(BaseModel):
@@ -102,6 +103,7 @@ class BusinessCaseRegistration(BaseModel):
     case_id: str
     title: str
     summary: str
+    industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
     status: BusinessCaseStatus
@@ -117,7 +119,6 @@ class BusinessCaseDocumentReplacement(BaseModel):
     document_type: BusinessCaseDocumentType
     title: str
     markdown_content: str
-    cover_image_url: str
 
 
 class BusinessCaseReplacement(BaseModel):
@@ -128,6 +129,7 @@ class BusinessCaseReplacement(BaseModel):
     case_id: str
     title: str
     summary: str
+    industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
     status: BusinessCaseStatus
@@ -152,7 +154,6 @@ class BusinessCaseDocumentResult(BaseModel):
     document_id: int
     title: str
     markdown_content: str
-    cover_image_url: str
 
 
 class BusinessCaseDocumentsResult(BaseModel):
@@ -173,6 +174,7 @@ class BusinessCaseDetailResult(BaseModel):
     case_id: str
     title: str
     summary: str
+    industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
     status: BusinessCaseStatus
@@ -190,6 +192,7 @@ class BusinessCaseListItemResult(BaseModel):
     case_id: str
     title: str
     summary: str
+    industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
     status: BusinessCaseStatus
@@ -205,7 +208,7 @@ class BusinessCasePageSlice(BaseModel):
 
     items: tuple[BusinessCaseListItemResult, ...]
     has_more: bool
-    available_tags: tuple[str, ...] = ()
+    available_industries: tuple[str, ...] = ()
 
 
 class ListBusinessCasesResult(BaseModel):
@@ -215,7 +218,7 @@ class ListBusinessCasesResult(BaseModel):
 
     items: tuple[BusinessCaseListItemResult, ...]
     next_cursor: str | None
-    available_tags: tuple[str, ...] = ()
+    available_industries: tuple[str, ...] = ()
 
 
 class DeleteBusinessCaseResult(BaseModel):

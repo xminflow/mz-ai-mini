@@ -18,6 +18,21 @@
     </swiper>
   </view>
 
+  <view class="story-search">
+    <input
+      class="story-search__input"
+      type="text"
+      value="{{keywordInput}}"
+      placeholder="搜索案例关键词"
+      confirm-type="search"
+      bindinput="handleKeywordInput"
+      bindconfirm="handleSubmitKeywordSearch"
+    />
+    <view class="story-search__action" bindtap="handleSubmitKeywordSearch">
+      搜索
+    </view>
+  </view>
+
   <scroll-view
     class="story-tabs"
     scroll-x="true"
@@ -26,16 +41,42 @@
   >
     <view class="story-tabs__list">
       <view
-        class="story-tabs__item {{item.value === selectedTag ? 'story-tabs__item--active' : ''}}"
+        class="story-tabs__item {{item.isActive ? 'story-tabs__item--active' : ''}}"
         wx:for="{{tabList}}"
-        wx:key="value"
-        data-tag="{{item.value}}"
+        wx:key="key"
+        data-industry="{{item.value}}"
         bindtap="handleSelectTab"
       >
         {{item.label}}
       </view>
     </view>
   </scroll-view>
+
+  <view
+    class="industry-sheet__mask"
+    wx:if="{{isIndustrySelectorVisible}}"
+    bindtap="handleHideIndustrySelector"
+  >
+    <view class="industry-sheet" catchtap="handleStopPropagation">
+      <view class="industry-sheet__header">
+        <view class="industry-sheet__title">选择行业</view>
+        <view class="industry-sheet__close" bindtap="handleHideIndustrySelector">
+          关闭
+        </view>
+      </view>
+      <view class="industry-sheet__list">
+        <view
+          class="industry-sheet__item {{item.isActive ? 'industry-sheet__item--active' : ''}}"
+          wx:for="{{industryOptionList}}"
+          wx:key="key"
+          data-industry="{{item.value}}"
+          bindtap="handleSelectIndustryOption"
+        >
+          {{item.label}}
+        </view>
+      </view>
+    </view>
+  </view>
 
   <view class="feed-grid" wx:if="{{isLoadingInitial}}">
     <view class="feed-column">
@@ -64,10 +105,14 @@
   </view>
 
   <view class="feedback feedback--center" wx:elif="{{!storyList.length}}">
-    <view class="feedback__title" wx:if="{{selectedTag}}">该分类下还没有案例</view>
+    <view class="feedback__title" wx:if="{{submittedKeyword}}">没有找到相关案例</view>
+    <view class="feedback__title" wx:elif="{{selectedIndustry}}">该行业下还没有案例</view>
     <view class="feedback__title" wx:else>还没有发布案例</view>
-    <view class="feedback__text" wx:if="{{selectedTag}}">
-      切换其他分类，或补充该标签对应的案例内容。
+    <view class="feedback__text" wx:if="{{submittedKeyword}}">
+      试试更换关键词，或调整当前行业筛选条件。
+    </view>
+    <view class="feedback__text" wx:elif="{{selectedIndustry}}">
+      切换其他行业，或补充该行业对应的案例内容。
     </view>
     <view class="feedback__text" wx:else>
       发布第一篇创业案例后，这里会自动形成首页阅读流。

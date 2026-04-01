@@ -40,8 +40,7 @@ def rewrite_markdown_local_images(
     """Replace local markdown image destinations with uploaded asset URLs."""
 
     def replace_match(match: re.Match[str]) -> str:
-        target = match.group("target").strip()
-        destination = _extract_image_destination(target)
+        destination = _extract_image_destination(match.group("target"))
         if _is_remote_reference(destination):
             return match.group(0)
 
@@ -49,6 +48,15 @@ def rewrite_markdown_local_images(
         return f"![{match.group('alt')}]({uploaded_url})"
 
     return _MARKDOWN_IMAGE_PATTERN.sub(replace_match, markdown_content)
+
+
+def extract_markdown_image_destinations(markdown_content: str) -> tuple[str, ...]:
+    """Return markdown image destinations in source order."""
+
+    return tuple(
+        _extract_image_destination(match.group("target"))
+        for match in _MARKDOWN_IMAGE_PATTERN.finditer(markdown_content)
+    )
 
 
 def resolve_local_asset(case_dir: Path, reference: str) -> ResolvedLocalAsset:

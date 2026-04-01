@@ -2,23 +2,28 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Protocol
+from urllib.parse import urlsplit
 
 from ...application import (
     BusinessCaseDocumentContent,
     CreateBusinessCaseCommand,
     CreateBusinessCaseUseCase,
-    ReplaceBusinessCaseCommand,
-    ReplaceBusinessCaseUseCase,
 )
 from ...domain import BusinessCaseDocumentType, BusinessCaseStatus
 from ..repositories import SqlAlchemyBusinessCaseRepository
 from .directory_loader import (
+    extract_markdown_image_destinations,
     extract_markdown_title,
     load_case_import_config,
     resolve_local_asset,
     rewrite_markdown_local_images,
 )
-from .models import CaseImportDocumentPayload, CaseImportPayload, CaseImportResult
+from .models import (
+    CaseImportConfig,
+    CaseImportDocumentPayload,
+    CaseImportPayload,
+    CaseImportResult,
+)
 
 
 class AssetUploader(Protocol):
@@ -27,39 +32,56 @@ class AssetUploader(Protocol):
     def upload_file(self, *, local_path: Path, object_key: str) -> str: ...
 
 
+class AssetManager(AssetUploader, Protocol):
+    """Upload and delete CloudBase assets used by the importer."""
+
+    def delete_directory(self, *, cloud_directory: str) -> None: ...
+
+
 class BusinessCaseDirectoryImporter:
-    """Import one local case directory into an existing business case."""
+    """Import one local case directory by recreating the target business case."""
 
     def __init__(
         self,
         *,
         business_case_repository: SqlAlchemyBusinessCaseRepository,
         create_use_case: CreateBusinessCaseUseCase,
-        replace_use_case: ReplaceBusinessCaseUseCase,
-        asset_uploader: AssetUploader,
+        asset_manager: AssetManager,
     ) -> None:
         self._business_case_repository = business_case_repository
         self._create_use_case = create_use_case
-        self._replace_use_case = replace_use_case
-        self._asset_uploader = asset_uploader
+        self._asset_manager = asset_manager
 
     async def import_case(self, *, case_dir: Path) -> CaseImportResult:
-        """Upload assets, then create or replace the target business case."""
+        """Recreate the target business case from one local case directory."""
 
         case_config = load_case_import_config(case_dir)
+        _validate_local_case_assets(case_dir=case_dir, case_config=case_config)
         existing_case = await self._business_case_repository.get_by_case_id(
             case_config.case_id
         )
+        if existing_case is not None:
+            self._asset_manager.delete_directory(
+                cloud_directory=_build_case_cloud_directory(case_config.case_id)
+            )
+            deleted = await self._business_case_repository.hard_delete_by_case_id(
+                case_config.case_id
+            )
+            if not deleted:
+                raise RuntimeError(
+                    f"Business case '{case_config.case_id}' disappeared before recreation."
+                )
 
         asset_publisher = _AssetPublisher(
             case_dir=case_dir,
             case_id=case_config.case_id,
-            asset_uploader=self._asset_uploader,
+            asset_uploader=self._asset_manager,
         )
         payload = CaseImportPayload(
             case_id=case_config.case_id,
             title=case_config.title,
             summary=case_config.desc,
+            industry=case_config.industry,
             tags=case_config.tags,
             cover_image_url=asset_publisher.publish_reference(case_config.cover),
             documents=(
@@ -67,30 +89,24 @@ class BusinessCaseDirectoryImporter:
                     case_dir=case_dir,
                     document_type=BusinessCaseDocumentType.BUSINESS_CASE,
                     markdown_reference=case_config.rework.file,
-                    cover_reference=case_config.rework.cover,
                     asset_publisher=asset_publisher,
                 ),
                 self._build_document_payload(
                     case_dir=case_dir,
                     document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
                     markdown_reference=case_config.market.file,
-                    cover_reference=case_config.market.cover,
                     asset_publisher=asset_publisher,
                 ),
                 self._build_document_payload(
                     case_dir=case_dir,
                     document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
                     markdown_reference=case_config.ai_driven_analysis.file,
-                    cover_reference=case_config.ai_driven_analysis.cover,
                     asset_publisher=asset_publisher,
                 ),
             ),
         )
 
-        if existing_case is None:
-            await self._create_use_case.execute(_build_create_command(payload))
-        else:
-            await self._replace_use_case.execute(_build_replace_command(payload))
+        await self._create_use_case.execute(_build_create_command(payload))
 
         return CaseImportResult(
             case_id=payload.case_id,
@@ -104,7 +120,6 @@ class BusinessCaseDirectoryImporter:
         case_dir: Path,
         document_type: BusinessCaseDocumentType,
         markdown_reference: str,
-        cover_reference: str,
         asset_publisher: "_AssetPublisher",
     ) -> CaseImportDocumentPayload:
         markdown_asset = resolve_local_asset(case_dir, markdown_reference)
@@ -118,7 +133,6 @@ class BusinessCaseDirectoryImporter:
             document_type=document_type,
             title=title,
             markdown_content=rewritten_markdown,
-            cover_image_url=asset_publisher.publish_reference(cover_reference),
         )
 
 
@@ -154,31 +168,12 @@ class _AssetPublisher:
         return uploaded_url
 
 
-def _build_replace_command(payload: CaseImportPayload) -> ReplaceBusinessCaseCommand:
-    return ReplaceBusinessCaseCommand(
-        case_id=payload.case_id,
-        title=payload.title,
-        summary=payload.summary,
-        tags=payload.tags,
-        cover_image_url=payload.cover_image_url,
-        status=BusinessCaseStatus.PUBLISHED,
-        documents=tuple(
-            BusinessCaseDocumentContent(
-                document_type=document.document_type,
-                title=document.title,
-                markdown_content=document.markdown_content,
-                cover_image_url=document.cover_image_url,
-            )
-            for document in payload.documents
-        ),
-    )
-
-
 def _build_create_command(payload: CaseImportPayload) -> CreateBusinessCaseCommand:
     return CreateBusinessCaseCommand(
         case_id=payload.case_id,
         title=payload.title,
         summary=payload.summary,
+        industry=payload.industry,
         tags=payload.tags,
         cover_image_url=payload.cover_image_url,
         status=BusinessCaseStatus.PUBLISHED,
@@ -187,8 +182,25 @@ def _build_create_command(payload: CaseImportPayload) -> CreateBusinessCaseComma
                 document_type=document.document_type,
                 title=document.title,
                 markdown_content=document.markdown_content,
-                cover_image_url=document.cover_image_url,
             )
             for document in payload.documents
         ),
     )
+
+def _validate_local_case_assets(*, case_dir: Path, case_config: CaseImportConfig) -> None:
+    resolve_local_asset(case_dir, case_config.cover)
+    for document_config in (
+        case_config.rework,
+        case_config.market,
+        case_config.ai_driven_analysis,
+    ):
+        markdown_asset = resolve_local_asset(case_dir, document_config.file)
+        markdown_content = markdown_asset.source_path.read_text(encoding="utf-8")
+        extract_markdown_title(markdown_content)
+        for destination in extract_markdown_image_destinations(markdown_content):
+            if urlsplit(destination).scheme == "":
+                resolve_local_asset(case_dir, destination)
+
+
+def _build_case_cloud_directory(case_id: str) -> str:
+    return f"business-cases/{case_id}"

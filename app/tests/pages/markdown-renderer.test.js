@@ -154,3 +154,37 @@ test("markdown renderer previews image only on double tap and includes all image
     Date.now = originalDateNow;
   }
 });
+
+test("markdown renderer appends parsed footnotes to the rendered block list", async () => {
+  const componentConfig = loadMarkdownRenderer();
+  const component = createComponentInstance(componentConfig);
+
+  await component.updateMarkdownBlocks("正文[^1]\n\n[^1]: 脚注内容");
+
+  assert.equal(component.data.blocks.length, 2);
+  assert.deepEqual(component.data.blocks[0].inlines, [
+    {
+      id: "inline-0",
+      type: "text",
+      text: "正文",
+    },
+  ]);
+  assert.deepEqual(component.data.blocks[1], {
+    id: "footnotes-1",
+    type: "footnotes",
+    items: [
+      {
+        id: "footnote-item-0",
+        label: "1",
+        marker: "1.",
+        inlines: [
+          {
+            id: "inline-0",
+            type: "text",
+            text: "脚注内容",
+          },
+        ],
+      },
+    ],
+  });
+});

@@ -2,7 +2,10 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 
 const {
-  buildStoryTabs,
+  DEFAULT_AVAILABLE_INDUSTRIES,
+  MORE_INDUSTRY_TAB_VALUE,
+  buildIndustryOptions,
+  buildIndustryTabs,
   buildWaterfallColumns,
   estimateStoryCardHeight,
 } = require("../../miniprogram/pages/index/layout");
@@ -83,10 +86,35 @@ test("buildWaterfallColumns distributes stories into balanced left and right col
   );
 });
 
-test("buildStoryTabs prepends all tab and removes duplicate blanks", () => {
-  assert.deepEqual(buildStoryTabs(["连锁增长", "  AI 提效 ", "", "连锁增长"]), [
-    { label: "全部", value: "" },
-    { label: "连锁增长", value: "连锁增长" },
-    { label: "AI 提效", value: "AI 提效" },
+test("buildIndustryTabs keeps fixed tabs and marks more active for non-primary industries", () => {
+  assert.deepEqual(buildIndustryTabs("金融"), [
+    { key: "all", label: "全部", value: "", isActive: false },
+    {
+      key: "自媒体",
+      label: "自媒体",
+      value: "自媒体",
+      isActive: false,
+    },
+    { key: "消费", label: "消费", value: "消费", isActive: false },
+    { key: "娱乐", label: "娱乐", value: "娱乐", isActive: false },
+    {
+      key: "more",
+      label: "更多",
+      value: MORE_INDUSTRY_TAB_VALUE,
+      isActive: true,
+      isMore: true,
+    },
   ]);
+});
+
+test("buildIndustryOptions prepends all option and preserves full selector order", () => {
+  assert.deepEqual(
+    buildIndustryOptions(DEFAULT_AVAILABLE_INDUSTRIES, "消费").slice(0, 4),
+    [
+      { key: "all", label: "全部", value: "", isActive: false },
+      { key: "科技", label: "科技", value: "科技", isActive: false },
+      { key: "消费", label: "消费", value: "消费", isActive: true },
+      { key: "金融", label: "金融", value: "金融", isActive: false },
+    ]
+  );
 });

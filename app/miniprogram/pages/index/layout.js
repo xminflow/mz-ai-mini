@@ -9,10 +9,27 @@ const HEIGHT_WEIGHTS = Object.freeze({
   resultBlockPadding: 32,
 });
 
-const ALL_STORY_TAB = Object.freeze({
-  label: "全部",
-  value: "",
-});
+const DEFAULT_AVAILABLE_INDUSTRIES = Object.freeze([
+  "科技",
+  "消费",
+  "金融",
+  "医疗",
+  "教育",
+  "企业服务",
+  "自媒体",
+  "娱乐",
+  "本地生活",
+  "工业与供应链",
+  "其他",
+]);
+
+const PRIMARY_INDUSTRY_LIST = Object.freeze([
+  "自媒体",
+  "消费",
+  "娱乐",
+]);
+
+const MORE_INDUSTRY_TAB_VALUE = "__more__";
 
 const getTextLength = (value = "") => Array.from(String(value).trim()).length;
 
@@ -91,32 +108,86 @@ const buildWaterfallColumns = (storyList = []) => {
   };
 };
 
-const buildStoryTabs = (availableTags = []) => {
-  const tabs = [ALL_STORY_TAB];
+const normalizeAvailableIndustries = (availableIndustries = []) => {
+  if (!Array.isArray(availableIndustries) || availableIndustries.length === 0) {
+    return [...DEFAULT_AVAILABLE_INDUSTRIES];
+  }
+
+  const industries = [];
   const seen = new Set();
 
-  availableTags.forEach((tag) => {
-    if (typeof tag !== "string") {
+  availableIndustries.forEach((industry) => {
+    if (typeof industry !== "string") {
       return;
     }
 
-    const normalizedTag = tag.trim();
-    if (!normalizedTag || seen.has(normalizedTag)) {
+    const normalizedIndustry = industry.trim();
+    if (!normalizedIndustry || seen.has(normalizedIndustry)) {
       return;
     }
 
-    seen.add(normalizedTag);
-    tabs.push({
-      label: normalizedTag,
-      value: normalizedTag,
-    });
+    seen.add(normalizedIndustry);
+    industries.push(normalizedIndustry);
   });
 
-  return tabs;
+  return industries.length > 0 ? industries : [...DEFAULT_AVAILABLE_INDUSTRIES];
+};
+
+const buildIndustryTabs = (selectedIndustry = "") => {
+  const isMoreActive =
+    selectedIndustry !== "" && !PRIMARY_INDUSTRY_LIST.includes(selectedIndustry);
+
+  return [
+    {
+      key: "all",
+      label: "全部",
+      value: "",
+      isActive: selectedIndustry === "",
+    },
+    ...PRIMARY_INDUSTRY_LIST.map((industry) => ({
+      key: industry,
+      label: industry,
+      value: industry,
+      isActive: selectedIndustry === industry,
+    })),
+    {
+      key: "more",
+      label: "更多",
+      value: MORE_INDUSTRY_TAB_VALUE,
+      isActive: isMoreActive,
+      isMore: true,
+    },
+  ];
+};
+
+const buildIndustryOptions = (
+  availableIndustries = DEFAULT_AVAILABLE_INDUSTRIES,
+  selectedIndustry = ""
+) => {
+  const normalizedIndustries = normalizeAvailableIndustries(availableIndustries);
+
+  return [
+    {
+      key: "all",
+      label: "全部",
+      value: "",
+      isActive: selectedIndustry === "",
+    },
+    ...normalizedIndustries.map((industry) => ({
+      key: industry,
+      label: industry,
+      value: industry,
+      isActive: selectedIndustry === industry,
+    })),
+  ];
 };
 
 module.exports = {
-  buildStoryTabs,
+  DEFAULT_AVAILABLE_INDUSTRIES,
+  MORE_INDUSTRY_TAB_VALUE,
+  buildIndustryOptions,
+  buildIndustryTabs,
+  normalizeAvailableIndustries,
   buildWaterfallColumns,
   estimateStoryCardHeight,
 };

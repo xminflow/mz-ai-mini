@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Protocol
 
-from ...domain import BusinessCase
+from ...domain import BusinessCase, BusinessCaseIndustry
 from ..dtos import (
     BusinessCaseCursor,
     BusinessCasePageSlice,
@@ -41,6 +41,7 @@ class BusinessCaseRepository(Protocol):
         *,
         limit: int,
         cursor: BusinessCaseCursor | None,
-        tag: str | None,
+        industry: BusinessCaseIndustry | None,
+        keyword: str | None,
     ) -> BusinessCasePageSlice:
         """Return one public-facing list slice ordered by publish time."""

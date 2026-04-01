@@ -40,3 +40,15 @@ test("markdown renderer delegates table blocks to markdown table component", () 
   assert.equal(template.includes("block.type === 'table'"), true);
   assert.equal(template.includes("<markdown-table"), true);
 });
+
+test("markdown renderer renders footnotes in a dedicated footer section", () => {
+  const template = fs.readFileSync(MARKDOWN_RENDERER_TEMPLATE_PATH, "utf8");
+
+  assert.equal(template.includes("block.type === 'footnotes'"), true);
+  assert.equal(template.includes('class="markdown-renderer__footnotes-title"'), false);
+  assert.equal(template.includes('class="markdown-renderer__footnote-marker">{{footnote.marker}} </text>'), true);
+  assert.equal(
+    template.includes('<template is="markdown-inline" data="{{inlines: footnote.inlines}}" />'),
+    true
+  );
+});

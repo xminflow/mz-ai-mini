@@ -15,7 +15,7 @@ from ..application import (
     ListBusinessCasesResult,
     ReplaceBusinessCaseCommand,
 )
-from ..domain import BusinessCaseDocumentType, BusinessCaseStatus
+from ..domain import BusinessCaseDocumentType, BusinessCaseIndustry, BusinessCaseStatus
 
 
 def _serialize_business_id(value: str | int) -> str:
@@ -69,7 +69,6 @@ class BusinessCaseDocumentUpsertRequest(BaseModel):
 
     title: str
     markdown_content: str
-    cover_image_url: HttpUrl
 
     @field_validator("title")
     @classmethod
@@ -99,19 +98,16 @@ class BusinessCaseDocumentsUpsertRequest(BaseModel):
                 document_type=BusinessCaseDocumentType.BUSINESS_CASE,
                 title=self.business_case.title,
                 markdown_content=self.business_case.markdown_content,
-                cover_image_url=str(self.business_case.cover_image_url),
             ),
             BusinessCaseDocumentContent(
                 document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
                 title=self.market_research.title,
                 markdown_content=self.market_research.markdown_content,
-                cover_image_url=str(self.market_research.cover_image_url),
             ),
             BusinessCaseDocumentContent(
                 document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
                 title=self.ai_business_upgrade.title,
                 markdown_content=self.ai_business_upgrade.markdown_content,
-                cover_image_url=str(self.ai_business_upgrade.cover_image_url),
             ),
         )
 
@@ -123,6 +119,7 @@ class BusinessCaseUpsertRequest(BaseModel):
 
     title: str
     summary: str
+    industry: BusinessCaseIndustry = BusinessCaseIndustry.OTHER
     tags: tuple[str, ...]
     cover_image_url: HttpUrl
     status: BusinessCaseStatus
@@ -144,6 +141,7 @@ class BusinessCaseUpsertRequest(BaseModel):
         return CreateBusinessCaseCommand(
             title=self.title,
             summary=self.summary,
+            industry=self.industry,
             tags=self.tags,
             cover_image_url=str(self.cover_image_url),
             status=self.status,
@@ -157,6 +155,7 @@ class BusinessCaseUpsertRequest(BaseModel):
             case_id=case_id,
             title=self.title,
             summary=self.summary,
+            industry=self.industry,
             tags=self.tags,
             cover_image_url=str(self.cover_image_url),
             status=self.status,
@@ -172,7 +171,6 @@ class BusinessCaseDocumentResponse(BaseModel):
     document_id: str
     title: str
     markdown_content: str
-    cover_image_url: str
 
     @classmethod
     def from_result(
@@ -217,6 +215,7 @@ class BusinessCaseDetailResponse(BaseModel):
     case_id: str
     title: str
     summary: str
+    industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
     status: str
@@ -244,6 +243,7 @@ class BusinessCaseListItemResponse(BaseModel):
     case_id: str
     title: str
     summary: str
+    industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
     status: str
@@ -268,7 +268,7 @@ class BusinessCaseListResponse(BaseModel):
 
     items: tuple[BusinessCaseListItemResponse, ...]
     next_cursor: str | None
-    available_tags: tuple[str, ...]
+    available_industries: tuple[str, ...]
 
     @classmethod
     def from_result(
@@ -280,7 +280,7 @@ class BusinessCaseListResponse(BaseModel):
                 BusinessCaseListItemResponse.from_result(item) for item in result.items
             ),
             next_cursor=result.next_cursor,
-            available_tags=result.available_tags,
+            available_industries=result.available_industries,
         )
 
 
