@@ -26,6 +26,7 @@ Required `<CASE_DIR>` structure:
 `config.yml` minimum shape:
 case_id: case-05
 title: 喜茶（HEYTEA）新茶饮高端品牌创业案例
+type: case
 desc: 从广东街头小店到估值600亿的新茶饮标杆，喜茶以产品创新驱动品类革命，在高端定位与规模扩张的张力中寻找属于自己的第三条路
 cover: images\\cover\\image_01.png
 industry: 消费
@@ -57,7 +58,6 @@ import sys
 from pathlib import Path
 
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 API_SRC = PROJECT_ROOT / "api" / "src"
@@ -105,7 +105,9 @@ async def run_import(*, case_dir: Path) -> int:
     # Build one async SQLAlchemy session and wire the importer dependencies explicitly.
     cloudbase_settings = CaseImportCloudBaseSettings.from_env()
     engine = create_async_engine(settings.database_url, pool_pre_ping=True, future=True)
-    session_maker = async_sessionmaker(bind=engine, expire_on_commit=False, autoflush=False)
+    session_maker = async_sessionmaker(
+        bind=engine, expire_on_commit=False, autoflush=False
+    )
 
     try:
         async with session_maker() as session:

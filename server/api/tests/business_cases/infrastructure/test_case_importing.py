@@ -16,6 +16,7 @@ from mz_ai_backend.modules.business_cases.domain import (
     BusinessCaseDocumentType,
     BusinessCaseDocuments,
     BusinessCaseStatus,
+    BusinessCaseType,
 )
 from mz_ai_backend.modules.business_cases.infrastructure.importing import (
     BusinessCaseDirectoryImporter,
@@ -75,6 +76,7 @@ def test_load_case_import_config_reads_expected_fields(tmp_path: Path) -> None:
         tmp_path,
         config_text=(
             "case_id: case-4\n"
+            "type: project\n"
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
             "cover: images\\cover\\image_01.png\n"
@@ -94,6 +96,7 @@ def test_load_case_import_config_reads_expected_fields(tmp_path: Path) -> None:
     config = load_case_import_config(tmp_path)
 
     assert config.case_id == CASE_ID
+    assert config.type == BusinessCaseType.PROJECT
     assert config.title == "宠物新零售行业创业案例"
     assert config.industry == BusinessCaseIndustry.CONSUMER
     assert config.tags == ("宠物", "新零售")
@@ -122,6 +125,31 @@ def test_load_case_import_config_rejects_missing_case_id(tmp_path: Path) -> None
         load_case_import_config(tmp_path)
 
     assert "case_id" in str(exc_info.value)
+
+
+def test_load_case_import_config_rejects_missing_type(tmp_path: Path) -> None:
+    _write_case_directory(
+        tmp_path,
+        config_text=(
+            "case_id: case-4\n"
+            "title: 宠物新零售行业创业案例\n"
+            "desc: 围绕宠物健康知识输出和社群运营\n"
+            "cover: images/cover/image_01.png\n"
+            "tags:\n"
+            "  - 宠物\n"
+            "rework:\n"
+            "  file: rework.md\n"
+            "ai_driven_analysis:\n"
+            "  file: ai_driven_analysis.md\n"
+            "market:\n"
+            "  file: market_analysis_report.md\n"
+        ),
+    )
+
+    with pytest.raises(Exception) as exc_info:
+        load_case_import_config(tmp_path)
+
+    assert "type" in str(exc_info.value)
 
 
 def test_extract_markdown_title_returns_first_h1() -> None:
@@ -168,6 +196,7 @@ async def test_business_case_directory_importer_recreates_existing_case_and_clea
     assert create_use_case.executed_command is not None
     command = create_use_case.executed_command
     assert command.case_id == CASE_ID
+    assert command.type == BusinessCaseType.CASE
     assert command.status == BusinessCaseStatus.PUBLISHED
     assert command.industry == BusinessCaseIndustry.CONSUMER
     assert command.documents[0].document_type == BusinessCaseDocumentType.BUSINESS_CASE
@@ -204,6 +233,7 @@ async def test_business_case_directory_importer_creates_missing_case(
     assert uploader.deleted_cloud_directories == []
     assert create_use_case.executed_command is not None
     assert create_use_case.executed_command.case_id == CASE_ID
+    assert create_use_case.executed_command.type == BusinessCaseType.CASE
     assert create_use_case.executed_command.industry == BusinessCaseIndustry.CONSUMER
     assert create_use_case.executed_command.status == BusinessCaseStatus.PUBLISHED
 
@@ -606,6 +636,7 @@ def _write_case_directory(
         config_text
         or (
             "case_id: case-4\n"
+            "type: case\n"
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
             "cover: images\\cover\\image_01.png\n"
@@ -627,6 +658,7 @@ def _write_case_directory(
 def _build_existing_case() -> BusinessCase:
     return BusinessCase(
         case_id=CASE_ID,
+        type=BusinessCaseType.CASE,
         title="Existing Title",
         summary="Existing Summary",
         industry=BusinessCaseIndustry.OTHER,

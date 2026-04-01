@@ -4,7 +4,12 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
 
-from ..domain import BusinessCaseDocumentType, BusinessCaseIndustry, BusinessCaseStatus
+from ..domain import (
+    BusinessCaseDocumentType,
+    BusinessCaseIndustry,
+    BusinessCaseStatus,
+    BusinessCaseType,
+)
 
 
 class BusinessCaseDocumentContent(BaseModel):
@@ -23,6 +28,7 @@ class CreateBusinessCaseCommand(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     case_id: str | None = None
+    type: BusinessCaseType
     title: str
     summary: str
     industry: BusinessCaseIndustry
@@ -38,6 +44,7 @@ class ReplaceBusinessCaseCommand(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     case_id: str
+    type: BusinessCaseType
     title: str
     summary: str
     industry: BusinessCaseIndustry
@@ -80,6 +87,7 @@ class ListPublicBusinessCasesQuery(BaseModel):
 
     limit: int
     cursor: str | None
+    type: BusinessCaseType
     industry: BusinessCaseIndustry | None
     keyword: str | None
 
@@ -101,6 +109,7 @@ class BusinessCaseRegistration(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     case_id: str
+    type: BusinessCaseType
     title: str
     summary: str
     industry: BusinessCaseIndustry
@@ -127,6 +136,7 @@ class BusinessCaseReplacement(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     case_id: str
+    type: BusinessCaseType
     title: str
     summary: str
     industry: BusinessCaseIndustry
@@ -172,6 +182,7 @@ class BusinessCaseDetailResult(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     case_id: str
+    type: BusinessCaseType
     title: str
     summary: str
     industry: BusinessCaseIndustry
@@ -190,6 +201,7 @@ class BusinessCaseListItemResult(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     case_id: str
+    type: BusinessCaseType
     title: str
     summary: str
     industry: BusinessCaseIndustry

@@ -5,8 +5,8 @@ Usage:
   a published business case recreation.
 - Import `CaseImportCloudBaseSettings` and `CloudBaseStorageClient` to configure
   CloudBase asset uploads and cleanup for the importer.
-- Import config supports case-level `industry`, `tags`, and one shared case
-  cover image. Document entries only carry markdown file references.
+- Import config supports case-level `type`, `industry`, `tags`, and one shared
+  case cover image. Document entries only carry markdown file references.
 
 Development rules:
 - Keep filesystem parsing and object storage details inside this package.

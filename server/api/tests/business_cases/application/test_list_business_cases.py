@@ -17,7 +17,10 @@ from mz_ai_backend.modules.business_cases.application.use_cases._common import (
     encode_cursor,
 )
 from mz_ai_backend.modules.business_cases.domain import BusinessCaseStatus
-from mz_ai_backend.modules.business_cases.domain import BusinessCaseIndustry
+from mz_ai_backend.modules.business_cases.domain import (
+    BusinessCaseIndustry,
+    BusinessCaseType,
+)
 
 
 class FakeBusinessCaseRepository:
@@ -25,7 +28,7 @@ class FakeBusinessCaseRepository:
         self._page = page
         self.admin_cursor = None
         self.public_cursor = None
-        self.public_tag = None
+        self.public_type = None
 
     async def list_admin(self, *, limit: int, cursor, status):
         self.admin_cursor = cursor
@@ -33,9 +36,10 @@ class FakeBusinessCaseRepository:
         self.admin_status = status
         return self._page
 
-    async def list_public(self, *, limit: int, cursor, industry, keyword):
+    async def list_public(self, *, limit: int, cursor, case_type, industry, keyword):
         self.public_cursor = cursor
         self.public_limit = limit
+        self.public_type = case_type
         self.public_industry = industry
         self.public_keyword = keyword
         return self._page
@@ -49,6 +53,7 @@ def _build_list_item(
 ) -> BusinessCaseListItemResult:
     return BusinessCaseListItemResult(
         case_id=case_id,
+        type=BusinessCaseType.CASE,
         title=f"Case {case_id}",
         summary=f"Summary {case_id}",
         industry=BusinessCaseIndustry.CONSUMER,
@@ -143,6 +148,7 @@ async def test_list_public_business_cases_use_case_decodes_cursor_before_query()
         ListPublicBusinessCasesQuery(
             limit=20,
             cursor=cursor,
+            type=BusinessCaseType.PROJECT,
             industry=BusinessCaseIndustry.CONSUMER,
             keyword="增长",
         )
@@ -151,6 +157,7 @@ async def test_list_public_business_cases_use_case_decodes_cursor_before_query()
     assert repository.public_cursor is not None
     assert repository.public_cursor.case_id == "999"
     assert repository.public_cursor.sort_value == datetime(2026, 1, 4, 8, 0, 0)
+    assert repository.public_type == BusinessCaseType.PROJECT
     assert repository.public_industry == BusinessCaseIndustry.CONSUMER
     assert repository.public_keyword == "增长"
     assert result.next_cursor is None

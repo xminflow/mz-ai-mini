@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/project/index",
     "pages/subscribe/index",
     "pages/academy/index",
     "pages/consult/index",
@@ -25,6 +26,12 @@
         "text": "首页",
         "iconPath": "images/icons/home.png",
         "selectedIconPath": "images/icons/home-active.png"
+      },
+      {
+        "pagePath": "pages/project/index",
+        "text": "项目",
+        "iconPath": "images/icons/examples.png",
+        "selectedIconPath": "images/icons/examples-active.png"
       },
       {
         "pagePath": "pages/academy/index",

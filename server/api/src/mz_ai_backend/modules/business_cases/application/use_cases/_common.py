@@ -72,6 +72,7 @@ def build_registration(
     )
     return BusinessCaseRegistration(
         case_id=case_id,
+        type=command.type,
         title=command.title,
         summary=command.summary,
         industry=command.industry,
@@ -100,6 +101,7 @@ def build_replacement(
     )
     return BusinessCaseReplacement(
         case_id=command.case_id,
+        type=command.type,
         title=command.title,
         summary=command.summary,
         industry=command.industry,
@@ -134,6 +136,7 @@ def build_detail_result(case: BusinessCase) -> BusinessCaseDetailResult:
 
     return BusinessCaseDetailResult(
         case_id=case.case_id,
+        type=case.type,
         title=case.title,
         summary=case.summary,
         industry=case.industry,

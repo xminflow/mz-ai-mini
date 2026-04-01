@@ -17,6 +17,7 @@ from mz_ai_backend.modules.business_cases.domain import (
     BusinessCaseDocuments,
     BusinessCaseNotFoundException,
     BusinessCaseStatus,
+    BusinessCaseType,
 )
 
 
@@ -50,6 +51,7 @@ class FakeBusinessCaseRepository:
 def _build_case(
     *,
     case_id: str,
+    case_type: BusinessCaseType = BusinessCaseType.CASE,
     status: BusinessCaseStatus,
     published_at: datetime | None,
 ) -> BusinessCase:
@@ -85,6 +87,7 @@ def _build_case(
     )
     return BusinessCase(
         case_id=case_id,
+        type=case_type,
         title="Case A",
         summary="Summary A",
         industry=BusinessCaseIndustry.CONTENT_AND_CREATOR,
@@ -128,6 +131,7 @@ async def test_replace_business_case_use_case_preserves_existing_published_at() 
     )
     replaced_case = _build_case(
         case_id="1001",
+        case_type=BusinessCaseType.PROJECT,
         status=BusinessCaseStatus.PUBLISHED,
         published_at=datetime(2026, 1, 1, 9, 0, 0),
     )
@@ -143,6 +147,7 @@ async def test_replace_business_case_use_case_preserves_existing_published_at() 
     result = await use_case.execute(
         ReplaceBusinessCaseCommand(
             case_id="1001",
+            type=BusinessCaseType.PROJECT,
             title="Case A Updated",
             summary="Summary A Updated",
             industry=BusinessCaseIndustry.CONSUMER,
@@ -155,8 +160,10 @@ async def test_replace_business_case_use_case_preserves_existing_published_at() 
 
     assert repository.replacement is not None
     assert repository.replacement.published_at == datetime(2026, 1, 1, 9, 0, 0)
+    assert repository.replacement.type == BusinessCaseType.PROJECT
     assert repository.replacement.industry == BusinessCaseIndustry.CONSUMER
     assert repository.replacement.tags == ("私域增长", "门店升级")
+    assert result.type == BusinessCaseType.PROJECT
     assert result.status == BusinessCaseStatus.PUBLISHED
 
 
@@ -184,6 +191,7 @@ async def test_replace_business_case_use_case_clears_published_at_when_moving_to
     result = await use_case.execute(
         ReplaceBusinessCaseCommand(
             case_id="1001",
+            type=BusinessCaseType.CASE,
             title="Case A Updated",
             summary="Summary A Updated",
             industry=BusinessCaseIndustry.EDUCATION,
@@ -196,8 +204,10 @@ async def test_replace_business_case_use_case_clears_published_at_when_moving_to
 
     assert repository.replacement is not None
     assert repository.replacement.published_at is None
+    assert repository.replacement.type == BusinessCaseType.CASE
     assert repository.replacement.industry == BusinessCaseIndustry.EDUCATION
     assert repository.replacement.tags == ("私域增长",)
+    assert result.type == BusinessCaseType.CASE
     assert result.status == BusinessCaseStatus.DRAFT
 
 
@@ -213,6 +223,7 @@ async def test_replace_business_case_use_case_raises_not_found_for_missing_case(
         await use_case.execute(
             ReplaceBusinessCaseCommand(
                 case_id="1001",
+                type=BusinessCaseType.CASE,
                 title="Case A Updated",
                 summary="Summary A Updated",
                 industry=BusinessCaseIndustry.OTHER,

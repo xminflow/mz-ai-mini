@@ -9,6 +9,10 @@ const {
 const { request } = require("../core/apiClient");
 
 const STORY_PAGE_SIZE = 6;
+const STORY_TYPES = Object.freeze({
+  CASE: "case",
+  PROJECT: "project",
+});
 const DEFAULT_DOCUMENT_KEY = "business_case";
 const DOCUMENT_DEFINITIONS = Object.freeze([
   {
@@ -39,6 +43,29 @@ const normalizeIndustry = (industry) => {
   }
 
   return industry.trim();
+};
+
+const normalizeStoryType = (storyType, { required = true } = {}) => {
+  if (typeof storyType !== "string") {
+    if (required) {
+      throw new Error("story type is invalid.");
+    }
+    return "";
+  }
+
+  const normalizedStoryType = storyType.trim();
+  if (normalizedStoryType === "") {
+    if (required) {
+      throw new Error("story type is invalid.");
+    }
+    return "";
+  }
+
+  if (!Object.values(STORY_TYPES).includes(normalizedStoryType)) {
+    throw new Error("story type is invalid.");
+  }
+
+  return normalizedStoryType;
 };
 
 const normalizeAvailableIndustries = (industries) => {
@@ -165,6 +192,7 @@ const resolveDefaultDocumentKey = (documentMap = {}) => {
 
 const normalizeStoryListItem = (story = {}, coverImageTempUrlMap = {}) => ({
   id: story.case_id ? String(story.case_id) : story._id || "",
+  type: normalizeStoryType(story.type),
   title: story.title || "",
   summary: story.summary || "",
   industry: normalizeIndustry(story.industry),
@@ -191,6 +219,7 @@ const normalizeStoryDetail = (story = {}, coverImageTempUrlMap = {}) => {
 
   return {
     id: story.case_id ? String(story.case_id) : story._id || "",
+    type: normalizeStoryType(story.type),
     title: story.title || "",
     summary: story.summary || "",
     industry: normalizeIndustry(story.industry),
@@ -208,15 +237,18 @@ const normalizeStoryDetail = (story = {}, coverImageTempUrlMap = {}) => {
 const fetchStoryList = async ({
   pageSize = STORY_PAGE_SIZE,
   cursor = "",
+  type,
   industry = "",
   keyword = "",
 } = {}) => {
+  const normalizedType = normalizeStoryType(type);
   const result = await request({
     path: "/business-cases",
     method: "GET",
     query: {
       limit: pageSize,
       cursor,
+      type: normalizedType,
       industry,
       keyword,
     },
@@ -244,6 +276,7 @@ const fetchStoryDetail = async (id) => {
 
 module.exports = {
   STORY_PAGE_SIZE,
+  STORY_TYPES,
   fetchStoryDetail,
   fetchStoryList,
 };

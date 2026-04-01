@@ -13,6 +13,13 @@ class BusinessCaseStatus(StrEnum):
     PUBLISHED = "published"
 
 
+class BusinessCaseType(StrEnum):
+    """Supported business case content types."""
+
+    CASE = "case"
+    PROJECT = "project"
+
+
 class BusinessCaseIndustry(StrEnum):
     """Supported business case industries."""
 
@@ -76,6 +83,7 @@ class BusinessCaseSummary(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     case_id: str
+    type: BusinessCaseType
     title: str
     summary: str
     industry: BusinessCaseIndustry

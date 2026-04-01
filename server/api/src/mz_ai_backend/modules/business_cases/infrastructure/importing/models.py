@@ -5,7 +5,7 @@ from pathlib import Path
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from ...domain import BusinessCaseDocumentType, BusinessCaseIndustry
+from ...domain import BusinessCaseDocumentType, BusinessCaseIndustry, BusinessCaseType
 
 SERVER_ENV_FILE = Path(__file__).resolve().parents[7] / ".env"
 
@@ -61,6 +61,7 @@ class CaseImportConfig(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     case_id: str
+    type: BusinessCaseType
     title: str
     desc: str
     cover: str
@@ -107,6 +108,7 @@ class CaseImportPayload(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     case_id: str
+    type: BusinessCaseType
     title: str
     summary: str
     industry: BusinessCaseIndustry

@@ -15,7 +15,12 @@ from ..application import (
     ListBusinessCasesResult,
     ReplaceBusinessCaseCommand,
 )
-from ..domain import BusinessCaseDocumentType, BusinessCaseIndustry, BusinessCaseStatus
+from ..domain import (
+    BusinessCaseDocumentType,
+    BusinessCaseIndustry,
+    BusinessCaseStatus,
+    BusinessCaseType,
+)
 
 
 def _serialize_business_id(value: str | int) -> str:
@@ -117,6 +122,7 @@ class BusinessCaseUpsertRequest(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
+    type: BusinessCaseType
     title: str
     summary: str
     industry: BusinessCaseIndustry = BusinessCaseIndustry.OTHER
@@ -139,6 +145,7 @@ class BusinessCaseUpsertRequest(BaseModel):
         """Convert the HTTP payload into an application create command."""
 
         return CreateBusinessCaseCommand(
+            type=self.type,
             title=self.title,
             summary=self.summary,
             industry=self.industry,
@@ -153,6 +160,7 @@ class BusinessCaseUpsertRequest(BaseModel):
 
         return ReplaceBusinessCaseCommand(
             case_id=case_id,
+            type=self.type,
             title=self.title,
             summary=self.summary,
             industry=self.industry,
@@ -213,6 +221,7 @@ class BusinessCaseDetailResponse(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     case_id: str
+    type: BusinessCaseType
     title: str
     summary: str
     industry: BusinessCaseIndustry
@@ -241,6 +250,7 @@ class BusinessCaseListItemResponse(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     case_id: str
+    type: BusinessCaseType
     title: str
     summary: str
     industry: BusinessCaseIndustry

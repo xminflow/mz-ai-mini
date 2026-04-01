@@ -22,6 +22,7 @@ from ..domain import (
     BusinessCaseDocumentType,
     BusinessCaseDocuments,
     BusinessCaseStatus,
+    BusinessCaseType,
 )
 from .models import BusinessCaseDocumentModel, BusinessCaseModel
 
@@ -60,6 +61,20 @@ def _normalize_loaded_industry(industry: object) -> BusinessCaseIndustry:
         raise InternalServerException(
             message="Business case industry is invalid."
         ) from exc
+
+
+def _normalize_loaded_type(case_type: object) -> BusinessCaseType:
+    if not isinstance(case_type, str):
+        raise InternalServerException(message="Business case type is invalid.")
+
+    normalized_type = case_type.strip()
+    if normalized_type == "":
+        raise InternalServerException(message="Business case type is invalid.")
+
+    try:
+        return BusinessCaseType(normalized_type)
+    except ValueError as exc:
+        raise InternalServerException(message="Business case type is invalid.") from exc
 
 
 def _escape_like_pattern(value: str) -> str:
@@ -111,6 +126,7 @@ def _to_aggregate(
 ) -> BusinessCase:
     return BusinessCase(
         case_id=model.case_id,
+        type=_normalize_loaded_type(model.type),
         title=model.title,
         summary=model.summary,
         industry=_normalize_loaded_industry(model.industry),
@@ -128,6 +144,7 @@ def _to_aggregate(
 def _to_list_item(model: BusinessCaseModel) -> BusinessCaseListItemResult:
     return BusinessCaseListItemResult(
         case_id=model.case_id,
+        type=_normalize_loaded_type(model.type),
         title=model.title,
         summary=model.summary,
         industry=_normalize_loaded_industry(model.industry),
@@ -169,6 +186,7 @@ class SqlAlchemyBusinessCaseRepository:
     async def create(self, registration: BusinessCaseRegistration) -> BusinessCase:
         case_model = BusinessCaseModel(
             case_id=registration.case_id,
+            type=registration.type.value,
             title=registration.title,
             summary=registration.summary,
             industry=registration.industry.value,
@@ -251,6 +269,7 @@ class SqlAlchemyBusinessCaseRepository:
             )
 
         case_model.title = replacement.title
+        case_model.type = replacement.type.value
         case_model.summary = replacement.summary
         case_model.industry = replacement.industry.value
         case_model.tags = list(replacement.tags)
@@ -344,10 +363,12 @@ class SqlAlchemyBusinessCaseRepository:
         *,
         limit: int,
         cursor: BusinessCaseCursor | None,
+        case_type: BusinessCaseType,
         industry: BusinessCaseIndustry | None,
         keyword: str | None,
     ) -> BusinessCasePageSlice:
         statement = self._build_public_list_statement(
+            case_type=case_type,
             industry=industry,
             keyword=keyword,
         )
@@ -372,12 +393,14 @@ class SqlAlchemyBusinessCaseRepository:
     def _build_public_list_statement(
         self,
         *,
+        case_type: BusinessCaseType,
         industry: BusinessCaseIndustry | None,
         keyword: str | None,
     ) -> Select[tuple[BusinessCaseModel]]:
         statement = select(BusinessCaseModel).where(
             BusinessCaseModel.is_deleted.is_(False),
             BusinessCaseModel.status == BusinessCaseStatus.PUBLISHED.value,
+            BusinessCaseModel.type == case_type.value,
             BusinessCaseModel.published_at.is_not(None),
         )
         if industry is not None:

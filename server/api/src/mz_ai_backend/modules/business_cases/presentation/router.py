@@ -20,8 +20,7 @@ from ..application import (
     ListPublicBusinessCasesUseCase,
     ReplaceBusinessCaseUseCase,
 )
-from ..domain import BusinessCaseStatus
-from ..domain import BusinessCaseIndustry
+from ..domain import BusinessCaseIndustry, BusinessCaseStatus, BusinessCaseType
 from ..infrastructure import (
     get_create_business_case_use_case,
     get_delete_business_case_use_case,
@@ -155,6 +154,7 @@ async def list_public_business_cases(
         ListPublicBusinessCasesUseCase,
         Depends(get_list_public_business_cases_use_case),
     ],
+    type_: Annotated[str, Query(alias="type")],
     limit: Annotated[int, Query(ge=1, le=50)] = 20,
     cursor: Annotated[str | None, Query()] = None,
     industry: Annotated[str | None, Query()] = None,
@@ -166,6 +166,7 @@ async def list_public_business_cases(
         ListPublicBusinessCasesQuery(
             limit=limit,
             cursor=cursor,
+            type=_normalize_public_type(type_),
             industry=_normalize_public_industry(industry),
             keyword=_normalize_public_keyword(keyword),
         )
@@ -217,6 +218,17 @@ def _normalize_public_industry(
         return BusinessCaseIndustry(normalized_industry)
     except ValueError as exc:
         raise ValidationException(message="Industry filter is invalid.") from exc
+
+
+def _normalize_public_type(case_type: str) -> BusinessCaseType:
+    normalized_type = case_type.strip()
+    if normalized_type == "":
+        raise ValidationException(message="Type filter is invalid.")
+
+    try:
+        return BusinessCaseType(normalized_type)
+    except ValueError as exc:
+        raise ValidationException(message="Type filter is invalid.") from exc
 
 
 def _normalize_public_keyword(keyword: str | None) -> str | None:

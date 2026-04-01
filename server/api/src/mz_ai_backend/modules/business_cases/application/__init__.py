@@ -2,8 +2,9 @@
 
 Usage:
 - Import DTOs and use cases through this package.
-- Public case payloads include case-level `industry`, `tags`, and a shared
-  case cover image. Document payloads contain title and markdown content only.
+- Public case payloads include case-level `type`, `industry`, `tags`, and a
+  shared case cover image. Document payloads contain title and markdown
+  content only.
 
 Development rules:
 - Keep orchestration logic in use cases.

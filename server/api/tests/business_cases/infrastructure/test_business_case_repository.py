@@ -11,6 +11,7 @@ from mz_ai_backend.modules.business_cases.application.dtos import (
 from mz_ai_backend.modules.business_cases.domain import (
     BusinessCaseIndustry,
     BusinessCaseStatus,
+    BusinessCaseType,
 )
 from mz_ai_backend.modules.business_cases.infrastructure.models import (
     BusinessCaseDocumentModel,
@@ -49,12 +50,14 @@ class FakeManyResult:
 def _build_case_model(
     *,
     case_id: str,
+    case_type: str = "case",
     published_at: datetime | None = None,
     industry: str = "消费",
     tags: tuple[str, ...] = ("连锁增长",),
 ) -> BusinessCaseModel:
     return BusinessCaseModel(
         case_id=case_id,
+        type=case_type,
         title=f"Case {case_id}",
         summary=f"Summary {case_id}",
         industry=industry,
@@ -120,6 +123,7 @@ async def test_business_case_repository_returns_domain_aggregate_for_case_lookup
 
     assert case is not None
     assert case.case_id == "1001"
+    assert case.type == BusinessCaseType.CASE
     assert case.industry == BusinessCaseIndustry.CONSUMER
     assert case.tags == ("连锁增长",)
     assert case.documents.business_case.title == "Business Case"
@@ -142,6 +146,7 @@ async def test_business_case_repository_list_admin_returns_page_slice() -> None:
 
     assert len(page.items) == 2
     assert page.items[0].case_id == "1003"
+    assert page.items[0].type == BusinessCaseType.CASE
     assert page.items[0].industry == BusinessCaseIndustry.CONSUMER
     assert page.items[0].tags == ("连锁增长",)
     assert page.items[1].case_id == "1002"
@@ -180,6 +185,7 @@ async def test_business_case_repository_list_public_filters_by_industry_and_keyw
     page = await repository.list_public(
         limit=2,
         cursor=None,
+        case_type=BusinessCaseType.PROJECT,
         industry=BusinessCaseIndustry.CONSUMER,
         keyword="增长",
     )
@@ -201,6 +207,8 @@ async def test_business_case_repository_list_public_filters_by_industry_and_keyw
     )
     assert page.has_more is True
     statement_text = str(session.execute.await_args.args[0]).lower()
+    assert "business_cases.type" in statement_text
+    assert "business_cases.type =" in statement_text
     assert "business_cases.industry" in statement_text
     assert "business_case_documents" in statement_text
     assert "like" in statement_text
@@ -263,6 +271,7 @@ async def test_business_case_repository_replace_raises_for_incomplete_document_s
         await repository.replace(
             BusinessCaseReplacement(
                 case_id="1001",
+                type=BusinessCaseType.CASE,
                 title="Case Updated",
                 summary="Summary Updated",
                 industry=BusinessCaseIndustry.OTHER,

@@ -2,13 +2,17 @@ from __future__ import annotations
 
 from typing import Protocol
 
-from ...domain import BusinessCase, BusinessCaseIndustry
+from ...domain import (
+    BusinessCase,
+    BusinessCaseIndustry,
+    BusinessCaseStatus,
+    BusinessCaseType,
+)
 from ..dtos import (
     BusinessCaseCursor,
     BusinessCasePageSlice,
     BusinessCaseRegistration,
     BusinessCaseReplacement,
-    BusinessCaseStatus,
 )
 
 
@@ -41,6 +45,7 @@ class BusinessCaseRepository(Protocol):
         *,
         limit: int,
         cursor: BusinessCaseCursor | None,
+        case_type: BusinessCaseType,
         industry: BusinessCaseIndustry | None,
         keyword: str | None,
     ) -> BusinessCasePageSlice:

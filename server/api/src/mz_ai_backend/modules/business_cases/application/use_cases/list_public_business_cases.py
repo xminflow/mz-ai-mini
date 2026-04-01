@@ -20,6 +20,7 @@ class ListPublicBusinessCasesUseCase:
         page = await self._business_case_repository.list_public(
             limit=query.limit,
             cursor=decode_cursor(query.cursor),
+            case_type=query.type,
             industry=query.industry,
             keyword=query.keyword,
         )

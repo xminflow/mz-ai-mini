@@ -18,6 +18,7 @@ from mz_ai_backend.modules.business_cases.domain import (
     BusinessCaseIndustry,
     BusinessCaseNotFoundException,
     BusinessCaseStatus,
+    BusinessCaseType,
 )
 from mz_ai_backend.modules.business_cases.infrastructure.dependencies import (
     get_create_business_case_use_case,
@@ -36,6 +37,7 @@ DOCUMENT_ID_AI_BUSINESS_UPGRADE = 162758122237067267
 class StubCreateBusinessCaseUseCase:
     async def execute(self, command) -> BusinessCaseDetailResult:
         assert command.title == "Case A"
+        assert command.type == BusinessCaseType.CASE
         assert command.industry == BusinessCaseIndustry.CONSUMER
         assert command.tags == ("连锁增长", "AI 提效")
         assert command.documents[0].document_type.value == "business_case"
@@ -51,6 +53,7 @@ class StubListAdminBusinessCasesUseCase:
             items=(
                 BusinessCaseListItemResult(
                     case_id=CASE_ID,
+                    type=BusinessCaseType.CASE,
                     title="Case A",
                     summary="Summary A",
                     industry=BusinessCaseIndustry.CONSUMER,
@@ -70,12 +73,14 @@ class StubListPublicBusinessCasesUseCase:
     async def execute(self, query) -> ListBusinessCasesResult:
         assert query.limit == 10
         assert query.cursor == "cursor-1"
+        assert query.type == BusinessCaseType.CASE
         assert query.industry == BusinessCaseIndustry.CONSUMER
         assert query.keyword == "增长"
         return ListBusinessCasesResult(
             items=(
                 BusinessCaseListItemResult(
                     case_id=CASE_ID,
+                    type=BusinessCaseType.CASE,
                     title="Case A",
                     summary="Summary A",
                     industry=BusinessCaseIndustry.CONSUMER,
@@ -116,6 +121,7 @@ def _build_detail_result(
 ) -> BusinessCaseDetailResult:
     return BusinessCaseDetailResult(
         case_id=case_id,
+        type=BusinessCaseType.CASE,
         title="Case A",
         summary="Summary A",
         industry=BusinessCaseIndustry.CONSUMER,
@@ -185,6 +191,7 @@ def test_business_case_router_creates_business_case() -> None:
             "/api/v1/admin/business-cases",
             json={
                 "title": "Case A",
+                "type": "case",
                 "summary": "Summary A",
                 "industry": "消费",
                 "tags": ["连锁增长", "AI 提效"],
@@ -212,6 +219,7 @@ def test_business_case_router_creates_business_case() -> None:
     assert response.status_code == 200
     assert body["request_id"] == "business-case-create"
     assert body["data"]["case_id"] == str(CASE_ID)
+    assert body["data"]["type"] == "case"
     assert body["data"]["industry"] == "消费"
     assert body["data"]["tags"] == ["连锁增长", "AI 提效"]
     assert body["data"]["documents"]["business_case"]["document_id"] == str(
@@ -230,6 +238,7 @@ def test_business_case_router_lists_admin_business_cases() -> None:
     body = response.json()
     assert response.status_code == 200
     assert body["data"]["items"][0]["case_id"] == str(CASE_ID)
+    assert body["data"]["items"][0]["type"] == "case"
     assert body["data"]["items"][0]["tags"] == ["连锁增长"]
     assert body["data"]["next_cursor"] == "cursor-2"
 
@@ -239,11 +248,12 @@ def test_business_case_router_lists_public_business_cases_by_industry_and_keywor
         list_public_use_case=StubListPublicBusinessCasesUseCase()
     ) as client:
         response = client.get(
-            "/api/v1/business-cases?limit=10&cursor=cursor-1&industry=%E6%B6%88%E8%B4%B9&keyword=%E5%A2%9E%E9%95%BF"
+            "/api/v1/business-cases?type=case&limit=10&cursor=cursor-1&industry=%E6%B6%88%E8%B4%B9&keyword=%E5%A2%9E%E9%95%BF"
         )
 
     body = response.json()
     assert response.status_code == 200
+    assert body["data"]["items"][0]["type"] == "case"
     assert body["data"]["items"][0]["industry"] == "消费"
     assert body["data"]["items"][0]["tags"] == ["AI 提效"]
     assert body["data"]["next_cursor"] == "cursor-3"
@@ -261,6 +271,17 @@ def test_business_case_router_returns_not_found_for_unpublished_public_detail() 
     body = response.json()
     assert response.status_code == 404
     assert body["code"] == ErrorCode.BUSINESS_CASE_NOT_FOUND.value
+
+
+def test_business_case_router_rejects_invalid_public_type_filter() -> None:
+    with _build_client(
+        list_public_use_case=StubListPublicBusinessCasesUseCase()
+    ) as client:
+        response = client.get("/api/v1/business-cases?type=invalid")
+
+    body = response.json()
+    assert response.status_code == 422
+    assert body["code"] == ErrorCode.COMMON_VALIDATION_ERROR.value
 
 
 def test_business_case_router_returns_validation_error_for_invalid_payload() -> None:

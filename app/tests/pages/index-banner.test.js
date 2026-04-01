@@ -3,6 +3,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 
 const INDEX_PAGE_PATH = require.resolve("../../miniprogram/pages/index/index");
+const PAGE_FACTORY_PATH = require.resolve("../../miniprogram/pages/story-feed/createPage");
 const INDEX_TEMPLATE_PATH = require.resolve("../../miniprogram/pages/index/index.wxml");
 const APP_ENTRY_PATH = require.resolve("../../miniprogram/app");
 const APP_CONFIG_PATH = require.resolve("../../miniprogram/app.json");
@@ -10,6 +11,7 @@ const AUTH_SERVICE_PATH = require.resolve("../../miniprogram/services/auth");
 
 const clearIndexModules = () => {
   delete require.cache[INDEX_PAGE_PATH];
+  delete require.cache[PAGE_FACTORY_PATH];
 };
 
 const clearAppModules = () => {
@@ -69,10 +71,14 @@ test("app config uses the native tab bar configuration", () => {
   const appConfig = JSON.parse(fs.readFileSync(APP_CONFIG_PATH, "utf8"));
 
   assert.equal("custom" in appConfig.tabBar, false);
-  assert.equal(appConfig.tabBar.list.length, 4);
+  assert.equal(appConfig.tabBar.list.length, 5);
   assert.equal(appConfig.tabBar.backgroundColor, "#FFFFFF");
   assert.equal(appConfig.tabBar.color, "#6B7280");
   assert.equal(appConfig.tabBar.selectedColor, "#0B0B0B");
+  assert.equal(
+    appConfig.tabBar.list.some((item) => item.pagePath === "pages/project/index"),
+    true
+  );
   assert.equal(
     appConfig.tabBar.list.some((item) => item.pagePath === "pages/consult/index"),
     true

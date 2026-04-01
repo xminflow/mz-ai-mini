@@ -2,7 +2,7 @@
 
 Usage:
 - Import business case entities and domain-specific exceptions from this package.
-- Case summaries and aggregates expose case-level `industry` and `tags`.
+- Case summaries and aggregates expose case-level `type`, `industry`, and `tags`.
 - Business case documents expose title and markdown content without per-document
   cover metadata.
 
@@ -19,6 +19,7 @@ from .entities import (
     BusinessCaseDocuments,
     BusinessCaseStatus,
     BusinessCaseSummary,
+    BusinessCaseType,
 )
 from .exceptions import (
     BusinessCaseInvalidDocumentSetException,
@@ -35,4 +36,5 @@ __all__ = [
     "BusinessCaseNotFoundException",
     "BusinessCaseStatus",
     "BusinessCaseSummary",
+    "BusinessCaseType",
 ]

@@ -79,6 +79,7 @@ class BusinessCaseDirectoryImporter:
         )
         payload = CaseImportPayload(
             case_id=case_config.case_id,
+            type=case_config.type,
             title=case_config.title,
             summary=case_config.desc,
             industry=case_config.industry,
@@ -171,6 +172,7 @@ class _AssetPublisher:
 def _build_create_command(payload: CaseImportPayload) -> CreateBusinessCaseCommand:
     return CreateBusinessCaseCommand(
         case_id=payload.case_id,
+        type=payload.type,
         title=payload.title,
         summary=payload.summary,
         industry=payload.industry,

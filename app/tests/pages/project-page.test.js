@@ -2,13 +2,14 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 
-const PAGE_PATH = require.resolve("../../miniprogram/pages/index/index");
+const PAGE_PATH = require.resolve("../../miniprogram/pages/project/index");
 const PAGE_FACTORY_PATH = require.resolve("../../miniprogram/pages/story-feed/createPage");
 const STORY_SERVICE_PATH = require.resolve("../../miniprogram/services/story");
 const BUSINESS_CASE_ID_PATH =
   require.resolve("../../miniprogram/utils/businessCaseId");
 const PAGE_TEMPLATE_PATH =
-  require.resolve("../../miniprogram/pages/index/index.wxml");
+  require.resolve("../../miniprogram/pages/project/index.wxml");
+const APP_CONFIG_PATH = require.resolve("../../miniprogram/app.json");
 
 const DEFAULT_INDUSTRIES = [
   "科技",
@@ -24,7 +25,7 @@ const DEFAULT_INDUSTRIES = [
   "其他",
 ];
 
-const clearIndexPageModules = () => {
+const clearProjectPageModules = () => {
   delete require.cache[PAGE_PATH];
   delete require.cache[PAGE_FACTORY_PATH];
   delete require.cache[STORY_SERVICE_PATH];
@@ -40,7 +41,7 @@ const mockModule = (modulePath, exports) => {
   };
 };
 
-const loadIndexPage = ({
+const loadProjectPage = ({
   fetchStoryList = async () => ({
     list: [],
     nextCursor: "",
@@ -49,7 +50,7 @@ const loadIndexPage = ({
   }),
   encodeBusinessCaseRouteId = (value) => value,
 } = {}) => {
-  clearIndexPageModules();
+  clearProjectPageModules();
 
   let pageConfig = null;
   global.Page = (config) => {
@@ -91,29 +92,22 @@ const createPageInstance = (pageConfig) => {
 };
 
 test.afterEach(() => {
-  clearIndexPageModules();
+  clearProjectPageModules();
   delete global.Page;
   delete global.wx;
 });
 
-test("index page opens industry selector when tapping the more tab", () => {
-  const pageConfig = loadIndexPage();
-  const page = createPageInstance(pageConfig);
+test("project page uses project feed copy and type", () => {
+  const pageConfig = loadProjectPage();
 
-  page.handleSelectTab({
-    currentTarget: {
-      dataset: {
-        industry: "__more__",
-      },
-    },
-  });
-
-  assert.equal(page.data.isIndustrySelectorVisible, true);
+  assert.equal(pageConfig.data.storyType, "project");
+  assert.equal(pageConfig.data.pageCopy.searchPlaceholder, "搜索项目关键词");
+  assert.equal(pageConfig.data.pageCopy.emptyDefaultTitle, "还没有发布项目");
 });
 
-test("index page submits confirmed keyword with the current industry filter", async () => {
+test("project page submits confirmed keyword with the project type filter", async () => {
   const requests = [];
-  const pageConfig = loadIndexPage({
+  const pageConfig = loadProjectPage({
     fetchStoryList: async (options) => {
       requests.push(options);
       return {
@@ -132,85 +126,40 @@ test("index page submits confirmed keyword with the current industry filter", as
   };
 
   page.setData({
-    selectedIndustry: "消费",
-    keywordInput: "宠物",
+    selectedIndustry: "科技",
+    keywordInput: "自动化",
     submittedKeyword: "",
   });
 
   await page.handleSubmitKeywordSearch({
     detail: {
-      value: "宠物",
+      value: "自动化",
     },
   });
 
   assert.deepEqual(requests[0], {
     pageSize: 6,
-    type: "case",
-    industry: "消费",
-    keyword: "宠物",
-  });
-  assert.equal(page.data.submittedKeyword, "宠物");
-});
-
-test("index page switches industry from the selector and closes the sheet", async () => {
-  const requests = [];
-  const pageConfig = loadIndexPage({
-    fetchStoryList: async (options) => {
-      requests.push(options);
-      return {
-        list: [],
-        nextCursor: "",
-        hasMore: false,
-        availableIndustries: ["科技", "消费", "金融"],
-      };
-    },
-  });
-  const page = createPageInstance(pageConfig);
-
-  global.wx = {
-    stopPullDownRefresh() {},
-    showToast() {},
-  };
-
-  page.setData({
-    isIndustrySelectorVisible: true,
-    selectedIndustry: "",
-    submittedKeyword: "增长",
-  });
-
-  await page.handleSelectIndustryOption({
-    currentTarget: {
-      dataset: {
-        industry: "金融",
-      },
-    },
-  });
-
-  assert.equal(page.data.isIndustrySelectorVisible, false);
-  assert.deepEqual(requests[0], {
-    pageSize: 6,
-    type: "case",
-    industry: "金融",
-    keyword: "增长",
+    type: "project",
+    industry: "科技",
+    keyword: "自动化",
   });
 });
 
-test("index page uses case feed copy and type", () => {
-  const pageConfig = loadIndexPage();
-
-  assert.equal(pageConfig.data.storyType, "case");
-  assert.equal(pageConfig.data.pageCopy.searchPlaceholder, "搜索案例关键词");
-  assert.equal(pageConfig.data.pageCopy.emptyDefaultTitle, "还没有发布案例");
-});
-
-test("index template renders shared search input and industry selector sheet", () => {
+test("project template renders shared placeholder binding", () => {
   const template = fs.readFileSync(PAGE_TEMPLATE_PATH, "utf8");
 
   assert.equal(template.includes('placeholder="{{pageCopy.searchPlaceholder}}"'), true);
-  assert.equal(
-    template.includes('bindconfirm="handleSubmitKeywordSearch"'),
-    true,
-  );
-  assert.equal(template.includes('class="industry-sheet__mask"'), true);
-  assert.equal(template.includes('bindtap="handleSelectIndustryOption"'), true);
+  assert.equal(template.includes("pageCopy.emptyDefaultText"), true);
+});
+
+test("app config registers the project page and tab", () => {
+  const appConfig = JSON.parse(fs.readFileSync(APP_CONFIG_PATH, "utf8"));
+
+  assert.equal(appConfig.pages.includes("pages/project/index"), true);
+  assert.deepEqual(appConfig.tabBar.list[1], {
+    pagePath: "pages/project/index",
+    text: "项目",
+    iconPath: "images/icons/examples.png",
+    selectedIconPath: "images/icons/examples-active.png",
+  });
 });

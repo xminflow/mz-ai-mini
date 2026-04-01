@@ -17,6 +17,7 @@ from mz_ai_backend.modules.business_cases.domain import (
     BusinessCaseDocuments,
     BusinessCaseInvalidDocumentSetException,
     BusinessCaseStatus,
+    BusinessCaseType,
 )
 
 
@@ -74,6 +75,7 @@ class FakeBusinessCaseRepository:
         )
         return BusinessCase(
             case_id=registration.case_id,
+            type=registration.type,
             title=registration.title,
             summary=registration.summary,
             industry=registration.industry,
@@ -119,6 +121,7 @@ async def test_create_business_case_use_case_generates_ids_and_published_at() ->
 
     result = await use_case.execute(
         CreateBusinessCaseCommand(
+            type=BusinessCaseType.CASE,
             title="Case A",
             summary="Summary A",
             industry=BusinessCaseIndustry.CONSUMER,
@@ -132,6 +135,7 @@ async def test_create_business_case_use_case_generates_ids_and_published_at() ->
     assert repository.registration is not None
     assert repository.registration.case_id == "1001"
     assert repository.registration.published_at == datetime(2026, 1, 1, 8, 0, 0)
+    assert repository.registration.type == BusinessCaseType.CASE
     assert repository.registration.industry == BusinessCaseIndustry.CONSUMER
     assert repository.registration.tags == ("连锁增长", "AI 提效")
     assert [document.document_id for document in repository.registration.documents] == [
@@ -140,6 +144,7 @@ async def test_create_business_case_use_case_generates_ids_and_published_at() ->
         2003,
     ]
     assert result.case_id == "1001"
+    assert result.type == BusinessCaseType.CASE
     assert result.industry == BusinessCaseIndustry.CONSUMER
     assert result.status == BusinessCaseStatus.PUBLISHED
     assert result.tags == ("连锁增长", "AI 提效")
@@ -158,6 +163,7 @@ async def test_create_business_case_use_case_preserves_supplied_case_id() -> Non
     result = await use_case.execute(
         CreateBusinessCaseCommand(
             case_id="case-4",
+            type=BusinessCaseType.PROJECT,
             title="Case A",
             summary="Summary A",
             industry=BusinessCaseIndustry.ENTERTAINMENT,
@@ -170,6 +176,7 @@ async def test_create_business_case_use_case_preserves_supplied_case_id() -> Non
 
     assert repository.registration is not None
     assert repository.registration.case_id == "case-4"
+    assert repository.registration.type == BusinessCaseType.PROJECT
     assert repository.registration.industry == BusinessCaseIndustry.ENTERTAINMENT
     assert [document.document_id for document in repository.registration.documents] == [
         2001,
@@ -177,6 +184,7 @@ async def test_create_business_case_use_case_preserves_supplied_case_id() -> Non
         2003,
     ]
     assert result.case_id == "case-4"
+    assert result.type == BusinessCaseType.PROJECT
 
 
 @pytest.mark.asyncio
@@ -191,6 +199,7 @@ async def test_create_business_case_use_case_rejects_invalid_document_set() -> N
     with pytest.raises(BusinessCaseInvalidDocumentSetException):
         await use_case.execute(
             CreateBusinessCaseCommand(
+                type=BusinessCaseType.CASE,
                 title="Case A",
                 summary="Summary A",
                 industry=BusinessCaseIndustry.OTHER,
