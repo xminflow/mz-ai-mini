@@ -125,6 +125,7 @@ class BusinessCaseDocumentReplacement(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
+    document_id: int
     document_type: BusinessCaseDocumentType
     title: str
     markdown_content: str
@@ -174,6 +175,7 @@ class BusinessCaseDocumentsResult(BaseModel):
     business_case: BusinessCaseDocumentResult
     market_research: BusinessCaseDocumentResult
     ai_business_upgrade: BusinessCaseDocumentResult
+    how_to_do: BusinessCaseDocumentResult | None = None
 
 
 class BusinessCaseDetailResult(BaseModel):

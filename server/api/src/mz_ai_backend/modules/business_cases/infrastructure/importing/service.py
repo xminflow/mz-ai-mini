@@ -9,7 +9,7 @@ from ...application import (
     CreateBusinessCaseCommand,
     CreateBusinessCaseUseCase,
 )
-from ...domain import BusinessCaseDocumentType, BusinessCaseStatus
+from ...domain import BusinessCaseDocumentType, BusinessCaseStatus, BusinessCaseType
 from ..repositories import SqlAlchemyBusinessCaseRepository
 from .directory_loader import (
     extract_markdown_image_destinations,
@@ -24,7 +24,6 @@ from .models import (
     CaseImportPayload,
     CaseImportResult,
 )
-
 
 class AssetUploader(Protocol):
     """Upload one local asset and return its remote reference."""
@@ -77,6 +76,36 @@ class BusinessCaseDirectoryImporter:
             case_id=case_config.case_id,
             asset_uploader=self._asset_manager,
         )
+        document_payloads = [
+            self._build_document_payload(
+                case_dir=case_dir,
+                document_type=BusinessCaseDocumentType.BUSINESS_CASE,
+                markdown_reference=case_config.rework.file,
+                asset_publisher=asset_publisher,
+            ),
+            self._build_document_payload(
+                case_dir=case_dir,
+                document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
+                markdown_reference=case_config.market.file,
+                asset_publisher=asset_publisher,
+            ),
+            self._build_document_payload(
+                case_dir=case_dir,
+                document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
+                markdown_reference=case_config.ai_driven_analysis.file,
+                asset_publisher=asset_publisher,
+            ),
+        ]
+        if case_config.type == BusinessCaseType.PROJECT:
+            document_payloads.append(
+                self._build_document_payload(
+                    case_dir=case_dir,
+                    document_type=BusinessCaseDocumentType.HOW_TO_DO,
+                    markdown_reference=case_config.how_to_do.file,
+                    asset_publisher=asset_publisher,
+                )
+            )
+
         payload = CaseImportPayload(
             case_id=case_config.case_id,
             type=case_config.type,
@@ -85,26 +114,7 @@ class BusinessCaseDirectoryImporter:
             industry=case_config.industry,
             tags=case_config.tags,
             cover_image_url=asset_publisher.publish_reference(case_config.cover),
-            documents=(
-                self._build_document_payload(
-                    case_dir=case_dir,
-                    document_type=BusinessCaseDocumentType.BUSINESS_CASE,
-                    markdown_reference=case_config.rework.file,
-                    asset_publisher=asset_publisher,
-                ),
-                self._build_document_payload(
-                    case_dir=case_dir,
-                    document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
-                    markdown_reference=case_config.market.file,
-                    asset_publisher=asset_publisher,
-                ),
-                self._build_document_payload(
-                    case_dir=case_dir,
-                    document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
-                    markdown_reference=case_config.ai_driven_analysis.file,
-                    asset_publisher=asset_publisher,
-                ),
-            ),
+            documents=tuple(document_payloads),
         )
 
         await self._create_use_case.execute(_build_create_command(payload))
@@ -191,12 +201,18 @@ def _build_create_command(payload: CaseImportPayload) -> CreateBusinessCaseComma
 
 def _validate_local_case_assets(*, case_dir: Path, case_config: CaseImportConfig) -> None:
     resolve_local_asset(case_dir, case_config.cover)
-    for document_config in (
-        case_config.rework,
-        case_config.market,
-        case_config.ai_driven_analysis,
-    ):
-        markdown_asset = resolve_local_asset(case_dir, document_config.file)
+    document_references = [
+        case_config.rework.file,
+        case_config.market.file,
+        case_config.ai_driven_analysis.file,
+    ]
+    if case_config.type == BusinessCaseType.PROJECT:
+        if case_config.how_to_do is None:
+            raise ValueError("Project import is missing how_to_do configuration.")
+        document_references.append(case_config.how_to_do.file)
+
+    for document_reference in document_references:
+        markdown_asset = resolve_local_asset(case_dir, document_reference)
         markdown_content = markdown_asset.source_path.read_text(encoding="utf-8")
         extract_markdown_title(markdown_content)
         for destination in extract_markdown_image_destinations(markdown_content):

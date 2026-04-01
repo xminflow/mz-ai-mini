@@ -7,6 +7,8 @@ Usage:
   CloudBase asset uploads and cleanup for the importer.
 - Import config supports case-level `type`, `industry`, `tags`, and one shared
   case cover image. Document entries only carry markdown file references.
+- Project imports additionally read `how_to_do.md` from the case directory and
+  expose it as the `如何做` document.
 
 Development rules:
 - Keep filesystem parsing and object storage details inside this package.

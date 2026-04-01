@@ -6,9 +6,11 @@ from unittest.mock import AsyncMock
 import pytest
 from mz_ai_backend.core import InternalServerException
 from mz_ai_backend.modules.business_cases.application.dtos import (
+    BusinessCaseDocumentReplacement,
     BusinessCaseReplacement,
 )
 from mz_ai_backend.modules.business_cases.domain import (
+    BusinessCaseDocumentType,
     BusinessCaseIndustry,
     BusinessCaseStatus,
     BusinessCaseType,
@@ -108,6 +110,58 @@ def _build_document_models(case_id: str) -> list[BusinessCaseDocumentModel]:
     ]
 
 
+def _build_project_document_models(case_id: str) -> list[BusinessCaseDocumentModel]:
+    return _build_document_models(case_id) + [
+        BusinessCaseDocumentModel(
+            document_id=2004,
+            case_id=case_id,
+            document_type="how_to_do",
+            title="How To Do",
+            markdown_content="# 如何做",
+            is_deleted=False,
+            created_at=datetime(2026, 1, 1, 8, 0, 0),
+            updated_at=datetime(2026, 1, 1, 8, 0, 0),
+        ),
+    ]
+
+
+def _build_document_replacements(
+    *,
+    include_how_to_do: bool = False,
+) -> tuple[BusinessCaseDocumentReplacement, ...]:
+    document_replacements = [
+        BusinessCaseDocumentReplacement(
+            document_id=2001,
+            document_type=BusinessCaseDocumentType.BUSINESS_CASE,
+            title="Business Case",
+            markdown_content="# Business Case",
+        ),
+        BusinessCaseDocumentReplacement(
+            document_id=2002,
+            document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
+            title="Market Research",
+            markdown_content="# Market Research",
+        ),
+        BusinessCaseDocumentReplacement(
+            document_id=2003,
+            document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
+            title="AI Upgrade",
+            markdown_content="# AI Upgrade",
+        ),
+    ]
+    if include_how_to_do:
+        document_replacements.append(
+            BusinessCaseDocumentReplacement(
+                document_id=4001,
+                document_type=BusinessCaseDocumentType.HOW_TO_DO,
+                title="How To Do",
+                markdown_content="# 如何做",
+            )
+        )
+
+    return tuple(document_replacements)
+
+
 @pytest.mark.asyncio
 async def test_business_case_repository_returns_domain_aggregate_for_case_lookup() -> (
     None
@@ -128,6 +182,25 @@ async def test_business_case_repository_returns_domain_aggregate_for_case_lookup
     assert case.tags == ("连锁增长",)
     assert case.documents.business_case.title == "Business Case"
     assert case.documents.market_research.document_id == 2002
+
+
+@pytest.mark.asyncio
+async def test_business_case_repository_returns_project_how_to_do_document_when_present() -> None:
+    session = AsyncMock(spec=AsyncSession)
+    session.execute.side_effect = [
+        FakeScalarOneResult(
+            _build_case_model(case_id="1001", case_type=BusinessCaseType.PROJECT.value)
+        ),
+        FakeManyResult(_build_project_document_models("1001")),
+    ]
+    repository = SqlAlchemyBusinessCaseRepository(session=session)
+
+    case = await repository.get_by_case_id("1001")
+
+    assert case is not None
+    assert case.type == BusinessCaseType.PROJECT
+    assert case.documents.how_to_do is not None
+    assert case.documents.how_to_do.document_id == 2004
 
 
 @pytest.mark.asyncio
@@ -257,7 +330,7 @@ async def test_business_case_repository_hard_delete_removes_case_and_documents()
 
 
 @pytest.mark.asyncio
-async def test_business_case_repository_replace_raises_for_incomplete_document_set() -> (
+async def test_business_case_repository_get_by_case_id_raises_for_incomplete_document_set() -> (
     None
 ):
     session = AsyncMock(spec=AsyncSession)
@@ -268,17 +341,39 @@ async def test_business_case_repository_replace_raises_for_incomplete_document_s
     repository = SqlAlchemyBusinessCaseRepository(session=session)
 
     with pytest.raises(InternalServerException):
-        await repository.replace(
-            BusinessCaseReplacement(
-                case_id="1001",
-                type=BusinessCaseType.CASE,
-                title="Case Updated",
-                summary="Summary Updated",
-                industry=BusinessCaseIndustry.OTHER,
-                tags=("私域增长",),
-                cover_image_url="https://example.com/case-updated.png",
-                status=BusinessCaseStatus.DRAFT,
-                published_at=None,
-                documents=(),
-            )
+        await repository.get_by_case_id("1001")
+
+
+@pytest.mark.asyncio
+async def test_business_case_repository_replace_adds_project_how_to_do_document() -> None:
+    case_model = _build_case_model(case_id="1001")
+    document_models = _build_document_models("1001")
+    session = AsyncMock(spec=AsyncSession)
+    session.execute.side_effect = [
+        FakeScalarOneResult(case_model),
+        FakeManyResult(document_models),
+        FakeScalarOneResult(
+            _build_case_model(case_id="1001", case_type=BusinessCaseType.PROJECT.value)
+        ),
+        FakeManyResult(_build_project_document_models("1001")),
+    ]
+    repository = SqlAlchemyBusinessCaseRepository(session=session)
+
+    replaced_case = await repository.replace(
+        BusinessCaseReplacement(
+            case_id="1001",
+            type=BusinessCaseType.PROJECT,
+            title="Project Updated",
+            summary="Summary Updated",
+            industry=BusinessCaseIndustry.TECHNOLOGY,
+            tags=("自动化",),
+            cover_image_url="https://example.com/project-updated.png",
+            status=BusinessCaseStatus.PUBLISHED,
+            published_at=datetime(2026, 1, 1, 8, 0, 0),
+            documents=_build_document_replacements(include_how_to_do=True),
         )
+    )
+
+    assert replaced_case is not None
+    assert replaced_case.documents.how_to_do is not None
+    assert session.add.call_count >= 1

@@ -29,6 +29,14 @@ class FakeCurrentTimeProvider:
         return self._now
 
 
+class FakeSnowflakeIdGenerator:
+    def __init__(self, values: list[int]) -> None:
+        self._values = values
+
+    def generate(self) -> int:
+        return self._values.pop(0)
+
+
 class FakeBusinessCaseRepository:
     def __init__(
         self,
@@ -52,6 +60,7 @@ def _build_case(
     *,
     case_id: str,
     case_type: BusinessCaseType = BusinessCaseType.CASE,
+    include_how_to_do: bool = False,
     status: BusinessCaseStatus,
     published_at: datetime | None,
 ) -> BusinessCase:
@@ -83,6 +92,19 @@ def _build_case(
             is_deleted=False,
             created_at=created_at,
             updated_at=created_at,
+        ),
+        how_to_do=(
+            BusinessCaseDocument(
+                document_id=2004,
+                document_type=BusinessCaseDocumentType.HOW_TO_DO,
+                title="How To Do",
+                markdown_content="# 如何做",
+                is_deleted=False,
+                created_at=created_at,
+                updated_at=created_at,
+            )
+            if include_how_to_do
+            else None
         ),
     )
     return BusinessCase(
@@ -122,6 +144,17 @@ def _build_documents() -> tuple[BusinessCaseDocumentContent, ...]:
     )
 
 
+def _build_project_documents() -> tuple[BusinessCaseDocumentContent, ...]:
+    return (
+        *_build_documents(),
+        BusinessCaseDocumentContent(
+            document_type=BusinessCaseDocumentType.HOW_TO_DO,
+            title="How To Do Updated",
+            markdown_content="# 如何做升级版",
+        ),
+    )
+
+
 @pytest.mark.asyncio
 async def test_replace_business_case_use_case_preserves_existing_published_at() -> None:
     existing_case = _build_case(
@@ -131,7 +164,6 @@ async def test_replace_business_case_use_case_preserves_existing_published_at() 
     )
     replaced_case = _build_case(
         case_id="1001",
-        case_type=BusinessCaseType.PROJECT,
         status=BusinessCaseStatus.PUBLISHED,
         published_at=datetime(2026, 1, 1, 9, 0, 0),
     )
@@ -141,13 +173,14 @@ async def test_replace_business_case_use_case_preserves_existing_published_at() 
     )
     use_case = ReplaceBusinessCaseUseCase(
         business_case_repository=repository,
+        snowflake_id_generator=FakeSnowflakeIdGenerator([3001]),
         current_time_provider=FakeCurrentTimeProvider(datetime(2026, 1, 3, 10, 0, 0)),
     )
 
     result = await use_case.execute(
         ReplaceBusinessCaseCommand(
             case_id="1001",
-            type=BusinessCaseType.PROJECT,
+            type=BusinessCaseType.CASE,
             title="Case A Updated",
             summary="Summary A Updated",
             industry=BusinessCaseIndustry.CONSUMER,
@@ -160,10 +193,10 @@ async def test_replace_business_case_use_case_preserves_existing_published_at() 
 
     assert repository.replacement is not None
     assert repository.replacement.published_at == datetime(2026, 1, 1, 9, 0, 0)
-    assert repository.replacement.type == BusinessCaseType.PROJECT
+    assert repository.replacement.type == BusinessCaseType.CASE
     assert repository.replacement.industry == BusinessCaseIndustry.CONSUMER
     assert repository.replacement.tags == ("私域增长", "门店升级")
-    assert result.type == BusinessCaseType.PROJECT
+    assert result.type == BusinessCaseType.CASE
     assert result.status == BusinessCaseStatus.PUBLISHED
 
 
@@ -185,6 +218,7 @@ async def test_replace_business_case_use_case_clears_published_at_when_moving_to
     )
     use_case = ReplaceBusinessCaseUseCase(
         business_case_repository=repository,
+        snowflake_id_generator=FakeSnowflakeIdGenerator([3001]),
         current_time_provider=FakeCurrentTimeProvider(datetime(2026, 1, 3, 10, 0, 0)),
     )
 
@@ -216,6 +250,7 @@ async def test_replace_business_case_use_case_raises_not_found_for_missing_case(
     repository = FakeBusinessCaseRepository(existing_case=None, replaced_case=None)
     use_case = ReplaceBusinessCaseUseCase(
         business_case_repository=repository,
+        snowflake_id_generator=FakeSnowflakeIdGenerator([3001]),
         current_time_provider=FakeCurrentTimeProvider(datetime(2026, 1, 3, 10, 0, 0)),
     )
 
@@ -233,3 +268,48 @@ async def test_replace_business_case_use_case_raises_not_found_for_missing_case(
                 documents=_build_documents(),
             )
         )
+
+
+@pytest.mark.asyncio
+async def test_replace_business_case_use_case_generates_document_id_for_new_project_how_to_do() -> None:
+    existing_case = _build_case(
+        case_id="1001",
+        status=BusinessCaseStatus.PUBLISHED,
+        published_at=datetime(2026, 1, 1, 9, 0, 0),
+    )
+    replaced_case = _build_case(
+        case_id="1001",
+        case_type=BusinessCaseType.PROJECT,
+        include_how_to_do=True,
+        status=BusinessCaseStatus.PUBLISHED,
+        published_at=datetime(2026, 1, 1, 9, 0, 0),
+    )
+    repository = FakeBusinessCaseRepository(
+        existing_case=existing_case,
+        replaced_case=replaced_case,
+    )
+    use_case = ReplaceBusinessCaseUseCase(
+        business_case_repository=repository,
+        snowflake_id_generator=FakeSnowflakeIdGenerator([4001]),
+        current_time_provider=FakeCurrentTimeProvider(datetime(2026, 1, 3, 10, 0, 0)),
+    )
+
+    result = await use_case.execute(
+        ReplaceBusinessCaseCommand(
+            case_id="1001",
+            type=BusinessCaseType.PROJECT,
+            title="Project A Updated",
+            summary="Project Summary Updated",
+            industry=BusinessCaseIndustry.TECHNOLOGY,
+            tags=("自动化",),
+            cover_image_url="https://example.com/project-a-updated.png",
+            status=BusinessCaseStatus.PUBLISHED,
+            documents=_build_project_documents(),
+        )
+    )
+
+    assert repository.replacement is not None
+    assert len(repository.replacement.documents) == 4
+    assert repository.replacement.documents[-1].document_type == BusinessCaseDocumentType.HOW_TO_DO
+    assert repository.replacement.documents[-1].document_id == 4001
+    assert result.documents.how_to_do is not None

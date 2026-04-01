@@ -90,6 +90,8 @@ def test_load_case_import_config_reads_expected_fields(tmp_path: Path) -> None:
             "  file: ai_driven_analysis.md\n"
             "market:\n"
             "  file: market_analysis_report.md\n"
+            "how_to_do:\n"
+            "  file: how_to_do.md\n"
         ),
     )
 
@@ -150,6 +152,32 @@ def test_load_case_import_config_rejects_missing_type(tmp_path: Path) -> None:
         load_case_import_config(tmp_path)
 
     assert "type" in str(exc_info.value)
+
+
+def test_load_case_import_config_rejects_project_without_how_to_do(tmp_path: Path) -> None:
+    _write_case_directory(
+        tmp_path,
+        config_text=(
+            "case_id: case-4\n"
+            "type: project\n"
+            "title: 宠物新零售行业创业案例\n"
+            "desc: 围绕宠物健康知识输出和社群运营\n"
+            "cover: images/cover/image_01.png\n"
+            "tags:\n"
+            "  - 宠物\n"
+            "rework:\n"
+            "  file: rework.md\n"
+            "ai_driven_analysis:\n"
+            "  file: ai_driven_analysis.md\n"
+            "market:\n"
+            "  file: market_analysis_report.md\n"
+        ),
+    )
+
+    with pytest.raises(Exception) as exc_info:
+        load_case_import_config(tmp_path)
+
+    assert "how_to_do" in str(exc_info.value)
 
 
 def test_extract_markdown_title_returns_first_h1() -> None:
@@ -236,6 +264,36 @@ async def test_business_case_directory_importer_creates_missing_case(
     assert create_use_case.executed_command.type == BusinessCaseType.CASE
     assert create_use_case.executed_command.industry == BusinessCaseIndustry.CONSUMER
     assert create_use_case.executed_command.status == BusinessCaseStatus.PUBLISHED
+
+
+@pytest.mark.asyncio
+async def test_business_case_directory_importer_reads_project_how_to_do_markdown(
+    tmp_path: Path,
+) -> None:
+    _write_case_directory(tmp_path, case_type=BusinessCaseType.PROJECT, include_how_to_do=True)
+    create_use_case = StubCreateBusinessCaseUseCase()
+    uploader = StubAssetUploader()
+    repository = StubRepository(existing_case=None)
+    importer = BusinessCaseDirectoryImporter(
+        business_case_repository=repository,
+        create_use_case=create_use_case,
+        asset_manager=uploader,
+    )
+
+    result = await importer.import_case(case_dir=tmp_path)
+
+    assert result.case_id == CASE_ID
+    assert result.uploaded_asset_count == 5
+    assert create_use_case.executed_command is not None
+    command = create_use_case.executed_command
+    assert command.type == BusinessCaseType.PROJECT
+    assert len(command.documents) == 4
+    assert command.documents[-1].document_type == BusinessCaseDocumentType.HOW_TO_DO
+    assert (
+        f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
+        f"{CASE_ID}/images/how_to_do_chart1/chart.png"
+        in command.documents[-1].markdown_content
+    )
 
 
 def test_cloudbase_settings_from_env_reads_required_values(
@@ -607,11 +665,15 @@ def _write_case_directory(
     case_dir: Path,
     *,
     config_text: str | None = None,
+    case_type: BusinessCaseType = BusinessCaseType.CASE,
+    include_how_to_do: bool = False,
 ) -> None:
     (case_dir / "images" / "cover").mkdir(parents=True, exist_ok=True)
     (case_dir / "images" / "rework_chart1").mkdir(parents=True, exist_ok=True)
     (case_dir / "images" / "market_chart1").mkdir(parents=True, exist_ok=True)
     (case_dir / "images" / "ai_chart1").mkdir(parents=True, exist_ok=True)
+    if include_how_to_do:
+        (case_dir / "images" / "how_to_do_chart1").mkdir(parents=True, exist_ok=True)
     for path in (
         case_dir / "images" / "cover" / "image_01.png",
         case_dir / "images" / "rework_chart1" / "chart.png",
@@ -619,6 +681,8 @@ def _write_case_directory(
         case_dir / "images" / "ai_chart1" / "chart.png",
     ):
         path.write_bytes(b"png")
+    if include_how_to_do:
+        (case_dir / "images" / "how_to_do_chart1" / "chart.png").write_bytes(b"png")
 
     (case_dir / "rework.md").write_text(
         "# Rework Title\n\n![Chart](images/rework_chart1/chart.png)\n",
@@ -632,11 +696,16 @@ def _write_case_directory(
         "# AI Title\n\n![Chart](images/ai_chart1/chart.png)\n",
         encoding="utf-8",
     )
+    if include_how_to_do:
+        (case_dir / "how_to_do.md").write_text(
+            "# How To Do\n\n![Chart](images/how_to_do_chart1/chart.png)\n",
+            encoding="utf-8",
+        )
     (case_dir / "config.yml").write_text(
         config_text
         or (
             "case_id: case-4\n"
-            "type: case\n"
+            f"type: {case_type.value}\n"
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
             "cover: images\\cover\\image_01.png\n"
@@ -650,6 +719,12 @@ def _write_case_directory(
             "  file: ai_driven_analysis.md\n"
             "market:\n"
             "  file: market_analysis_report.md\n"
+            + (
+                "how_to_do:\n"
+                "  file: how_to_do.md\n"
+                if include_how_to_do or case_type == BusinessCaseType.PROJECT
+                else ""
+            )
         ),
         encoding="utf-8",
     )

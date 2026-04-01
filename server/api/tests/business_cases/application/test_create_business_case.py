@@ -44,34 +44,23 @@ class FakeBusinessCaseRepository:
     async def create(self, registration):
         self.registration = registration
         created_at = datetime(2026, 1, 2, 3, 4, 5)
+        document_map = {
+            document.document_type: BusinessCaseDocument(
+                document_id=document.document_id,
+                document_type=document.document_type,
+                title=document.title,
+                markdown_content=document.markdown_content,
+                is_deleted=False,
+                created_at=created_at,
+                updated_at=created_at,
+            )
+            for document in registration.documents
+        }
         documents = BusinessCaseDocuments(
-            business_case=BusinessCaseDocument(
-                document_id=registration.documents[0].document_id,
-                document_type=registration.documents[0].document_type,
-                title=registration.documents[0].title,
-                markdown_content=registration.documents[0].markdown_content,
-                is_deleted=False,
-                created_at=created_at,
-                updated_at=created_at,
-            ),
-            market_research=BusinessCaseDocument(
-                document_id=registration.documents[1].document_id,
-                document_type=registration.documents[1].document_type,
-                title=registration.documents[1].title,
-                markdown_content=registration.documents[1].markdown_content,
-                is_deleted=False,
-                created_at=created_at,
-                updated_at=created_at,
-            ),
-            ai_business_upgrade=BusinessCaseDocument(
-                document_id=registration.documents[2].document_id,
-                document_type=registration.documents[2].document_type,
-                title=registration.documents[2].title,
-                markdown_content=registration.documents[2].markdown_content,
-                is_deleted=False,
-                created_at=created_at,
-                updated_at=created_at,
-            ),
+            business_case=document_map[BusinessCaseDocumentType.BUSINESS_CASE],
+            market_research=document_map[BusinessCaseDocumentType.MARKET_RESEARCH],
+            ai_business_upgrade=document_map[BusinessCaseDocumentType.AI_BUSINESS_UPGRADE],
+            how_to_do=document_map.get(BusinessCaseDocumentType.HOW_TO_DO),
         )
         return BusinessCase(
             case_id=registration.case_id,
@@ -106,6 +95,17 @@ def _build_document_contents() -> tuple[BusinessCaseDocumentContent, ...]:
             document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
             title="AI Upgrade",
             markdown_content="# AI Upgrade",
+        ),
+    )
+
+
+def _build_project_document_contents() -> tuple[BusinessCaseDocumentContent, ...]:
+    return (
+        *_build_document_contents(),
+        BusinessCaseDocumentContent(
+            document_type=BusinessCaseDocumentType.HOW_TO_DO,
+            title="How To Do",
+            markdown_content="# 如何做",
         ),
     )
 
@@ -156,7 +156,7 @@ async def test_create_business_case_use_case_preserves_supplied_case_id() -> Non
     repository = FakeBusinessCaseRepository()
     use_case = CreateBusinessCaseUseCase(
         business_case_repository=repository,
-        snowflake_id_generator=FakeSnowflakeIdGenerator([2001, 2002, 2003]),
+        snowflake_id_generator=FakeSnowflakeIdGenerator([2001, 2002, 2003, 2004]),
         current_time_provider=FakeCurrentTimeProvider(datetime(2026, 1, 1, 8, 0, 0)),
     )
 
@@ -170,7 +170,7 @@ async def test_create_business_case_use_case_preserves_supplied_case_id() -> Non
             tags=("连锁增长", "AI 提效"),
             cover_image_url="https://example.com/case-a.png",
             status=BusinessCaseStatus.PUBLISHED,
-            documents=_build_document_contents(),
+            documents=_build_project_document_contents(),
         )
     )
 
@@ -182,9 +182,40 @@ async def test_create_business_case_use_case_preserves_supplied_case_id() -> Non
         2001,
         2002,
         2003,
+        2004,
     ]
     assert result.case_id == "case-4"
     assert result.type == BusinessCaseType.PROJECT
+    assert result.documents.how_to_do is not None
+
+
+@pytest.mark.asyncio
+async def test_create_business_case_use_case_accepts_project_how_to_do_document() -> None:
+    repository = FakeBusinessCaseRepository()
+    use_case = CreateBusinessCaseUseCase(
+        business_case_repository=repository,
+        snowflake_id_generator=FakeSnowflakeIdGenerator([1001, 2001, 2002, 2003, 2004]),
+        current_time_provider=FakeCurrentTimeProvider(datetime(2026, 1, 1, 8, 0, 0)),
+    )
+
+    result = await use_case.execute(
+        CreateBusinessCaseCommand(
+            type=BusinessCaseType.PROJECT,
+            title="Project A",
+            summary="Project Summary",
+            industry=BusinessCaseIndustry.TECHNOLOGY,
+            tags=("自动化", "增长"),
+            cover_image_url="https://example.com/project-a.png",
+            status=BusinessCaseStatus.PUBLISHED,
+            documents=_build_project_document_contents(),
+        )
+    )
+
+    assert repository.registration is not None
+    assert len(repository.registration.documents) == 4
+    assert repository.registration.documents[-1].document_type == BusinessCaseDocumentType.HOW_TO_DO
+    assert result.documents.how_to_do is not None
+    assert result.documents.how_to_do.document_id == 2004
 
 
 @pytest.mark.asyncio
@@ -223,5 +254,29 @@ async def test_create_business_case_use_case_rejects_invalid_document_set() -> N
                         markdown_content="# Market Research",
                     ),
                 ),
+            )
+        )
+
+
+@pytest.mark.asyncio
+async def test_create_business_case_use_case_rejects_project_without_how_to_do() -> None:
+    repository = FakeBusinessCaseRepository()
+    use_case = CreateBusinessCaseUseCase(
+        business_case_repository=repository,
+        snowflake_id_generator=FakeSnowflakeIdGenerator([1001, 2001, 2002, 2003]),
+        current_time_provider=FakeCurrentTimeProvider(datetime(2026, 1, 1, 8, 0, 0)),
+    )
+
+    with pytest.raises(BusinessCaseInvalidDocumentSetException):
+        await use_case.execute(
+            CreateBusinessCaseCommand(
+                type=BusinessCaseType.PROJECT,
+                title="Project A",
+                summary="Project Summary",
+                industry=BusinessCaseIndustry.OTHER,
+                tags=("增长",),
+                cover_image_url="https://example.com/project-a.png",
+                status=BusinessCaseStatus.DRAFT,
+                documents=_build_document_contents(),
             )
         )

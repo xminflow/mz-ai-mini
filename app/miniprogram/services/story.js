@@ -27,6 +27,10 @@ const DOCUMENT_DEFINITIONS = Object.freeze([
     key: "ai_business_upgrade",
     label: "AI 升级",
   },
+  {
+    key: "how_to_do",
+    label: "如何做",
+  },
 ]);
 
 const normalizeTags = (tags) => {

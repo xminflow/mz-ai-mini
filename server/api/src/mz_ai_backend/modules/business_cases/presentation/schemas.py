@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from enum import StrEnum
 
-from pydantic import BaseModel, ConfigDict, HttpUrl, field_validator
+from pydantic import BaseModel, ConfigDict, HttpUrl, field_validator, model_validator
 
 from ..application import (
     BusinessCaseDetailResult,
@@ -87,18 +87,22 @@ class BusinessCaseDocumentUpsertRequest(BaseModel):
 
 
 class BusinessCaseDocumentsUpsertRequest(BaseModel):
-    """HTTP payload containing the fixed document set."""
+    """HTTP payload containing one business case document set."""
 
     model_config = ConfigDict(frozen=True)
 
     business_case: BusinessCaseDocumentUpsertRequest
     market_research: BusinessCaseDocumentUpsertRequest
     ai_business_upgrade: BusinessCaseDocumentUpsertRequest
+    how_to_do: BusinessCaseDocumentUpsertRequest | None = None
 
-    def to_document_contents(self) -> tuple[BusinessCaseDocumentContent, ...]:
+    def to_document_contents(
+        self,
+        case_type: BusinessCaseType,
+    ) -> tuple[BusinessCaseDocumentContent, ...]:
         """Convert the HTTP payload into application document content DTOs."""
 
-        return (
+        document_contents: list[BusinessCaseDocumentContent] = [
             BusinessCaseDocumentContent(
                 document_type=BusinessCaseDocumentType.BUSINESS_CASE,
                 title=self.business_case.title,
@@ -114,7 +118,18 @@ class BusinessCaseDocumentsUpsertRequest(BaseModel):
                 title=self.ai_business_upgrade.title,
                 markdown_content=self.ai_business_upgrade.markdown_content,
             ),
-        )
+        ]
+
+        if case_type == BusinessCaseType.PROJECT and self.how_to_do is not None:
+            document_contents.append(
+                BusinessCaseDocumentContent(
+                    document_type=BusinessCaseDocumentType.HOW_TO_DO,
+                    title=self.how_to_do.title,
+                    markdown_content=self.how_to_do.markdown_content,
+                )
+            )
+
+        return tuple(document_contents)
 
 
 class BusinessCaseUpsertRequest(BaseModel):
@@ -141,6 +156,16 @@ class BusinessCaseUpsertRequest(BaseModel):
     def validate_tags(cls, value: tuple[str, ...]) -> tuple[str, ...]:
         return _normalize_tags(value, field_name="tags")
 
+    @model_validator(mode="after")
+    def validate_document_set_for_type(self) -> "BusinessCaseUpsertRequest":
+        if self.type == BusinessCaseType.PROJECT and self.documents.how_to_do is None:
+            raise ValueError("documents.how_to_do is required for project.")
+
+        if self.type == BusinessCaseType.CASE and self.documents.how_to_do is not None:
+            raise ValueError("documents.how_to_do is only supported for project.")
+
+        return self
+
     def to_create_command(self) -> CreateBusinessCaseCommand:
         """Convert the HTTP payload into an application create command."""
 
@@ -152,7 +177,7 @@ class BusinessCaseUpsertRequest(BaseModel):
             tags=self.tags,
             cover_image_url=str(self.cover_image_url),
             status=self.status,
-            documents=self.documents.to_document_contents(),
+            documents=self.documents.to_document_contents(self.type),
         )
 
     def to_replace_command(self, *, case_id: str) -> ReplaceBusinessCaseCommand:
@@ -167,7 +192,7 @@ class BusinessCaseUpsertRequest(BaseModel):
             tags=self.tags,
             cover_image_url=str(self.cover_image_url),
             status=self.status,
-            documents=self.documents.to_document_contents(),
+            documents=self.documents.to_document_contents(self.type),
         )
 
 
@@ -191,13 +216,14 @@ class BusinessCaseDocumentResponse(BaseModel):
 
 
 class BusinessCaseDocumentsResponse(BaseModel):
-    """HTTP response payload for the fixed business case document set."""
+    """HTTP response payload for one business case document set."""
 
     model_config = ConfigDict(frozen=True)
 
     business_case: BusinessCaseDocumentResponse
     market_research: BusinessCaseDocumentResponse
     ai_business_upgrade: BusinessCaseDocumentResponse
+    how_to_do: BusinessCaseDocumentResponse | None = None
 
     @classmethod
     def from_result(
@@ -211,6 +237,11 @@ class BusinessCaseDocumentsResponse(BaseModel):
             ),
             ai_business_upgrade=BusinessCaseDocumentResponse.from_result(
                 result.ai_business_upgrade
+            ),
+            how_to_do=(
+                BusinessCaseDocumentResponse.from_result(result.how_to_do)
+                if result.how_to_do is not None
+                else None
             ),
         )
 

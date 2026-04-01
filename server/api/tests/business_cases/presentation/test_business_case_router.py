@@ -32,6 +32,7 @@ CASE_ID = "case-4"
 DOCUMENT_ID_BUSINESS_CASE = 162758122237067265
 DOCUMENT_ID_MARKET_RESEARCH = 162758122237067266
 DOCUMENT_ID_AI_BUSINESS_UPGRADE = 162758122237067267
+DOCUMENT_ID_HOW_TO_DO = 162758122237067268
 
 
 class StubCreateBusinessCaseUseCase:
@@ -98,13 +99,21 @@ class StubListPublicBusinessCasesUseCase:
 
 
 class StubPublicDetailUseCase:
-    def __init__(self, *, error: Exception | None = None) -> None:
+    def __init__(
+        self,
+        *,
+        error: Exception | None = None,
+        result: BusinessCaseDetailResult | None = None,
+    ) -> None:
         self._error = error
+        self._result = result
 
     async def execute(self, query) -> BusinessCaseDetailResult:
         assert query.case_id == CASE_ID
         if self._error is not None:
             raise self._error
+        if self._result is not None:
+            return self._result
         return _build_detail_result(case_id=CASE_ID, status=BusinessCaseStatus.PUBLISHED)
 
 
@@ -118,10 +127,12 @@ def _build_detail_result(
     *,
     case_id: str,
     status: BusinessCaseStatus,
+    case_type: BusinessCaseType = BusinessCaseType.CASE,
+    include_how_to_do: bool = False,
 ) -> BusinessCaseDetailResult:
     return BusinessCaseDetailResult(
         case_id=case_id,
-        type=BusinessCaseType.CASE,
+        type=case_type,
         title="Case A",
         summary="Summary A",
         industry=BusinessCaseIndustry.CONSUMER,
@@ -148,6 +159,15 @@ def _build_detail_result(
                 document_id=DOCUMENT_ID_AI_BUSINESS_UPGRADE,
                 title="AI Upgrade",
                 markdown_content="# AI Upgrade",
+            ),
+            how_to_do=(
+                BusinessCaseDocumentResult(
+                    document_id=DOCUMENT_ID_HOW_TO_DO,
+                    title="How To Do",
+                    markdown_content="# 如何做",
+                )
+                if include_how_to_do
+                else None
             ),
         ),
     )
@@ -271,6 +291,27 @@ def test_business_case_router_returns_not_found_for_unpublished_public_detail() 
     body = response.json()
     assert response.status_code == 404
     assert body["code"] == ErrorCode.BUSINESS_CASE_NOT_FOUND.value
+
+
+def test_business_case_router_returns_project_detail_with_how_to_do_document() -> None:
+    with _build_client(
+        public_detail_use_case=StubPublicDetailUseCase(
+            result=_build_detail_result(
+                case_id=CASE_ID,
+                status=BusinessCaseStatus.PUBLISHED,
+                case_type=BusinessCaseType.PROJECT,
+                include_how_to_do=True,
+            )
+        )
+    ) as client:
+        response = client.get(f"/api/v1/business-cases/{CASE_ID}")
+
+    body = response.json()
+    assert response.status_code == 200
+    assert body["data"]["type"] == "project"
+    assert body["data"]["documents"]["how_to_do"]["document_id"] == str(
+        DOCUMENT_ID_HOW_TO_DO
+    )
 
 
 def test_business_case_router_rejects_invalid_public_type_filter() -> None:

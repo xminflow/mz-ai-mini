@@ -42,6 +42,41 @@ class BusinessCaseDocumentType(StrEnum):
     BUSINESS_CASE = "business_case"
     MARKET_RESEARCH = "market_research"
     AI_BUSINESS_UPGRADE = "ai_business_upgrade"
+    HOW_TO_DO = "how_to_do"
+
+
+_BASE_DOCUMENT_TYPES = (
+    BusinessCaseDocumentType.BUSINESS_CASE,
+    BusinessCaseDocumentType.MARKET_RESEARCH,
+    BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
+)
+
+
+def required_document_types_for_case_type(
+    case_type: BusinessCaseType,
+) -> tuple[BusinessCaseDocumentType, ...]:
+    """Return the required document types for create and replace operations."""
+
+    if case_type == BusinessCaseType.CASE:
+        return _BASE_DOCUMENT_TYPES
+
+    return (*_BASE_DOCUMENT_TYPES, BusinessCaseDocumentType.HOW_TO_DO)
+
+
+def supports_loaded_document_types(
+    case_type: BusinessCaseType,
+    document_types: set[BusinessCaseDocumentType],
+) -> bool:
+    """Return whether one loaded document set is valid for the case type."""
+
+    base_document_type_set = set(_BASE_DOCUMENT_TYPES)
+    if case_type == BusinessCaseType.CASE:
+        return document_types == base_document_type_set
+
+    return document_types in (
+        base_document_type_set,
+        base_document_type_set | {BusinessCaseDocumentType.HOW_TO_DO},
+    )
 
 
 class BusinessCaseDocument(BaseModel):
@@ -59,22 +94,26 @@ class BusinessCaseDocument(BaseModel):
 
 
 class BusinessCaseDocuments(BaseModel):
-    """Typed container for the three required business case documents."""
+    """Typed container for one business case document set."""
 
     model_config = ConfigDict(frozen=True)
 
     business_case: BusinessCaseDocument
     market_research: BusinessCaseDocument
     ai_business_upgrade: BusinessCaseDocument
+    how_to_do: BusinessCaseDocument | None = None
 
     def iter_documents(self) -> tuple[BusinessCaseDocument, ...]:
-        """Return the fixed document set in presentation order."""
+        """Return the document set in presentation order."""
 
-        return (
+        documents = [
             self.business_case,
             self.market_research,
             self.ai_business_upgrade,
-        )
+        ]
+        if self.how_to_do is not None:
+            documents.append(self.how_to_do)
+        return tuple(documents)
 
 
 class BusinessCaseSummary(BaseModel):

@@ -62,6 +62,29 @@ const STORY_DETAIL = {
   },
 };
 
+const PROJECT_STORY_DETAIL = {
+  ...STORY_DETAIL,
+  id: "project-1",
+  type: "project",
+  metaItems: ["4 份专题文档"],
+  documentTabs: [
+    ...STORY_DETAIL.documentTabs,
+    {
+      key: "how_to_do",
+      label: "如何做",
+    },
+  ],
+  documentMap: {
+    ...STORY_DETAIL.documentMap,
+    how_to_do: {
+      key: "how_to_do",
+      label: "如何做",
+      title: "如何做",
+      markdownContent: "# 如何做\n\n执行步骤",
+    },
+  },
+};
+
 const clearStoryDetailPageModules = () => {
   delete require.cache[PAGE_PATH];
   delete require.cache[STORY_SERVICE_PATH];
@@ -193,6 +216,30 @@ test("story detail page switches active document from the keyed document map", (
 
   assert.equal(page.data.activeDocumentKey, "market_research");
   assert.deepEqual(page.data.activeDocument, STORY_DETAIL.documentMap.market_research);
+});
+
+test("story detail page supports switching to the project how_to_do tab", () => {
+  const pageConfig = loadStoryDetailPage({
+    fetchStoryDetail: async () => PROJECT_STORY_DETAIL,
+  });
+  const page = createPageInstance(pageConfig);
+
+  page.setData({
+    story: PROJECT_STORY_DETAIL,
+    activeDocumentKey: "business_case",
+    activeDocument: PROJECT_STORY_DETAIL.documentMap.business_case,
+  });
+
+  page.handleDocumentTabTap({
+    currentTarget: {
+      dataset: {
+        key: "how_to_do",
+      },
+    },
+  });
+
+  assert.equal(page.data.activeDocumentKey, "how_to_do");
+  assert.deepEqual(page.data.activeDocument, PROJECT_STORY_DETAIL.documentMap.how_to_do);
 });
 
 test("story detail page waits for app launch auth before checking current user", async () => {

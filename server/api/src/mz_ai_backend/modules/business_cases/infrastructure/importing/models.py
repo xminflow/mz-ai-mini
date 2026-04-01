@@ -2,7 +2,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    ValidationError,
+    field_validator,
+    model_validator,
+)
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from ...domain import BusinessCaseDocumentType, BusinessCaseIndustry, BusinessCaseType
@@ -70,6 +77,7 @@ class CaseImportConfig(BaseModel):
     rework: CaseImportDocumentConfig
     ai_driven_analysis: CaseImportDocumentConfig
     market: CaseImportDocumentConfig
+    how_to_do: CaseImportDocumentConfig | None = None
 
     @field_validator("title", "desc", "cover")
     @classmethod
@@ -85,6 +93,16 @@ class CaseImportConfig(BaseModel):
     @classmethod
     def validate_tags(cls, value: tuple[str, ...]) -> tuple[str, ...]:
         return _normalize_tags(value)
+
+    @model_validator(mode="after")
+    def validate_project_documents(self) -> "CaseImportConfig":
+        if self.type == BusinessCaseType.PROJECT and self.how_to_do is None:
+            raise ValueError("how_to_do is required for project imports.")
+
+        if self.type == BusinessCaseType.CASE and self.how_to_do is not None:
+            raise ValueError("how_to_do is only supported for project imports.")
+
+        return self
 
 
 class CaseImportDocumentPayload(BaseModel):

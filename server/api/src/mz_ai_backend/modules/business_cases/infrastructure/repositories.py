@@ -23,6 +23,7 @@ from ..domain import (
     BusinessCaseDocuments,
     BusinessCaseStatus,
     BusinessCaseType,
+    supports_loaded_document_types,
 )
 from .models import BusinessCaseDocumentModel, BusinessCaseModel
 
@@ -97,17 +98,13 @@ def _to_documents(
     document_models: Iterable[BusinessCaseDocumentModel],
     *,
     case_id: str,
+    case_type: BusinessCaseType,
 ) -> BusinessCaseDocuments:
     document_map = {
         BusinessCaseDocumentType(model.document_type): _to_document(model)
         for model in document_models
     }
-    required_types = {
-        BusinessCaseDocumentType.BUSINESS_CASE,
-        BusinessCaseDocumentType.MARKET_RESEARCH,
-        BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
-    }
-    if set(document_map) != required_types:
+    if not supports_loaded_document_types(case_type, set(document_map)):
         raise InternalServerException(
             message="Business case document set is incomplete.",
             details={"case_id": case_id},
@@ -117,6 +114,7 @@ def _to_documents(
         business_case=document_map[BusinessCaseDocumentType.BUSINESS_CASE],
         market_research=document_map[BusinessCaseDocumentType.MARKET_RESEARCH],
         ai_business_upgrade=document_map[BusinessCaseDocumentType.AI_BUSINESS_UPGRADE],
+        how_to_do=document_map.get(BusinessCaseDocumentType.HOW_TO_DO),
     )
 
 
@@ -124,9 +122,10 @@ def _to_aggregate(
     model: BusinessCaseModel,
     document_models: Iterable[BusinessCaseDocumentModel],
 ) -> BusinessCase:
+    case_type = _normalize_loaded_type(model.type)
     return BusinessCase(
         case_id=model.case_id,
-        type=_normalize_loaded_type(model.type),
+        type=case_type,
         title=model.title,
         summary=model.summary,
         industry=_normalize_loaded_industry(model.industry),
@@ -136,7 +135,11 @@ def _to_aggregate(
         published_at=model.published_at,
         created_at=model.created_at,
         updated_at=model.updated_at,
-        documents=_to_documents(document_models, case_id=model.case_id),
+        documents=_to_documents(
+            document_models,
+            case_id=model.case_id,
+            case_type=case_type,
+        ),
         is_deleted=model.is_deleted,
     )
 
@@ -257,17 +260,6 @@ class SqlAlchemyBusinessCaseRepository:
             BusinessCaseDocumentType(model.document_type): model for model in document_models
         }
 
-        required_types = {
-            BusinessCaseDocumentType.BUSINESS_CASE,
-            BusinessCaseDocumentType.MARKET_RESEARCH,
-            BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
-        }
-        if set(document_model_map) != required_types:
-            raise InternalServerException(
-                message="Business case document set is incomplete.",
-                details={"case_id": replacement.case_id},
-            )
-
         case_model.title = replacement.title
         case_model.type = replacement.type.value
         case_model.summary = replacement.summary
@@ -277,10 +269,33 @@ class SqlAlchemyBusinessCaseRepository:
         case_model.status = replacement.status.value
         case_model.published_at = replacement.published_at
 
+        replacement_document_map = {
+            document.document_type: document for document in replacement.documents
+        }
+        for document_type, model in document_model_map.items():
+            replacement_document = replacement_document_map.get(document_type)
+            if replacement_document is None:
+                await self._session.delete(model)
+                continue
+
+            model.title = replacement_document.title
+            model.markdown_content = replacement_document.markdown_content
+            model.is_deleted = False
+
         for document in replacement.documents:
-            model = document_model_map[document.document_type]
-            model.title = document.title
-            model.markdown_content = document.markdown_content
+            if document.document_type in document_model_map:
+                continue
+
+            self._session.add(
+                BusinessCaseDocumentModel(
+                    document_id=document.document_id,
+                    case_id=replacement.case_id,
+                    document_type=document.document_type.value,
+                    title=document.title,
+                    markdown_content=document.markdown_content,
+                    is_deleted=False,
+                )
+            )
 
         await self._commit_or_raise("Failed to replace business case.")
         return await self.get_by_case_id(replacement.case_id)

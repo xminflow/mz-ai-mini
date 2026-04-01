@@ -137,6 +137,10 @@ def get_replace_business_case_use_case(
         SqlAlchemyBusinessCaseRepository,
         Depends(get_business_case_repository),
     ],
+    snowflake_id_generator: Annotated[
+        SnowflakeGenerator,
+        Depends(get_snowflake_id_generator),
+    ],
     current_time_provider: Annotated[
         SystemCurrentTimeProvider,
         Depends(get_current_time_provider),
@@ -146,6 +150,7 @@ def get_replace_business_case_use_case(
 
     return ReplaceBusinessCaseUseCase(
         business_case_repository=business_case_repository,
+        snowflake_id_generator=snowflake_id_generator,
         current_time_provider=current_time_provider,
     )
 

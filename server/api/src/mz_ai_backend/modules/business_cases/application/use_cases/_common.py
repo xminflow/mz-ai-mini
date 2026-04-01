@@ -14,6 +14,8 @@ from ...domain import (
     BusinessCaseDocuments,
     BusinessCaseInvalidDocumentSetException,
     BusinessCaseStatus,
+    BusinessCaseType,
+    required_document_types_for_case_type,
 )
 from ..dtos import (
     BusinessCaseCursor,
@@ -34,20 +36,18 @@ from ..dtos import (
 from ..ports import SnowflakeIdGenerator
 
 
-_REQUIRED_DOCUMENT_TYPES = {
-    BusinessCaseDocumentType.BUSINESS_CASE,
-    BusinessCaseDocumentType.MARKET_RESEARCH,
-    BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
-}
-
-
 def validate_document_contents(
+    case_type: BusinessCaseType,
     documents: tuple[BusinessCaseDocumentContent, ...],
 ) -> tuple[BusinessCaseDocumentContent, ...]:
-    """Validate the fixed business case document set."""
+    """Validate the document set for one business case type."""
 
     document_types = {document.document_type for document in documents}
-    if len(documents) != 3 or document_types != _REQUIRED_DOCUMENT_TYPES:
+    required_document_types = set(required_document_types_for_case_type(case_type))
+    if (
+        len(documents) != len(required_document_types)
+        or document_types != required_document_types
+    ):
         raise BusinessCaseInvalidDocumentSetException()
     return documents
 
@@ -68,7 +68,7 @@ def build_registration(
             title=document.title,
             markdown_content=document.markdown_content,
         )
-        for document in validate_document_contents(command.documents)
+        for document in validate_document_contents(command.type, command.documents)
     )
     return BusinessCaseRegistration(
         case_id=case_id,
@@ -87,17 +87,28 @@ def build_registration(
 def build_replacement(
     command: ReplaceBusinessCaseCommand,
     *,
+    current_documents: BusinessCaseDocuments,
     published_at: datetime | None,
+    snowflake_id_generator: SnowflakeIdGenerator,
 ) -> BusinessCaseReplacement:
     """Build a repository replacement payload from a replace command."""
 
+    existing_document_id_map = {
+        document.document_type: document.document_id
+        for document in current_documents.iter_documents()
+    }
     documents = tuple(
         BusinessCaseDocumentReplacement(
+            document_id=(
+                existing_document_id_map[document.document_type]
+                if document.document_type in existing_document_id_map
+                else snowflake_id_generator.generate()
+            ),
             document_type=document.document_type,
             title=document.title,
             markdown_content=document.markdown_content,
         )
-        for document in validate_document_contents(command.documents)
+        for document in validate_document_contents(command.type, command.documents)
     )
     return BusinessCaseReplacement(
         case_id=command.case_id,
@@ -128,6 +139,11 @@ def _documents_result(
         business_case=_document_result(documents.business_case),
         market_research=_document_result(documents.market_research),
         ai_business_upgrade=_document_result(documents.ai_business_upgrade),
+        how_to_do=(
+            _document_result(documents.how_to_do)
+            if documents.how_to_do is not None
+            else None
+        ),
     )
 
 

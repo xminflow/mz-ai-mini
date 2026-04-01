@@ -42,6 +42,13 @@ ai_driven_analysis:
   file: ai_driven_analysis.md
 market:
   file: market_analysis_report.md
+how_to_do:
+  file: how_to_do.md
+
+For `type: project`, the importer additionally requires:
+- the `how_to_do` section in `config.yml`
+- the referenced markdown file such as `<CASE_DIR>/how_to_do.md`
+- the file is imported into the `如何做` document tab
 
 Notes:
 - Every markdown file should contain one level-1 heading (`# Title`).

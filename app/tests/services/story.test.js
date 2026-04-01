@@ -190,6 +190,75 @@ test("fetchStoryDetail maps keyed documents and ordered tabs over HTTP in develo
   );
 });
 
+test("fetchStoryDetail maps project how_to_do document into the detail tabs", async () => {
+  global.wx = {
+    getAccountInfoSync() {
+      return {
+        miniProgram: {
+          envVersion: "develop",
+        },
+      };
+    },
+    request(options) {
+      assert.equal(options.url, "http://127.0.0.1:8000/api/v1/business-cases/2001");
+      assert.equal(options.method, "GET");
+
+      options.success({
+        statusCode: 200,
+        data: {
+          code: "COMMON.SUCCESS",
+          message: "success",
+          data: {
+            case_id: 2001,
+            type: "project",
+            title: "项目 A",
+            summary: "项目摘要",
+            industry: "科技",
+            tags: ["自动化"],
+            cover_image_url: "https://example.com/project-a.png",
+            published_at: "2026-03-22T08:00:00Z",
+            documents: {
+              business_case: {
+                title: "项目背景",
+                markdown_content: "# 商业案例",
+              },
+              market_research: {
+                title: "调研",
+                markdown_content: "# 市场调研",
+              },
+              ai_business_upgrade: {
+                title: "AI 升级",
+                markdown_content: "# AI 升级",
+              },
+              how_to_do: {
+                title: "如何做",
+                markdown_content: "# 如何做\n\n执行步骤",
+              },
+            },
+          },
+        },
+      });
+    },
+  };
+
+  const { fetchStoryDetail } = loadStoryService();
+  const result = await fetchStoryDetail("2001");
+
+  assert.equal(result.type, "project");
+  assert.deepEqual(result.documentTabs, [
+    { key: "business_case", label: "商业案例" },
+    { key: "market_research", label: "市场调研" },
+    { key: "ai_business_upgrade", label: "AI 升级" },
+    { key: "how_to_do", label: "如何做" },
+  ]);
+  assert.deepEqual(result.documentMap.how_to_do, {
+    key: "how_to_do",
+    label: "如何做",
+    title: "如何做",
+    markdownContent: "# 如何做\n\n执行步骤",
+  });
+});
+
 test("fetchStoryList resolves cloud cover image ids through CloudBase temp urls", async () => {
   global.wx = {
     getAccountInfoSync() {

@@ -20,6 +20,8 @@ from .entities import (
     BusinessCaseStatus,
     BusinessCaseSummary,
     BusinessCaseType,
+    required_document_types_for_case_type,
+    supports_loaded_document_types,
 )
 from .exceptions import (
     BusinessCaseInvalidDocumentSetException,
@@ -37,4 +39,6 @@ __all__ = [
     "BusinessCaseStatus",
     "BusinessCaseSummary",
     "BusinessCaseType",
+    "required_document_types_for_case_type",
+    "supports_loaded_document_types",
 ]

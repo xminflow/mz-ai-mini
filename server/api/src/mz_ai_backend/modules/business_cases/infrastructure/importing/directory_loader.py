@@ -9,7 +9,13 @@ from .models import CaseImportConfig, ResolvedLocalAsset
 
 
 _MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[(?P<alt>[^\]]*)\]\((?P<target>[^)\r\n]+)\)")
-_TOP_LEVEL_NESTED_KEYS = {"tags", "rework", "ai_driven_analysis", "market"}
+_TOP_LEVEL_NESTED_KEYS = {
+    "tags",
+    "rework",
+    "ai_driven_analysis",
+    "market",
+    "how_to_do",
+}
 
 
 def load_case_import_config(case_dir: Path) -> CaseImportConfig:
