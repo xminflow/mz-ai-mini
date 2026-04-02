@@ -33,12 +33,7 @@
     </view>
   </view>
 
-  <scroll-view
-    class="story-tabs"
-    scroll-x="true"
-    enable-flex="true"
-    show-scrollbar="false"
-  >
+  <view class="story-tabs">
     <view class="story-tabs__list">
       <view
         class="story-tabs__item {{item.isActive ? 'story-tabs__item--active' : ''}}"
@@ -50,7 +45,7 @@
         {{item.label}}
       </view>
     </view>
-  </scroll-view>
+  </view>
 
   <view
     class="industry-sheet__mask"

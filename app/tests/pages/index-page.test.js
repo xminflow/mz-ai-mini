@@ -10,6 +10,7 @@ const BUSINESS_CASE_ID_PATH =
 const PAGE_TEMPLATE_PATH =
   require.resolve("../../miniprogram/pages/index/index.wxml");
 const APP_CONFIG_PATH = require.resolve("../../miniprogram/app.json");
+const APP_STYLE_PATH = require.resolve("../../miniprogram/app.wxss");
 
 const DEFAULT_INDUSTRIES = [
   "科技",
@@ -215,6 +216,15 @@ test("index template renders shared search input and industry selector sheet", (
   );
   assert.equal(template.includes('class="industry-sheet__mask"'), true);
   assert.equal(template.includes('bindtap="handleSelectIndustryOption"'), true);
+});
+
+test("index template keeps industry tabs in a fixed container without horizontal scroll view", () => {
+  const template = fs.readFileSync(PAGE_TEMPLATE_PATH, "utf8");
+  const appStyle = fs.readFileSync(APP_STYLE_PATH, "utf8");
+
+  assert.equal(template.includes('<view class="story-tabs">'), true);
+  assert.equal(template.includes("<scroll-view"), false);
+  assert.equal(appStyle.includes("overflow-x: hidden;"), true);
 });
 
 test("app config registers the case tab in the second position", () => {

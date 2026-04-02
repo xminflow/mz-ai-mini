@@ -150,6 +150,8 @@ test("project template renders shared placeholder binding", () => {
 
   assert.equal(template.includes('placeholder="{{pageCopy.searchPlaceholder}}"'), true);
   assert.equal(template.includes("pageCopy.emptyDefaultText"), true);
+  assert.equal(template.includes('<view class="story-tabs">'), true);
+  assert.equal(template.includes("<scroll-view"), false);
 });
 
 test("app config registers the project page and tab", () => {
