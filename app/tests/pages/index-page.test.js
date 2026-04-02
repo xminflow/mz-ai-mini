@@ -75,11 +75,15 @@ const createPageInstance = (pageConfig) => {
     data: {
       ...pageConfig.data,
     },
-    setData(update) {
+    setData(update, callback) {
       this.data = {
         ...this.data,
         ...update,
       };
+
+      if (typeof callback === "function") {
+        callback();
+      }
     },
   };
 
@@ -195,6 +199,47 @@ test("index page switches industry from the selector and closes the sheet", asyn
     industry: "金融",
     keyword: "增长",
   });
+});
+
+test("index page clears submitted keyword search when the input becomes empty", async () => {
+  const requests = [];
+  const pageConfig = loadIndexPage({
+    fetchStoryList: async (options) => {
+      requests.push(options);
+      return {
+        list: [],
+        nextCursor: "",
+        hasMore: false,
+        availableIndustries: ["科技", "消费"],
+      };
+    },
+  });
+  const page = createPageInstance(pageConfig);
+
+  global.wx = {
+    stopPullDownRefresh() {},
+    showToast() {},
+  };
+
+  page.setData({
+    selectedIndustry: "消费",
+    keywordInput: "宠物",
+    submittedKeyword: "宠物",
+  });
+
+  await page.handleKeywordInput({
+    detail: {
+      value: "",
+    },
+  });
+
+  assert.deepEqual(requests[0], {
+    pageSize: 6,
+    type: "case",
+    industry: "消费",
+    keyword: "",
+  });
+  assert.equal(page.data.submittedKeyword, "");
 });
 
 test("index page uses case feed copy and type", () => {

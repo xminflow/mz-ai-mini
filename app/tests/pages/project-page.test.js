@@ -74,11 +74,15 @@ const createPageInstance = (pageConfig) => {
     data: {
       ...pageConfig.data,
     },
-    setData(update) {
+    setData(update, callback) {
       this.data = {
         ...this.data,
         ...update,
       };
+
+      if (typeof callback === "function") {
+        callback();
+      }
     },
   };
 
@@ -143,6 +147,47 @@ test("project page submits confirmed keyword with the project type filter", asyn
     industry: "科技",
     keyword: "自动化",
   });
+});
+
+test("project page clears submitted keyword search when the input becomes empty", async () => {
+  const requests = [];
+  const pageConfig = loadProjectPage({
+    fetchStoryList: async (options) => {
+      requests.push(options);
+      return {
+        list: [],
+        nextCursor: "",
+        hasMore: false,
+        availableIndustries: ["科技", "消费"],
+      };
+    },
+  });
+  const page = createPageInstance(pageConfig);
+
+  global.wx = {
+    stopPullDownRefresh() {},
+    showToast() {},
+  };
+
+  page.setData({
+    selectedIndustry: "科技",
+    keywordInput: "自动化",
+    submittedKeyword: "自动化",
+  });
+
+  await page.handleKeywordInput({
+    detail: {
+      value: "",
+    },
+  });
+
+  assert.deepEqual(requests[0], {
+    pageSize: 6,
+    type: "project",
+    industry: "科技",
+    keyword: "",
+  });
+  assert.equal(page.data.submittedKeyword, "");
 });
 
 test("project template renders shared placeholder binding", () => {

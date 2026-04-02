@@ -251,8 +251,21 @@ const createStoryFeedPage = ({
     },
 
     handleKeywordInput(event) {
+      const keywordInput =
+        typeof event?.detail?.value === "string" ? event.detail.value : "";
+      const normalizedKeyword = keywordInput.trim();
+
       this.setData({
-        keywordInput: event.detail.value || "",
+        keywordInput,
+      }, () => {
+        if (normalizedKeyword !== "" || this.data.submittedKeyword === "") {
+          return;
+        }
+
+        this.loadInitialStories({
+          industry: this.data.selectedIndustry,
+          keyword: "",
+        });
       });
     },
 
