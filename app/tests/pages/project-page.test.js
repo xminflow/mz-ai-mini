@@ -155,11 +155,11 @@ test("project template renders shared placeholder binding", () => {
 test("app config registers the project page and tab", () => {
   const appConfig = JSON.parse(fs.readFileSync(APP_CONFIG_PATH, "utf8"));
 
-  assert.equal(appConfig.pages.includes("pages/project/index"), true);
-  assert.deepEqual(appConfig.tabBar.list[1], {
+  assert.equal(appConfig.pages[0], "pages/project/index");
+  assert.deepEqual(appConfig.tabBar.list[0], {
     pagePath: "pages/project/index",
     text: "项目",
-    iconPath: "images/icons/examples.png",
-    selectedIconPath: "images/icons/examples-active.png",
+    iconPath: "images/icons/project.png",
+    selectedIconPath: "images/icons/project-active.png",
   });
 });

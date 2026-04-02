@@ -9,6 +9,7 @@ const BUSINESS_CASE_ID_PATH =
   require.resolve("../../miniprogram/utils/businessCaseId");
 const PAGE_TEMPLATE_PATH =
   require.resolve("../../miniprogram/pages/index/index.wxml");
+const APP_CONFIG_PATH = require.resolve("../../miniprogram/app.json");
 
 const DEFAULT_INDUSTRIES = [
   "科技",
@@ -201,6 +202,7 @@ test("index page uses case feed copy and type", () => {
   assert.equal(pageConfig.data.storyType, "case");
   assert.equal(pageConfig.data.pageCopy.searchPlaceholder, "搜索案例关键词");
   assert.equal(pageConfig.data.pageCopy.emptyDefaultTitle, "还没有发布案例");
+  assert.equal(pageConfig.data.pageCopy.emptyDefaultText, "发布第一篇创业案例后，这里会自动形成案例阅读流。");
 });
 
 test("index template renders shared search input and industry selector sheet", () => {
@@ -213,4 +215,16 @@ test("index template renders shared search input and industry selector sheet", (
   );
   assert.equal(template.includes('class="industry-sheet__mask"'), true);
   assert.equal(template.includes('bindtap="handleSelectIndustryOption"'), true);
+});
+
+test("app config registers the case tab in the second position", () => {
+  const appConfig = JSON.parse(fs.readFileSync(APP_CONFIG_PATH, "utf8"));
+
+  assert.equal(appConfig.pages[1], "pages/index/index");
+  assert.deepEqual(appConfig.tabBar.list[1], {
+    pagePath: "pages/index/index",
+    text: "案例",
+    iconPath: "images/icons/case.png",
+    selectedIconPath: "images/icons/case-active.png",
+  });
 });

@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/index/index",
     "pages/project/index",
+    "pages/index/index",
     "pages/subscribe/index",
     "pages/academy/index",
     "pages/consult/index",
@@ -22,16 +22,16 @@
     "borderStyle": "white",
     "list": [
       {
-        "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "images/icons/home.png",
-        "selectedIconPath": "images/icons/home-active.png"
-      },
-      {
         "pagePath": "pages/project/index",
         "text": "项目",
-        "iconPath": "images/icons/examples.png",
-        "selectedIconPath": "images/icons/examples-active.png"
+        "iconPath": "images/icons/project.png",
+        "selectedIconPath": "images/icons/project-active.png"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "案例",
+        "iconPath": "images/icons/case.png",
+        "selectedIconPath": "images/icons/case-active.png"
       },
       {
         "pagePath": "pages/academy/index",
