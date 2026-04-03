@@ -77,6 +77,7 @@ class CaseImportConfig(BaseModel):
     rework: CaseImportDocumentConfig
     ai_driven_analysis: CaseImportDocumentConfig
     market: CaseImportDocumentConfig
+    business_model: CaseImportDocumentConfig | None = None
     how_to_do: CaseImportDocumentConfig | None = None
 
     @field_validator("title", "desc", "cover")
@@ -101,6 +102,12 @@ class CaseImportConfig(BaseModel):
 
         if self.type == BusinessCaseType.CASE and self.how_to_do is not None:
             raise ValueError("how_to_do is only supported for project imports.")
+
+        if self.type == BusinessCaseType.CASE and self.business_model is None:
+            raise ValueError("business_model is required for case imports.")
+
+        if self.type == BusinessCaseType.PROJECT and self.business_model is not None:
+            raise ValueError("business_model is only supported for case imports.")
 
         return self
 

@@ -14,6 +14,7 @@ _TOP_LEVEL_NESTED_KEYS = {
     "rework",
     "ai_driven_analysis",
     "market",
+    "business_model",
     "how_to_do",
 }
 

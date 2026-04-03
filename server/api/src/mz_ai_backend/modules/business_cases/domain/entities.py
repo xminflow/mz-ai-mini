@@ -41,13 +41,20 @@ class BusinessCaseDocumentType(StrEnum):
 
     BUSINESS_CASE = "business_case"
     MARKET_RESEARCH = "market_research"
+    BUSINESS_MODEL = "business_model"
     AI_BUSINESS_UPGRADE = "ai_business_upgrade"
     HOW_TO_DO = "how_to_do"
 
 
-_BASE_DOCUMENT_TYPES = (
+_PROJECT_BASE_DOCUMENT_TYPES = (
     BusinessCaseDocumentType.BUSINESS_CASE,
     BusinessCaseDocumentType.MARKET_RESEARCH,
+    BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
+)
+_CASE_DOCUMENT_TYPES = (
+    BusinessCaseDocumentType.BUSINESS_CASE,
+    BusinessCaseDocumentType.MARKET_RESEARCH,
+    BusinessCaseDocumentType.BUSINESS_MODEL,
     BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
 )
 
@@ -58,9 +65,9 @@ def required_document_types_for_case_type(
     """Return the required document types for create and replace operations."""
 
     if case_type == BusinessCaseType.CASE:
-        return _BASE_DOCUMENT_TYPES
+        return _CASE_DOCUMENT_TYPES
 
-    return (*_BASE_DOCUMENT_TYPES, BusinessCaseDocumentType.HOW_TO_DO)
+    return (*_PROJECT_BASE_DOCUMENT_TYPES, BusinessCaseDocumentType.HOW_TO_DO)
 
 
 def supports_loaded_document_types(
@@ -69,10 +76,10 @@ def supports_loaded_document_types(
 ) -> bool:
     """Return whether one loaded document set is valid for the case type."""
 
-    base_document_type_set = set(_BASE_DOCUMENT_TYPES)
     if case_type == BusinessCaseType.CASE:
-        return document_types == base_document_type_set
+        return document_types == set(_CASE_DOCUMENT_TYPES)
 
+    base_document_type_set = set(_PROJECT_BASE_DOCUMENT_TYPES)
     return document_types in (
         base_document_type_set,
         base_document_type_set | {BusinessCaseDocumentType.HOW_TO_DO},
@@ -100,6 +107,7 @@ class BusinessCaseDocuments(BaseModel):
 
     business_case: BusinessCaseDocument
     market_research: BusinessCaseDocument
+    business_model: BusinessCaseDocument | None = None
     ai_business_upgrade: BusinessCaseDocument
     how_to_do: BusinessCaseDocument | None = None
 
@@ -109,8 +117,10 @@ class BusinessCaseDocuments(BaseModel):
         documents = [
             self.business_case,
             self.market_research,
-            self.ai_business_upgrade,
         ]
+        if self.business_model is not None:
+            documents.append(self.business_model)
+        documents.append(self.ai_business_upgrade)
         if self.how_to_do is not None:
             documents.append(self.how_to_do)
         return tuple(documents)

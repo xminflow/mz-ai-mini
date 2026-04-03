@@ -100,6 +100,16 @@ def _build_document_models(case_id: str) -> list[BusinessCaseDocumentModel]:
         BusinessCaseDocumentModel(
             document_id=2003,
             case_id=case_id,
+            document_type="business_model",
+            title="Business Model",
+            markdown_content="# Business Model",
+            is_deleted=False,
+            created_at=datetime(2026, 1, 1, 8, 0, 0),
+            updated_at=datetime(2026, 1, 1, 8, 0, 0),
+        ),
+        BusinessCaseDocumentModel(
+            document_id=2004,
+            case_id=case_id,
             document_type="ai_business_upgrade",
             title="AI Upgrade",
             markdown_content="# AI Upgrade",
@@ -111,9 +121,11 @@ def _build_document_models(case_id: str) -> list[BusinessCaseDocumentModel]:
 
 
 def _build_project_document_models(case_id: str) -> list[BusinessCaseDocumentModel]:
-    return _build_document_models(case_id) + [
+    project_documents = _build_document_models(case_id)
+    project_documents.pop(2)
+    return project_documents + [
         BusinessCaseDocumentModel(
-            document_id=2004,
+            document_id=2005,
             case_id=case_id,
             document_type="how_to_do",
             title="How To Do",
@@ -127,6 +139,7 @@ def _build_project_document_models(case_id: str) -> list[BusinessCaseDocumentMod
 
 def _build_document_replacements(
     *,
+    include_business_model: bool = True,
     include_how_to_do: bool = False,
 ) -> tuple[BusinessCaseDocumentReplacement, ...]:
     document_replacements = [
@@ -143,12 +156,22 @@ def _build_document_replacements(
             markdown_content="# Market Research",
         ),
         BusinessCaseDocumentReplacement(
-            document_id=2003,
+            document_id=2004,
             document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
             title="AI Upgrade",
             markdown_content="# AI Upgrade",
         ),
     ]
+    if include_business_model:
+        document_replacements.insert(
+            2,
+            BusinessCaseDocumentReplacement(
+                document_id=2003,
+                document_type=BusinessCaseDocumentType.BUSINESS_MODEL,
+                title="Business Model",
+                markdown_content="# Business Model",
+            ),
+        )
     if include_how_to_do:
         document_replacements.append(
             BusinessCaseDocumentReplacement(
@@ -182,6 +205,8 @@ async def test_business_case_repository_returns_domain_aggregate_for_case_lookup
     assert case.tags == ("连锁增长",)
     assert case.documents.business_case.title == "Business Case"
     assert case.documents.market_research.document_id == 2002
+    assert case.documents.business_model is not None
+    assert case.documents.business_model.document_id == 2003
 
 
 @pytest.mark.asyncio
@@ -199,8 +224,9 @@ async def test_business_case_repository_returns_project_how_to_do_document_when_
 
     assert case is not None
     assert case.type == BusinessCaseType.PROJECT
+    assert case.documents.business_model is None
     assert case.documents.how_to_do is not None
-    assert case.documents.how_to_do.document_id == 2004
+    assert case.documents.how_to_do.document_id == 2005
 
 
 @pytest.mark.asyncio
@@ -325,7 +351,8 @@ async def test_business_case_repository_hard_delete_removes_case_and_documents()
     assert session.delete.await_args_list[0].args == (document_models[0],)
     assert session.delete.await_args_list[1].args == (document_models[1],)
     assert session.delete.await_args_list[2].args == (document_models[2],)
-    assert session.delete.await_args_list[3].args == (case_model,)
+    assert session.delete.await_args_list[3].args == (document_models[3],)
+    assert session.delete.await_args_list[4].args == (case_model,)
     session.commit.assert_awaited_once()
 
 
@@ -370,10 +397,14 @@ async def test_business_case_repository_replace_adds_project_how_to_do_document(
             cover_image_url="https://example.com/project-updated.png",
             status=BusinessCaseStatus.PUBLISHED,
             published_at=datetime(2026, 1, 1, 8, 0, 0),
-            documents=_build_document_replacements(include_how_to_do=True),
+            documents=_build_document_replacements(
+                include_business_model=False,
+                include_how_to_do=True,
+            ),
         )
     )
 
     assert replaced_case is not None
+    assert replaced_case.documents.business_model is None
     assert replaced_case.documents.how_to_do is not None
     assert session.add.call_count >= 1

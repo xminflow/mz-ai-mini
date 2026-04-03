@@ -24,6 +24,10 @@ const DOCUMENT_DEFINITIONS = Object.freeze([
     label: "市场调研",
   },
   {
+    key: "business_model",
+    label: "商业模式",
+  },
+  {
     key: "ai_business_upgrade",
     label: "AI 升级",
   },

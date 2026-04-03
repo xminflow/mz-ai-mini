@@ -36,7 +36,7 @@ class BusinessCaseSeed:
     title: str
     summary: str
     cover_image_url: str
-    documents: tuple[DocumentSeed, DocumentSeed, DocumentSeed]
+    documents: tuple[DocumentSeed, ...]
 
 
 def _build_document_set(
@@ -47,7 +47,7 @@ def _build_document_set(
     market_research_content: str,
     ai_upgrade_title: str,
     ai_upgrade_content: str,
-) -> tuple[DocumentSeed, DocumentSeed, DocumentSeed]:
+) -> tuple[DocumentSeed, ...]:
     return (
         DocumentSeed(
             document_type="business_case",
@@ -58,6 +58,25 @@ def _build_document_set(
             document_type="market_research",
             title=market_research_title,
             markdown_content=market_research_content.strip(),
+        ),
+        DocumentSeed(
+            document_type="business_model",
+            title="商业模式与收入设计",
+            markdown_content="""
+# 商业模式
+
+## 核心价值
+
+围绕案例中的高频需求，把一次性交付沉淀为可重复销售的标准产品与服务组合。
+
+## 收入结构
+
+通过低门槛内容产品完成获客，再用高客单服务与长期订阅提升单客价值。
+
+## 关键资源
+
+案例库、标准化流程、内容资产和稳定的用户运营机制共同构成可复制的增长基础。
+""".strip(),
         ),
         DocumentSeed(
             document_type="ai_business_upgrade",

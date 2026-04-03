@@ -138,6 +138,11 @@ def _documents_result(
     return BusinessCaseDocumentsResult(
         business_case=_document_result(documents.business_case),
         market_research=_document_result(documents.market_research),
+        business_model=(
+            _document_result(documents.business_model)
+            if documents.business_model is not None
+            else None
+        ),
         ai_business_upgrade=_document_result(documents.ai_business_upgrade),
         how_to_do=(
             _document_result(documents.how_to_do)

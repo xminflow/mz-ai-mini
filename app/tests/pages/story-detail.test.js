@@ -22,7 +22,7 @@ const STORY_DETAIL = {
   summary: "案例摘要",
   coverImage: "https://example.com/case-4.png",
   tags: ["宠物零售"],
-  metaItems: ["3 份专题文档"],
+  metaItems: ["4 份专题文档"],
   resultText: "",
   publishedAtText: "2026.03.27",
   defaultDocumentKey: "business_case",
@@ -34,6 +34,10 @@ const STORY_DETAIL = {
     {
       key: "market_research",
       label: "市场调研",
+    },
+    {
+      key: "business_model",
+      label: "商业模式",
     },
     {
       key: "ai_business_upgrade",
@@ -53,6 +57,12 @@ const STORY_DETAIL = {
       title: "市场文档",
       markdownContent: "## 市场调研\n\n市场段落",
     },
+    business_model: {
+      key: "business_model",
+      label: "商业模式",
+      title: "商业模式文档",
+      markdownContent: "## 商业模式\n\n订阅收入",
+    },
     ai_business_upgrade: {
       key: "ai_business_upgrade",
       label: "AI 升级",
@@ -68,14 +78,27 @@ const PROJECT_STORY_DETAIL = {
   type: "project",
   metaItems: ["4 份专题文档"],
   documentTabs: [
-    ...STORY_DETAIL.documentTabs,
+    {
+      key: "business_case",
+      label: "商业案例",
+    },
+    {
+      key: "market_research",
+      label: "市场调研",
+    },
+    {
+      key: "ai_business_upgrade",
+      label: "AI 升级",
+    },
     {
       key: "how_to_do",
       label: "如何做",
     },
   ],
   documentMap: {
-    ...STORY_DETAIL.documentMap,
+    business_case: STORY_DETAIL.documentMap.business_case,
+    market_research: STORY_DETAIL.documentMap.market_research,
+    ai_business_upgrade: STORY_DETAIL.documentMap.ai_business_upgrade,
     how_to_do: {
       key: "how_to_do",
       label: "如何做",
@@ -216,6 +239,28 @@ test("story detail page switches active document from the keyed document map", (
 
   assert.equal(page.data.activeDocumentKey, "market_research");
   assert.deepEqual(page.data.activeDocument, STORY_DETAIL.documentMap.market_research);
+});
+
+test("story detail page switches to the case business_model tab", () => {
+  const pageConfig = loadStoryDetailPage();
+  const page = createPageInstance(pageConfig);
+
+  page.setData({
+    story: STORY_DETAIL,
+    activeDocumentKey: "business_case",
+    activeDocument: STORY_DETAIL.documentMap.business_case,
+  });
+
+  page.handleDocumentTabTap({
+    currentTarget: {
+      dataset: {
+        key: "business_model",
+      },
+    },
+  });
+
+  assert.equal(page.data.activeDocumentKey, "business_model");
+  assert.deepEqual(page.data.activeDocument, STORY_DETAIL.documentMap.business_model);
 });
 
 test("story detail page supports switching to the project how_to_do tab", () => {

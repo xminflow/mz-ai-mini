@@ -71,6 +71,8 @@ class BusinessCaseDirectoryImporter:
                     f"Business case '{case_config.case_id}' disappeared before recreation."
                 )
 
+        await self._business_case_repository.release_connection()
+
         asset_publisher = _AssetPublisher(
             case_dir=case_dir,
             case_id=case_config.case_id,
@@ -89,13 +91,26 @@ class BusinessCaseDirectoryImporter:
                 markdown_reference=case_config.market.file,
                 asset_publisher=asset_publisher,
             ),
+        ]
+        if case_config.type == BusinessCaseType.CASE:
+            if case_config.business_model is None:
+                raise ValueError("Case import is missing business_model configuration.")
+            document_payloads.append(
+                self._build_document_payload(
+                    case_dir=case_dir,
+                    document_type=BusinessCaseDocumentType.BUSINESS_MODEL,
+                    markdown_reference=case_config.business_model.file,
+                    asset_publisher=asset_publisher,
+                )
+            )
+        document_payloads.append(
             self._build_document_payload(
                 case_dir=case_dir,
                 document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
                 markdown_reference=case_config.ai_driven_analysis.file,
                 asset_publisher=asset_publisher,
-            ),
-        ]
+            )
+        )
         if case_config.type == BusinessCaseType.PROJECT:
             document_payloads.append(
                 self._build_document_payload(
@@ -204,8 +219,12 @@ def _validate_local_case_assets(*, case_dir: Path, case_config: CaseImportConfig
     document_references = [
         case_config.rework.file,
         case_config.market.file,
-        case_config.ai_driven_analysis.file,
     ]
+    if case_config.type == BusinessCaseType.CASE:
+        if case_config.business_model is None:
+            raise ValueError("Case import is missing business_model configuration.")
+        document_references.append(case_config.business_model.file)
+    document_references.append(case_config.ai_driven_analysis.file)
     if case_config.type == BusinessCaseType.PROJECT:
         if case_config.how_to_do is None:
             raise ValueError("Project import is missing how_to_do configuration.")

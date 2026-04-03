@@ -174,6 +174,7 @@ class BusinessCaseDocumentsResult(BaseModel):
 
     business_case: BusinessCaseDocumentResult
     market_research: BusinessCaseDocumentResult
+    business_model: BusinessCaseDocumentResult | None = None
     ai_business_upgrade: BusinessCaseDocumentResult
     how_to_do: BusinessCaseDocumentResult | None = None
 

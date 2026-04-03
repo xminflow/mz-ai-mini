@@ -31,8 +31,9 @@ from mz_ai_backend.modules.business_cases.infrastructure.dependencies import (
 CASE_ID = "case-4"
 DOCUMENT_ID_BUSINESS_CASE = 162758122237067265
 DOCUMENT_ID_MARKET_RESEARCH = 162758122237067266
-DOCUMENT_ID_AI_BUSINESS_UPGRADE = 162758122237067267
-DOCUMENT_ID_HOW_TO_DO = 162758122237067268
+DOCUMENT_ID_BUSINESS_MODEL = 162758122237067267
+DOCUMENT_ID_AI_BUSINESS_UPGRADE = 162758122237067268
+DOCUMENT_ID_HOW_TO_DO = 162758122237067269
 
 
 class StubCreateBusinessCaseUseCase:
@@ -130,6 +131,15 @@ def _build_detail_result(
     case_type: BusinessCaseType = BusinessCaseType.CASE,
     include_how_to_do: bool = False,
 ) -> BusinessCaseDetailResult:
+    business_model = (
+        BusinessCaseDocumentResult(
+            document_id=DOCUMENT_ID_BUSINESS_MODEL,
+            title="Business Model",
+            markdown_content="# Business Model",
+        )
+        if case_type == BusinessCaseType.CASE
+        else None
+    )
     return BusinessCaseDetailResult(
         case_id=case_id,
         type=case_type,
@@ -155,6 +165,7 @@ def _build_detail_result(
                 title="Market Research",
                 markdown_content="# Market Research",
             ),
+            business_model=business_model,
             ai_business_upgrade=BusinessCaseDocumentResult(
                 document_id=DOCUMENT_ID_AI_BUSINESS_UPGRADE,
                 title="AI Upgrade",
@@ -226,6 +237,10 @@ def test_business_case_router_creates_business_case() -> None:
                         "title": "Market Research",
                         "markdown_content": "# Market Research",
                     },
+                    "business_model": {
+                        "title": "Business Model",
+                        "markdown_content": "# Business Model",
+                    },
                     "ai_business_upgrade": {
                         "title": "AI Upgrade",
                         "markdown_content": "# AI Upgrade",
@@ -244,6 +259,9 @@ def test_business_case_router_creates_business_case() -> None:
     assert body["data"]["tags"] == ["连锁增长", "AI 提效"]
     assert body["data"]["documents"]["business_case"]["document_id"] == str(
         DOCUMENT_ID_BUSINESS_CASE
+    )
+    assert body["data"]["documents"]["business_model"]["document_id"] == str(
+        DOCUMENT_ID_BUSINESS_MODEL
     )
 
 
@@ -309,6 +327,7 @@ def test_business_case_router_returns_project_detail_with_how_to_do_document() -
     body = response.json()
     assert response.status_code == 200
     assert body["data"]["type"] == "project"
+    assert body["data"]["documents"]["business_model"] is None
     assert body["data"]["documents"]["how_to_do"]["document_id"] == str(
         DOCUMENT_ID_HOW_TO_DO
     )
@@ -343,6 +362,10 @@ def test_business_case_router_returns_validation_error_for_invalid_payload() -> 
                     "market_research": {
                         "title": "Market Research",
                         "markdown_content": "# Market Research",
+                    },
+                    "business_model": {
+                        "title": "Business Model",
+                        "markdown_content": "# Business Model",
                     },
                     "ai_business_upgrade": {
                         "title": "AI Upgrade",

@@ -113,6 +113,7 @@ def _to_documents(
     return BusinessCaseDocuments(
         business_case=document_map[BusinessCaseDocumentType.BUSINESS_CASE],
         market_research=document_map[BusinessCaseDocumentType.MARKET_RESEARCH],
+        business_model=document_map.get(BusinessCaseDocumentType.BUSINESS_MODEL),
         ai_business_upgrade=document_map[BusinessCaseDocumentType.AI_BUSINESS_UPGRADE],
         how_to_do=document_map.get(BusinessCaseDocumentType.HOW_TO_DO),
     )
@@ -185,6 +186,11 @@ class SqlAlchemyBusinessCaseRepository:
 
     def __init__(self, *, session: AsyncSession) -> None:
         self._session = session
+
+    async def release_connection(self) -> None:
+        """Release the current session connection before long non-DB work."""
+
+        await self._session.close()
 
     async def create(self, registration: BusinessCaseRegistration) -> BusinessCase:
         case_model = BusinessCaseModel(

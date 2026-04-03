@@ -141,6 +141,10 @@ test("fetchStoryDetail maps keyed documents and ordered tabs over HTTP in develo
                 title: "目标市场调研",
                 markdown_content: "## 市场调研\n\n1. 用户画像\n\n2. 渠道判断",
               },
+              business_model: {
+                title: "商业模式设计",
+                markdown_content: "## 商业模式\n\n订阅服务\n\n增值陪跑",
+              },
               ai_business_upgrade: {
                 title: "AI 升级路径",
                 markdown_content: "### AI 升级\n\n`自动化脚本`\n\n[上线节奏](https://example.com)",
@@ -174,6 +178,10 @@ test("fetchStoryDetail maps keyed documents and ordered tabs over HTTP in develo
       label: "市场调研",
     },
     {
+      key: "business_model",
+      label: "商业模式",
+    },
+    {
       key: "ai_business_upgrade",
       label: "AI 升级",
     },
@@ -183,6 +191,12 @@ test("fetchStoryDetail maps keyed documents and ordered tabs over HTTP in develo
     label: "商业案例",
     title: "从线下咨询到线上课程",
     markdownContent: "# 商业案例\n\n**第一段**\n\n- 第二段",
+  });
+  assert.deepEqual(result.documentMap.business_model, {
+    key: "business_model",
+    label: "商业模式",
+    title: "商业模式设计",
+    markdownContent: "## 商业模式\n\n订阅服务\n\n增值陪跑",
   });
   assert.equal(
     result.documentMap.ai_business_upgrade.markdownContent,
@@ -251,6 +265,7 @@ test("fetchStoryDetail maps project how_to_do document into the detail tabs", as
     { key: "ai_business_upgrade", label: "AI 升级" },
     { key: "how_to_do", label: "如何做" },
   ]);
+  assert.equal(result.documentMap.business_model, undefined);
   assert.deepEqual(result.documentMap.how_to_do, {
     key: "how_to_do",
     label: "如何做",

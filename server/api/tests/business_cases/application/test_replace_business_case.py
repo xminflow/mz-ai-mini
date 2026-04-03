@@ -60,6 +60,7 @@ def _build_case(
     *,
     case_id: str,
     case_type: BusinessCaseType = BusinessCaseType.CASE,
+    include_business_model: bool = True,
     include_how_to_do: bool = False,
     status: BusinessCaseStatus,
     published_at: datetime | None,
@@ -84,8 +85,21 @@ def _build_case(
             created_at=created_at,
             updated_at=created_at,
         ),
+        business_model=(
+            BusinessCaseDocument(
+                document_id=2003,
+                document_type=BusinessCaseDocumentType.BUSINESS_MODEL,
+                title="Business Model",
+                markdown_content="# Business Model",
+                is_deleted=False,
+                created_at=created_at,
+                updated_at=created_at,
+            )
+            if include_business_model
+            else None
+        ),
         ai_business_upgrade=BusinessCaseDocument(
-            document_id=2003,
+            document_id=2004,
             document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
             title="AI Upgrade",
             markdown_content="# AI Upgrade",
@@ -95,7 +109,7 @@ def _build_case(
         ),
         how_to_do=(
             BusinessCaseDocument(
-                document_id=2004,
+                document_id=2005,
                 document_type=BusinessCaseDocumentType.HOW_TO_DO,
                 title="How To Do",
                 markdown_content="# 如何做",
@@ -137,6 +151,11 @@ def _build_documents() -> tuple[BusinessCaseDocumentContent, ...]:
             markdown_content="# Market Research Updated",
         ),
         BusinessCaseDocumentContent(
+            document_type=BusinessCaseDocumentType.BUSINESS_MODEL,
+            title="Business Model Updated",
+            markdown_content="# Business Model Updated",
+        ),
+        BusinessCaseDocumentContent(
             document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
             title="AI Upgrade Updated",
             markdown_content="# AI Upgrade Updated",
@@ -146,7 +165,21 @@ def _build_documents() -> tuple[BusinessCaseDocumentContent, ...]:
 
 def _build_project_documents() -> tuple[BusinessCaseDocumentContent, ...]:
     return (
-        *_build_documents(),
+        BusinessCaseDocumentContent(
+            document_type=BusinessCaseDocumentType.BUSINESS_CASE,
+            title="Business Case Updated",
+            markdown_content="# Business Case Updated",
+        ),
+        BusinessCaseDocumentContent(
+            document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
+            title="Market Research Updated",
+            markdown_content="# Market Research Updated",
+        ),
+        BusinessCaseDocumentContent(
+            document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
+            title="AI Upgrade Updated",
+            markdown_content="# AI Upgrade Updated",
+        ),
         BusinessCaseDocumentContent(
             document_type=BusinessCaseDocumentType.HOW_TO_DO,
             title="How To Do Updated",
@@ -274,12 +307,14 @@ async def test_replace_business_case_use_case_raises_not_found_for_missing_case(
 async def test_replace_business_case_use_case_generates_document_id_for_new_project_how_to_do() -> None:
     existing_case = _build_case(
         case_id="1001",
+        include_business_model=False,
         status=BusinessCaseStatus.PUBLISHED,
         published_at=datetime(2026, 1, 1, 9, 0, 0),
     )
     replaced_case = _build_case(
         case_id="1001",
         case_type=BusinessCaseType.PROJECT,
+        include_business_model=False,
         include_how_to_do=True,
         status=BusinessCaseStatus.PUBLISHED,
         published_at=datetime(2026, 1, 1, 9, 0, 0),

@@ -39,14 +39,22 @@ class StubRepository:
         self._existing_case = existing_case
         self.requested_case_ids: list[str] = []
         self.hard_deleted_case_ids: list[str] = []
+        self.release_connection_call_count = 0
+        self.events: list[str] = []
 
     async def get_by_case_id(self, case_id: str) -> BusinessCase | None:
         self.requested_case_ids.append(case_id)
+        self.events.append("get_by_case_id")
         return self._existing_case
 
     async def hard_delete_by_case_id(self, case_id: str) -> bool:
         self.hard_deleted_case_ids.append(case_id)
+        self.events.append("hard_delete_by_case_id")
         return self._existing_case is not None
+
+    async def release_connection(self) -> None:
+        self.release_connection_call_count += 1
+        self.events.append("release_connection")
 
 
 class StubCreateBusinessCaseUseCase:
@@ -59,16 +67,21 @@ class StubCreateBusinessCaseUseCase:
 
 
 class StubAssetUploader:
-    def __init__(self) -> None:
+    def __init__(self, *, events: list[str] | None = None) -> None:
         self.calls: list[tuple[Path, str]] = []
         self.deleted_cloud_directories: list[str] = []
+        self._events = events
 
     def upload_file(self, *, local_path: Path, object_key: str) -> str:
         self.calls.append((local_path, object_key))
+        if self._events is not None:
+            self._events.append("upload_file")
         return f"cloud://{CLOUDBASE_ENV_ID}.bucket/{object_key}"
 
     def delete_directory(self, *, cloud_directory: str) -> None:
         self.deleted_cloud_directories.append(cloud_directory)
+        if self._events is not None:
+            self._events.append("delete_directory")
 
 
 def test_load_case_import_config_reads_expected_fields(tmp_path: Path) -> None:
@@ -76,7 +89,7 @@ def test_load_case_import_config_reads_expected_fields(tmp_path: Path) -> None:
         tmp_path,
         config_text=(
             "case_id: case-4\n"
-            "type: project\n"
+            "type: case\n"
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
             "cover: images\\cover\\image_01.png\n"
@@ -90,19 +103,21 @@ def test_load_case_import_config_reads_expected_fields(tmp_path: Path) -> None:
             "  file: ai_driven_analysis.md\n"
             "market:\n"
             "  file: market_analysis_report.md\n"
-            "how_to_do:\n"
-            "  file: how_to_do.md\n"
+            "business_model:\n"
+            "  file: business_model.md\n"
         ),
     )
 
     config = load_case_import_config(tmp_path)
 
     assert config.case_id == CASE_ID
-    assert config.type == BusinessCaseType.PROJECT
+    assert config.type == BusinessCaseType.CASE
     assert config.title == "宠物新零售行业创业案例"
     assert config.industry == BusinessCaseIndustry.CONSUMER
     assert config.tags == ("宠物", "新零售")
     assert config.rework.file == "rework.md"
+    assert config.business_model is not None
+    assert config.business_model.file == "business_model.md"
 
 
 def test_load_case_import_config_rejects_missing_case_id(tmp_path: Path) -> None:
@@ -180,6 +195,32 @@ def test_load_case_import_config_rejects_project_without_how_to_do(tmp_path: Pat
     assert "how_to_do" in str(exc_info.value)
 
 
+def test_load_case_import_config_rejects_case_without_business_model(tmp_path: Path) -> None:
+    _write_case_directory(
+        tmp_path,
+        config_text=(
+            "case_id: case-4\n"
+            "type: case\n"
+            "title: 宠物新零售行业创业案例\n"
+            "desc: 围绕宠物健康知识输出和社群运营\n"
+            "cover: images/cover/image_01.png\n"
+            "tags:\n"
+            "  - 宠物\n"
+            "rework:\n"
+            "  file: rework.md\n"
+            "ai_driven_analysis:\n"
+            "  file: ai_driven_analysis.md\n"
+            "market:\n"
+            "  file: market_analysis_report.md\n"
+        ),
+    )
+
+    with pytest.raises(Exception) as exc_info:
+        load_case_import_config(tmp_path)
+
+    assert "business_model" in str(exc_info.value)
+
+
 def test_extract_markdown_title_returns_first_h1() -> None:
     markdown_content = "\nIntro\n# Main Title\n## Secondary\n"
 
@@ -206,9 +247,9 @@ async def test_business_case_directory_importer_recreates_existing_case_and_clea
     tmp_path: Path,
 ) -> None:
     _write_case_directory(tmp_path)
-    uploader = StubAssetUploader()
-    create_use_case = StubCreateBusinessCaseUseCase()
     repository = StubRepository(existing_case=_build_existing_case())
+    uploader = StubAssetUploader(events=repository.events)
+    create_use_case = StubCreateBusinessCaseUseCase()
     importer = BusinessCaseDirectoryImporter(
         business_case_repository=repository,
         create_use_case=create_use_case,
@@ -218,9 +259,13 @@ async def test_business_case_directory_importer_recreates_existing_case_and_clea
     result = await importer.import_case(case_dir=tmp_path)
 
     assert result.case_id == CASE_ID
-    assert result.uploaded_asset_count == 4
+    assert result.uploaded_asset_count == 5
     assert repository.hard_deleted_case_ids == [CASE_ID]
+    assert repository.release_connection_call_count == 1
     assert uploader.deleted_cloud_directories == [f"business-cases/{CASE_ID}"]
+    assert repository.events.index("release_connection") < repository.events.index(
+        "upload_file"
+    )
     assert create_use_case.executed_command is not None
     command = create_use_case.executed_command
     assert command.case_id == CASE_ID
@@ -228,10 +273,16 @@ async def test_business_case_directory_importer_recreates_existing_case_and_clea
     assert command.status == BusinessCaseStatus.PUBLISHED
     assert command.industry == BusinessCaseIndustry.CONSUMER
     assert command.documents[0].document_type == BusinessCaseDocumentType.BUSINESS_CASE
+    assert command.documents[2].document_type == BusinessCaseDocumentType.BUSINESS_MODEL
     assert (
         f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
         f"{CASE_ID}/images/rework_chart1/chart.png"
         in command.documents[0].markdown_content
+    )
+    assert (
+        f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
+        f"{CASE_ID}/images/business_model_chart1/chart.png"
+        in command.documents[2].markdown_content
     )
     assert command.cover_image_url == (
         f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
@@ -245,8 +296,8 @@ async def test_business_case_directory_importer_creates_missing_case(
 ) -> None:
     _write_case_directory(tmp_path)
     create_use_case = StubCreateBusinessCaseUseCase()
-    uploader = StubAssetUploader()
     repository = StubRepository(existing_case=None)
+    uploader = StubAssetUploader(events=repository.events)
     importer = BusinessCaseDirectoryImporter(
         business_case_repository=repository,
         create_use_case=create_use_case,
@@ -256,9 +307,13 @@ async def test_business_case_directory_importer_creates_missing_case(
     result = await importer.import_case(case_dir=tmp_path)
 
     assert result.case_id == CASE_ID
-    assert result.uploaded_asset_count == 4
+    assert result.uploaded_asset_count == 5
     assert repository.hard_deleted_case_ids == []
+    assert repository.release_connection_call_count == 1
     assert uploader.deleted_cloud_directories == []
+    assert repository.events.index("release_connection") < repository.events.index(
+        "upload_file"
+    )
     assert create_use_case.executed_command is not None
     assert create_use_case.executed_command.case_id == CASE_ID
     assert create_use_case.executed_command.type == BusinessCaseType.CASE
@@ -272,8 +327,8 @@ async def test_business_case_directory_importer_reads_project_how_to_do_markdown
 ) -> None:
     _write_case_directory(tmp_path, case_type=BusinessCaseType.PROJECT, include_how_to_do=True)
     create_use_case = StubCreateBusinessCaseUseCase()
-    uploader = StubAssetUploader()
     repository = StubRepository(existing_case=None)
+    uploader = StubAssetUploader(events=repository.events)
     importer = BusinessCaseDirectoryImporter(
         business_case_repository=repository,
         create_use_case=create_use_case,
@@ -284,6 +339,7 @@ async def test_business_case_directory_importer_reads_project_how_to_do_markdown
 
     assert result.case_id == CASE_ID
     assert result.uploaded_asset_count == 5
+    assert repository.release_connection_call_count == 1
     assert create_use_case.executed_command is not None
     command = create_use_case.executed_command
     assert command.type == BusinessCaseType.PROJECT
@@ -671,6 +727,7 @@ def _write_case_directory(
     (case_dir / "images" / "cover").mkdir(parents=True, exist_ok=True)
     (case_dir / "images" / "rework_chart1").mkdir(parents=True, exist_ok=True)
     (case_dir / "images" / "market_chart1").mkdir(parents=True, exist_ok=True)
+    (case_dir / "images" / "business_model_chart1").mkdir(parents=True, exist_ok=True)
     (case_dir / "images" / "ai_chart1").mkdir(parents=True, exist_ok=True)
     if include_how_to_do:
         (case_dir / "images" / "how_to_do_chart1").mkdir(parents=True, exist_ok=True)
@@ -678,6 +735,7 @@ def _write_case_directory(
         case_dir / "images" / "cover" / "image_01.png",
         case_dir / "images" / "rework_chart1" / "chart.png",
         case_dir / "images" / "market_chart1" / "chart.png",
+        case_dir / "images" / "business_model_chart1" / "chart.png",
         case_dir / "images" / "ai_chart1" / "chart.png",
     ):
         path.write_bytes(b"png")
@@ -690,6 +748,10 @@ def _write_case_directory(
     )
     (case_dir / "market_analysis_report.md").write_text(
         "# Market Title\n\n![Chart](images/market_chart1/chart.png)\n",
+        encoding="utf-8",
+    )
+    (case_dir / "business_model.md").write_text(
+        "# Business Model Title\n\n![Chart](images/business_model_chart1/chart.png)\n",
         encoding="utf-8",
     )
     (case_dir / "ai_driven_analysis.md").write_text(
@@ -719,6 +781,12 @@ def _write_case_directory(
             "  file: ai_driven_analysis.md\n"
             "market:\n"
             "  file: market_analysis_report.md\n"
+            + (
+                "business_model:\n"
+                "  file: business_model.md\n"
+                if case_type == BusinessCaseType.CASE
+                else ""
+            )
             + (
                 "how_to_do:\n"
                 "  file: how_to_do.md\n"
@@ -755,8 +823,12 @@ def _build_existing_case() -> BusinessCase:
                 document_id=2002,
                 document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
             ),
-            ai_business_upgrade=_build_document(
+            business_model=_build_document(
                 document_id=2003,
+                document_type=BusinessCaseDocumentType.BUSINESS_MODEL,
+            ),
+            ai_business_upgrade=_build_document(
+                document_id=2004,
                 document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
             ),
         ),
@@ -772,6 +844,7 @@ def _build_document(
     document_slug = {
         BusinessCaseDocumentType.BUSINESS_CASE: "rework",
         BusinessCaseDocumentType.MARKET_RESEARCH: "market",
+        BusinessCaseDocumentType.BUSINESS_MODEL: "business_model",
         BusinessCaseDocumentType.AI_BUSINESS_UPGRADE: "ai",
     }[document_type]
     return BusinessCaseDocument(

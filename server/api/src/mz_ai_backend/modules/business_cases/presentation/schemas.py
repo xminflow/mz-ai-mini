@@ -93,6 +93,7 @@ class BusinessCaseDocumentsUpsertRequest(BaseModel):
 
     business_case: BusinessCaseDocumentUpsertRequest
     market_research: BusinessCaseDocumentUpsertRequest
+    business_model: BusinessCaseDocumentUpsertRequest | None = None
     ai_business_upgrade: BusinessCaseDocumentUpsertRequest
     how_to_do: BusinessCaseDocumentUpsertRequest | None = None
 
@@ -113,12 +114,24 @@ class BusinessCaseDocumentsUpsertRequest(BaseModel):
                 title=self.market_research.title,
                 markdown_content=self.market_research.markdown_content,
             ),
+        ]
+        if case_type == BusinessCaseType.CASE:
+            if self.business_model is None:
+                raise ValueError("documents.business_model is required for case.")
+            document_contents.append(
+                BusinessCaseDocumentContent(
+                    document_type=BusinessCaseDocumentType.BUSINESS_MODEL,
+                    title=self.business_model.title,
+                    markdown_content=self.business_model.markdown_content,
+                )
+            )
+        document_contents.append(
             BusinessCaseDocumentContent(
                 document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
                 title=self.ai_business_upgrade.title,
                 markdown_content=self.ai_business_upgrade.markdown_content,
-            ),
-        ]
+            )
+        )
 
         if case_type == BusinessCaseType.PROJECT and self.how_to_do is not None:
             document_contents.append(
@@ -163,6 +176,15 @@ class BusinessCaseUpsertRequest(BaseModel):
 
         if self.type == BusinessCaseType.CASE and self.documents.how_to_do is not None:
             raise ValueError("documents.how_to_do is only supported for project.")
+
+        if self.type == BusinessCaseType.CASE and self.documents.business_model is None:
+            raise ValueError("documents.business_model is required for case.")
+
+        if (
+            self.type == BusinessCaseType.PROJECT
+            and self.documents.business_model is not None
+        ):
+            raise ValueError("documents.business_model is only supported for case.")
 
         return self
 
@@ -222,6 +244,7 @@ class BusinessCaseDocumentsResponse(BaseModel):
 
     business_case: BusinessCaseDocumentResponse
     market_research: BusinessCaseDocumentResponse
+    business_model: BusinessCaseDocumentResponse | None = None
     ai_business_upgrade: BusinessCaseDocumentResponse
     how_to_do: BusinessCaseDocumentResponse | None = None
 
@@ -234,6 +257,11 @@ class BusinessCaseDocumentsResponse(BaseModel):
             business_case=BusinessCaseDocumentResponse.from_result(result.business_case),
             market_research=BusinessCaseDocumentResponse.from_result(
                 result.market_research
+            ),
+            business_model=(
+                BusinessCaseDocumentResponse.from_result(result.business_model)
+                if result.business_model is not None
+                else None
             ),
             ai_business_upgrade=BusinessCaseDocumentResponse.from_result(
                 result.ai_business_upgrade

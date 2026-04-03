@@ -27,7 +27,7 @@ def test_generate_snowflake_id_uses_generate_method() -> None:
 
 def test_local_dev_case_seeds_prepare_multiple_cases_with_full_document_sets() -> None:
     assert len(LOCAL_DEV_CASE_SEEDS) >= 8
-    assert all(len(case_seed.documents) == 3 for case_seed in LOCAL_DEV_CASE_SEEDS)
+    assert all(len(case_seed.documents) == 4 for case_seed in LOCAL_DEV_CASE_SEEDS)
 
 
 def test_filter_missing_case_seeds_excludes_existing_titles() -> None:

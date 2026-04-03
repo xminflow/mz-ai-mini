@@ -59,6 +59,7 @@ class FakeBusinessCaseRepository:
         documents = BusinessCaseDocuments(
             business_case=document_map[BusinessCaseDocumentType.BUSINESS_CASE],
             market_research=document_map[BusinessCaseDocumentType.MARKET_RESEARCH],
+            business_model=document_map.get(BusinessCaseDocumentType.BUSINESS_MODEL),
             ai_business_upgrade=document_map[BusinessCaseDocumentType.AI_BUSINESS_UPGRADE],
             how_to_do=document_map.get(BusinessCaseDocumentType.HOW_TO_DO),
         )
@@ -92,6 +93,11 @@ def _build_document_contents() -> tuple[BusinessCaseDocumentContent, ...]:
             markdown_content="# Market Research",
         ),
         BusinessCaseDocumentContent(
+            document_type=BusinessCaseDocumentType.BUSINESS_MODEL,
+            title="Business Model",
+            markdown_content="# Business Model",
+        ),
+        BusinessCaseDocumentContent(
             document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
             title="AI Upgrade",
             markdown_content="# AI Upgrade",
@@ -101,7 +107,21 @@ def _build_document_contents() -> tuple[BusinessCaseDocumentContent, ...]:
 
 def _build_project_document_contents() -> tuple[BusinessCaseDocumentContent, ...]:
     return (
-        *_build_document_contents(),
+        BusinessCaseDocumentContent(
+            document_type=BusinessCaseDocumentType.BUSINESS_CASE,
+            title="Business Case",
+            markdown_content="# Business Case",
+        ),
+        BusinessCaseDocumentContent(
+            document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
+            title="Market Research",
+            markdown_content="# Market Research",
+        ),
+        BusinessCaseDocumentContent(
+            document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
+            title="AI Upgrade",
+            markdown_content="# AI Upgrade",
+        ),
         BusinessCaseDocumentContent(
             document_type=BusinessCaseDocumentType.HOW_TO_DO,
             title="How To Do",
@@ -115,7 +135,7 @@ async def test_create_business_case_use_case_generates_ids_and_published_at() ->
     repository = FakeBusinessCaseRepository()
     use_case = CreateBusinessCaseUseCase(
         business_case_repository=repository,
-        snowflake_id_generator=FakeSnowflakeIdGenerator([1001, 2001, 2002, 2003]),
+        snowflake_id_generator=FakeSnowflakeIdGenerator([1001, 2001, 2002, 2003, 2004]),
         current_time_provider=FakeCurrentTimeProvider(datetime(2026, 1, 1, 8, 0, 0)),
     )
 
@@ -142,6 +162,7 @@ async def test_create_business_case_use_case_generates_ids_and_published_at() ->
         2001,
         2002,
         2003,
+        2004,
     ]
     assert result.case_id == "1001"
     assert result.type == BusinessCaseType.CASE
@@ -149,6 +170,8 @@ async def test_create_business_case_use_case_generates_ids_and_published_at() ->
     assert result.status == BusinessCaseStatus.PUBLISHED
     assert result.tags == ("连锁增长", "AI 提效")
     assert result.documents.business_case.document_id == 2001
+    assert result.documents.business_model is not None
+    assert result.documents.business_model.document_id == 2003
 
 
 @pytest.mark.asyncio
@@ -252,6 +275,11 @@ async def test_create_business_case_use_case_rejects_invalid_document_set() -> N
                         document_type=BusinessCaseDocumentType.MARKET_RESEARCH,
                         title="Market Research",
                         markdown_content="# Market Research",
+                    ),
+                    BusinessCaseDocumentContent(
+                        document_type=BusinessCaseDocumentType.BUSINESS_MODEL,
+                        title="Business Model",
+                        markdown_content="# Business Model",
                     ),
                 ),
             )
