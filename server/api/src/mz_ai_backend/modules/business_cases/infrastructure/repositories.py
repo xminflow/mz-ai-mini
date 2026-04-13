@@ -1,6 +1,6 @@
 from __future__ import annotations
 from collections.abc import Iterable
-from datetime import datetime
+from datetime import date, datetime
 
 from sqlalchemy import Select, and_, desc, or_, select
 from sqlalchemy.exc import SQLAlchemyError
@@ -78,6 +78,34 @@ def _normalize_loaded_type(case_type: object) -> BusinessCaseType:
         raise InternalServerException(message="Business case type is invalid.") from exc
 
 
+def _normalize_loaded_summary_markdown(summary_markdown: object) -> str | None:
+    if summary_markdown is None:
+        return None
+    if not isinstance(summary_markdown, str):
+        raise InternalServerException(message="Business case summary markdown is invalid.")
+
+    normalized_summary_markdown = summary_markdown.strip()
+    if normalized_summary_markdown == "":
+        return None
+    return summary_markdown
+
+
+def _normalize_loaded_data_cutoff_date(data_cutoff_date: object) -> date | None:
+    if data_cutoff_date is None:
+        return None
+    if not isinstance(data_cutoff_date, date):
+        raise InternalServerException(message="Business case data cutoff date is invalid.")
+    return data_cutoff_date
+
+
+def _normalize_loaded_freshness_months(freshness_months: object) -> int | None:
+    if freshness_months is None:
+        return None
+    if not isinstance(freshness_months, int) or freshness_months <= 0:
+        raise InternalServerException(message="Business case freshness months is invalid.")
+    return freshness_months
+
+
 def _escape_like_pattern(value: str) -> str:
     return value.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
@@ -129,6 +157,9 @@ def _to_aggregate(
         type=case_type,
         title=model.title,
         summary=model.summary,
+        summary_markdown=_normalize_loaded_summary_markdown(model.summary_markdown),
+        data_cutoff_date=_normalize_loaded_data_cutoff_date(model.data_cutoff_date),
+        freshness_months=_normalize_loaded_freshness_months(model.freshness_months),
         industry=_normalize_loaded_industry(model.industry),
         tags=_normalize_loaded_tags(model.tags),
         cover_image_url=model.cover_image_url,
@@ -151,6 +182,8 @@ def _to_list_item(model: BusinessCaseModel) -> BusinessCaseListItemResult:
         type=_normalize_loaded_type(model.type),
         title=model.title,
         summary=model.summary,
+        data_cutoff_date=_normalize_loaded_data_cutoff_date(model.data_cutoff_date),
+        freshness_months=_normalize_loaded_freshness_months(model.freshness_months),
         industry=_normalize_loaded_industry(model.industry),
         tags=_normalize_loaded_tags(model.tags),
         cover_image_url=model.cover_image_url,
@@ -198,7 +231,10 @@ class SqlAlchemyBusinessCaseRepository:
             type=registration.type.value,
             title=registration.title,
             summary=registration.summary,
+            summary_markdown=registration.summary_markdown,
             industry=registration.industry.value,
+            data_cutoff_date=registration.data_cutoff_date,
+            freshness_months=registration.freshness_months,
             tags=list(registration.tags),
             cover_image_url=registration.cover_image_url,
             status=registration.status.value,
@@ -269,7 +305,10 @@ class SqlAlchemyBusinessCaseRepository:
         case_model.title = replacement.title
         case_model.type = replacement.type.value
         case_model.summary = replacement.summary
+        case_model.summary_markdown = replacement.summary_markdown
         case_model.industry = replacement.industry.value
+        case_model.data_cutoff_date = replacement.data_cutoff_date
+        case_model.freshness_months = replacement.freshness_months
         case_model.tags = list(replacement.tags)
         case_model.cover_image_url = replacement.cover_image_url
         case_model.status = replacement.status.value
@@ -453,6 +492,7 @@ class SqlAlchemyBusinessCaseRepository:
             or_(
                 BusinessCaseModel.title.like(keyword_pattern, escape="\\"),
                 BusinessCaseModel.summary.like(keyword_pattern, escape="\\"),
+                BusinessCaseModel.summary_markdown.like(keyword_pattern, escape="\\"),
                 document_match_exists,
             )
         )

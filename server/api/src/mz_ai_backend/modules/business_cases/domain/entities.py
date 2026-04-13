@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from enum import StrEnum
 
 from pydantic import BaseModel, ConfigDict
@@ -46,16 +46,18 @@ class BusinessCaseDocumentType(StrEnum):
     HOW_TO_DO = "how_to_do"
 
 
-_PROJECT_BASE_DOCUMENT_TYPES = (
-    BusinessCaseDocumentType.BUSINESS_CASE,
-    BusinessCaseDocumentType.MARKET_RESEARCH,
-    BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
-)
 _CASE_DOCUMENT_TYPES = (
     BusinessCaseDocumentType.BUSINESS_CASE,
     BusinessCaseDocumentType.MARKET_RESEARCH,
     BusinessCaseDocumentType.BUSINESS_MODEL,
     BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
+)
+_PROJECT_DOCUMENT_TYPES = (
+    BusinessCaseDocumentType.BUSINESS_CASE,
+    BusinessCaseDocumentType.MARKET_RESEARCH,
+    BusinessCaseDocumentType.BUSINESS_MODEL,
+    BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
+    BusinessCaseDocumentType.HOW_TO_DO,
 )
 
 
@@ -67,7 +69,7 @@ def required_document_types_for_case_type(
     if case_type == BusinessCaseType.CASE:
         return _CASE_DOCUMENT_TYPES
 
-    return (*_PROJECT_BASE_DOCUMENT_TYPES, BusinessCaseDocumentType.HOW_TO_DO)
+    return _PROJECT_DOCUMENT_TYPES
 
 
 def supports_loaded_document_types(
@@ -79,11 +81,7 @@ def supports_loaded_document_types(
     if case_type == BusinessCaseType.CASE:
         return document_types == set(_CASE_DOCUMENT_TYPES)
 
-    base_document_type_set = set(_PROJECT_BASE_DOCUMENT_TYPES)
-    return document_types in (
-        base_document_type_set,
-        base_document_type_set | {BusinessCaseDocumentType.HOW_TO_DO},
-    )
+    return document_types == set(_PROJECT_DOCUMENT_TYPES)
 
 
 class BusinessCaseDocument(BaseModel):
@@ -135,6 +133,8 @@ class BusinessCaseSummary(BaseModel):
     type: BusinessCaseType
     title: str
     summary: str
+    data_cutoff_date: date | None
+    freshness_months: int | None
     industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
@@ -147,5 +147,6 @@ class BusinessCaseSummary(BaseModel):
 class BusinessCase(BusinessCaseSummary):
     """Business case aggregate root."""
 
+    summary_markdown: str | None
     documents: BusinessCaseDocuments
     is_deleted: bool

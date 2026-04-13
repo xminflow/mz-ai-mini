@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from unittest.mock import AsyncMock
 
 import pytest
@@ -62,7 +62,10 @@ def _build_case_model(
         type=case_type,
         title=f"Case {case_id}",
         summary=f"Summary {case_id}",
+        summary_markdown=f"# Summary {case_id}",
         industry=industry,
+        data_cutoff_date=date(2026, 4, 13),
+        freshness_months=3,
         tags=list(tags),
         cover_image_url=f"https://example.com/{case_id}.png",
         status=BusinessCaseStatus.PUBLISHED.value
@@ -121,9 +124,7 @@ def _build_document_models(case_id: str) -> list[BusinessCaseDocumentModel]:
 
 
 def _build_project_document_models(case_id: str) -> list[BusinessCaseDocumentModel]:
-    project_documents = _build_document_models(case_id)
-    project_documents.pop(2)
-    return project_documents + [
+    return _build_document_models(case_id) + [
         BusinessCaseDocumentModel(
             document_id=2005,
             case_id=case_id,
@@ -201,6 +202,9 @@ async def test_business_case_repository_returns_domain_aggregate_for_case_lookup
     assert case is not None
     assert case.case_id == "1001"
     assert case.type == BusinessCaseType.CASE
+    assert case.summary_markdown == "# Summary 1001"
+    assert case.data_cutoff_date == date(2026, 4, 13)
+    assert case.freshness_months == 3
     assert case.industry == BusinessCaseIndustry.CONSUMER
     assert case.tags == ("连锁增长",)
     assert case.documents.business_case.title == "Business Case"
@@ -224,7 +228,7 @@ async def test_business_case_repository_returns_project_how_to_do_document_when_
 
     assert case is not None
     assert case.type == BusinessCaseType.PROJECT
-    assert case.documents.business_model is None
+    assert case.documents.business_model is not None
     assert case.documents.how_to_do is not None
     assert case.documents.how_to_do.document_id == 2005
 
@@ -246,6 +250,8 @@ async def test_business_case_repository_list_admin_returns_page_slice() -> None:
     assert len(page.items) == 2
     assert page.items[0].case_id == "1003"
     assert page.items[0].type == BusinessCaseType.CASE
+    assert page.items[0].data_cutoff_date == date(2026, 4, 13)
+    assert page.items[0].freshness_months == 3
     assert page.items[0].industry == BusinessCaseIndustry.CONSUMER
     assert page.items[0].tags == ("连锁增长",)
     assert page.items[1].case_id == "1002"
@@ -392,19 +398,22 @@ async def test_business_case_repository_replace_adds_project_how_to_do_document(
             type=BusinessCaseType.PROJECT,
             title="Project Updated",
             summary="Summary Updated",
+            summary_markdown="# Summary Updated",
+            data_cutoff_date=date(2026, 4, 13),
+            freshness_months=6,
             industry=BusinessCaseIndustry.TECHNOLOGY,
             tags=("自动化",),
             cover_image_url="https://example.com/project-updated.png",
             status=BusinessCaseStatus.PUBLISHED,
             published_at=datetime(2026, 1, 1, 8, 0, 0),
             documents=_build_document_replacements(
-                include_business_model=False,
+                include_business_model=True,
                 include_how_to_do=True,
             ),
         )
     )
 
     assert replaced_case is not None
-    assert replaced_case.documents.business_model is None
+    assert replaced_case.documents.business_model is not None
     assert replaced_case.documents.how_to_do is not None
     assert session.add.call_count >= 1

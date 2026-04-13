@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 
 from pydantic import BaseModel, ConfigDict
 
@@ -31,6 +31,9 @@ class CreateBusinessCaseCommand(BaseModel):
     type: BusinessCaseType
     title: str
     summary: str
+    summary_markdown: str
+    data_cutoff_date: date
+    freshness_months: int
     industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
@@ -47,6 +50,9 @@ class ReplaceBusinessCaseCommand(BaseModel):
     type: BusinessCaseType
     title: str
     summary: str
+    summary_markdown: str
+    data_cutoff_date: date
+    freshness_months: int
     industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
@@ -112,6 +118,9 @@ class BusinessCaseRegistration(BaseModel):
     type: BusinessCaseType
     title: str
     summary: str
+    summary_markdown: str
+    data_cutoff_date: date
+    freshness_months: int
     industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
@@ -140,6 +149,9 @@ class BusinessCaseReplacement(BaseModel):
     type: BusinessCaseType
     title: str
     summary: str
+    summary_markdown: str
+    data_cutoff_date: date
+    freshness_months: int
     industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
@@ -188,6 +200,9 @@ class BusinessCaseDetailResult(BaseModel):
     type: BusinessCaseType
     title: str
     summary: str
+    summary_markdown: str | None
+    data_cutoff_date: date | None
+    freshness_months: int | None
     industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
@@ -207,6 +222,8 @@ class BusinessCaseListItemResult(BaseModel):
     type: BusinessCaseType
     title: str
     summary: str
+    data_cutoff_date: date | None
+    freshness_months: int | None
     industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str

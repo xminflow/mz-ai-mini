@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 
 import pytest
 
@@ -126,6 +126,9 @@ def _build_case(
         type=case_type,
         title="Case A",
         summary="Summary A",
+        summary_markdown="# Summary A",
+        data_cutoff_date=date(2026, 4, 13),
+        freshness_months=3,
         industry=BusinessCaseIndustry.CONTENT_AND_CREATOR,
         tags=("连锁增长", "AI 提效"),
         cover_image_url="https://example.com/case-a.png",
@@ -176,6 +179,11 @@ def _build_project_documents() -> tuple[BusinessCaseDocumentContent, ...]:
             markdown_content="# Market Research Updated",
         ),
         BusinessCaseDocumentContent(
+            document_type=BusinessCaseDocumentType.BUSINESS_MODEL,
+            title="Business Model Updated",
+            markdown_content="# Business Model Updated",
+        ),
+        BusinessCaseDocumentContent(
             document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
             title="AI Upgrade Updated",
             markdown_content="# AI Upgrade Updated",
@@ -216,6 +224,9 @@ async def test_replace_business_case_use_case_preserves_existing_published_at() 
             type=BusinessCaseType.CASE,
             title="Case A Updated",
             summary="Summary A Updated",
+            summary_markdown="# Summary A Updated",
+            data_cutoff_date=date(2026, 4, 13),
+            freshness_months=3,
             industry=BusinessCaseIndustry.CONSUMER,
             tags=("私域增长", "门店升级"),
             cover_image_url="https://example.com/case-a-updated.png",
@@ -227,9 +238,13 @@ async def test_replace_business_case_use_case_preserves_existing_published_at() 
     assert repository.replacement is not None
     assert repository.replacement.published_at == datetime(2026, 1, 1, 9, 0, 0)
     assert repository.replacement.type == BusinessCaseType.CASE
+    assert repository.replacement.summary_markdown == "# Summary A Updated"
+    assert repository.replacement.data_cutoff_date == date(2026, 4, 13)
+    assert repository.replacement.freshness_months == 3
     assert repository.replacement.industry == BusinessCaseIndustry.CONSUMER
     assert repository.replacement.tags == ("私域增长", "门店升级")
     assert result.type == BusinessCaseType.CASE
+    assert result.summary_markdown == "# Summary A"
     assert result.status == BusinessCaseStatus.PUBLISHED
 
 
@@ -261,6 +276,9 @@ async def test_replace_business_case_use_case_clears_published_at_when_moving_to
             type=BusinessCaseType.CASE,
             title="Case A Updated",
             summary="Summary A Updated",
+            summary_markdown="# Summary A Updated",
+            data_cutoff_date=date(2026, 4, 13),
+            freshness_months=6,
             industry=BusinessCaseIndustry.EDUCATION,
             tags=("私域增长",),
             cover_image_url="https://example.com/case-a-updated.png",
@@ -272,6 +290,9 @@ async def test_replace_business_case_use_case_clears_published_at_when_moving_to
     assert repository.replacement is not None
     assert repository.replacement.published_at is None
     assert repository.replacement.type == BusinessCaseType.CASE
+    assert repository.replacement.summary_markdown == "# Summary A Updated"
+    assert repository.replacement.data_cutoff_date == date(2026, 4, 13)
+    assert repository.replacement.freshness_months == 6
     assert repository.replacement.industry == BusinessCaseIndustry.EDUCATION
     assert repository.replacement.tags == ("私域增长",)
     assert result.type == BusinessCaseType.CASE
@@ -294,6 +315,9 @@ async def test_replace_business_case_use_case_raises_not_found_for_missing_case(
                 type=BusinessCaseType.CASE,
                 title="Case A Updated",
                 summary="Summary A Updated",
+                summary_markdown="# Summary A Updated",
+                data_cutoff_date=date(2026, 4, 13),
+                freshness_months=3,
                 industry=BusinessCaseIndustry.OTHER,
                 tags=("私域增长",),
                 cover_image_url="https://example.com/case-a-updated.png",
@@ -307,14 +331,12 @@ async def test_replace_business_case_use_case_raises_not_found_for_missing_case(
 async def test_replace_business_case_use_case_generates_document_id_for_new_project_how_to_do() -> None:
     existing_case = _build_case(
         case_id="1001",
-        include_business_model=False,
         status=BusinessCaseStatus.PUBLISHED,
         published_at=datetime(2026, 1, 1, 9, 0, 0),
     )
     replaced_case = _build_case(
         case_id="1001",
         case_type=BusinessCaseType.PROJECT,
-        include_business_model=False,
         include_how_to_do=True,
         status=BusinessCaseStatus.PUBLISHED,
         published_at=datetime(2026, 1, 1, 9, 0, 0),
@@ -335,6 +357,9 @@ async def test_replace_business_case_use_case_generates_document_id_for_new_proj
             type=BusinessCaseType.PROJECT,
             title="Project A Updated",
             summary="Project Summary Updated",
+            summary_markdown="# Project Summary Updated",
+            data_cutoff_date=date(2026, 4, 13),
+            freshness_months=3,
             industry=BusinessCaseIndustry.TECHNOLOGY,
             tags=("自动化",),
             cover_image_url="https://example.com/project-a-updated.png",
@@ -344,7 +369,7 @@ async def test_replace_business_case_use_case_generates_document_id_for_new_proj
     )
 
     assert repository.replacement is not None
-    assert len(repository.replacement.documents) == 4
+    assert len(repository.replacement.documents) == 5
     assert repository.replacement.documents[-1].document_type == BusinessCaseDocumentType.HOW_TO_DO
     assert repository.replacement.documents[-1].document_id == 4001
     assert result.documents.how_to_do is not None

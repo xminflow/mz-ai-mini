@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 
 from sqlalchemy import (
     BigInteger,
     Boolean,
+    Date,
     DateTime,
     Index,
+    Integer,
     JSON,
     String,
     Text,
@@ -40,7 +42,10 @@ class BusinessCaseModel(Base):
     type: Mapped[str] = mapped_column(String(16), nullable=False)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     summary: Mapped[str] = mapped_column(Text, nullable=False)
+    summary_markdown: Mapped[str | None] = mapped_column(LONGTEXT, nullable=True)
     industry: Mapped[str] = mapped_column(String(32), nullable=False)
+    data_cutoff_date: Mapped[date | None] = mapped_column(Date, nullable=True)
+    freshness_months: Mapped[int | None] = mapped_column(Integer, nullable=True)
     tags: Mapped[list[str]] = mapped_column(JSON, nullable=False)
     cover_image_url: Mapped[str] = mapped_column(String(2048), nullable=False)
     status: Mapped[str] = mapped_column(String(16), nullable=False)

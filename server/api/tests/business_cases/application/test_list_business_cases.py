@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 
 import pytest
 
@@ -56,6 +56,8 @@ def _build_list_item(
         type=BusinessCaseType.CASE,
         title=f"Case {case_id}",
         summary=f"Summary {case_id}",
+        data_cutoff_date=date(2026, 4, 13),
+        freshness_months=3,
         industry=BusinessCaseIndustry.CONSUMER,
         tags=("连锁增长",),
         cover_image_url=f"https://example.com/{case_id}.png",

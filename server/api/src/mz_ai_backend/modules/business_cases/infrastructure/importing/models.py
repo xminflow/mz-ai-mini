@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import date
 from pathlib import Path
 
 from pydantic import (
@@ -62,6 +63,21 @@ class CaseImportDocumentConfig(BaseModel):
         return _strip_required_text(value, field_name=info.field_name)
 
 
+class CaseImportRelationshipConfig(BaseModel):
+    """One relationship entry loaded from a case directory config file."""
+
+    model_config = ConfigDict(frozen=True)
+
+    case_id: str
+    type: str
+    reason: str
+
+    @field_validator("case_id", "type", "reason")
+    @classmethod
+    def validate_required_fields(cls, value: str, info) -> str:
+        return _strip_required_text(value, field_name=info.field_name)
+
+
 class CaseImportConfig(BaseModel):
     """Structured case directory config loaded from config.yml."""
 
@@ -71,9 +87,13 @@ class CaseImportConfig(BaseModel):
     type: BusinessCaseType
     title: str
     desc: str
+    summary: CaseImportDocumentConfig
     cover: str
+    data_cutoff_date: date
+    freshness_months: int
     industry: BusinessCaseIndustry = BusinessCaseIndustry.OTHER
     tags: tuple[str, ...]
+    relationships: tuple[CaseImportRelationshipConfig, ...] = ()
     rework: CaseImportDocumentConfig
     ai_driven_analysis: CaseImportDocumentConfig
     market: CaseImportDocumentConfig
@@ -95,6 +115,13 @@ class CaseImportConfig(BaseModel):
     def validate_tags(cls, value: tuple[str, ...]) -> tuple[str, ...]:
         return _normalize_tags(value)
 
+    @field_validator("freshness_months")
+    @classmethod
+    def validate_freshness_months(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("freshness_months must be greater than 0.")
+        return value
+
     @model_validator(mode="after")
     def validate_project_documents(self) -> "CaseImportConfig":
         if self.type == BusinessCaseType.PROJECT and self.how_to_do is None:
@@ -103,11 +130,8 @@ class CaseImportConfig(BaseModel):
         if self.type == BusinessCaseType.CASE and self.how_to_do is not None:
             raise ValueError("how_to_do is only supported for project imports.")
 
-        if self.type == BusinessCaseType.CASE and self.business_model is None:
-            raise ValueError("business_model is required for case imports.")
-
-        if self.type == BusinessCaseType.PROJECT and self.business_model is not None:
-            raise ValueError("business_model is only supported for case imports.")
+        if self.business_model is None:
+            raise ValueError("business_model is required for all imports.")
 
         return self
 
@@ -136,12 +160,15 @@ class CaseImportPayload(BaseModel):
     type: BusinessCaseType
     title: str
     summary: str
+    summary_markdown: str
+    data_cutoff_date: date
+    freshness_months: int
     industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
     documents: tuple[CaseImportDocumentPayload, ...]
 
-    @field_validator("title", "summary", "cover_image_url")
+    @field_validator("title", "summary", "summary_markdown", "cover_image_url")
     @classmethod
     def validate_text_fields(cls, value: str, info) -> str:
         return _strip_required_text(value, field_name=info.field_name)
@@ -155,6 +182,13 @@ class CaseImportPayload(BaseModel):
     @classmethod
     def validate_tags(cls, value: tuple[str, ...]) -> tuple[str, ...]:
         return _normalize_tags(value)
+
+    @field_validator("freshness_months")
+    @classmethod
+    def validate_payload_freshness_months(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("freshness_months must be greater than 0.")
+        return value
 
 
 class CaseImportResult(BaseModel):

@@ -1,8 +1,16 @@
 from __future__ import annotations
 
+from datetime import date
 from enum import StrEnum
 
-from pydantic import BaseModel, ConfigDict, HttpUrl, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    HttpUrl,
+    field_validator,
+    model_validator,
+)
 
 from ..application import (
     BusinessCaseDetailResult,
@@ -53,8 +61,8 @@ def _normalize_tags(value: tuple[str, ...], *, field_name: str) -> tuple[str, ..
 
     if not normalized_tags:
         raise ValueError(f"{field_name} must not be empty.")
-    if len(normalized_tags) > 3:
-        raise ValueError(f"{field_name} must contain at most 3 items.")
+    if len(normalized_tags) > 10:
+        raise ValueError(f"{field_name} must contain at most 10 items.")
 
     return tuple(normalized_tags)
 
@@ -115,16 +123,15 @@ class BusinessCaseDocumentsUpsertRequest(BaseModel):
                 markdown_content=self.market_research.markdown_content,
             ),
         ]
-        if case_type == BusinessCaseType.CASE:
-            if self.business_model is None:
-                raise ValueError("documents.business_model is required for case.")
-            document_contents.append(
-                BusinessCaseDocumentContent(
-                    document_type=BusinessCaseDocumentType.BUSINESS_MODEL,
-                    title=self.business_model.title,
-                    markdown_content=self.business_model.markdown_content,
-                )
+        if self.business_model is None:
+            raise ValueError("documents.business_model is required.")
+        document_contents.append(
+            BusinessCaseDocumentContent(
+                document_type=BusinessCaseDocumentType.BUSINESS_MODEL,
+                title=self.business_model.title,
+                markdown_content=self.business_model.markdown_content,
             )
+        )
         document_contents.append(
             BusinessCaseDocumentContent(
                 document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
@@ -153,6 +160,9 @@ class BusinessCaseUpsertRequest(BaseModel):
     type: BusinessCaseType
     title: str
     summary: str
+    summary_markdown: str
+    data_cutoff_date: date
+    freshness_months: int = Field(gt=0)
     industry: BusinessCaseIndustry = BusinessCaseIndustry.OTHER
     tags: tuple[str, ...]
     cover_image_url: HttpUrl
@@ -163,6 +173,11 @@ class BusinessCaseUpsertRequest(BaseModel):
     @classmethod
     def validate_text_fields(cls, value: str, info) -> str:
         return _strip_required_text(value, field_name=info.field_name)
+
+    @field_validator("summary_markdown")
+    @classmethod
+    def validate_summary_markdown(cls, value: str) -> str:
+        return _validate_non_blank_text(value, field_name="summary_markdown")
 
     @field_validator("tags")
     @classmethod
@@ -177,14 +192,8 @@ class BusinessCaseUpsertRequest(BaseModel):
         if self.type == BusinessCaseType.CASE and self.documents.how_to_do is not None:
             raise ValueError("documents.how_to_do is only supported for project.")
 
-        if self.type == BusinessCaseType.CASE and self.documents.business_model is None:
-            raise ValueError("documents.business_model is required for case.")
-
-        if (
-            self.type == BusinessCaseType.PROJECT
-            and self.documents.business_model is not None
-        ):
-            raise ValueError("documents.business_model is only supported for case.")
+        if self.documents.business_model is None:
+            raise ValueError("documents.business_model is required.")
 
         return self
 
@@ -195,6 +204,9 @@ class BusinessCaseUpsertRequest(BaseModel):
             type=self.type,
             title=self.title,
             summary=self.summary,
+            summary_markdown=self.summary_markdown,
+            data_cutoff_date=self.data_cutoff_date,
+            freshness_months=self.freshness_months,
             industry=self.industry,
             tags=self.tags,
             cover_image_url=str(self.cover_image_url),
@@ -210,6 +222,9 @@ class BusinessCaseUpsertRequest(BaseModel):
             type=self.type,
             title=self.title,
             summary=self.summary,
+            summary_markdown=self.summary_markdown,
+            data_cutoff_date=self.data_cutoff_date,
+            freshness_months=self.freshness_months,
             industry=self.industry,
             tags=self.tags,
             cover_image_url=str(self.cover_image_url),
@@ -283,6 +298,9 @@ class BusinessCaseDetailResponse(BaseModel):
     type: BusinessCaseType
     title: str
     summary: str
+    summary_markdown: str | None
+    data_cutoff_date: date | None
+    freshness_months: int | None
     industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str
@@ -312,6 +330,8 @@ class BusinessCaseListItemResponse(BaseModel):
     type: BusinessCaseType
     title: str
     summary: str
+    data_cutoff_date: date | None
+    freshness_months: int | None
     industry: BusinessCaseIndustry
     tags: tuple[str, ...]
     cover_image_url: str

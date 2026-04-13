@@ -2,7 +2,8 @@
 
 Usage:
 - Import business case entities and domain-specific exceptions from this package.
-- Case summaries and aggregates expose case-level `type`, `industry`, and `tags`.
+- Case summaries and aggregates expose case-level `type`, short `summary`,
+  `summary_markdown`, freshness metadata, `industry`, and `tags`.
 - Business case documents expose title and markdown content without per-document
   cover metadata.
 

@@ -9,8 +9,12 @@ from .models import CaseImportConfig, ResolvedLocalAsset
 
 
 _MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[(?P<alt>[^\]]*)\]\((?P<target>[^)\r\n]+)\)")
-_TOP_LEVEL_NESTED_KEYS = {
+_TOP_LEVEL_LIST_KEYS = {
+    "relationships",
     "tags",
+}
+_TOP_LEVEL_MAPPING_KEYS = {
+    "summary",
     "rework",
     "ai_driven_analysis",
     "market",
@@ -108,6 +112,7 @@ def _parse_supported_yaml(config_path: Path) -> dict[str, object]:
     payload: dict[str, object] = {}
     current_section: str | None = None
     current_list_key: str | None = None
+    current_list_mapping_item: dict[str, object] | None = None
 
     for line_number, raw_line in enumerate(
         config_path.read_text(encoding="utf-8").splitlines(),
@@ -118,7 +123,7 @@ def _parse_supported_yaml(config_path: Path) -> dict[str, object]:
             continue
 
         indent = len(raw_line) - len(raw_line.lstrip(" "))
-        if indent not in (0, 2):
+        if indent not in (0, 2, 4):
             raise ValueError(
                 f"Unsupported indentation in {config_path.name} at line {line_number}."
             )
@@ -126,36 +131,65 @@ def _parse_supported_yaml(config_path: Path) -> dict[str, object]:
         if indent == 0:
             current_section = None
             current_list_key = None
+            current_list_mapping_item = None
 
             if stripped_line.endswith(":"):
                 key = stripped_line[:-1].strip()
-                if key not in _TOP_LEVEL_NESTED_KEYS:
+                if key in _TOP_LEVEL_LIST_KEYS:
+                    payload[key] = []
+                    current_list_key = key
+                    continue
+
+                if key not in _TOP_LEVEL_MAPPING_KEYS:
                     raise ValueError(
                         f"Unsupported top-level section '{key}' in {config_path.name} "
                         f"at line {line_number}."
                     )
-                if key == "tags":
-                    payload[key] = []
-                    current_list_key = key
-                else:
-                    payload[key] = {}
-                    current_section = key
+                payload[key] = {}
+                current_section = key
                 continue
 
             key, value = _split_key_value(stripped_line, config_path, line_number)
             payload[key] = _parse_scalar(value)
             continue
 
-        if current_list_key == "tags":
-            if not stripped_line.startswith("- "):
+        if current_list_key is not None:
+            value_list = payload.get(current_list_key)
+            if not isinstance(value_list, list):
                 raise ValueError(
-                    f"Unsupported list item syntax in {config_path.name} at line {line_number}."
+                    f"Invalid {current_list_key} structure in {config_path.name}."
                 )
-            tag_list = payload.get("tags")
-            if not isinstance(tag_list, list):
-                raise ValueError(f"Invalid tags structure in {config_path.name}.")
-            tag_list.append(_parse_scalar(stripped_line[2:]))
-            continue
+
+            if indent == 2:
+                if not stripped_line.startswith("- "):
+                    raise ValueError(
+                        f"Unsupported list item syntax in {config_path.name} at line {line_number}."
+                    )
+                item_value = stripped_line[2:].strip()
+                if current_list_key == "relationships" and ":" in item_value:
+                    key, value = _split_key_value(item_value, config_path, line_number)
+                    mapping_item = {key: _parse_scalar(value)}
+                    value_list.append(mapping_item)
+                    current_list_mapping_item = mapping_item
+                    continue
+
+                value_list.append(_parse_scalar(item_value))
+                current_list_mapping_item = None
+                continue
+
+            if (
+                indent == 4
+                and current_list_key == "relationships"
+                and current_list_mapping_item is not None
+            ):
+                key, value = _split_key_value(stripped_line, config_path, line_number)
+                current_list_mapping_item[key] = _parse_scalar(value)
+                continue
+
+            if indent == 4 and current_list_mapping_item is None:
+                raise ValueError(
+                    f"Unsupported nested list item in {config_path.name} at line {line_number}."
+                )
 
         if current_section is None:
             raise ValueError(
@@ -189,8 +223,10 @@ def _split_key_value(
     return normalized_key, value.strip()
 
 
-def _parse_scalar(value: str) -> str:
+def _parse_scalar(value: str) -> object:
     normalized_value = value.strip()
+    if normalized_value == "[]":
+        return []
     if (
         len(normalized_value) >= 2
         and normalized_value[0] == normalized_value[-1]

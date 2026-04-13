@@ -2,7 +2,8 @@
 
 Usage:
 - Import `router` to register business case HTTP endpoints.
-- Public business case routes expose `type`, industry, and keyword filters.
+- Public business case routes expose `type`, freshness metadata, industry, and
+  keyword filters.
 
 Development rules:
 - Keep public exports limited to stable routing contracts.

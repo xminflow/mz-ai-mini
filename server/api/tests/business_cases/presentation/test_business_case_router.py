@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 
 from fastapi.testclient import TestClient
 
@@ -40,6 +40,9 @@ class StubCreateBusinessCaseUseCase:
     async def execute(self, command) -> BusinessCaseDetailResult:
         assert command.title == "Case A"
         assert command.type == BusinessCaseType.CASE
+        assert command.summary_markdown == "# Summary A"
+        assert command.data_cutoff_date == date(2026, 4, 13)
+        assert command.freshness_months == 3
         assert command.industry == BusinessCaseIndustry.CONSUMER
         assert command.tags == ("连锁增长", "AI 提效")
         assert command.documents[0].document_type.value == "business_case"
@@ -58,6 +61,8 @@ class StubListAdminBusinessCasesUseCase:
                     type=BusinessCaseType.CASE,
                     title="Case A",
                     summary="Summary A",
+                    data_cutoff_date=date(2026, 4, 13),
+                    freshness_months=3,
                     industry=BusinessCaseIndustry.CONSUMER,
                     tags=("连锁增长",),
                     cover_image_url="https://example.com/case-a.png",
@@ -85,6 +90,8 @@ class StubListPublicBusinessCasesUseCase:
                     type=BusinessCaseType.CASE,
                     title="Case A",
                     summary="Summary A",
+                    data_cutoff_date=date(2026, 4, 13),
+                    freshness_months=3,
                     industry=BusinessCaseIndustry.CONSUMER,
                     tags=("AI 提效",),
                     cover_image_url="https://example.com/case-a.png",
@@ -131,20 +138,14 @@ def _build_detail_result(
     case_type: BusinessCaseType = BusinessCaseType.CASE,
     include_how_to_do: bool = False,
 ) -> BusinessCaseDetailResult:
-    business_model = (
-        BusinessCaseDocumentResult(
-            document_id=DOCUMENT_ID_BUSINESS_MODEL,
-            title="Business Model",
-            markdown_content="# Business Model",
-        )
-        if case_type == BusinessCaseType.CASE
-        else None
-    )
     return BusinessCaseDetailResult(
         case_id=case_id,
         type=case_type,
         title="Case A",
         summary="Summary A",
+        summary_markdown="# Summary A",
+        data_cutoff_date=date(2026, 4, 13),
+        freshness_months=3,
         industry=BusinessCaseIndustry.CONSUMER,
         tags=("连锁增长", "AI 提效"),
         cover_image_url="https://example.com/case-a.png",
@@ -165,7 +166,11 @@ def _build_detail_result(
                 title="Market Research",
                 markdown_content="# Market Research",
             ),
-            business_model=business_model,
+            business_model=BusinessCaseDocumentResult(
+                document_id=DOCUMENT_ID_BUSINESS_MODEL,
+                title="Business Model",
+                markdown_content="# Business Model",
+            ),
             ai_business_upgrade=BusinessCaseDocumentResult(
                 document_id=DOCUMENT_ID_AI_BUSINESS_UPGRADE,
                 title="AI Upgrade",
@@ -224,6 +229,9 @@ def test_business_case_router_creates_business_case() -> None:
                 "title": "Case A",
                 "type": "case",
                 "summary": "Summary A",
+                "summary_markdown": "# Summary A",
+                "data_cutoff_date": "2026-04-13",
+                "freshness_months": 3,
                 "industry": "消费",
                 "tags": ["连锁增长", "AI 提效"],
                 "cover_image_url": "https://example.com/case-a.png",
@@ -255,6 +263,9 @@ def test_business_case_router_creates_business_case() -> None:
     assert body["request_id"] == "business-case-create"
     assert body["data"]["case_id"] == str(CASE_ID)
     assert body["data"]["type"] == "case"
+    assert body["data"]["summary_markdown"] == "# Summary A"
+    assert body["data"]["data_cutoff_date"] == "2026-04-13"
+    assert body["data"]["freshness_months"] == 3
     assert body["data"]["industry"] == "消费"
     assert body["data"]["tags"] == ["连锁增长", "AI 提效"]
     assert body["data"]["documents"]["business_case"]["document_id"] == str(
@@ -277,6 +288,8 @@ def test_business_case_router_lists_admin_business_cases() -> None:
     assert response.status_code == 200
     assert body["data"]["items"][0]["case_id"] == str(CASE_ID)
     assert body["data"]["items"][0]["type"] == "case"
+    assert body["data"]["items"][0]["data_cutoff_date"] == "2026-04-13"
+    assert body["data"]["items"][0]["freshness_months"] == 3
     assert body["data"]["items"][0]["tags"] == ["连锁增长"]
     assert body["data"]["next_cursor"] == "cursor-2"
 
@@ -293,6 +306,8 @@ def test_business_case_router_lists_public_business_cases_by_industry_and_keywor
     assert response.status_code == 200
     assert body["data"]["items"][0]["type"] == "case"
     assert body["data"]["items"][0]["industry"] == "消费"
+    assert body["data"]["items"][0]["data_cutoff_date"] == "2026-04-13"
+    assert body["data"]["items"][0]["freshness_months"] == 3
     assert body["data"]["items"][0]["tags"] == ["AI 提效"]
     assert body["data"]["next_cursor"] == "cursor-3"
     assert body["data"]["available_industries"] == ["科技", "消费"]
@@ -327,7 +342,10 @@ def test_business_case_router_returns_project_detail_with_how_to_do_document() -
     body = response.json()
     assert response.status_code == 200
     assert body["data"]["type"] == "project"
-    assert body["data"]["documents"]["business_model"] is None
+    assert body["data"]["summary_markdown"] == "# Summary A"
+    assert body["data"]["documents"]["business_model"]["document_id"] == str(
+        DOCUMENT_ID_BUSINESS_MODEL
+    )
     assert body["data"]["documents"]["how_to_do"]["document_id"] == str(
         DOCUMENT_ID_HOW_TO_DO
     )
@@ -351,6 +369,9 @@ def test_business_case_router_returns_validation_error_for_invalid_payload() -> 
             json={
                 "title": "   ",
                 "summary": "Summary A",
+                "summary_markdown": "# Summary A",
+                "data_cutoff_date": "2026-04-13",
+                "freshness_months": 3,
                 "tags": ["连锁增长"],
                 "cover_image_url": "not-a-url",
                 "status": "draft",

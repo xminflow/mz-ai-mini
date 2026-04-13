@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 
 import pytest
 
@@ -68,6 +68,9 @@ class FakeBusinessCaseRepository:
             type=registration.type,
             title=registration.title,
             summary=registration.summary,
+            summary_markdown=registration.summary_markdown,
+            data_cutoff_date=registration.data_cutoff_date,
+            freshness_months=registration.freshness_months,
             industry=registration.industry,
             tags=registration.tags,
             cover_image_url=registration.cover_image_url,
@@ -118,6 +121,11 @@ def _build_project_document_contents() -> tuple[BusinessCaseDocumentContent, ...
             markdown_content="# Market Research",
         ),
         BusinessCaseDocumentContent(
+            document_type=BusinessCaseDocumentType.BUSINESS_MODEL,
+            title="Business Model",
+            markdown_content="# Business Model",
+        ),
+        BusinessCaseDocumentContent(
             document_type=BusinessCaseDocumentType.AI_BUSINESS_UPGRADE,
             title="AI Upgrade",
             markdown_content="# AI Upgrade",
@@ -144,6 +152,9 @@ async def test_create_business_case_use_case_generates_ids_and_published_at() ->
             type=BusinessCaseType.CASE,
             title="Case A",
             summary="Summary A",
+            summary_markdown="# Summary A",
+            data_cutoff_date=date(2026, 4, 13),
+            freshness_months=3,
             industry=BusinessCaseIndustry.CONSUMER,
             tags=("连锁增长", "AI 提效"),
             cover_image_url="https://example.com/case-a.png",
@@ -156,6 +167,9 @@ async def test_create_business_case_use_case_generates_ids_and_published_at() ->
     assert repository.registration.case_id == "1001"
     assert repository.registration.published_at == datetime(2026, 1, 1, 8, 0, 0)
     assert repository.registration.type == BusinessCaseType.CASE
+    assert repository.registration.summary_markdown == "# Summary A"
+    assert repository.registration.data_cutoff_date == date(2026, 4, 13)
+    assert repository.registration.freshness_months == 3
     assert repository.registration.industry == BusinessCaseIndustry.CONSUMER
     assert repository.registration.tags == ("连锁增长", "AI 提效")
     assert [document.document_id for document in repository.registration.documents] == [
@@ -166,6 +180,9 @@ async def test_create_business_case_use_case_generates_ids_and_published_at() ->
     ]
     assert result.case_id == "1001"
     assert result.type == BusinessCaseType.CASE
+    assert result.summary_markdown == "# Summary A"
+    assert result.data_cutoff_date == date(2026, 4, 13)
+    assert result.freshness_months == 3
     assert result.industry == BusinessCaseIndustry.CONSUMER
     assert result.status == BusinessCaseStatus.PUBLISHED
     assert result.tags == ("连锁增长", "AI 提效")
@@ -179,7 +196,7 @@ async def test_create_business_case_use_case_preserves_supplied_case_id() -> Non
     repository = FakeBusinessCaseRepository()
     use_case = CreateBusinessCaseUseCase(
         business_case_repository=repository,
-        snowflake_id_generator=FakeSnowflakeIdGenerator([2001, 2002, 2003, 2004]),
+        snowflake_id_generator=FakeSnowflakeIdGenerator([2001, 2002, 2003, 2004, 2005]),
         current_time_provider=FakeCurrentTimeProvider(datetime(2026, 1, 1, 8, 0, 0)),
     )
 
@@ -189,6 +206,9 @@ async def test_create_business_case_use_case_preserves_supplied_case_id() -> Non
             type=BusinessCaseType.PROJECT,
             title="Case A",
             summary="Summary A",
+            summary_markdown="# Summary A",
+            data_cutoff_date=date(2026, 4, 13),
+            freshness_months=6,
             industry=BusinessCaseIndustry.ENTERTAINMENT,
             tags=("连锁增长", "AI 提效"),
             cover_image_url="https://example.com/case-a.png",
@@ -200,15 +220,20 @@ async def test_create_business_case_use_case_preserves_supplied_case_id() -> Non
     assert repository.registration is not None
     assert repository.registration.case_id == "case-4"
     assert repository.registration.type == BusinessCaseType.PROJECT
+    assert repository.registration.summary_markdown == "# Summary A"
+    assert repository.registration.data_cutoff_date == date(2026, 4, 13)
+    assert repository.registration.freshness_months == 6
     assert repository.registration.industry == BusinessCaseIndustry.ENTERTAINMENT
     assert [document.document_id for document in repository.registration.documents] == [
         2001,
         2002,
         2003,
         2004,
+        2005,
     ]
     assert result.case_id == "case-4"
     assert result.type == BusinessCaseType.PROJECT
+    assert result.summary_markdown == "# Summary A"
     assert result.documents.how_to_do is not None
 
 
@@ -217,7 +242,9 @@ async def test_create_business_case_use_case_accepts_project_how_to_do_document(
     repository = FakeBusinessCaseRepository()
     use_case = CreateBusinessCaseUseCase(
         business_case_repository=repository,
-        snowflake_id_generator=FakeSnowflakeIdGenerator([1001, 2001, 2002, 2003, 2004]),
+        snowflake_id_generator=FakeSnowflakeIdGenerator(
+            [1001, 2001, 2002, 2003, 2004, 2005]
+        ),
         current_time_provider=FakeCurrentTimeProvider(datetime(2026, 1, 1, 8, 0, 0)),
     )
 
@@ -226,6 +253,9 @@ async def test_create_business_case_use_case_accepts_project_how_to_do_document(
             type=BusinessCaseType.PROJECT,
             title="Project A",
             summary="Project Summary",
+            summary_markdown="# Project Summary",
+            data_cutoff_date=date(2026, 4, 13),
+            freshness_months=3,
             industry=BusinessCaseIndustry.TECHNOLOGY,
             tags=("自动化", "增长"),
             cover_image_url="https://example.com/project-a.png",
@@ -235,10 +265,10 @@ async def test_create_business_case_use_case_accepts_project_how_to_do_document(
     )
 
     assert repository.registration is not None
-    assert len(repository.registration.documents) == 4
+    assert len(repository.registration.documents) == 5
     assert repository.registration.documents[-1].document_type == BusinessCaseDocumentType.HOW_TO_DO
     assert result.documents.how_to_do is not None
-    assert result.documents.how_to_do.document_id == 2004
+    assert result.documents.how_to_do.document_id == 2005
 
 
 @pytest.mark.asyncio
@@ -256,6 +286,9 @@ async def test_create_business_case_use_case_rejects_invalid_document_set() -> N
                 type=BusinessCaseType.CASE,
                 title="Case A",
                 summary="Summary A",
+                summary_markdown="# Summary A",
+                data_cutoff_date=date(2026, 4, 13),
+                freshness_months=3,
                 industry=BusinessCaseIndustry.OTHER,
                 tags=("连锁增长",),
                 cover_image_url="https://example.com/case-a.png",
@@ -291,7 +324,7 @@ async def test_create_business_case_use_case_rejects_project_without_how_to_do()
     repository = FakeBusinessCaseRepository()
     use_case = CreateBusinessCaseUseCase(
         business_case_repository=repository,
-        snowflake_id_generator=FakeSnowflakeIdGenerator([1001, 2001, 2002, 2003]),
+        snowflake_id_generator=FakeSnowflakeIdGenerator([1001, 2001, 2002, 2003, 2004]),
         current_time_provider=FakeCurrentTimeProvider(datetime(2026, 1, 1, 8, 0, 0)),
     )
 
@@ -301,6 +334,9 @@ async def test_create_business_case_use_case_rejects_project_without_how_to_do()
                 type=BusinessCaseType.PROJECT,
                 title="Project A",
                 summary="Project Summary",
+                summary_markdown="# Project Summary",
+                data_cutoff_date=date(2026, 4, 13),
+                freshness_months=3,
                 industry=BusinessCaseIndustry.OTHER,
                 tags=("增长",),
                 cover_image_url="https://example.com/project-a.png",

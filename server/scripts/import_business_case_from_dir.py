@@ -28,14 +28,19 @@ case_id: case-05
 title: 喜茶（HEYTEA）新茶饮高端品牌创业案例
 type: case
 desc: 从广东街头小店到估值600亿的新茶饮标杆，喜茶以产品创新驱动品类革命，在高端定位与规模扩张的张力中寻找属于自己的第三条路
+data_cutoff_date: 2026-04-13
+freshness_months: 3
 cover: images\\cover\\image_01.png
 industry: 消费
+relationships: []
 tags:
   - 新茶饮
   - 品牌溢价
   - 出海
   - 加盟模式
   - 健康消费
+summary:
+  file: summary.md
 rework:
   file: rework.md
 ai_driven_analysis:
@@ -45,10 +50,12 @@ market:
 business_model:
   file: business_model.md
 
-For `type: case`, the importer additionally requires:
+For both `type: case` and `type: project`, the importer requires:
+- the `summary` section in `config.yml`
+- the referenced markdown file such as `<CASE_DIR>/summary.md`
 - the `business_model` section in `config.yml`
 - the referenced markdown file such as `<CASE_DIR>/business_model.md`
-- the file is imported into the `商业模式` document tab
+- the business model file is imported into the `商业模式` document tab
 
 For `type: project`, the importer additionally requires:
 - the `how_to_do` section in `config.yml`
@@ -56,6 +63,8 @@ For `type: project`, the importer additionally requires:
 - the file is imported into the `如何做` document tab
 
 Notes:
+- `config.yml.desc` is imported as the short summary shown in case lists.
+- `summary.md` is imported as the case-level summary markdown shown in details.
 - Every markdown file should contain one level-1 heading (`# Title`).
 - Local image references in markdown are uploaded to CloudBase and rewritten.
 - Duplicate `case_id` imports recreate the case: old database rows and

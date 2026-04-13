@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 
 import pytest
@@ -92,11 +92,19 @@ def test_load_case_import_config_reads_expected_fields(tmp_path: Path) -> None:
             "type: case\n"
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
+            "data_cutoff_date: 2026-04-13\n"
+            "freshness_months: 3\n"
             "cover: images\\cover\\image_01.png\n"
             "industry: 消费\n"
+            "relationships:\n"
+            "  - case_id: case-26\n"
+            "    type: 同行业\n"
+            "    reason: 同属AI赛道\n"
             "tags:\n"
             "  - 宠物\n"
             "  - 新零售\n"
+            "summary:\n"
+            "  file: summary.md\n"
             "rework:\n"
             "  file: rework.md\n"
             "ai_driven_analysis:\n"
@@ -113,7 +121,14 @@ def test_load_case_import_config_reads_expected_fields(tmp_path: Path) -> None:
     assert config.case_id == CASE_ID
     assert config.type == BusinessCaseType.CASE
     assert config.title == "宠物新零售行业创业案例"
+    assert config.summary.file == "summary.md"
+    assert config.data_cutoff_date == date(2026, 4, 13)
+    assert config.freshness_months == 3
     assert config.industry == BusinessCaseIndustry.CONSUMER
+    assert len(config.relationships) == 1
+    assert config.relationships[0].case_id == "case-26"
+    assert config.relationships[0].type == "同行业"
+    assert config.relationships[0].reason == "同属AI赛道"
     assert config.tags == ("宠物", "新零售")
     assert config.rework.file == "rework.md"
     assert config.business_model is not None
@@ -126,9 +141,13 @@ def test_load_case_import_config_rejects_missing_case_id(tmp_path: Path) -> None
         config_text=(
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
+            "data_cutoff_date: 2026-04-13\n"
+            "freshness_months: 3\n"
             "cover: images/cover/image_01.png\n"
             "tags:\n"
             "  - 宠物\n"
+            "summary:\n"
+            "  file: summary.md\n"
             "rework:\n"
             "  file: rework.md\n"
             "ai_driven_analysis:\n"
@@ -151,9 +170,13 @@ def test_load_case_import_config_rejects_missing_type(tmp_path: Path) -> None:
             "case_id: case-4\n"
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
+            "data_cutoff_date: 2026-04-13\n"
+            "freshness_months: 3\n"
             "cover: images/cover/image_01.png\n"
             "tags:\n"
             "  - 宠物\n"
+            "summary:\n"
+            "  file: summary.md\n"
             "rework:\n"
             "  file: rework.md\n"
             "ai_driven_analysis:\n"
@@ -177,15 +200,21 @@ def test_load_case_import_config_rejects_project_without_how_to_do(tmp_path: Pat
             "type: project\n"
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
+            "data_cutoff_date: 2026-04-13\n"
+            "freshness_months: 3\n"
             "cover: images/cover/image_01.png\n"
             "tags:\n"
             "  - 宠物\n"
+            "summary:\n"
+            "  file: summary.md\n"
             "rework:\n"
             "  file: rework.md\n"
             "ai_driven_analysis:\n"
             "  file: ai_driven_analysis.md\n"
             "market:\n"
             "  file: market_analysis_report.md\n"
+            "business_model:\n"
+            "  file: business_model.md\n"
         ),
     )
 
@@ -203,9 +232,13 @@ def test_load_case_import_config_rejects_case_without_business_model(tmp_path: P
             "type: case\n"
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
+            "data_cutoff_date: 2026-04-13\n"
+            "freshness_months: 3\n"
             "cover: images/cover/image_01.png\n"
             "tags:\n"
             "  - 宠物\n"
+            "summary:\n"
+            "  file: summary.md\n"
             "rework:\n"
             "  file: rework.md\n"
             "ai_driven_analysis:\n"
@@ -219,6 +252,41 @@ def test_load_case_import_config_rejects_case_without_business_model(tmp_path: P
         load_case_import_config(tmp_path)
 
     assert "business_model" in str(exc_info.value)
+
+
+def test_load_case_import_config_rejects_non_positive_freshness_months(
+    tmp_path: Path,
+) -> None:
+    _write_case_directory(
+        tmp_path,
+        config_text=(
+            "case_id: case-4\n"
+            "type: case\n"
+            "title: 宠物新零售行业创业案例\n"
+            "desc: 围绕宠物健康知识输出和社群运营\n"
+            "data_cutoff_date: 2026-04-13\n"
+            "freshness_months: 0\n"
+            "cover: images/cover/image_01.png\n"
+            "industry: 消费\n"
+            "tags:\n"
+            "  - 宠物\n"
+            "summary:\n"
+            "  file: summary.md\n"
+            "rework:\n"
+            "  file: rework.md\n"
+            "ai_driven_analysis:\n"
+            "  file: ai_driven_analysis.md\n"
+            "market:\n"
+            "  file: market_analysis_report.md\n"
+            "business_model:\n"
+            "  file: business_model.md\n"
+        ),
+    )
+
+    with pytest.raises(Exception) as exc_info:
+        load_case_import_config(tmp_path)
+
+    assert "freshness_months" in str(exc_info.value)
 
 
 def test_extract_markdown_title_returns_first_h1() -> None:
@@ -259,7 +327,7 @@ async def test_business_case_directory_importer_recreates_existing_case_and_clea
     result = await importer.import_case(case_dir=tmp_path)
 
     assert result.case_id == CASE_ID
-    assert result.uploaded_asset_count == 5
+    assert result.uploaded_asset_count == 6
     assert repository.hard_deleted_case_ids == [CASE_ID]
     assert repository.release_connection_call_count == 1
     assert uploader.deleted_cloud_directories == [f"business-cases/{CASE_ID}"]
@@ -270,10 +338,18 @@ async def test_business_case_directory_importer_recreates_existing_case_and_clea
     command = create_use_case.executed_command
     assert command.case_id == CASE_ID
     assert command.type == BusinessCaseType.CASE
+    assert command.summary_markdown.startswith("# Summary Title")
+    assert command.data_cutoff_date == date(2026, 4, 13)
+    assert command.freshness_months == 3
     assert command.status == BusinessCaseStatus.PUBLISHED
     assert command.industry == BusinessCaseIndustry.CONSUMER
     assert command.documents[0].document_type == BusinessCaseDocumentType.BUSINESS_CASE
     assert command.documents[2].document_type == BusinessCaseDocumentType.BUSINESS_MODEL
+    assert (
+        f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
+        f"{CASE_ID}/images/summary_chart1/chart.png"
+        in command.summary_markdown
+    )
     assert (
         f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
         f"{CASE_ID}/images/rework_chart1/chart.png"
@@ -307,7 +383,7 @@ async def test_business_case_directory_importer_creates_missing_case(
     result = await importer.import_case(case_dir=tmp_path)
 
     assert result.case_id == CASE_ID
-    assert result.uploaded_asset_count == 5
+    assert result.uploaded_asset_count == 6
     assert repository.hard_deleted_case_ids == []
     assert repository.release_connection_call_count == 1
     assert uploader.deleted_cloud_directories == []
@@ -317,6 +393,9 @@ async def test_business_case_directory_importer_creates_missing_case(
     assert create_use_case.executed_command is not None
     assert create_use_case.executed_command.case_id == CASE_ID
     assert create_use_case.executed_command.type == BusinessCaseType.CASE
+    assert create_use_case.executed_command.summary_markdown.startswith("# Summary Title")
+    assert create_use_case.executed_command.data_cutoff_date == date(2026, 4, 13)
+    assert create_use_case.executed_command.freshness_months == 3
     assert create_use_case.executed_command.industry == BusinessCaseIndustry.CONSUMER
     assert create_use_case.executed_command.status == BusinessCaseStatus.PUBLISHED
 
@@ -338,13 +417,19 @@ async def test_business_case_directory_importer_reads_project_how_to_do_markdown
     result = await importer.import_case(case_dir=tmp_path)
 
     assert result.case_id == CASE_ID
-    assert result.uploaded_asset_count == 5
+    assert result.uploaded_asset_count == 7
     assert repository.release_connection_call_count == 1
     assert create_use_case.executed_command is not None
     command = create_use_case.executed_command
     assert command.type == BusinessCaseType.PROJECT
-    assert len(command.documents) == 4
+    assert len(command.documents) == 5
+    assert command.documents[2].document_type == BusinessCaseDocumentType.BUSINESS_MODEL
     assert command.documents[-1].document_type == BusinessCaseDocumentType.HOW_TO_DO
+    assert (
+        f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
+        f"{CASE_ID}/images/summary_chart1/chart.png"
+        in command.summary_markdown
+    )
     assert (
         f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
         f"{CASE_ID}/images/how_to_do_chart1/chart.png"
@@ -725,6 +810,7 @@ def _write_case_directory(
     include_how_to_do: bool = False,
 ) -> None:
     (case_dir / "images" / "cover").mkdir(parents=True, exist_ok=True)
+    (case_dir / "images" / "summary_chart1").mkdir(parents=True, exist_ok=True)
     (case_dir / "images" / "rework_chart1").mkdir(parents=True, exist_ok=True)
     (case_dir / "images" / "market_chart1").mkdir(parents=True, exist_ok=True)
     (case_dir / "images" / "business_model_chart1").mkdir(parents=True, exist_ok=True)
@@ -733,6 +819,7 @@ def _write_case_directory(
         (case_dir / "images" / "how_to_do_chart1").mkdir(parents=True, exist_ok=True)
     for path in (
         case_dir / "images" / "cover" / "image_01.png",
+        case_dir / "images" / "summary_chart1" / "chart.png",
         case_dir / "images" / "rework_chart1" / "chart.png",
         case_dir / "images" / "market_chart1" / "chart.png",
         case_dir / "images" / "business_model_chart1" / "chart.png",
@@ -742,6 +829,10 @@ def _write_case_directory(
     if include_how_to_do:
         (case_dir / "images" / "how_to_do_chart1" / "chart.png").write_bytes(b"png")
 
+    (case_dir / "summary.md").write_text(
+        "# Summary Title\n\n![Chart](images/summary_chart1/chart.png)\n",
+        encoding="utf-8",
+    )
     (case_dir / "rework.md").write_text(
         "# Rework Title\n\n![Chart](images/rework_chart1/chart.png)\n",
         encoding="utf-8",
@@ -770,23 +861,24 @@ def _write_case_directory(
             f"type: {case_type.value}\n"
             "title: 宠物新零售行业创业案例\n"
             "desc: 围绕宠物健康知识输出和社群运营\n"
+            "data_cutoff_date: 2026-04-13\n"
+            "freshness_months: 3\n"
             "cover: images\\cover\\image_01.png\n"
             "industry: 消费\n"
+            "relationships: []\n"
             "tags:\n"
             "  - 宠物\n"
             "  - 新零售\n"
+            "summary:\n"
+            "  file: summary.md\n"
             "rework:\n"
             "  file: rework.md\n"
             "ai_driven_analysis:\n"
             "  file: ai_driven_analysis.md\n"
             "market:\n"
             "  file: market_analysis_report.md\n"
-            + (
-                "business_model:\n"
-                "  file: business_model.md\n"
-                if case_type == BusinessCaseType.CASE
-                else ""
-            )
+            "business_model:\n"
+            "  file: business_model.md\n"
             + (
                 "how_to_do:\n"
                 "  file: how_to_do.md\n"
@@ -804,6 +896,9 @@ def _build_existing_case() -> BusinessCase:
         type=BusinessCaseType.CASE,
         title="Existing Title",
         summary="Existing Summary",
+        summary_markdown="# Existing Summary",
+        data_cutoff_date=date(2026, 4, 13),
+        freshness_months=3,
         industry=BusinessCaseIndustry.OTHER,
         tags=("旧标签",),
         cover_image_url=(
