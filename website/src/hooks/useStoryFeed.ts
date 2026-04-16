@@ -22,12 +22,12 @@ export interface UseStoryFeedResult {
 
 interface FetchParams {
   cursor: string
-  type: StoryType
+  type?: StoryType
   industry: string
   keyword: string
 }
 
-export const useStoryFeed = (type: StoryType): UseStoryFeedResult => {
+export const useStoryFeed = (type?: StoryType): UseStoryFeedResult => {
   const [items, setItems] = useState<Story[]>([])
   const [availableIndustries, setAvailableIndustries] = useState<string[]>([])
   const [nextCursor, setNextCursor] = useState('')

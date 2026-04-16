@@ -103,18 +103,20 @@ export const fetchStoryList = async (
   query: StoryListQuery,
   options: { signal?: AbortSignal } = {},
 ): Promise<StoryListResult> => {
-  const type = normalizeStoryType(query.type)
   const pageSize = query.pageSize && query.pageSize > 0 ? query.pageSize : STORY_PAGE_SIZE
+  const queryParams: Record<string, string | number> = {
+    limit: pageSize,
+    cursor: query.cursor ?? '',
+    industry: query.industry ?? '',
+    keyword: query.keyword ?? '',
+  }
+  if (query.type) {
+    queryParams.type = normalizeStoryType(query.type)
+  }
   const result = await request<RawStoryListResult>({
     path: '/business-cases',
     method: 'GET',
-    query: {
-      type,
-      limit: pageSize,
-      cursor: query.cursor ?? '',
-      industry: query.industry ?? '',
-      keyword: query.keyword ?? '',
-    },
+    query: queryParams,
     signal: options.signal,
   })
   const rawItems = Array.isArray(result.items) ? result.items : []

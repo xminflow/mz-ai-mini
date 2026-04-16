@@ -5,7 +5,6 @@ const FOOTER_GROUPS: Array<{ title: string; links: Array<{ label: string; to: st
     title: '浏览',
     links: [
       { label: '首页', to: '/' },
-      { label: '项目', to: '/projects' },
       { label: '案例', to: '/cases' },
       { label: '关于我们', to: '/about' },
     ],
@@ -15,7 +14,7 @@ const FOOTER_GROUPS: Array<{ title: string; links: Array<{ label: string; to: st
     links: [
       { label: '创业机会分析', to: '/cases' },
       { label: '深度市场调研', to: '/cases' },
-      { label: '全链路 AI 方案', to: '/projects' },
+      { label: '全链路 AI 方案', to: '/cases' },
       { label: '共赢生态对接', to: '/about' },
     ],
   },

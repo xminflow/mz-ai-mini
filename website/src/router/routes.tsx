@@ -1,13 +1,12 @@
 import { createBrowserRouter, Link } from 'react-router-dom'
 import { RootLayout } from '../components/layout'
-import { AboutPage, CasesPage, HomePage, ProjectsPage } from '../pages'
+import { AboutPage, CasesPage, HomePage } from '../pages'
 
 export const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: 'projects', element: <ProjectsPage /> },
       { path: 'cases', element: <CasesPage /> },
       { path: 'about', element: <AboutPage /> },
       {
@@ -19,7 +18,7 @@ export const router = createBrowserRouter([
               页面暂未上线
             </h1>
             <p className="max-w-md text-sm leading-[1.85] text-muted sm:text-[15px]">
-              你访问的路径不存在，或者内容还在酝酿中。先从首页或项目列表开始浏览吧。
+              你访问的路径不存在，或者内容还在酝酿中。先从首页或案例列表开始浏览吧。
             </p>
             <div className="mt-1 flex gap-3 sm:mt-2">
               <Link
@@ -29,10 +28,10 @@ export const router = createBrowserRouter([
                 回到首页
               </Link>
               <Link
-                to="/projects"
+                to="/cases"
                 className="inline-flex items-center rounded-full border border-hairline bg-surface/60 px-4 py-2 text-[13px] font-medium text-ink transition-colors hover:border-hairline-strong sm:px-5 sm:text-sm"
               >
-                浏览项目
+                浏览案例
               </Link>
             </div>
           </section>

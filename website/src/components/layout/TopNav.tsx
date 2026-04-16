@@ -4,7 +4,6 @@ import { NavLink } from 'react-router-dom'
 
 const NAV_LINKS = [
   { to: '/', label: '首页', end: true },
-  { to: '/projects', label: '项目' },
   { to: '/cases', label: '案例' },
   { to: '/about', label: '关于' },
 ]

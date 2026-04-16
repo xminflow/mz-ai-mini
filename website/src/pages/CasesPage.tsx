@@ -1,9 +1,7 @@
 import { StoryFeedPage } from '../components/feed'
-import { STORY_TYPES } from '../types'
 
 export const CasesPage = () => (
   <StoryFeedPage
-    type={STORY_TYPES.CASE}
     pageTitle="案例"
     pageDescription="围绕商业模式、增长策略与 AI 落地，沉淀可复用的创业机会分析与市场调研，帮你看清机会、校准方向。"
     searchPlaceholder="搜索案例关键词"

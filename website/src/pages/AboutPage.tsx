@@ -164,10 +164,10 @@ export const AboutPage = () => {
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <Link
-                  to="/projects"
+                  to="/cases"
                   className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[13px] font-semibold text-canvas transition-transform hover:-translate-y-0.5 sm:px-6 sm:py-3 sm:text-sm"
                 >
-                  查看合作项目
+                  查看案例
                   <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="currentColor">
                     <path d="M8.22 3.22a.75.75 0 011.06 0l4 4a.75.75 0 010 1.06l-4 4a.75.75 0 01-1.06-1.06l2.72-2.72H3a.75.75 0 010-1.5h7.94L8.22 4.28a.75.75 0 010-1.06z" />
                   </svg>

@@ -44,7 +44,7 @@ export interface Story {
 }
 
 export interface StoryListQuery {
-  type: StoryType
+  type?: StoryType
   cursor?: string
   pageSize?: number
   industry?: string
