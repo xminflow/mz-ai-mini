@@ -423,7 +423,7 @@ class SqlAlchemyBusinessCaseRepository:
         *,
         limit: int,
         cursor: BusinessCaseCursor | None,
-        case_type: BusinessCaseType,
+        case_type: BusinessCaseType | None,
         industry: BusinessCaseIndustry | None,
         keyword: str | None,
     ) -> BusinessCasePageSlice:
@@ -453,16 +453,17 @@ class SqlAlchemyBusinessCaseRepository:
     def _build_public_list_statement(
         self,
         *,
-        case_type: BusinessCaseType,
+        case_type: BusinessCaseType | None,
         industry: BusinessCaseIndustry | None,
         keyword: str | None,
     ) -> Select[tuple[BusinessCaseModel]]:
         statement = select(BusinessCaseModel).where(
             BusinessCaseModel.is_deleted.is_(False),
             BusinessCaseModel.status == BusinessCaseStatus.PUBLISHED.value,
-            BusinessCaseModel.type == case_type.value,
             BusinessCaseModel.published_at.is_not(None),
         )
+        if case_type is not None:
+            statement = statement.where(BusinessCaseModel.type == case_type.value)
         if industry is not None:
             statement = statement.where(BusinessCaseModel.industry == industry.value)
 

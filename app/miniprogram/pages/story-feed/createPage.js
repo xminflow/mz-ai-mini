@@ -50,12 +50,12 @@ const normalizeRequiredText = (value, fieldName) => {
 };
 
 const createStoryFeedPage = ({
-  storyType,
+  storyType = "",
   contentLabel,
   emptyDefaultText,
   bannerImageList = DEFAULT_BANNER_IMAGE_LIST,
 }) => {
-  const normalizedStoryType = normalizeRequiredText(storyType, "storyType");
+  const normalizedStoryType = typeof storyType === "string" ? storyType.trim() : "";
   const normalizedContentLabel = normalizeRequiredText(contentLabel, "contentLabel");
   const normalizedEmptyDefaultText = normalizeRequiredText(
     emptyDefaultText,

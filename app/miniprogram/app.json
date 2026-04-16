@@ -1,9 +1,8 @@
 {
   "pages": [
-    "pages/project/index",
     "pages/index/index",
     "pages/subscribe/index",
-    "pages/academy/index",
+    "pages/apply/index",
     "pages/consult/index",
     "pages/mine/index",
     "pages/story-detail/index"
@@ -12,7 +11,7 @@
     "backgroundColor": "#F7F8FA",
     "backgroundTextStyle": "dark",
     "navigationBarBackgroundColor": "#F7F8FA",
-    "navigationBarTitleText": "妙智AI商业圈",
+    "navigationBarTitleText": "微域生光商业圈",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
@@ -22,20 +21,14 @@
     "borderStyle": "white",
     "list": [
       {
-        "pagePath": "pages/project/index",
-        "text": "项目",
-        "iconPath": "images/icons/project.png",
-        "selectedIconPath": "images/icons/project-active.png"
-      },
-      {
         "pagePath": "pages/index/index",
         "text": "案例",
         "iconPath": "images/icons/case.png",
         "selectedIconPath": "images/icons/case-active.png"
       },
       {
-        "pagePath": "pages/academy/index",
-        "text": "学院",
+        "pagePath": "pages/apply/index",
+        "text": "申请",
         "iconPath": "images/icons/business.png",
         "selectedIconPath": "images/icons/business-active.png"
       },

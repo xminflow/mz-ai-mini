@@ -44,7 +44,7 @@ async def test_create_order_raises_wechat_error_from_payload(
         return func(**kwargs)
 
     monkeypatch.setattr(
-        "mz_ai_backend.modules.membership.infrastructure.wechat_pay_gateway.run_in_threadpool",
+        "mz_ai_backend.shared.wechat_pay.run_in_threadpool",
         _fake_run_in_threadpool,
     )
     gateway = _build_gateway(
@@ -72,7 +72,7 @@ async def test_create_order_raises_wechat_error_from_json_string_payload(
         return func(**kwargs)
 
     monkeypatch.setattr(
-        "mz_ai_backend.modules.membership.infrastructure.wechat_pay_gateway.run_in_threadpool",
+        "mz_ai_backend.shared.wechat_pay.run_in_threadpool",
         _fake_run_in_threadpool,
     )
     gateway = _build_gateway(
@@ -97,7 +97,7 @@ async def test_create_order_raises_network_error_message(
         raise TimeoutError("connect timeout")
 
     monkeypatch.setattr(
-        "mz_ai_backend.modules.membership.infrastructure.wechat_pay_gateway.run_in_threadpool",
+        "mz_ai_backend.shared.wechat_pay.run_in_threadpool",
         _broken_run_in_threadpool,
     )
     gateway = _build_gateway((200, {"prepay_id": "unused"}))
@@ -117,7 +117,7 @@ async def test_create_order_raises_when_prepay_id_is_missing(
         return func(**kwargs)
 
     monkeypatch.setattr(
-        "mz_ai_backend.modules.membership.infrastructure.wechat_pay_gateway.run_in_threadpool",
+        "mz_ai_backend.shared.wechat_pay.run_in_threadpool",
         _fake_run_in_threadpool,
     )
     gateway = _build_gateway((200, {"appid": "wx-test-app-id"}))
@@ -137,7 +137,7 @@ async def test_create_order_returns_payment_params_when_successful(
         return func(**kwargs)
 
     monkeypatch.setattr(
-        "mz_ai_backend.modules.membership.infrastructure.wechat_pay_gateway.run_in_threadpool",
+        "mz_ai_backend.shared.wechat_pay.run_in_threadpool",
         _fake_run_in_threadpool,
     )
 
@@ -172,7 +172,7 @@ async def test_create_order_returns_payment_params_when_json_string_payload(
         return func(**kwargs)
 
     monkeypatch.setattr(
-        "mz_ai_backend.modules.membership.infrastructure.wechat_pay_gateway.run_in_threadpool",
+        "mz_ai_backend.shared.wechat_pay.run_in_threadpool",
         _fake_run_in_threadpool,
     )
 

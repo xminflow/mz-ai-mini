@@ -1,0 +1,111 @@
+<view class="tab-page">
+  <view class="info-card info-card--loading" wx:if="{{authState === authPageState.CHECKING}}">
+    <view class="info-card__title">正在确认登录状态</view>
+    <view class="info-card__text">请稍候，正在同步你的微信身份信息。</view>
+  </view>
+
+  <view class="feedback-panel" wx:elif="{{authState === authPageState.ERROR}}">
+    <view class="feedback-panel__title">申请页面暂时不可用</view>
+    <view class="feedback-panel__text">当前无法确认你的登录状态，请稍后重新尝试。</view>
+    <view class="feedback-panel__button" bindtap="handleRetryAuth">重新检查</view>
+  </view>
+
+  <view class="auth-gate" wx:elif="{{authState === authPageState.UNAUTHORIZED}}">
+    <view class="auth-gate__hero">
+      <view class="auth-gate__eyebrow">先完成登录</view>
+      <view class="auth-gate__title">登录后才可以提交案例调研申请</view>
+      <view class="auth-gate__text">
+        该页面会绑定当前微信身份保存申请记录，请先前往"我的"页完成登录同步。
+      </view>
+    </view>
+    <view class="auth-gate__body">
+      <button class="auth-gate__button" bindtap="handleAuthorize">前往我的页</button>
+    </view>
+  </view>
+
+  <view class="feedback-panel" wx:elif="{{hasSubmitted}}">
+    <view class="feedback-panel__eyebrow">已收到申请</view>
+    <view class="feedback-panel__title">案例调研申请提交成功</view>
+    <view class="feedback-panel__text" wx:if="{{submittedVisibility === 'public'}}">
+      我们会对你提交的案例进行价值评估，高价值典型案例将由团队免费制作。
+    </view>
+    <view class="feedback-panel__text" wx:else>
+      我们会在 24 小时内安排调研制作，完成后可在"我的"页面的案例库中查看。
+    </view>
+    <view class="feedback-panel__button" bindtap="handleCreateAnother">继续提交其他申请</view>
+  </view>
+
+  <view class="form-section" wx:else>
+    <image
+      class="apply-banner"
+      src="cloud://rlink-5g3hqx773b8980a1.726c-rlink-5g3hqx773b8980a1-1415950630/images/solution.png"
+      mode="widthFix"
+    ></image>
+
+    <view class="form-card">
+      <view class="form-card__title">填写案例调研申请</view>
+
+      <view class="form-field">
+        <view class="form-field__label">标题</view>
+        <view class="form-field__control">
+          <input
+            class="form-field__input"
+            type="text"
+            maxlength="255"
+            placeholder="请输入案例标题"
+            placeholder-style="color: #9CA3AF;"
+            value="{{title}}"
+            bindinput="handleTitleInput"
+          />
+        </view>
+      </view>
+
+      <view class="form-field form-field--textarea">
+        <view class="form-field__label">描述</view>
+        <view class="form-field__control form-field__control--textarea">
+          <textarea
+            class="form-field__textarea"
+            maxlength="1000"
+            placeholder="请描述你希望调研的案例内容、关注方向或背景说明。"
+            placeholder-style="color: #9CA3AF;"
+            value="{{description}}"
+            bindinput="handleDescriptionInput"
+          ></textarea>
+        </view>
+      </view>
+
+      <view class="form-field">
+        <view class="form-field__label">申请类型</view>
+        <view class="type-selector">
+          <view
+            class="type-selector__option {{requestType === 'public' ? 'type-selector__option--active' : ''}}"
+            bindtap="handleSelectPublic"
+          >
+            <view class="type-selector__name">公开案例</view>
+            <view class="type-selector__tag">免费</view>
+          </view>
+          <view
+            class="type-selector__option {{requestType === 'private' ? 'type-selector__option--active' : ''}}"
+            bindtap="handleSelectPrivate"
+          >
+            <view class="type-selector__name">私人案例</view>
+            <view class="type-selector__tag">¥0.1</view>
+          </view>
+        </view>
+        <view class="type-hint">
+          <view wx:if="{{requestType === 'public'}}">提交后由团队评估，高价值典型案例免费制作</view>
+          <view wx:else>支付后 24 小时内安排调研制作，案例仅在"我的"页面可见</view>
+        </view>
+      </view>
+
+      <button
+        class="form-card__button"
+        bindtap="handleSubmit"
+        loading="{{isSubmitting}}"
+        disabled="{{isSubmitting}}"
+      >
+        {{requestType === 'public' ? '提交公开申请' : '支付并提交 ¥0.1'}}
+      </button>
+    </view>
+  </view>
+</view>

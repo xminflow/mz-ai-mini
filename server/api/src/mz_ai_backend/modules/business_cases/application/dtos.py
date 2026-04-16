@@ -93,9 +93,9 @@ class ListPublicBusinessCasesQuery(BaseModel):
 
     limit: int
     cursor: str | None
-    type: BusinessCaseType
-    industry: BusinessCaseIndustry | None
-    keyword: str | None
+    type: BusinessCaseType | None = None
+    industry: BusinessCaseIndustry | None = None
+    keyword: str | None = None
 
 
 class BusinessCaseDocumentRegistration(BaseModel):

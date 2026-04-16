@@ -196,6 +196,18 @@ Page({
     this.refreshAuthorizationState(true);
   },
 
+  handleEnterFullReport() {
+    const { story } = this.data;
+    if (!story) return;
+    const firstTab = story.documentTabs[0];
+    if (!firstTab) return;
+    const activeDocument = resolveActiveDocument(story, firstTab.key);
+    if (!activeDocument) return;
+    this.setData({ activeDocumentKey: firstTab.key, activeDocument }, () => {
+      wx.pageScrollTo({ scrollTop: 0, duration: 300 });
+    });
+  },
+
   handleDocumentTabTap(event) {
     const { key } = event.currentTarget.dataset;
     if (!key || key === this.data.activeDocumentKey || !this.data.story) {
@@ -210,6 +222,8 @@ Page({
     this.setData({
       activeDocumentKey: key,
       activeDocument,
+    }, () => {
+      wx.pageScrollTo({ scrollTop: 0, duration: 300 });
     });
   },
 
@@ -239,4 +253,5 @@ Page({
       url: "/pages/mine/index",
     });
   },
+
 });

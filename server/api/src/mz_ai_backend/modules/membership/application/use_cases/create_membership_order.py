@@ -79,7 +79,7 @@ class CreateMembershipOrderUseCase:
             WechatPayCreateOrderRequest(
                 order_no=order_no,
                 amount_fen=amount_fen,
-                description="妙智AI商业圈普通会员",
+                description="微域生光商业圈普通会员",
                 payer_openid=command.identity.openid,
             )
         )

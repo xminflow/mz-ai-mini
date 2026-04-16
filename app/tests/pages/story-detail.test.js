@@ -29,7 +29,7 @@ const STORY_DETAIL = {
   documentTabs: [
     {
       key: "business_case",
-      label: "商业案例",
+      label: "创业机会分析",
     },
     {
       key: "market_research",
@@ -47,9 +47,9 @@ const STORY_DETAIL = {
   documentMap: {
     business_case: {
       key: "business_case",
-      label: "商业案例",
+      label: "创业机会分析",
       title: "Rework 文档",
-      markdownContent: "# 商业案例\n\n第一段\n\n第二段",
+      markdownContent: "# 创业机会分析\n\n第一段\n\n第二段",
     },
     market_research: {
       key: "market_research",
@@ -80,7 +80,7 @@ const PROJECT_STORY_DETAIL = {
   documentTabs: [
     {
       key: "business_case",
-      label: "商业案例",
+      label: "创业机会分析",
     },
     {
       key: "market_research",

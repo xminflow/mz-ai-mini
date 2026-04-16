@@ -45,7 +45,7 @@ test("fetchStoryList maps backend business cases and keeps direct cover image ur
     request(options) {
       assert.equal(
         options.url,
-        "http://127.0.0.1:8000/api/v1/business-cases?limit=6&cursor=cursor-1&type=case&industry=%E6%B6%88%E8%B4%B9&keyword=AI%20%E6%8F%90%E6%95%88"
+        "http://127.0.0.1:8000/api/v1/business-cases?limit=6&cursor=cursor-1&industry=%E6%B6%88%E8%B4%B9&keyword=AI%20%E6%8F%90%E6%95%88"
       );
       assert.equal(options.method, "GET");
       assert.equal(options.header["X-WX-OPENID"], "local-dev-openid");
@@ -81,7 +81,6 @@ test("fetchStoryList maps backend business cases and keeps direct cover image ur
   const result = await fetchStoryList({
     pageSize: 6,
     cursor: "cursor-1",
-    type: "case",
     industry: "消费",
     keyword: "AI 提效",
   });
@@ -135,7 +134,7 @@ test("fetchStoryDetail maps keyed documents and ordered tabs over HTTP in develo
             documents: {
               business_case: {
                 title: "从线下咨询到线上课程",
-                markdown_content: "# 商业案例\n\n**第一段**\n\n- 第二段",
+                markdown_content: "# 创业机会分析\n\n**第一段**\n\n- 第二段",
               },
               market_research: {
                 title: "目标市场调研",
@@ -171,7 +170,7 @@ test("fetchStoryDetail maps keyed documents and ordered tabs over HTTP in develo
   assert.deepEqual(result.documentTabs, [
     {
       key: "business_case",
-      label: "商业案例",
+      label: "创业机会分析",
     },
     {
       key: "market_research",
@@ -188,9 +187,9 @@ test("fetchStoryDetail maps keyed documents and ordered tabs over HTTP in develo
   ]);
   assert.deepEqual(result.documentMap.business_case, {
     key: "business_case",
-    label: "商业案例",
+    label: "创业机会分析",
     title: "从线下咨询到线上课程",
-    markdownContent: "# 商业案例\n\n**第一段**\n\n- 第二段",
+    markdownContent: "# 创业机会分析\n\n**第一段**\n\n- 第二段",
   });
   assert.deepEqual(result.documentMap.business_model, {
     key: "business_model",
@@ -234,7 +233,7 @@ test("fetchStoryDetail maps project how_to_do document into the detail tabs", as
             documents: {
               business_case: {
                 title: "项目背景",
-                markdown_content: "# 商业案例",
+                markdown_content: "# 创业机会分析",
               },
               market_research: {
                 title: "调研",
@@ -260,7 +259,7 @@ test("fetchStoryDetail maps project how_to_do document into the detail tabs", as
 
   assert.equal(result.type, "project");
   assert.deepEqual(result.documentTabs, [
-    { key: "business_case", label: "商业案例" },
+    { key: "business_case", label: "创业机会分析" },
     { key: "market_research", label: "市场调研" },
     { key: "ai_business_upgrade", label: "AI 升级" },
     { key: "how_to_do", label: "如何做" },
@@ -327,9 +326,7 @@ test("fetchStoryList resolves cloud cover image ids through CloudBase temp urls"
   };
 
   const { fetchStoryList } = loadStoryService();
-  const result = await fetchStoryList({
-    type: "case",
-  });
+  const result = await fetchStoryList();
 
   assert.equal(result.list[0].coverImage, "https://temp.example.com/case-c.png");
 });
@@ -348,7 +345,7 @@ test("fetchStoryList uses fixed production backend in trial", async () => {
         assert.deepEqual(options.config, {
           env: "rlink-5g3hqx773b8980a1",
         });
-        assert.equal(options.path, "/api/v1/business-cases?limit=6&type=case");
+        assert.equal(options.path, "/api/v1/business-cases?limit=6");
         assert.equal(options.method, "GET");
         assert.equal(options.header["X-WX-SERVICE"], "mz-ai");
         assert.equal(options.header["X-WX-OPENID"], undefined);
@@ -377,7 +374,6 @@ test("fetchStoryList uses fixed production backend in trial", async () => {
   });
   const result = await fetchStoryList({
     pageSize: 6,
-    type: "case",
   });
 
   assert.equal(result.hasMore, false);
@@ -399,7 +395,7 @@ test("fetchStoryList uses production backend and omits local identity headers in
         assert.deepEqual(options.config, {
           env: "rlink-5g3hqx773b8980a1",
         });
-        assert.equal(options.path, "/api/v1/business-cases?limit=6&type=case");
+        assert.equal(options.path, "/api/v1/business-cases?limit=6");
         assert.equal(options.method, "GET");
         assert.equal(options.header["X-WX-SERVICE"], "mz-ai");
         assert.equal(options.header["X-WX-OPENID"], undefined);
@@ -439,7 +435,6 @@ test("fetchStoryList uses production backend and omits local identity headers in
   });
   const result = await fetchStoryList({
     pageSize: 6,
-    type: "case",
   });
 
   assert.equal(result.hasMore, false);

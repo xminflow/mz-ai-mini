@@ -7,6 +7,7 @@ const {
   isMembershipPaymentResultPending,
   purchaseNormalMembership,
 } = require("../../services/membership");
+const { fetchUserCaseResearchRequests } = require("../../services/case-research");
 const {
   generateAvatarCloudPath,
   isCloudFileId,
@@ -14,6 +15,14 @@ const {
   uploadFileToCloud,
 } = require("../../utils/cloudFile");
 const { formatDateLabel } = require("../../utils/format");
+
+const CASE_REQUEST_STATUS_LABELS = Object.freeze({
+  pending_review: "审核中",
+  accepted: "已立项",
+  rejected: "未通过",
+  in_progress: "制作中",
+  completed: "已完成",
+});
 const {
   AUTH_PAGE_STATE,
   hasAuthenticatedMiniProgramUser,
@@ -158,10 +167,29 @@ Page({
     isNormalMembershipActive: false,
     normalMembershipStatusText: "开通后可体验普通会员内容与服务",
     membershipBadge: "非会员",
+    userCaseRequests: [],
   },
 
   onShow() {
     this.refreshAuthorizationState();
+  },
+
+  async _loadUserCaseRequests() {
+    try {
+      const result = await fetchUserCaseResearchRequests();
+      const items = Array.isArray(result?.items) ? result.items : [];
+      this.setData({
+        userCaseRequests: items.map((item) => ({
+          requestId: item.request_id,
+          title: item.title,
+          statusLabel: CASE_REQUEST_STATUS_LABELS[item.status] || item.status,
+          linkedCaseId: item.linked_case_id || null,
+          createdAtText: formatDateLabel(item.created_at),
+        })),
+      });
+    } catch (error) {
+      console.warn("Failed to load user case research requests.", error);
+    }
   },
 
   async applyCurrentUserState(currentUser, { resetProfileDraft = false } = {}) {
@@ -174,6 +202,10 @@ Page({
       ...currentUserState,
       ...profileDraft,
     });
+
+    if (hasAuthenticatedMiniProgramUser(currentUser)) {
+      this._loadUserCaseRequests();
+    }
   },
 
   async syncProfilePatch(profilePatch) {
@@ -311,6 +343,12 @@ Page({
 
   handleRetryAuth() {
     this.refreshAuthorizationState(true);
+  },
+
+  handleViewCase(event) {
+    const caseId = event?.currentTarget?.dataset?.caseId;
+    if (!caseId) return;
+    wx.navigateTo({ url: `/pages/story-detail/index?id=${encodeURIComponent(caseId)}` });
   },
 
   async handleOpenNormalMembership() {

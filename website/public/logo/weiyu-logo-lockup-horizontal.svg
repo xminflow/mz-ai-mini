@@ -1,0 +1,11 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- 微域生光 — 横排组合标识 / Horizontal Lockup -->
+  <g transform="translate(120,148)">
+    <rect x="-58" y="-58" width="116" height="116" rx="19" fill="#1a1a1a" transform="rotate(45)"/>
+    <path d="M-30,-4 L-20,13 L-10,-4 L0,13 L10,-4 L20,13 L30,-4" fill="none" stroke="#faf8f4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M-24,19 Q0,28 24,19" fill="none" stroke="#faf8f4" stroke-width="3.8" stroke-linecap="round"/>
+  </g>
+  <line x1="216" y1="60" x2="216" y2="236" stroke="#1a1a1a" stroke-width="1.5" opacity="0.15"/>
+  <text x="248" y="138" fill="#1a1a1a" font-family="'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" font-size="52" font-weight="500" letter-spacing="0.1em">微域生光</text>
+  <text x="248" y="190" fill="#1a1a1a" font-family="'Helvetica Neue',Helvetica,Arial,sans-serif" font-size="20" font-weight="400" letter-spacing="0.18em" opacity="0.4">WEIYU SHENGGUANG</text>
+</svg>

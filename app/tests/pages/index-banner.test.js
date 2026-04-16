@@ -71,12 +71,12 @@ test("app config uses the native tab bar configuration", () => {
   const appConfig = JSON.parse(fs.readFileSync(APP_CONFIG_PATH, "utf8"));
 
   assert.equal("custom" in appConfig.tabBar, false);
-  assert.equal(appConfig.tabBar.list.length, 5);
+  assert.equal(appConfig.tabBar.list.length, 4);
   assert.equal(appConfig.tabBar.backgroundColor, "#FFFFFF");
   assert.equal(appConfig.tabBar.color, "#6B7280");
   assert.equal(appConfig.tabBar.selectedColor, "#0B0B0B");
   assert.equal(
-    appConfig.tabBar.list.some((item) => item.pagePath === "pages/project/index"),
+    appConfig.tabBar.list.some((item) => item.pagePath === "pages/index/index"),
     true
   );
   assert.equal(

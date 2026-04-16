@@ -1,0 +1,8 @@
+<svg width="800" height="800" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- 微域生光 — 反白版 / Inverted -->
+  <g transform="translate(400,400)">
+    <rect x="-136" y="-136" width="272" height="272" rx="45" fill="#ddd8cc" transform="rotate(45)"/>
+    <path d="M-70.4,-9.6 L-48,32 L-24,-9.6 L0,32 L24,-9.6 L48,32 L70.4,-9.6" fill="none" stroke="#0e0e0e" stroke-width="8.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M-57.6,44.8 Q0,64 57.6,44.8" fill="none" stroke="#0e0e0e" stroke-width="8.8" stroke-linecap="round"/>
+  </g>
+</svg>

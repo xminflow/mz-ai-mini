@@ -121,5 +121,33 @@
       </view>
       <view class="membership-card__text">白金会员权益正在筹备中，后续开放后可在这里直接升级。</view>
     </view>
+
+    <view class="section-label">案例库</view>
+
+    <view wx:if="{{userCaseRequests.length > 0}}" class="case-request-list">
+      <view
+        class="case-request-item"
+        wx:for="{{userCaseRequests}}"
+        wx:key="requestId"
+      >
+        <view class="case-request-item__header">
+          <view class="case-request-item__name">{{item.title}}</view>
+          <view class="case-request-item__status">{{item.statusLabel}}</view>
+        </view>
+        <view class="case-request-item__meta">{{item.createdAtText}}</view>
+        <view
+          class="case-request-item__action"
+          bindtap="handleViewCase"
+          data-case-id="{{item.linkedCaseId}}"
+          wx:if="{{item.linkedCaseId}}"
+        >
+          查看案例
+        </view>
+      </view>
+    </view>
+
+    <view class="case-request-empty" wx:else>
+      暂无私人案例申请记录
+    </view>
   </block>
 </view>

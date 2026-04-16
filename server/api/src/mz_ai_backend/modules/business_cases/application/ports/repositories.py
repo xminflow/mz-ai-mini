@@ -45,7 +45,7 @@ class BusinessCaseRepository(Protocol):
         *,
         limit: int,
         cursor: BusinessCaseCursor | None,
-        case_type: BusinessCaseType,
+        case_type: BusinessCaseType | None,
         industry: BusinessCaseIndustry | None,
         keyword: str | None,
     ) -> BusinessCasePageSlice:

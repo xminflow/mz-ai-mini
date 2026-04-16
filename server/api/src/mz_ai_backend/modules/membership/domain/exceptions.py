@@ -3,8 +3,13 @@ from __future__ import annotations
 from http import HTTPStatus
 
 from mz_ai_backend.core.error_codes import ErrorCode
-from mz_ai_backend.core.exceptions import BusinessException, SystemException
-
+from mz_ai_backend.core.exceptions import BusinessException
+from mz_ai_backend.shared.wechat_pay import (
+    WechatPayConfigMissingException,
+    WechatPayNotifyInvalidException,
+    WechatPayNotifyMismatchException,
+    WechatPayOrderCreateFailedException,
+)
 
 class MembershipPlanNotOpenException(BusinessException):
     """Raised when requesting a membership plan that is not open yet."""
@@ -50,49 +55,3 @@ class MembershipOrderStatusInvalidException(BusinessException):
         )
 
 
-class WechatPayNotifyInvalidException(BusinessException):
-    """Raised when WeChat Pay callback payload cannot be verified."""
-
-    def __init__(self, *, message: str = "WeChat Pay callback is invalid.") -> None:
-        super().__init__(
-            error_code=ErrorCode.PAYMENT_WECHAT_NOTIFY_INVALID,
-            message=message,
-            http_status=HTTPStatus.BAD_REQUEST,
-        )
-
-
-class WechatPayNotifyMismatchException(BusinessException):
-    """Raised when callback order data mismatches persisted order data."""
-
-    def __init__(self, *, message: str = "WeChat Pay callback does not match order.") -> None:
-        super().__init__(
-            error_code=ErrorCode.PAYMENT_WECHAT_NOTIFY_MISMATCH,
-            message=message,
-            http_status=HTTPStatus.CONFLICT,
-        )
-
-
-class WechatPayOrderCreateFailedException(SystemException):
-    """Raised when creating WeChat Pay order fails."""
-
-    def __init__(self, *, message: str = "Failed to create WeChat Pay order.") -> None:
-        super().__init__(
-            error_code=ErrorCode.PAYMENT_WECHAT_ORDER_CREATE_FAILED,
-            message=message,
-            http_status=HTTPStatus.BAD_GATEWAY,
-        )
-
-
-class WechatPayConfigMissingException(SystemException):
-    """Raised when WeChat Pay runtime configuration is missing."""
-
-    def __init__(
-        self,
-        *,
-        message: str = "WeChat Pay configuration is missing.",
-    ) -> None:
-        super().__init__(
-            error_code=ErrorCode.PAYMENT_WECHAT_CONFIG_MISSING,
-            message=message,
-            http_status=HTTPStatus.INTERNAL_SERVER_ERROR,
-        )

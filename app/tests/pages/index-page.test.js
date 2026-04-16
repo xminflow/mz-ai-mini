@@ -151,7 +151,7 @@ test("index page submits confirmed keyword with the current industry filter", as
 
   assert.deepEqual(requests[0], {
     pageSize: 6,
-    type: "case",
+    type: "",
     industry: "消费",
     keyword: "宠物",
   });
@@ -195,7 +195,7 @@ test("index page switches industry from the selector and closes the sheet", asyn
   assert.equal(page.data.isIndustrySelectorVisible, false);
   assert.deepEqual(requests[0], {
     pageSize: 6,
-    type: "case",
+    type: "",
     industry: "金融",
     keyword: "增长",
   });
@@ -235,17 +235,17 @@ test("index page clears submitted keyword search when the input becomes empty", 
 
   assert.deepEqual(requests[0], {
     pageSize: 6,
-    type: "case",
+    type: "",
     industry: "消费",
     keyword: "",
   });
   assert.equal(page.data.submittedKeyword, "");
 });
 
-test("index page uses case feed copy and type", () => {
+test("index page uses case feed copy without type filter", () => {
   const pageConfig = loadIndexPage();
 
-  assert.equal(pageConfig.data.storyType, "case");
+  assert.equal(pageConfig.data.storyType, "");
   assert.equal(pageConfig.data.pageCopy.searchPlaceholder, "搜索案例关键词");
   assert.equal(pageConfig.data.pageCopy.emptyDefaultTitle, "还没有发布案例");
   assert.equal(pageConfig.data.pageCopy.emptyDefaultText, "发布第一篇创业案例后，这里会自动形成案例阅读流。");
@@ -272,11 +272,11 @@ test("index template keeps industry tabs in a fixed container without horizontal
   assert.equal(appStyle.includes("overflow-x: hidden;"), true);
 });
 
-test("app config registers the case tab in the second position", () => {
+test("app config registers the case tab in the first position", () => {
   const appConfig = JSON.parse(fs.readFileSync(APP_CONFIG_PATH, "utf8"));
 
-  assert.equal(appConfig.pages[1], "pages/index/index");
-  assert.deepEqual(appConfig.tabBar.list[1], {
+  assert.equal(appConfig.pages[0], "pages/index/index");
+  assert.deepEqual(appConfig.tabBar.list[0], {
     pagePath: "pages/index/index",
     text: "案例",
     iconPath: "images/icons/case.png",

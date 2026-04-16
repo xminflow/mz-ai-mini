@@ -46,9 +46,9 @@
   </view>
 
   <view class="detail-article" wx:elif="{{story}}">
-    <image class="detail-article__cover" src="{{story.coverImage}}" mode="aspectFill" bindtap="handleCoverImageTap"></image>
+    <image class="detail-article__cover" wx:if="{{activeDocumentKey === 'summary' || !story.documentMap.summary}}" src="{{story.coverImage}}" mode="aspectFill" bindtap="handleCoverImageTap"></image>
 
-    <view class="detail-article__head">
+    <view class="detail-article__head" wx:if="{{activeDocumentKey === 'summary' || !story.documentMap.summary}}">
       <view class="detail-article__title">{{story.title}}</view>
       <view class="detail-article__summary">{{story.summary}}</view>
 
@@ -63,21 +63,28 @@
     </view>
 
     <view class="detail-article__content">
-      <view class="detail-tabs" wx:if="{{story.documentTabs.length > 1}}">
-        <view
-          class="detail-tabs__item {{item.key === activeDocumentKey ? 'detail-tabs__item--active' : ''}}"
-          wx:for="{{story.documentTabs}}"
-          wx:key="key"
-          data-key="{{item.key}}"
-          bindtap="handleDocumentTabTap"
-        >
-          {{item.label}}
-        </view>
-      </view>
-
       <view class="detail-section" wx:if="{{activeDocument}}">
         <markdown-renderer markdown="{{activeDocument.markdownContent}}"></markdown-renderer>
       </view>
+    </view>
+  </view>
+
+  <view class="detail-full-report-pin" wx:if="{{story && story.documentTabs.length > 0 && activeDocumentKey === 'summary'}}" bindtap="handleEnterFullReport">
+    <view class="detail-full-report-pin__inner">
+      <text class="detail-full-report-pin__label">查看完整报告</text>
+      <text class="detail-full-report-pin__arrow">›</text>
+    </view>
+  </view>
+
+  <view class="detail-bottom-tabs" wx:if="{{story && story.documentTabs.length > 1 && activeDocumentKey !== 'summary'}}">
+    <view
+      class="detail-bottom-tabs__item {{item.key === activeDocumentKey ? 'detail-bottom-tabs__item--active' : ''}}"
+      wx:for="{{story.documentTabs}}"
+      wx:key="key"
+      data-key="{{item.key}}"
+      bindtap="handleDocumentTabTap"
+    >
+      {{item.label}}
     </view>
   </view>
 </view>

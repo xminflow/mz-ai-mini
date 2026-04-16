@@ -154,7 +154,7 @@ async def list_public_business_cases(
         ListPublicBusinessCasesUseCase,
         Depends(get_list_public_business_cases_use_case),
     ],
-    type_: Annotated[str, Query(alias="type")],
+    type_: Annotated[str | None, Query(alias="type")] = None,
     limit: Annotated[int, Query(ge=1, le=50)] = 20,
     cursor: Annotated[str | None, Query()] = None,
     industry: Annotated[str | None, Query()] = None,
@@ -220,10 +220,13 @@ def _normalize_public_industry(
         raise ValidationException(message="Industry filter is invalid.") from exc
 
 
-def _normalize_public_type(case_type: str) -> BusinessCaseType:
+def _normalize_public_type(case_type: str | None) -> BusinessCaseType | None:
+    if case_type is None:
+        return None
+
     normalized_type = case_type.strip()
     if normalized_type == "":
-        raise ValidationException(message="Type filter is invalid.")
+        return None
 
     try:
         return BusinessCaseType(normalized_type)

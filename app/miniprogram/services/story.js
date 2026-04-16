@@ -17,7 +17,7 @@ const DEFAULT_DOCUMENT_KEY = "business_case";
 const DOCUMENT_DEFINITIONS = Object.freeze([
   {
     key: "business_case",
-    label: "商业案例",
+    label: "创业机会分析",
   },
   {
     key: "market_research",
@@ -216,13 +216,27 @@ const normalizeStoryDetail = (story = {}, coverImageTempUrlMap = {}) => {
   const documentMap = story.documents
     ? buildDocumentMap(story.documents)
     : buildLegacyDocumentMap(story);
-  const documentTabs = buildDocumentTabs(documentMap);
+
+  const summaryMarkdown =
+    typeof story.summary_markdown === "string" ? story.summary_markdown.trim() : "";
+  if (summaryMarkdown) {
+    documentMap["summary"] = {
+      key: "summary",
+      label: "简介",
+      title: "简介",
+      markdownContent: summaryMarkdown,
+    };
+  }
+
+  const rawDocumentTabs = buildDocumentTabs(documentMap);
+  const documentTabs = rawDocumentTabs;
+
   const metaItems = buildStoryListMetaItems(story);
   const normalizedMetaItems =
     metaItems.length > 0
       ? metaItems
-      : story.documents && documentTabs.length > 0
-        ? [`${documentTabs.length} 份专题文档`]
+      : story.documents && rawDocumentTabs.length > 0
+        ? [`${rawDocumentTabs.length} 份专题文档`]
         : [];
 
   return {
@@ -236,7 +250,7 @@ const normalizeStoryDetail = (story = {}, coverImageTempUrlMap = {}) => {
     metaItems: normalizedMetaItems,
     resultText: story.resultText || "",
     publishedAtText: formatDateLabel(resolvePublishedAt(story)),
-    defaultDocumentKey: resolveDefaultDocumentKey(documentMap),
+    defaultDocumentKey: summaryMarkdown ? "summary" : resolveDefaultDocumentKey(documentMap),
     documentTabs,
     documentMap,
   };
@@ -249,17 +263,20 @@ const fetchStoryList = async ({
   industry = "",
   keyword = "",
 } = {}) => {
-  const normalizedType = normalizeStoryType(type);
+  const normalizedType = normalizeStoryType(type, { required: false });
+  const query = {
+    limit: pageSize,
+    cursor,
+    industry,
+    keyword,
+  };
+  if (normalizedType) {
+    query.type = normalizedType;
+  }
   const result = await request({
     path: "/business-cases",
     method: "GET",
-    query: {
-      limit: pageSize,
-      cursor,
-      type: normalizedType,
-      industry,
-      keyword,
-    },
+    query,
   });
   const itemList = Array.isArray(result.items) ? result.items : [];
   const coverImageTempUrlMap = await buildCoverImageTempUrlMap(itemList);
