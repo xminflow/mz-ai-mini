@@ -523,7 +523,7 @@ async def _insert_case_seed(
                 :cover_image_url,
                 'published',
                 :published_at,
-                0,
+                false,
                 :created_at,
                 :updated_at
             )
@@ -561,7 +561,7 @@ async def _insert_case_seed(
                     :title,
                     :markdown_content,
                     :cover_image_url,
-                    0,
+                    false,
                     :created_at,
                     :updated_at
                 )
@@ -601,7 +601,7 @@ async def seed_local_dev_data() -> None:
                     """
                     SELECT title
                     FROM business_cases
-                    WHERE is_deleted = 0
+                    WHERE is_deleted = false
                     """
                 )
             )

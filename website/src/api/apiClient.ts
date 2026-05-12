@@ -104,7 +104,7 @@ export const request = async <T>(options: RequestOptions): Promise<T> => {
     })
   } catch (error) {
     clearTimeout(timeoutId)
-    if (error instanceof DOMException && error.name === 'AbortError') {
+    if (error instanceof Error && error.name === 'AbortError') {
       throw new ApiClientError('Request aborted or timed out.', {
         code: 'NETWORK_ABORTED',
         cause: error,

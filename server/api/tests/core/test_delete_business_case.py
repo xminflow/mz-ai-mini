@@ -60,7 +60,7 @@ async def test_run_delete_removes_cloud_directory_and_database_rows(
     monkeypatch.setattr(
         delete_business_case,
         "get_settings",
-        lambda: SimpleNamespace(database_url="mysql+aiomysql://demo"),
+        lambda: SimpleNamespace(database_url="postgresql+asyncpg://demo"),
     )
     monkeypatch.setattr(
         delete_business_case,
@@ -123,7 +123,7 @@ async def test_run_delete_raises_when_case_does_not_exist(
     monkeypatch.setattr(
         delete_business_case,
         "get_settings",
-        lambda: SimpleNamespace(database_url="mysql+aiomysql://demo"),
+        lambda: SimpleNamespace(database_url="postgresql+asyncpg://demo"),
     )
     monkeypatch.setattr(
         delete_business_case,

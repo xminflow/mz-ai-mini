@@ -1,3 +1,5 @@
+'use client'
+
 import { motion } from 'framer-motion'
 import type { Story } from '../../types'
 import { StoryCard } from '../story-card'

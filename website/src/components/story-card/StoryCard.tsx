@@ -1,3 +1,5 @@
+'use client'
+
 import type { MouseEvent } from 'react'
 import { useCallback } from 'react'
 import { motion, useMotionTemplate, useMotionValue } from 'framer-motion'

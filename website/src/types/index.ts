@@ -2,8 +2,10 @@ export type { ApiEnvelope } from './api'
 export { API_SUCCESS_CODE } from './api'
 export type {
   RawStory,
+  RawStoryDetail,
   RawStoryListResult,
   Story,
+  StoryDetail,
   StoryListQuery,
   StoryListResult,
   StoryType,

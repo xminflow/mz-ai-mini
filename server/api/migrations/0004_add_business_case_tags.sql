@@ -1,9 +1,9 @@
-ALTER TABLE `business_cases`
-    ADD COLUMN `tags` JSON NULL AFTER `summary`;
+ALTER TABLE business_cases
+    ADD COLUMN IF NOT EXISTS tags JSON NULL;
 
-UPDATE `business_cases`
-SET `tags` = JSON_ARRAY()
-WHERE `tags` IS NULL;
+UPDATE business_cases
+SET tags = '[]'::json
+WHERE tags IS NULL;
 
-ALTER TABLE `business_cases`
-    MODIFY COLUMN `tags` JSON NOT NULL;
+ALTER TABLE business_cases
+    ALTER COLUMN tags SET NOT NULL;

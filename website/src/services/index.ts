@@ -1,1 +1,1 @@
-export { STORY_PAGE_SIZE, fetchStoryList, normalizeStory } from './story'
+export { STORY_PAGE_SIZE, fetchStoryDetail, fetchStoryList, normalizeStory, normalizeStoryDetail } from './story'

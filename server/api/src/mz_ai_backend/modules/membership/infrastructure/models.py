@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from sqlalchemy import BigInteger, Boolean, DateTime, Integer, String, Text, text
+from sqlalchemy import BigInteger, Boolean, DateTime, Identity, Integer, String, Text, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from mz_ai_backend.core.database import Base
@@ -13,7 +13,7 @@ class MembershipOrderModel(Base):
 
     __tablename__ = "membership_orders"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(BigInteger, Identity(), primary_key=True)
     order_id: Mapped[int] = mapped_column(BigInteger, nullable=False, unique=True, index=True)
     order_no: Mapped[str] = mapped_column(String(64), nullable=False, unique=True, index=True)
     user_id: Mapped[int] = mapped_column(BigInteger, nullable=False, index=True)
@@ -48,11 +48,11 @@ class MembershipOrderModel(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False),
         nullable=False,
-        server_default=text("CURRENT_TIMESTAMP(6)"),
+        server_default=func.now(),
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False),
         nullable=False,
-        server_default=text("CURRENT_TIMESTAMP(6)"),
-        server_onupdate=text("CURRENT_TIMESTAMP(6)"),
+        server_default=func.now(),
+        onupdate=func.now(),
     )

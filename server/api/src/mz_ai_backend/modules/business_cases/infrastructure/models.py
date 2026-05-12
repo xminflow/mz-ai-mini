@@ -7,15 +7,15 @@ from sqlalchemy import (
     Boolean,
     Date,
     DateTime,
+    Identity,
     Index,
     Integer,
     JSON,
     String,
     Text,
     UniqueConstraint,
-    text,
+    func,
 )
-from sqlalchemy.dialects.mysql import LONGTEXT
 from sqlalchemy.orm import Mapped, mapped_column
 
 from mz_ai_backend.core.database import Base
@@ -37,12 +37,12 @@ class BusinessCaseModel(Base):
         ),
     )
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(BigInteger, Identity(), primary_key=True)
     case_id: Mapped[str] = mapped_column(String(128), unique=True, nullable=False, index=True)
     type: Mapped[str] = mapped_column(String(16), nullable=False)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     summary: Mapped[str] = mapped_column(Text, nullable=False)
-    summary_markdown: Mapped[str | None] = mapped_column(LONGTEXT, nullable=True)
+    summary_markdown: Mapped[str | None] = mapped_column(Text, nullable=True)
     industry: Mapped[str] = mapped_column(String(32), nullable=False)
     data_cutoff_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     freshness_months: Mapped[int | None] = mapped_column(Integer, nullable=True)
@@ -57,13 +57,13 @@ class BusinessCaseModel(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False),
         nullable=False,
-        server_default=text("CURRENT_TIMESTAMP(6)"),
+        server_default=func.now(),
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False),
         nullable=False,
-        server_default=text("CURRENT_TIMESTAMP(6)"),
-        server_onupdate=text("CURRENT_TIMESTAMP(6)"),
+        server_default=func.now(),
+        onupdate=func.now(),
     )
 
 
@@ -80,7 +80,7 @@ class BusinessCaseDocumentModel(Base):
         Index("idx_business_case_documents_case_id", "case_id"),
     )
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(BigInteger, Identity(), primary_key=True)
     document_id: Mapped[int] = mapped_column(
         BigInteger,
         unique=True,
@@ -90,16 +90,16 @@ class BusinessCaseDocumentModel(Base):
     case_id: Mapped[str] = mapped_column(String(128), nullable=False)
     document_type: Mapped[str] = mapped_column(String(32), nullable=False)
     title: Mapped[str] = mapped_column(String(255), nullable=False)
-    markdown_content: Mapped[str] = mapped_column(LONGTEXT, nullable=False)
+    markdown_content: Mapped[str] = mapped_column(Text, nullable=False)
     is_deleted: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False),
         nullable=False,
-        server_default=text("CURRENT_TIMESTAMP(6)"),
+        server_default=func.now(),
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False),
         nullable=False,
-        server_default=text("CURRENT_TIMESTAMP(6)"),
-        server_onupdate=text("CURRENT_TIMESTAMP(6)"),
+        server_default=func.now(),
+        onupdate=func.now(),
     )

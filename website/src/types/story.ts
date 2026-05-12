@@ -57,3 +57,25 @@ export interface StoryListResult {
   hasMore: boolean
   availableIndustries: string[]
 }
+
+export interface RawStoryDetail {
+  case_id?: string | number
+  type?: string
+  title?: string
+  summary?: string
+  summary_markdown?: string | null
+  industry?: string
+  cover_image_url?: string
+  coverImageUrl?: string
+  tags?: string[]
+  stage?: string
+  city?: string
+  resultText?: string
+  readTime?: number
+  published_at?: string
+  publishedAt?: string
+}
+
+export interface StoryDetail extends Story {
+  summaryMarkdown: string
+}

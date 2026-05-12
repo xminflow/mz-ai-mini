@@ -5,9 +5,10 @@ description = "Backend service for the mz-ai WeChat mini program."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "aiomysql>=0.2.0,<1.0.0",
+    "asyncpg>=0.30.0,<1.0.0",
     "cryptography>=46.0.1,<47.0.0",
     "fastapi>=0.116.1,<1.0.0",
+    "psycopg[binary]>=3.2.0,<4.0.0",
     "pydantic-settings>=2.11.0,<3.0.0",
     "sqlalchemy>=2.0.44,<3.0.0",
     "uvicorn>=0.35.0,<1.0.0",

@@ -2,8 +2,10 @@ import { request } from '../api'
 import {
   STORY_TYPES,
   type RawStory,
+  type RawStoryDetail,
   type RawStoryListResult,
   type Story,
+  type StoryDetail,
   type StoryListQuery,
   type StoryListResult,
   type StoryType,
@@ -126,4 +128,21 @@ export const fetchStoryList = async (
     hasMore: Boolean(result.next_cursor),
     availableIndustries: normalizeAvailableIndustries(result.available_industries),
   }
+}
+
+export const normalizeStoryDetail = (raw: RawStoryDetail): StoryDetail => ({
+  ...normalizeStory(raw),
+  summaryMarkdown: typeof raw.summary_markdown === 'string' ? raw.summary_markdown : '',
+})
+
+export const fetchStoryDetail = async (
+  caseId: string,
+  options: { signal?: AbortSignal } = {},
+): Promise<StoryDetail> => {
+  const result = await request<RawStoryDetail>({
+    path: `/business-cases/${encodeURIComponent(caseId)}`,
+    method: 'GET',
+    signal: options.signal,
+  })
+  return normalizeStoryDetail(result)
 }

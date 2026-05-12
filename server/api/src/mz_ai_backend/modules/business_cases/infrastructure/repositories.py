@@ -477,11 +477,11 @@ class SqlAlchemyBusinessCaseRepository:
                 BusinessCaseDocumentModel.case_id == BusinessCaseModel.case_id,
                 BusinessCaseDocumentModel.is_deleted.is_(False),
                 or_(
-                    BusinessCaseDocumentModel.title.like(
+                    BusinessCaseDocumentModel.title.ilike(
                         keyword_pattern,
                         escape="\\",
                     ),
-                    BusinessCaseDocumentModel.markdown_content.like(
+                    BusinessCaseDocumentModel.markdown_content.ilike(
                         keyword_pattern,
                         escape="\\",
                     ),
@@ -491,9 +491,9 @@ class SqlAlchemyBusinessCaseRepository:
         )
         return statement.where(
             or_(
-                BusinessCaseModel.title.like(keyword_pattern, escape="\\"),
-                BusinessCaseModel.summary.like(keyword_pattern, escape="\\"),
-                BusinessCaseModel.summary_markdown.like(keyword_pattern, escape="\\"),
+                BusinessCaseModel.title.ilike(keyword_pattern, escape="\\"),
+                BusinessCaseModel.summary.ilike(keyword_pattern, escape="\\"),
+                BusinessCaseModel.summary_markdown.ilike(keyword_pattern, escape="\\"),
                 document_match_exists,
             )
         )

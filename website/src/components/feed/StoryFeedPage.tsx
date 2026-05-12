@@ -1,3 +1,5 @@
+'use client'
+
 import { motion } from 'framer-motion'
 import { useStoryFeed } from '../../hooks'
 import type { StoryType } from '../../types'
@@ -53,7 +55,7 @@ export const StoryFeedPage = ({
           >
             <span className="inline-flex w-fit items-center gap-2 rounded-full border border-hairline bg-surface/60 px-3 py-1 text-[11px] text-ink-soft backdrop-blur sm:px-3.5 sm:py-1.5 sm:text-xs">
               <span className="h-1.5 w-1.5 rounded-full bg-violet-400" />
-              创业机会分析 · 市场调研
+              行业分析报告 · 市场调研
             </span>
             <h1 className="font-serif-zh max-w-3xl text-balance text-[34px] font-semibold leading-[1.35] tracking-[0.005em] sm:text-[48px] sm:leading-[1.3] lg:text-[60px] lg:leading-[1.25]">
               {pageTitle}

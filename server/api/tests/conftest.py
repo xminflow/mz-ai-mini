@@ -28,7 +28,7 @@ def configure_test_environment(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("MZ_AI_BACKEND_ENV", "test")
     monkeypatch.setenv(
         "MZ_AI_BACKEND_DATABASE_URL",
-        "mysql+aiomysql://test:test@127.0.0.1:3306/mz_ai_backend_test",
+        "postgresql+asyncpg://test:test@127.0.0.1:5432/mz_ai_backend_test",
     )
     get_settings.cache_clear()
     clear_database_caches()

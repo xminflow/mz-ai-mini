@@ -35,17 +35,17 @@ def test_settings_preserve_explicit_database_url(
     monkeypatch.delenv("MZ_AI_BACKEND_PRODUCTION_DATABASE_URL", raising=False)
     monkeypatch.setenv(
         "MZ_AI_BACKEND_DEVELOPMENT_DATABASE_URL",
-        "mysql+aiomysql://root:mysql@127.0.0.1:3306/development_database",
+        "postgresql+asyncpg://root:postgres@127.0.0.1:5432/development_database",
     )
     monkeypatch.setenv(
         "MZ_AI_BACKEND_DATABASE_URL",
-        "mysql+aiomysql://root:mysql@127.0.0.1:3306/custom_database",
+        "postgresql+asyncpg://root:postgres@127.0.0.1:5432/custom_database",
     )
 
     settings = Settings(_env_file=None)
 
     assert settings.database_url == (
-        "mysql+aiomysql://root:mysql@127.0.0.1:3306/custom_database"
+        "postgresql+asyncpg://root:postgres@127.0.0.1:5432/custom_database"
     )
 
 
@@ -57,13 +57,13 @@ def test_settings_use_development_database_url_when_explicit_database_url_is_mis
     monkeypatch.delenv("MZ_AI_BACKEND_PRODUCTION_DATABASE_URL", raising=False)
     monkeypatch.setenv(
         "MZ_AI_BACKEND_DEVELOPMENT_DATABASE_URL",
-        "mysql+aiomysql://root:mysql@127.0.0.1:3306/cloud_development_database",
+        "postgresql+asyncpg://root:postgres@127.0.0.1:5432/cloud_development_database",
     )
 
     settings = Settings(_env_file=None)
 
     assert settings.database_url == (
-        "mysql+aiomysql://root:mysql@127.0.0.1:3306/cloud_development_database"
+        "postgresql+asyncpg://root:postgres@127.0.0.1:5432/cloud_development_database"
     )
 
 
@@ -75,11 +75,11 @@ def test_settings_use_production_database_url_when_explicit_database_url_is_miss
     monkeypatch.delenv("MZ_AI_BACKEND_DEVELOPMENT_DATABASE_URL", raising=False)
     monkeypatch.setenv(
         "MZ_AI_BACKEND_PRODUCTION_DATABASE_URL",
-        "mysql+aiomysql://root:mysql@10.0.0.8:3306/cloud_production_database",
+        "postgresql+asyncpg://root:postgres@10.0.0.8:5432/cloud_production_database",
     )
 
     settings = Settings(_env_file=None)
 
     assert settings.database_url == (
-        "mysql+aiomysql://root:mysql@10.0.0.8:3306/cloud_production_database"
+        "postgresql+asyncpg://root:postgres@10.0.0.8:5432/cloud_production_database"
     )

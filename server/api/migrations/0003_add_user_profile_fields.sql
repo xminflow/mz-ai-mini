@@ -1,3 +1,3 @@
-ALTER TABLE `users`
-    ADD COLUMN `nickname` VARCHAR(128) NULL AFTER `union_id`,
-    ADD COLUMN `avatar_url` VARCHAR(512) NULL AFTER `nickname`;
+ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS nickname VARCHAR(128) NULL,
+    ADD COLUMN IF NOT EXISTS avatar_url VARCHAR(512) NULL;

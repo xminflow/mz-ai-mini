@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from sqlalchemy import BigInteger, Boolean, DateTime, String, text
+from sqlalchemy import BigInteger, Boolean, DateTime, Identity, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from mz_ai_backend.core.database import Base
@@ -13,7 +13,7 @@ class UserModel(Base):
 
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(BigInteger, Identity(), primary_key=True)
     user_id: Mapped[int] = mapped_column(BigInteger, unique=True, nullable=False, index=True)
     openid: Mapped[str] = mapped_column(String(64), unique=True, nullable=False, index=True)
     union_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
@@ -37,11 +37,11 @@ class UserModel(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False),
         nullable=False,
-        server_default=text("CURRENT_TIMESTAMP(6)"),
+        server_default=func.now(),
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False),
         nullable=False,
-        server_default=text("CURRENT_TIMESTAMP(6)"),
-        server_onupdate=text("CURRENT_TIMESTAMP(6)"),
+        server_default=func.now(),
+        onupdate=func.now(),
     )
