@@ -1,0 +1,26 @@
+export const libraryStrings = {
+  tabLabel: "素材库",
+  capturedAt: "捕获时间",
+  author: "作者",
+  clearFilters: "清除筛选",
+  emptyMatches: "没有匹配的素材",
+  emptyLibrary: "素材库为空",
+  resultCount: (n: number): string => `${n} 条结果`,
+  justNow: "刚刚",
+  openInDouyin: "在抖音中打开",
+  delete: "删除",
+  deleted: "已删除",
+  deleteFailed: "删除失败",
+  shortDupHint: "可能与已收集素材重复",
+  filterAuthorPlaceholder: "按作者筛选 (精确匹配)",
+  filterFromPlaceholder: "起始日期 (UTC)",
+  filterToPlaceholder: "结束日期 (UTC)",
+  confirmDeleteTitle: "确认删除",
+  confirmDeleteBody: "删除后无法恢复，确认要删除该素材吗？",
+  confirmDeleteConfirm: "删除",
+  confirmDeleteCancel: "取消",
+  badgePhone: "📱 手机采集",
+  badgeWeb: "🌐 网页采集",
+} as const;
+
+export type LibraryStrings = typeof libraryStrings;

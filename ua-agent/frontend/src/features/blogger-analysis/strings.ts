@@ -1,0 +1,87 @@
+export const bloggerStrings = {
+  pageHeading: "抖音博主拆解",
+  pageSubheading: "",
+  detailHeading: "博主详情",
+  detailBack: "返回列表",
+  detailProfileSection: "博主信息",
+  detailSamplesSection: "已采样素材",
+  detailReportSection: "拆解报告",
+  detailNoSamples: "当前没有已采样素材。",
+  detailNoReport: "尚未生成拆解报告。",
+  detailPrimaryCapture: "采集资料",
+  detailPrimaryAnalyze: "拆解并生成报告",
+  detailPrimaryContinue: "继续拆解并生成报告",
+  detailPrimaryRegenerate: "重新拆解",
+  detailSupplement: "补充素材",
+  detailSupplementTitle: "补充素材",
+  detailSupplementDescription: "输入希望补充采集的素材数量，系统会增量去重采样并继续拆解。",
+  detailSupplementLabel: "补充数量",
+  detailSupplementHint: "默认 5 个，仅采集未在当前列表中的新素材。",
+  detailSupplementConfirm: "开始补充并拆解",
+  detailSupplementSubmitting: "补充中…",
+  addUrlPlaceholder: "https://www.douyin.com/user/MS4wLjABAAAA…",
+  addButtonLabel: "添加博主",
+  addingButtonLabel: "添加中…",
+  invalidUrl: "请输入合法的抖音博主主页链接",
+  emptyHint: "尚未添加任何博主。粘贴抖音主页链接开始。",
+
+  // Card actions
+  captureProfile: "采集资料",
+  capturingProfile: "采集中…",
+  recaptureProfile: "重新采集资料",
+  sampleVideos: "采样作品",
+  samplingVideos: "采样中…",
+  resampleVideos: "重新采样",
+  analyze: "拆解并生成报告",
+  continueAnalyze: "继续拆解并生成报告",
+  analyzing: (done: number, total: number): string => `拆解中 ${done}/${total}`,
+  generatingReport: "生成报告中…",
+  viewAnalysis: "查看报告",
+  regenerateReport: "重新拆解",
+  retry: "重试",
+  delete: "删除",
+  viewSamples: "查看采样",
+
+  // Profile labels
+  douyinIdPrefix: "抖音号:",
+  followLabel: "关注",
+  fansLabel: "粉丝",
+  likedLabel: "获赞",
+  unknown: "—",
+
+  // Stats summary
+  sampledBadge: (n: number, total: number): string => `已采样 ${n} / ${total}`,
+  analyzedBadge: (done: number, total: number): string => `已分析 ${done} / ${total}`,
+  reportReadyBadge: "报告就绪",
+  reportFailedBadge: "报告失败",
+  sampleFailedBadge: "处理失败",
+  pendingBadge: "待采集",
+  errorBadge: "采集失败",
+  sampleFailedSupplementHint: "这类失败会触发自动补样。",
+
+  // Toasts
+  toastBrowserBusy: "正在执行关键词采集，请先停止后再分析博主",
+  toastDeleted: "已删除",
+  toastSaved: "已保存",
+  toastSampleDeleted: "素材已删除",
+  toastSupplemented: (count: number): string => `已补充 ${count} 个素材并开始分析`,
+  toastUnknownError: (code: string, msg: string): string => `${code}: ${msg}`,
+
+  // Samples dialog
+  samplesDialogTitle: (name: string | null, count: number, total: number): string =>
+    `${name ?? "博主"} · ${count} 个采样作品 (共 ${total})`,
+  samplesEmpty: "暂无采样,请先点「采样作品」",
+  openVideoLabel: "打开",
+  copyLinkLabel: "复制链接",
+  deleteSampleLabel: "删除素材",
+  copyOkLabel: "已复制",
+  reportEmpty: "该博主尚未生成拆解报告。",
+  reportBack: "返回列表",
+
+  // Delete confirm
+  deleteConfirmTitle: "删除博主",
+  deleteConfirmBody: (name: string | null): string =>
+    `确认删除「${name ?? "该博主"}」吗？同时会清除已采样的作品。`,
+  cancelButton: "取消",
+  confirmDeleteButton: "删除",
+} as const;

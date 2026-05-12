@@ -1,0 +1,45 @@
+appId: com.uaagent.app
+productName: AI运营获客
+directories:
+  output: dist
+  buildResources: build
+
+# electron-vite emits the bundled main/preload/renderer into out/.
+# package.json is required so electron knows the main entry.
+files:
+  - out/**/*
+  - package.json
+  - resources/**/*
+  - "!node_modules/**/{CHANGELOG.md,README.md,readme.md,*.d.ts,*.map,test,__tests__,*.test.*}"
+
+asar: true
+# Native modules cannot live inside asar — subprocess loaders need a real file path.
+asarUnpack:
+  - "**/node_modules/better-sqlite3/**/*"
+  - "**/node_modules/patchright/**/*"
+  - "**/node_modules/ffmpeg-static/**/*"
+
+# Backend source tree is staged here by scripts/build-installer-no-python.ps1.
+# At runtime: process.resourcesPath/backend (matches locate.ts when app.isPackaged).
+extraResources:
+  - from: build-resources/staging/backend
+    to: backend
+  - from: build-resources/staging/playwright-browsers
+    to: playwright-browsers
+  - from: build-resources/staging/blogger-frames
+    to: blogger-frames
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  shortcutName: AI运营获客
+  artifactName: ${productName}-Setup-${version}-no-python.${ext}
+
+compression: maximum

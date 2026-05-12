@@ -47,3 +47,30 @@ dist/
 # WeChat Mini Program
 app/miniprogram_npm/
 app/project.private.config.json
+
+# ua-agent
+ua-agent/out/
+ua-agent/frontend/out/
+ua-agent/.vite/
+ua-agent/frontend/.vite/
+ua-agent/dist-tsc/
+ua-agent/frontend/dist-tsc/
+ua-agent/**/build-resources/staging/
+ua-agent/**/build-resources/cache/
+ua-agent/tmp/
+ua-agent/*.log
+ua-agent/scripts/.build-no-python.log
+ua-agent/.env
+ua-agent/.env.*
+ua-agent/.codex/
+ua-agent/.debug-oral/
+ua-agent/.debug-oral-fix/
+ua-agent/.debug-oral-real/
+ua-agent/.hf-home/
+ua-agent/.oral-runtime-cache/
+ua-agent/.uv-cache-backend/
+ua-agent/.uv-cache-indextts/
+ua-agent/.uvcache/
+ua-agent/.uvcache-indextts/
+ua-agent/.venvs/
+ua-agent/checkpoints/

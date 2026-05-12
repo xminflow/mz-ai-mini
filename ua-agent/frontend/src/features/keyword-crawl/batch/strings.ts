@@ -1,0 +1,37 @@
+export const batchStrings = {
+  statusBadge: {
+    running: "运行中",
+    stopped: "已停止",
+    done: "已完成",
+    error: "出错",
+  },
+  stopReason: {
+    user: "用户停止",
+    cap: "已达单关键词上限",
+    "end-of-results": "已无更多结果",
+    "error-threshold": "连续错误过多",
+    "session-failure": "会话异常",
+    "health-cap": "已达健康保护上限",
+    "layout-switch-failure": "布局切换失败",
+    "search-empty": "搜索无结果",
+    "batch-session-dead": "浏览器会话已死",
+    "all-completed": "全部完成",
+    // 006 — XHS-specific
+    "schema-drift": "小红书页面结构已变更",
+    "login-required": "需要登录小红书",
+  },
+  stopBatchButton: "停止整批",
+  counts: {
+    scanned: "已扫描",
+    captured: "已采集",
+    duplicate: "重复跳过",
+    error: "错误跳过",
+    filtered: "已过滤",
+  },
+  filteredTooltip: "低于点赞/粉丝比阈值，或博主资料读取失败",
+  sectionRunning: "当前关键词",
+  sectionPending: "待执行",
+  sectionDone: "已完成关键词",
+  sectionCancelled: "已取消的关键词",
+  summaryStartedAt: "开始时间",
+} as const;
