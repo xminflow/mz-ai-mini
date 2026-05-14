@@ -47,6 +47,10 @@ export const errorCodeSchema = z.enum([
   // Introduced by 抖音视频下载链接 (on-demand share-page → mp4 resolver)
   "DOUYIN_VIDEO_RESOLVE_FAILED",
   "VIDEO_RESOLVE_FAILED",
+  // Introduced by ua-agent remote account authentication
+  "AUTH_FETCH_FAILED",
+  "AUTH_STORAGE_UNAVAILABLE",
+  "AUTH_UNAUTHENTICATED",
   // Introduced by Fun-ASR-Nano-2512 视频文案提取
   "ASR_MODEL_MISSING",
   "ASR_MODEL_DOWNLOAD_FAILED",

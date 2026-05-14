@@ -10,6 +10,21 @@ describe("Persona routes", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     window.localStorage.clear();
+    Object.defineProperty(window, "api", {
+      configurable: true,
+      value: {
+        persona: {
+          save: vi.fn().mockResolvedValue({
+            schema_version: "1",
+            ok: true,
+            saved_at: "2026-05-14T00:00:00.000Z",
+            workspace_path: "D:\\workspace",
+            markdown_path: "D:\\workspace\\persona-context.md",
+            json_path: "D:\\workspace\\persona-context.json",
+          }),
+        },
+      },
+    });
     Object.defineProperty(window.navigator, "clipboard", {
       configurable: true,
       value: {
@@ -38,7 +53,6 @@ describe("Persona routes", () => {
     await waitFor(() => {
       expect(screen.getByRole("heading", { name: "人设设置" })).toBeInTheDocument();
     });
-    expect(screen.getByRole("heading", { name: "可复制人设卡" })).toBeInTheDocument();
   });
 
   it("renders persona settings and saves persona draft", () => {
@@ -55,7 +69,12 @@ describe("Persona routes", () => {
 
     const saved = window.localStorage.getItem(PERSONA_STORAGE_KEY);
     expect(saved).toContain("我服务高客单咨询从业者");
-    expect(screen.getByText("最小摘要")).toBeInTheDocument();
+    expect(window.api.persona.save).toHaveBeenCalledWith({
+      profile: expect.objectContaining({
+        targetAudience: "我服务高客单咨询从业者",
+      }),
+    });
+    expect(screen.getByRole("button", { name: "重置模板" })).toBeInTheDocument();
   });
 
   it("renders strategy settings and saves strategy draft", () => {
@@ -72,7 +91,12 @@ describe("Persona routes", () => {
 
     const saved = window.localStorage.getItem(STRATEGY_STORAGE_KEY);
     expect(saved).toContain("需要一个长期沉淀信任的内容阵地");
-    expect(screen.getByRole("heading", { name: "战略摘要" })).toBeInTheDocument();
+    expect(window.api.persona.save).toHaveBeenCalledWith({
+      strategy: expect.objectContaining({
+        motivation: "需要一个长期沉淀信任的内容阵地",
+      }),
+    });
+    expect(screen.getByRole("button", { name: "重置模板" })).toBeInTheDocument();
   });
 
   it("hydrates persona profile draft", () => {
@@ -89,24 +113,6 @@ describe("Persona routes", () => {
     renderPersona("/persona/profile");
 
     expect(screen.getByDisplayValue("我服务第一次做知识账号的咨询型从业者")).toBeInTheDocument();
-    expect(screen.getByText("清晰")).toBeInTheDocument();
-  });
-
-  it("copies strategy summary", async () => {
-    renderPersona("/persona/strategy");
-
-    fireEvent.change(screen.getByLabelText("我为什么必须做这个账号"), {
-      target: { value: "为了验证这个定位能否持续带来高质量咨询" },
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: "复制摘要" }));
-
-    await waitFor(() => {
-      expect(window.navigator.clipboard.writeText).toHaveBeenCalled();
-    });
-
-    const copied = vi.mocked(window.navigator.clipboard.writeText).mock.calls[0]?.[0] ?? "";
-    expect(copied).toContain("【为什么现在做】");
-    expect(copied).toContain("为了验证这个定位能否持续带来高质量咨询");
+    expect(screen.getByDisplayValue("让用户更快建立清晰定位和稳定表达")).toBeInTheDocument();
   });
 });

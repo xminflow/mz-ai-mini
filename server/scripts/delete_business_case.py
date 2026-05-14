@@ -1,22 +1,20 @@
-"""Delete one business case from the configured backend database and CloudBase.
+"""Delete one business case from the configured backend database and COS.
 
 Usage checklist:
 1. Ensure the backend `.env` points to the target database:
    - `MZ_AI_BACKEND_ENV=development`
    - `MZ_AI_BACKEND_DEVELOPMENT_DATABASE_URL=...`
-2. Ensure CloudBase credentials are available in `.env`:
-   - `MZ_AI_CASE_IMPORT_CLOUDBASE_ENV_ID=...`
-   - `MZ_AI_CASE_IMPORT_CLOUDBASE_API_KEY=...`
-   - Case deletion additionally requires either:
-     - an existing `tcb login` session, or
-     - `MZ_AI_CASE_IMPORT_CLOUDBASE_CLI_API_KEY_ID=...`
-     - `MZ_AI_CASE_IMPORT_CLOUDBASE_CLI_API_KEY=...`
-     - optional `MZ_AI_CASE_IMPORT_CLOUDBASE_CLI_TOKEN=...`
+2. Ensure Tencent Cloud COS credentials are available in `.env`:
+   - `MZ_AI_CASE_IMPORT_COS_APP_ID=...`
+   - `MZ_AI_CASE_IMPORT_COS_REGION=...`
+   - `MZ_AI_CASE_IMPORT_COS_SECRET_ID=...`
+   - `MZ_AI_CASE_IMPORT_COS_SECRET_KEY=...`
+   - optional `MZ_AI_CASE_IMPORT_COS_BUCKET_NAME=weelume-pro`
 3. Run the deleter:
    - `uv run python scripts/delete_business_case.py --case-id "case-05"`
 
 Notes:
-- The script deletes the whole `business-cases/{case_id}` CloudBase directory.
+- The script deletes the whole `business-cases/{case_id}` COS directory.
 - The script physically deletes the matching database rows.
 - The script raises an error when the target `case_id` does not exist.
 """
@@ -42,8 +40,8 @@ from mz_ai_backend.modules.business_cases.infrastructure import (
     SqlAlchemyBusinessCaseRepository,
 )
 from mz_ai_backend.modules.business_cases.infrastructure.importing import (
-    CaseImportCloudBaseSettings,
-    CloudBaseStorageClient,
+    CosStorageClient,
+    CosStorageSettings,
 )
 
 
@@ -51,7 +49,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse command-line arguments for deleting one business case."""
 
     parser = argparse.ArgumentParser(
-        description="Delete one business case from the backend and CloudBase."
+        description="Delete one business case from the backend and COS."
     )
     parser.add_argument(
         "--case-id",
@@ -67,7 +65,7 @@ async def run_delete(*, case_id: str) -> int:
     if settings.database_url is None:
         raise RuntimeError("Database is not configured.")
 
-    cloudbase_settings = CaseImportCloudBaseSettings.from_env()
+    cos_settings = CosStorageSettings.from_env()
     engine = create_async_engine(settings.database_url, pool_pre_ping=True, future=True)
     session_maker = async_sessionmaker(bind=engine, expire_on_commit=False, autoflush=False)
 
@@ -80,7 +78,7 @@ async def run_delete(*, case_id: str) -> int:
                     f"Business case '{normalized_case_id}' does not exist."
                 )
 
-            CloudBaseStorageClient(settings=cloudbase_settings).delete_directory(
+            CosStorageClient(settings=cos_settings).delete_directory(
                 cloud_directory=_build_case_cloud_directory(normalized_case_id)
             )
             deleted = await repository.hard_delete_by_case_id(normalized_case_id)

@@ -90,8 +90,16 @@ export function EditorLayout({
   sidebar,
 }: {
   sections: ReactNode;
-  sidebar: ReactNode;
+  sidebar?: ReactNode;
 }): JSX.Element {
+  if (!sidebar) {
+    return (
+      <div className="min-h-0 flex-1 overflow-hidden">
+        <main className="min-h-0 h-full space-y-4 overflow-y-auto pr-1">{sections}</main>
+      </div>
+    );
+  }
+
   return (
     <div className="grid min-h-0 flex-1 gap-4 overflow-hidden xl:grid-cols-[minmax(0,1fr)_420px]">
       <main className="min-h-0 space-y-4 overflow-y-auto pr-1">{sections}</main>
@@ -186,7 +194,7 @@ export function SummaryActions({
   onCopy,
 }: {
   onReset: () => void;
-  onCopy: () => void;
+  onCopy?: () => void;
 }): JSX.Element {
   return (
     <div className="flex flex-wrap gap-3 border-t border-border/60 pt-2">
@@ -194,10 +202,12 @@ export function SummaryActions({
         <RefreshCcw className="h-4 w-4" />
         重置模板
       </Button>
-      <Button type="button" onClick={onCopy}>
-        <ClipboardCopy className="h-4 w-4" />
-        复制摘要
-      </Button>
+      {onCopy ? (
+        <Button type="button" onClick={onCopy}>
+          <ClipboardCopy className="h-4 w-4" />
+          复制摘要
+        </Button>
+      ) : null}
     </div>
   );
 }
@@ -208,7 +218,7 @@ export function useAutosave<T>({
   initialHasDraft,
 }: {
   value: T;
-  save: (draft: T) => boolean;
+  save: (draft: T) => boolean | Promise<boolean>;
   initialHasDraft: boolean;
 }): { saveStatus: SaveStatus; skipNextSaveRef: MutableRefObject<boolean>; setSaveStatus: (status: SaveStatus) => void } {
   const [saveStatus, setSaveStatus] = useState<SaveStatus>(initialHasDraft ? "saved" : "idle");
@@ -226,8 +236,13 @@ export function useAutosave<T>({
     }
     setSaveStatus("saving");
     const timer = window.setTimeout(() => {
-      const ok = save(value);
-      setSaveStatus(ok ? "saved" : "error");
+      void Promise.resolve(save(value))
+        .then((ok) => {
+          setSaveStatus(ok ? "saved" : "error");
+        })
+        .catch(() => {
+          setSaveStatus("error");
+        });
     }, AUTOSAVE_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, [save, value]);

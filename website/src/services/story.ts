@@ -11,6 +11,7 @@ import {
   type StoryType,
 } from '../types'
 import { formatDateLabel, formatReadTime, isCloudFileId } from './format'
+import { buildReportSections } from './reportSections'
 
 export const STORY_PAGE_SIZE = 12
 
@@ -133,6 +134,7 @@ export const fetchStoryList = async (
 export const normalizeStoryDetail = (raw: RawStoryDetail): StoryDetail => ({
   ...normalizeStory(raw),
   summaryMarkdown: typeof raw.summary_markdown === 'string' ? raw.summary_markdown : '',
+  reportSections: buildReportSections(raw),
 })
 
 export const fetchStoryDetail = async (

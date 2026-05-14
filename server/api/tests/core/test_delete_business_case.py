@@ -64,8 +64,8 @@ async def test_run_delete_removes_cloud_directory_and_database_rows(
     )
     monkeypatch.setattr(
         delete_business_case,
-        "CaseImportCloudBaseSettings",
-        SimpleNamespace(from_env=lambda: SimpleNamespace(env_id="env-id")),
+        "CosStorageSettings",
+        SimpleNamespace(from_env=lambda: SimpleNamespace(bucket_name="weelume-pro")),
     )
     monkeypatch.setattr(
         delete_business_case,
@@ -84,7 +84,7 @@ async def test_run_delete_removes_cloud_directory_and_database_rows(
     )
     monkeypatch.setattr(
         delete_business_case,
-        "CloudBaseStorageClient",
+        "CosStorageClient",
         FakeAssetManager,
     )
 
@@ -127,8 +127,8 @@ async def test_run_delete_raises_when_case_does_not_exist(
     )
     monkeypatch.setattr(
         delete_business_case,
-        "CaseImportCloudBaseSettings",
-        SimpleNamespace(from_env=lambda: SimpleNamespace(env_id="env-id")),
+        "CosStorageSettings",
+        SimpleNamespace(from_env=lambda: SimpleNamespace(bucket_name="weelume-pro")),
     )
     monkeypatch.setattr(
         delete_business_case,

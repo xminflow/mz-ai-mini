@@ -16,6 +16,7 @@ from mz_ai_backend.modules.auth.infrastructure.dependencies import (
     get_ensure_current_mini_program_user_use_case,
     get_update_current_mini_program_user_profile_use_case,
 )
+from mz_ai_backend.modules.auth.presentation.router import get_avatar_storage_client
 
 USER_ID = 162758122237067264
 
@@ -60,9 +61,31 @@ class StubUpdateCurrentMiniProgramUserProfileUseCase:
         return self._result
 
 
+class StubAvatarStorageClient:
+    def __init__(self) -> None:
+        self.uploaded_payloads: list[dict[str, object]] = []
+
+    def upload_bytes(
+        self,
+        *,
+        content: bytes,
+        object_key: str,
+        content_type: str,
+    ) -> str:
+        self.uploaded_payloads.append(
+            {
+                "content": content,
+                "object_key": object_key,
+                "content_type": content_type,
+            }
+        )
+        return "https://weelume-pro.example.com/avatars/avatar.png"
+
+
 def _build_client(
     use_case: StubEnsureCurrentMiniProgramUserUseCase | None = None,
     profile_use_case: StubUpdateCurrentMiniProgramUserProfileUseCase | None = None,
+    avatar_storage_client: StubAvatarStorageClient | None = None,
 ) -> TestClient:
     app = create_app()
     if use_case is not None:
@@ -72,6 +95,10 @@ def _build_client(
     if profile_use_case is not None:
         app.dependency_overrides[get_update_current_mini_program_user_profile_use_case] = (
             lambda: profile_use_case
+        )
+    if avatar_storage_client is not None:
+        app.dependency_overrides[get_avatar_storage_client] = (
+            lambda: avatar_storage_client
         )
     return TestClient(app, raise_server_exceptions=False)
 
@@ -188,6 +215,59 @@ def test_auth_router_rejects_profile_update_when_cloud_identity_is_missing() -> 
     assert response.status_code == 401
     assert body["code"] == "AUTH.CLOUD_IDENTITY_MISSING"
     assert body["data"] is None
+
+
+def test_auth_router_uploads_current_mini_program_user_avatar() -> None:
+    avatar_storage_client = StubAvatarStorageClient()
+
+    with _build_client(avatar_storage_client=avatar_storage_client) as client:
+        response = client.post(
+            "/api/v1/auth/wechat-mini-program/users/current/avatar",
+            headers={
+                "X-WX-OPENID": "openid-10001",
+                "X-WX-APPID": "wx-app-id",
+                "X-Request-Id": "auth-avatar-request",
+            },
+            json={
+                "object_key": "avatars/avatar.png",
+                "content_type": "image/png",
+                "content_base64": "cG5n",
+            },
+        )
+
+    body = response.json()
+    assert response.status_code == 200
+    assert body["request_id"] == "auth-avatar-request"
+    assert body["data"]["avatar_url"] == (
+        "https://weelume-pro.example.com/avatars/avatar.png"
+    )
+    assert avatar_storage_client.uploaded_payloads == [
+        {
+            "content": b"png",
+            "object_key": "avatars/avatar.png",
+            "content_type": "image/png",
+        }
+    ]
+
+
+def test_auth_router_rejects_avatar_upload_outside_avatar_directory() -> None:
+    with _build_client(avatar_storage_client=StubAvatarStorageClient()) as client:
+        response = client.post(
+            "/api/v1/auth/wechat-mini-program/users/current/avatar",
+            headers={
+                "X-WX-OPENID": "openid-10001",
+                "X-WX-APPID": "wx-app-id",
+            },
+            json={
+                "object_key": "../avatar.png",
+                "content_type": "image/png",
+                "content_base64": "cG5n",
+            },
+        )
+
+    body = response.json()
+    assert response.status_code == 422
+    assert body["code"] == "COMMON.VALIDATION_ERROR"
 
 
 def test_auth_router_propagates_domain_errors() -> None:

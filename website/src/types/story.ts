@@ -74,8 +74,31 @@ export interface RawStoryDetail {
   readTime?: number
   published_at?: string
   publishedAt?: string
+  documents?: RawStoryDocuments
+}
+
+export interface RawStoryDocument {
+  document_id?: string
+  title?: string
+  markdown_content?: string
+}
+
+export interface RawStoryDocuments {
+  business_case?: RawStoryDocument
+  market_research?: RawStoryDocument
+  business_model?: RawStoryDocument | null
+  ai_business_upgrade?: RawStoryDocument
+  how_to_do?: RawStoryDocument | null
+}
+
+export interface StoryReportSection {
+  key: string
+  label: string
+  title: string
+  content: string
 }
 
 export interface StoryDetail extends Story {
   summaryMarkdown: string
+  reportSections: StoryReportSection[]
 }

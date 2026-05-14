@@ -1,3 +1,5 @@
+const { request } = require("../core/apiClient")
+
 const isCloudFileId = (value) =>
   typeof value === "string" && value.trim().startsWith("cloud://")
 
@@ -71,21 +73,11 @@ const resolveCloudFileTempUrlMap = async (fileIds = []) => {
         resolve(buildTempUrlMap(fileList))
       },
       fail(error) {
-        console.warn("Failed to resolve CloudBase temp file URLs.", error)
+        console.warn("Failed to resolve cloud file temp URLs.", error)
         resolve({})
       },
     })
   })
-}
-
-const _resolveUploadApi = () => {
-  if (typeof wx === "undefined" || !wx.cloud) {
-    return null
-  }
-  if (typeof wx.cloud.uploadFile !== "function") {
-    return null
-  }
-  return wx.cloud
 }
 
 const _extractFileExt = (filePath) => {
@@ -94,24 +86,48 @@ const _extractFileExt = (filePath) => {
   return parts.length > 1 ? parts.pop().toLowerCase() : "jpg"
 }
 
-const uploadFileToCloud = (tempFilePath, cloudPath) =>
+const _resolveContentType = (filePath) => {
+  const ext = _extractFileExt(filePath)
+  if (ext === "png") {
+    return "image/png"
+  }
+  if (ext === "webp") {
+    return "image/webp"
+  }
+  return "image/jpeg"
+}
+
+const _readFileAsBase64 = (filePath) =>
   new Promise((resolve, reject) => {
-    const cloudApi = _resolveUploadApi()
-    if (!cloudApi) {
-      reject(new Error("CloudBase upload API is unavailable."))
+    if (typeof wx === "undefined" || typeof wx.getFileSystemManager !== "function") {
+      reject(new Error("File system API is unavailable."))
       return
     }
 
-    cloudApi.uploadFile({
-      cloudPath,
-      filePath: tempFilePath,
+    wx.getFileSystemManager().readFile({
+      filePath,
+      encoding: "base64",
       success(response) {
-        resolve(response.fileID)
+        resolve(typeof response?.data === "string" ? response.data : "")
       },
       fail(error) {
         reject(error)
       },
     })
+  })
+
+const uploadFileToCloud = (tempFilePath, cloudPath) =>
+  _readFileAsBase64(tempFilePath).then(async (contentBase64) => {
+    const result = await request({
+      path: "/auth/wechat-mini-program/users/current/avatar",
+      method: "POST",
+      data: {
+        object_key: cloudPath,
+        content_type: _resolveContentType(tempFilePath),
+        content_base64: contentBase64,
+      },
+    })
+    return result.avatar_url
   })
 
 const generateAvatarCloudPath = (tempFilePath) => {
@@ -126,4 +142,3 @@ module.exports = {
   uploadFileToCloud,
   generateAvatarCloudPath,
 }
-

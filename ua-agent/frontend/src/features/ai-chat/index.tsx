@@ -1,14 +1,10 @@
 import {
-  ChevronDown,
-  ChevronUp,
   MessageSquare,
   RotateCcw,
   Send,
   Settings2,
-  Sparkles,
   Square,
   WandSparkles,
-  Wrench,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -54,6 +50,25 @@ function timeLabel(iso: string): string {
   });
 }
 
+function ThinkingIndicator({
+  className,
+  label = "思考中",
+}: {
+  className?: string;
+  label?: string;
+}): JSX.Element {
+  return (
+    <div className={cn("flex items-center gap-2 text-sm text-muted-foreground", className)}>
+      <span>{label}</span>
+      <span className="flex items-center gap-1" aria-hidden="true">
+        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.2s]" />
+        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current [animation-delay:-0.1s]" />
+        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-current" />
+      </span>
+    </div>
+  );
+}
+
 export function AiChat(): JSX.Element {
   const settings = useSettings();
   const state = useAiChatState();
@@ -63,13 +78,15 @@ export function AiChat(): JSX.Element {
   const thinkingTrail = useAiChatEvents();
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const [prompt, setPrompt] = useState("");
-  const [expandedToolIds, setExpandedToolIds] = useState<Record<string, boolean>>({});
 
   const snapshot = state.data?.snapshot;
   const workspaceValid = state.data?.workspace_valid ?? true;
   const provider = state.data?.provider ?? settings.data?.llm.provider ?? "claude-code";
   const running = snapshot?.run_status === "running" || send.isPending || cancel.isPending;
   const hasMessages = Boolean(snapshot && snapshot.messages.length > 0);
+  const assistantMessages = snapshot?.messages.filter((message) => message.role === "assistant") ?? [];
+  const lastAssistantMessage =
+    assistantMessages.length > 0 ? assistantMessages[assistantMessages.length - 1] : null;
   const lastThinking = thinkingTrail.length > 0 ? thinkingTrail[thinkingTrail.length - 1] : "";
 
   const canSend = useMemo(() => {
@@ -79,7 +96,7 @@ export function AiChat(): JSX.Element {
   useEffect(() => {
     if (!messagesRef.current) return;
     messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
-  }, [snapshot?.messages, lastThinking]);
+  }, [snapshot?.messages, running, lastThinking]);
 
   if (state.isLoading || settings.isLoading) {
     return (
@@ -187,7 +204,8 @@ export function AiChat(): JSX.Element {
                 {snapshot.messages.map((message) => {
                   const isUser = message.role === "user";
                   const isAssistant = message.role === "assistant";
-                  const pendingAssistant = isAssistant && running && !message.content;
+                  const isLiveAssistant = isAssistant && lastAssistantMessage?.id === message.id && running;
+                  const pendingAssistant = isLiveAssistant && !message.content;
                   return (
                     <section
                       key={message.id}
@@ -213,61 +231,20 @@ export function AiChat(): JSX.Element {
                               : "border border-border/60 bg-card/80 text-foreground",
                           )}
                         >
-                          <div className="whitespace-pre-wrap break-words">
-                            {message.content || (pendingAssistant ? "正在生成..." : " ")}
-                          </div>
+                          {pendingAssistant ? (
+                            <div className="flex min-h-20 items-center" aria-live="polite">
+                              <ThinkingIndicator
+                                className="text-foreground/70"
+                                label={lastThinking || "思考中"}
+                              />
+                            </div>
+                          ) : (
+                            <div className="whitespace-pre-wrap break-words">{message.content || " "}</div>
+                          )}
                         </div>
-                        {message.tool_traces.length > 0 ? (
-                          <div className="w-full space-y-2 pl-1">
-                            {message.tool_traces.map((trace) => {
-                              const expanded = expandedToolIds[trace.id] ?? false;
-                              return (
-                                <div
-                                  key={trace.id}
-                                  className="overflow-hidden rounded-2xl border border-border/60 bg-muted/20"
-                                >
-                                  <button
-                                    type="button"
-                                    className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
-                                    onClick={() =>
-                                      setExpandedToolIds((prev) => ({
-                                        ...prev,
-                                        [trace.id]: !expanded,
-                                      }))
-                                    }
-                                  >
-                                    <span className="flex min-w-0 items-center gap-2">
-                                      <Wrench className="h-4 w-4 text-muted-foreground" />
-                                      <span className="truncate text-sm text-foreground">
-                                        {trace.name}
-                                      </span>
-                                    </span>
-                                    <span className="flex items-center gap-2">
-                                      <Badge variant="outline" className="rounded-full px-2 py-0.5">
-                                        {trace.ended_at ? (trace.is_error ? "失败" : "完成") : "运行中"}
-                                      </Badge>
-                                      {expanded ? (
-                                        <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                                      ) : (
-                                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                                      )}
-                                    </span>
-                                  </button>
-                                  {expanded ? (
-                                    <div className="border-t border-border/50 px-4 py-4 text-xs leading-6 text-muted-foreground">
-                                      <pre className="overflow-x-auto whitespace-pre-wrap break-words">
-                                        {JSON.stringify(trace.input, null, 2)}
-                                      </pre>
-                                      {trace.content ? (
-                                        <pre className="mt-3 overflow-x-auto whitespace-pre-wrap break-words text-foreground">
-                                          {trace.content}
-                                        </pre>
-                                      ) : null}
-                                    </div>
-                                  ) : null}
-                                </div>
-                              );
-                            })}
+                        {isLiveAssistant && running && message.content ? (
+                          <div className="w-full pl-1" data-testid="ai-chat-running-inline" aria-live="polite">
+                            <ThinkingIndicator label={lastThinking || "思考中"} />
                           </div>
                         ) : null}
                       </div>
@@ -294,8 +271,20 @@ export function AiChat(): JSX.Element {
                 </div>
               ) : null}
               <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
-                <div className="min-h-5 text-xs text-muted-foreground">
-                  {lastThinking || "Enter 发送，Shift + Enter 换行"}
+                <div
+                  className={cn(
+                    "min-h-5 text-xs",
+                    running ? "text-foreground/70" : "text-muted-foreground",
+                  )}
+                >
+                  {running ? (
+                    <ThinkingIndicator
+                      className="max-w-[560px] text-xs text-foreground/70"
+                      label={lastThinking || "思考中"}
+                    />
+                  ) : (
+                    "Enter 发送，Shift + Enter 换行"
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="rounded-full px-3 py-1">

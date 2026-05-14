@@ -1,10 +1,8 @@
-import { Compass, Goal, LandPlot, Rocket, Sparkles } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Compass, Goal, LandPlot, Rocket } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { Card, CardContent, CardHeader } from "@/shared/ui/card";
 import {
-  buildStrategySummary,
   DEFAULT_STRATEGY_FORM,
   loadStrategyDraft,
   STRATEGY_STORAGE_KEY,
@@ -12,7 +10,6 @@ import {
 } from "../strategy-model";
 import { clearDraft, saveDraft } from "../storage";
 import {
-  copyPlainText,
   EditorLayout,
   PageShell,
   SectionsRenderer,
@@ -59,15 +56,28 @@ const sections: SectionDefinition<StrategyFormState>[] = [
   },
 ];
 
+async function persistStrategy(draft: StrategyFormState): Promise<boolean> {
+  const localSaved = saveDraft(STRATEGY_STORAGE_KEY, draft);
+  try {
+    const result = await window.api.persona.save({ strategy: draft });
+    return localSaved && result.ok;
+  } catch {
+    return false;
+  }
+}
+
 export function StrategySettingsPage(): JSX.Element {
   const initial = useMemo(() => loadStrategyDraft(), []);
   const [form, setForm] = useState<StrategyFormState>(initial.draft);
   const { saveStatus, skipNextSaveRef, setSaveStatus } = useAutosave({
     value: form,
-    save: (draft) => saveDraft(STRATEGY_STORAGE_KEY, draft),
+    save: persistStrategy,
     initialHasDraft: initial.hasDraft,
   });
-  const summary = useMemo(() => buildStrategySummary(form), [form]);
+
+  useEffect(() => {
+    void window.api.persona.save({ strategy: initial.draft }).catch(() => {});
+  }, [initial.draft]);
 
   function updateField<Key extends keyof StrategyFormState>(key: Key, value: StrategyFormState[Key]): void {
     setForm((current) => ({ ...current, [key]: value }));
@@ -78,56 +88,24 @@ export function StrategySettingsPage(): JSX.Element {
     setForm(DEFAULT_STRATEGY_FORM);
     clearDraft(STRATEGY_STORAGE_KEY);
     setSaveStatus("idle");
+    void window.api.persona.save({ strategy: DEFAULT_STRATEGY_FORM }).catch(() => {
+      setSaveStatus("error");
+    });
     toast.success("战略模板已重置。");
   }
 
   return (
     <PageShell
       title="战略设置"
-      badges={["账号作战地图", "本地自动保存", "最小战略"]}
+      badges={["账号作战地图", "本地自动保存"]}
       saveStatus={saveStatus}
     >
       <EditorLayout
-        sections={<SectionsRenderer sections={sections} form={form} onChange={updateField} />}
-        sidebar={
-          <Card className="sticky top-0 border-border/70 bg-card shadow-sm">
-            <CardHeader className="border-b border-border/60">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <h2 className="text-lg font-semibold tracking-tight">战略摘要</h2>
-                </div>
-                <div className="rounded-md bg-emerald-100 px-2 py-1 text-[11px] font-medium text-emerald-900 dark:bg-emerald-200 dark:text-emerald-950">
-                  最小摘要
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-5 pt-6">
-              <section className="rounded-lg border border-border/70 bg-muted/40 p-4">
-                <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  <Sparkles className="h-3.5 w-3.5" />
-                  为什么现在做
-                </div>
-                <p className="text-sm leading-7 text-foreground">{summary.whyNow}</p>
-              </section>
-              <section className="space-y-3">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">核心判断</div>
-                <div className="space-y-3 text-sm leading-7">
-                  <div><div className="font-medium text-foreground">一年目标</div><div className="text-muted-foreground">{summary.annualGoal}</div></div>
-                  <div><div className="font-medium text-foreground">赛道判断</div><div className="text-muted-foreground">{summary.marketDecision}</div></div>
-                  <div><div className="font-medium text-foreground">平台主场</div><div className="text-muted-foreground">{summary.platformDecision}</div></div>
-                  <div><div className="font-medium text-foreground">商业承接</div><div className="text-muted-foreground">{summary.monetization}</div></div>
-                </div>
-              </section>
-              <section className="space-y-3">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">边界与验证</div>
-                <div className="rounded-lg border border-border/70 bg-background p-4 text-sm leading-7 text-muted-foreground">
-                  <p><span className="font-medium text-foreground">机会边界：</span>{summary.boundary}</p>
-                  <p className="mt-3"><span className="font-medium text-foreground">30 天验证假设：</span>{summary.hypothesis}</p>
-                </div>
-              </section>
-              <SummaryActions onReset={handleReset} onCopy={() => void copyPlainText(summary.plainText)} />
-            </CardContent>
-          </Card>
+        sections={
+          <>
+            <SectionsRenderer sections={sections} form={form} onChange={updateField} />
+            <SummaryActions onReset={handleReset} />
+          </>
         }
       />
     </PageShell>

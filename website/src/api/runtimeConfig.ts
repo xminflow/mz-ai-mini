@@ -1,22 +1,17 @@
-const DEFAULT_API_BASE_URL = '/api/v1'
-const DEFAULT_SERVER_API_URL = 'http://127.0.0.1:8000/api/v1'
+const DEFAULT_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? '/api/v1'
 const DEFAULT_REQUEST_TIMEOUT_MS = 15_000
 
 const isServer = typeof window === 'undefined'
 
 export const resolveApiBaseUrl = (): string => {
   if (isServer) {
-    const serverUrl = process.env.INTERNAL_API_URL
-    if (typeof serverUrl === 'string' && serverUrl.trim() !== '') {
-      return serverUrl.trim().replace(/\/+$/, '')
+    const internalApiOrigin = process.env.INTERNAL_API_URL
+    if (typeof internalApiOrigin === 'string' && internalApiOrigin.trim() !== '') {
+      return `${internalApiOrigin.trim().replace(/\/+$/, '')}${DEFAULT_API_BASE_URL}`
     }
-    return DEFAULT_SERVER_API_URL
+    throw new Error('INTERNAL_API_URL is required for server-side API requests.')
   }
-  const fromEnv = process.env.NEXT_PUBLIC_API_BASE_URL
-  if (typeof fromEnv === 'string' && fromEnv.trim() !== '') {
-    return fromEnv.trim().replace(/\/+$/, '')
-  }
-  return DEFAULT_API_BASE_URL
+  return DEFAULT_API_BASE_URL.trim().replace(/\/+$/, '')
 }
 
 export const resolveRequestTimeoutMs = (): number => {

@@ -4,14 +4,12 @@ Usage checklist:
 1. Ensure the backend `.env` points to the target database:
    - `MZ_AI_BACKEND_ENV=development`
    - `MZ_AI_BACKEND_DEVELOPMENT_DATABASE_URL=...`
-2. Ensure CloudBase credentials are available in `.env`:
-   - `MZ_AI_CASE_IMPORT_CLOUDBASE_ENV_ID=...`
-   - `MZ_AI_CASE_IMPORT_CLOUDBASE_API_KEY=...`
-   - Duplicate `case_id` recreation additionally requires either:
-     - an existing `tcb login` session, or
-     - `MZ_AI_CASE_IMPORT_CLOUDBASE_CLI_API_KEY_ID=...`
-     - `MZ_AI_CASE_IMPORT_CLOUDBASE_CLI_API_KEY=...`
-     - optional `MZ_AI_CASE_IMPORT_CLOUDBASE_CLI_TOKEN=...`
+2. Ensure Tencent Cloud COS credentials are available in `.env`:
+   - `MZ_AI_CASE_IMPORT_COS_APP_ID=...`
+   - `MZ_AI_CASE_IMPORT_COS_REGION=...`
+   - `MZ_AI_CASE_IMPORT_COS_SECRET_ID=...`
+   - `MZ_AI_CASE_IMPORT_COS_SECRET_KEY=...`
+   - optional `MZ_AI_CASE_IMPORT_COS_BUCKET_NAME=weelume-pro`
 3. Ensure database schema migrations are already applied:
    - `uv run python api/migrations/run_sql_migrations.py`
 4. Run the importer:
@@ -66,9 +64,9 @@ Notes:
 - `config.yml.desc` is imported as the short summary shown in case lists.
 - `summary.md` is imported as the case-level summary markdown shown in details.
 - Every markdown file should contain one level-1 heading (`# Title`).
-- Local image references in markdown are uploaded to CloudBase and rewritten.
+- Local image references in markdown are uploaded to COS and rewritten.
 - Duplicate `case_id` imports recreate the case: old database rows and
-  referenced CloudBase assets are deleted before the new case is created.
+  referenced COS assets are deleted before the new case is created.
 """
 
 from __future__ import annotations
@@ -97,8 +95,8 @@ from mz_ai_backend.modules.business_cases.infrastructure import (
 )
 from mz_ai_backend.modules.business_cases.infrastructure.importing import (
     BusinessCaseDirectoryImporter,
-    CaseImportCloudBaseSettings,
-    CloudBaseStorageClient,
+    CosStorageClient,
+    CosStorageSettings,
 )
 from mz_ai_backend.shared import get_snowflake_generator
 
@@ -124,7 +122,7 @@ async def run_import(*, case_dir: Path) -> int:
         raise RuntimeError("Database is not configured.")
 
     # Build one async SQLAlchemy session and wire the importer dependencies explicitly.
-    cloudbase_settings = CaseImportCloudBaseSettings.from_env()
+    cos_settings = CosStorageSettings.from_env()
     engine = create_async_engine(settings.database_url, pool_pre_ping=True, future=True)
     session_maker = async_sessionmaker(
         bind=engine, expire_on_commit=False, autoflush=False
@@ -146,7 +144,7 @@ async def run_import(*, case_dir: Path) -> int:
             importer = BusinessCaseDirectoryImporter(
                 business_case_repository=repository,
                 create_use_case=create_use_case,
-                asset_manager=CloudBaseStorageClient(settings=cloudbase_settings),
+                asset_manager=CosStorageClient(settings=cos_settings),
             )
             # Import one case directory by recreating any existing case_id first.
             result = await importer.import_case(case_dir=case_dir.resolve())

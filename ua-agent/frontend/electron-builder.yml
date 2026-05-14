@@ -22,6 +22,8 @@ asarUnpack:
 # Backend source tree is staged here by scripts/build-installer-no-python.ps1.
 # At runtime: process.resourcesPath/backend (matches locate.ts when app.isPackaged).
 extraResources:
+  - from: build-resources/staging/AGENTS.md
+    to: AGENTS.md
   - from: build-resources/staging/backend
     to: backend
   - from: build-resources/staging/playwright-browsers

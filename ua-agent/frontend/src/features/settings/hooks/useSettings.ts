@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { AI_CHAT_QUERY_KEY } from "@/features/ai-chat/hooks";
 import {
   appSettingsSchema,
   normalizeAppSettings,
@@ -51,6 +52,7 @@ export function useUpdateSettings() {
     },
     onSuccess: (next) => {
       qc.setQueryData<AppSettingsContract>(SETTINGS_QUERY_KEY, next);
+      void qc.invalidateQueries({ queryKey: AI_CHAT_QUERY_KEY });
       toast.success("设置已保存");
     },
     onError: (err) => {

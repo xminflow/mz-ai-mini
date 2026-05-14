@@ -8,11 +8,24 @@ const MINI_PROGRAM_RELEASE_ENV = "release";
 const BACKEND_TARGET_LOCAL = "local";
 const BACKEND_TARGET_REMOTE = "remote";
 const BACKEND_TARGET_PRODUCTION = "production";
-const LOCAL_API_ORIGIN = "http://127.0.0.1:8000";
+const DEFAULT_LOCAL_API_ORIGIN = "http://127.0.0.1:8001";
+const PRODUCTION_API_ORIGIN = "https://api.weelume.com";
 const CLOUD_ENV_ID = "rlink-5g3hqx773b8980a1";
 const CLOUD_SERVICE_NAME = "mz-ai";
 const { getSupportedMiniProgramEnvVersion } = require("./runtime-mode");
 const localRuntimeConfig = require("./runtime-config.local");
+
+const normalizeConfiguredOrigin = (origin) => {
+  if (typeof origin !== "string") {
+    return "";
+  }
+
+  return origin.trim().replace(/\/+$/, "");
+};
+
+const LOCAL_API_ORIGIN =
+  normalizeConfiguredOrigin(localRuntimeConfig?.localApiOrigin) ||
+  DEFAULT_LOCAL_API_ORIGIN;
 
 const BACKEND_TARGET_LABELS = Object.freeze({
   [BACKEND_TARGET_LOCAL]: "本地后端",
@@ -130,11 +143,14 @@ const getBackendEnvironmentState = () => {
 };
 
 module.exports = {
+  API_PREFIX,
   BACKEND_TARGET_LOCAL,
   BACKEND_TARGET_PRODUCTION,
   BACKEND_TARGET_REMOTE,
   CLOUD_ENV_ID,
   CLOUD_SERVICE_NAME,
+  LOCAL_API_ORIGIN,
+  PRODUCTION_API_ORIGIN,
   REQUEST_TRANSPORT_CONTAINER,
   REQUEST_TRANSPORT_HTTP,
   buildRequestIdentityHeaders,

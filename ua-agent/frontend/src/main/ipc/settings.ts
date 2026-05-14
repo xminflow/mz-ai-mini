@@ -2,6 +2,7 @@ import { ipcMain } from "electron";
 import log from "electron-log/main";
 
 import { SCHEMA_VERSION } from "../../shared/contracts/error";
+import { resetAiChatSnapshotForProviderSwitch } from "./ai-chat";
 import { getProvider } from "../services/llm/provider";
 import {
   type AppSettings,
@@ -67,7 +68,11 @@ export function registerSettingsHandlers(): void {
             error: { code: "INVALID_INPUT", message: "patch must be an object" },
           };
         }
+        const previous = await getSettings();
         const settings = await updateSettings(patch as Parameters<typeof updateSettings>[0]);
+        if (previous.llm.provider !== settings.llm.provider) {
+          await resetAiChatSnapshotForProviderSwitch(settings.llm.provider);
+        }
         log.info("[settings] updated");
         return { schema_version: SCHEMA_VERSION, ok: true, settings };
       } catch (err) {

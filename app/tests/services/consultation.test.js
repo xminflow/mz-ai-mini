@@ -47,7 +47,7 @@ test("createConsultationRequest posts the consultation payload to backend", asyn
     request(options) {
       assert.equal(
         options.url,
-        "http://127.0.0.1:8000/api/v1/consultations/wechat-mini-program/requests"
+        "http://127.0.0.1:8001/api/v1/consultations/wechat-mini-program/requests"
       );
       assert.equal(options.method, "POST");
       assert.deepEqual(options.data, {

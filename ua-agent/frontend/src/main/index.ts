@@ -50,6 +50,11 @@ import {
   unregisterBloggerAnalyzeHandlers,
 } from "./ipc/blogger-analyze";
 import { registerAiChatHandlers, unregisterAiChatHandlers } from "./ipc/ai-chat";
+import { registerPersonaHandlers, unregisterPersonaHandlers } from "./ipc/persona";
+import {
+  registerAgentAuthHandlers,
+  unregisterAgentAuthHandlers,
+} from "./ipc/agent-auth";
 import {
   registerContentDiagnosisAnalyzeHandler,
   unregisterContentDiagnosisAnalyzeHandler,
@@ -164,12 +169,14 @@ import { registerSettingsHandlers, unregisterSettingsHandlers } from "./ipc/sett
 import { registerClaudeCodeProvider } from "./services/llm/claude-code-provider";
 import { registerCodexProvider } from "./services/llm/codex-provider";
 import { registerKimiProvider } from "./services/llm/kimi-provider";
+import { ensureBundledAgentsFile } from "./services/agents-file/bootstrap-data";
 import { ensureBundledBloggerData } from "./services/blogger/bootstrap-data";
 import { ensureDouyinBloggerReportSkill } from "./services/blogger/report-skill";
 import { ensureDouyinHotMaterialReportSkill } from "./services/hot-material/report-skill";
 import { resetClaudeCache } from "./services/llm/claude-runner";
 import { resetCodexCache } from "./services/llm/codex-runner";
 import { resetKimiCache } from "./services/llm/kimi-runner";
+import { ensurePersonaWorkspaceFiles } from "./services/persona/workspace-store";
 import { registerShellOpenLogsHandler, unregisterShellOpenLogsHandler } from "./ipc/shell-open-logs";
 import {
   registerWindowControlHandlers,
@@ -322,7 +329,9 @@ app.whenReady().then(async () => {
   });
 
   registerPingHandler();
+  registerAgentAuthHandlers();
   registerAiChatHandlers();
+  registerPersonaHandlers();
   registerLibraryListHandler();
   registerLibraryDeleteHandler();
   registerManualCaptureStartHandler();
@@ -368,6 +377,8 @@ app.whenReady().then(async () => {
   registerDouyinVideoHandler();
   registerTranscriptExtractHandler();
   registerAsrHandlers();
+  await ensurePersonaWorkspaceFiles();
+  await ensureBundledAgentsFile();
   await ensureBundledBloggerData();
   await ensureDouyinBloggerReportSkill();
   await ensureDouyinContentDiagnosisReportSkill();
@@ -463,7 +474,9 @@ app.on("before-quit", () => {
     unsubscribeClaudeCacheInvalidation = null;
   }
   unregisterPingHandler();
+  unregisterAgentAuthHandlers();
   unregisterAiChatHandlers();
+  unregisterPersonaHandlers();
   unregisterLibraryListHandler();
   unregisterLibraryDeleteHandler();
   unregisterManualCaptureStartHandler();

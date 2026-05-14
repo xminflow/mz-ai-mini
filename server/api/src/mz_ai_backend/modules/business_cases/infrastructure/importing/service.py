@@ -33,7 +33,7 @@ class AssetUploader(Protocol):
 
 
 class AssetManager(AssetUploader, Protocol):
-    """Upload and delete CloudBase assets used by the importer."""
+    """Upload and delete remote assets used by the importer."""
 
     def delete_directory(self, *, cloud_directory: str) -> None: ...
 

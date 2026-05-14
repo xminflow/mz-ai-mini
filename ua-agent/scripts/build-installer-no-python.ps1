@@ -155,7 +155,9 @@ $Staging   = Join-Path $Frontend 'build-resources\staging\backend'
 $Browsers  = Join-Path $Frontend 'build-resources\staging\playwright-browsers'
 $BrowserCache = Join-Path $Frontend 'build-resources\cache\playwright-browsers'
 $BloggerDataStaging = Join-Path $Frontend 'build-resources\staging\blogger-frames'
+$AgentsFileStaging = Join-Path $Frontend 'build-resources\staging\AGENTS.md'
 $Dist      = Join-Path $Frontend 'dist'
+$GuideRoot = 'D:\code\creator-notes\notes\book'
 
 Write-Banner 'Preflight: tooling versions'
 foreach ($tool in @('node', 'pnpm', 'uv')) {
@@ -167,7 +169,7 @@ foreach ($tool in @('node', 'pnpm', 'uv')) {
 }
 
 Write-Banner 'Clean: previous staging + dist'
-foreach ($p in @($Staging, $Browsers, $BloggerDataStaging, $Dist)) {
+foreach ($p in @($Staging, $Browsers, $BloggerDataStaging, $AgentsFileStaging, $Dist)) {
     if (Test-Path $p) {
         Remove-Item $p -Recurse -Force
         Write-Host "  removed $p"
@@ -210,6 +212,9 @@ else {
         Write-Host "  pass -BloggerDataSource or set UA_AGENT_BLOGGER_DATA_DIR to include it"
     }
 }
+
+Write-Banner 'Generate: AGENTS.md'
+node (Join-Path $RepoRoot 'scripts\generate-build-agents.cjs') $AgentsFileStaging $BloggerDataStaging $GuideRoot
 
 Push-Location $Frontend
 try {

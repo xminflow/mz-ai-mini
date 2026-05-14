@@ -76,6 +76,22 @@ function createEmptySnapshot(provider: ProviderId, workspacePath: string): AiCha
   };
 }
 
+async function replaceSnapshot(
+  provider: ProviderId,
+  workspacePath: string,
+): Promise<AiChatSnapshot> {
+  const snapshot = createEmptySnapshot(provider, workspacePath);
+  await saveAiChatSnapshot(snapshot);
+  emitEvent({
+    schema_version: SCHEMA_VERSION,
+    phase: "reset",
+    provider,
+    workspace_path: workspacePath,
+    snapshot,
+  });
+  return snapshot;
+}
+
 async function loadSnapshot(provider: ProviderId, workspacePath: string): Promise<AiChatSnapshot> {
   const persisted = await loadAiChatSnapshot(workspacePath, provider);
   if (persisted) {
@@ -87,6 +103,16 @@ async function loadSnapshot(provider: ProviderId, workspacePath: string): Promis
     };
   }
   return createEmptySnapshot(provider, workspacePath);
+}
+
+export async function resetAiChatSnapshotForProviderSwitch(
+  provider: ProviderId,
+  workspacePath = defaultLlmWorkspace(),
+): Promise<AiChatSnapshot> {
+  for (const providerId of ["claude-code", "codex", "kimi"] as const) {
+    await clearAiChatSnapshot(workspacePath, providerId);
+  }
+  return replaceSnapshot(provider, workspacePath);
 }
 
 function emitEvent(event: AiChatEvent): void {
@@ -384,15 +410,7 @@ export function registerAiChatHandlers(): void {
     const provider = configuredProvider();
     const workspacePath = configuredWorkspace();
     await clearAiChatSnapshot(workspacePath, provider);
-    const snapshot = createEmptySnapshot(provider, workspacePath);
-    await saveAiChatSnapshot(snapshot);
-    emitEvent({
-      schema_version: SCHEMA_VERSION,
-      phase: "reset",
-      provider,
-      workspace_path: workspacePath,
-      snapshot,
-    });
+    const snapshot = await replaceSnapshot(provider, workspacePath);
     return {
       schema_version: SCHEMA_VERSION,
       ok: true,

@@ -2,9 +2,11 @@
 .zed
 app
 specs
+website
 
 server/.env
 server/.venv
+server/.uv-cache
 server/__pycache__
 server/.pytest_cache
 server/build

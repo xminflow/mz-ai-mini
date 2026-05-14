@@ -5,6 +5,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from mz_ai_backend.core.protocol import ApiResponse, success_response
+from mz_ai_backend.shared import (
+    CosStorageClient,
+    CosStorageSettings,
+)
 
 from ..application import (
     EnsureCurrentMiniProgramUserCommand,
@@ -20,12 +24,20 @@ from ..infrastructure.dependencies import (
 )
 from .schemas import (
     EnsureCurrentMiniProgramUserResponse,
+    UploadCurrentMiniProgramUserAvatarRequest,
+    UploadCurrentMiniProgramUserAvatarResponse,
     UpdateCurrentMiniProgramUserProfileRequest,
     UpdateCurrentMiniProgramUserProfileResponse,
 )
 
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+def get_avatar_storage_client() -> CosStorageClient:
+    """Construct the avatar object storage client."""
+
+    return CosStorageClient(settings=CosStorageSettings.from_env())
 
 
 @router.put(
@@ -70,4 +82,32 @@ async def update_current_mini_program_user_profile(
     result = await use_case.execute(request.to_command(identity=identity))
     return success_response(
         data=UpdateCurrentMiniProgramUserProfileResponse.from_result(result)
+    )
+
+
+@router.post(
+    "/wechat-mini-program/users/current/avatar",
+    response_model=ApiResponse[UploadCurrentMiniProgramUserAvatarResponse],
+    summary="Upload the current mini program user avatar",
+)
+async def upload_current_mini_program_user_avatar(
+    request: UploadCurrentMiniProgramUserAvatarRequest,
+    _identity: Annotated[
+        MiniProgramIdentity,
+        Depends(get_current_mini_program_identity),
+    ],
+    storage_client: Annotated[
+        CosStorageClient,
+        Depends(get_avatar_storage_client),
+    ],
+) -> ApiResponse[UploadCurrentMiniProgramUserAvatarResponse]:
+    """Upload the authorized avatar binary to object storage."""
+
+    avatar_url = storage_client.upload_bytes(
+        content=request.decode_content(),
+        object_key=request.object_key,
+        content_type=request.content_type,
+    )
+    return success_response(
+        data=UploadCurrentMiniProgramUserAvatarResponse(avatar_url=avatar_url)
     )

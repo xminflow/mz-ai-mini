@@ -51,7 +51,7 @@ test("runtime config uses local backend by default in develop", () => {
 
   assert.deepEqual(resolveRequestTransport(), {
     type: REQUEST_TRANSPORT_HTTP,
-    apiBaseUrl: "http://127.0.0.1:8000/api/v1",
+    apiBaseUrl: "http://127.0.0.1:8001/api/v1",
   });
   assert.deepEqual(buildRequestIdentityHeaders(), {
     "X-WX-OPENID": "local-dev-openid",
@@ -97,6 +97,7 @@ test("runtime config fixes trial to production regardless of local overrides", (
     CLOUD_ENV_ID,
     CLOUD_SERVICE_NAME,
     getBackendEnvironmentState,
+    PRODUCTION_API_ORIGIN,
     resolveRequestTransport,
   } = loadRuntimeConfig({
     envVersion: "trial",
@@ -114,6 +115,7 @@ test("runtime config fixes trial to production regardless of local overrides", (
   assert.deepEqual(buildRequestIdentityHeaders(), {});
   assert.equal(getBackendEnvironmentState().currentTarget, "production");
   assert.equal(getBackendEnvironmentState().transportType, "container");
+  assert.equal(PRODUCTION_API_ORIGIN, "https://api.weelume.com");
 });
 
 test("runtime config remote develop mode no longer requires direct remote origin", () => {
@@ -126,4 +128,19 @@ test("runtime config remote develop mode no longer requires direct remote origin
 
   assert.equal(resolveRequestTransport().type, "container");
   assert.equal(getBackendEnvironmentState().currentTarget, "remote");
+});
+
+test("runtime config allows overriding local api origin from local config", () => {
+  const { LOCAL_API_ORIGIN, resolveRequestTransport } = loadRuntimeConfig({
+    envVersion: "develop",
+    localRuntimeConfig: {
+      localApiOrigin: " http://127.0.0.1:9000/ ",
+    },
+  });
+
+  assert.equal(LOCAL_API_ORIGIN, "http://127.0.0.1:9000");
+  assert.deepEqual(resolveRequestTransport(), {
+    type: "http",
+    apiBaseUrl: "http://127.0.0.1:9000/api/v1",
+  });
 });

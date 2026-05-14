@@ -76,7 +76,7 @@ export function useAiChatEvents() {
         }
         return;
       }
-      if (event.phase === "message-delta" || event.phase === "tool-started" || event.phase === "tool-ended") {
+      if (event.phase === "message-delta") {
         qc.setQueryData<{
           schema_version: "1";
           ok: true;
@@ -88,13 +88,7 @@ export function useAiChatEvents() {
           if (!prev) return prev;
           const snapshot = structuredClone(prev.snapshot) as AiChatSnapshot;
           const target = ensureAssistantMessage(snapshot, event.message_id);
-          if (event.phase === "message-delta") {
-            target.content += event.text;
-          } else {
-            const idx = target.tool_traces.findIndex((trace) => trace.id === event.trace.id);
-            if (idx >= 0) target.tool_traces[idx] = event.trace;
-            else target.tool_traces.push(event.trace);
-          }
+          target.content += event.text;
           snapshot.updated_at = new Date().toISOString();
           return { ...prev, snapshot };
         });

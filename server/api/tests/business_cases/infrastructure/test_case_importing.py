@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from datetime import date, datetime
 from pathlib import Path
 
@@ -20,8 +19,8 @@ from mz_ai_backend.modules.business_cases.domain import (
 )
 from mz_ai_backend.modules.business_cases.infrastructure.importing import (
     BusinessCaseDirectoryImporter,
-    CaseImportCloudBaseSettings,
-    CloudBaseStorageClient,
+    CosStorageClient,
+    CosStorageSettings,
 )
 from mz_ai_backend.modules.business_cases.infrastructure.importing.directory_loader import (
     extract_markdown_title,
@@ -31,7 +30,11 @@ from mz_ai_backend.modules.business_cases.infrastructure.importing.directory_loa
 
 
 CASE_ID = "case-4"
-CLOUDBASE_ENV_ID = "rlink-5g3hqx773b8980a1"
+COS_APP_ID = "1250000000"
+COS_BUCKET_NAME = "weelume-pro"
+COS_REGION = "ap-guangzhou"
+COS_HOST = f"{COS_BUCKET_NAME}-{COS_APP_ID}.cos.{COS_REGION}.myqcloud.com"
+COS_ENDPOINT = f"https://{COS_HOST}"
 
 
 class StubRepository:
@@ -76,7 +79,7 @@ class StubAssetUploader:
         self.calls.append((local_path, object_key))
         if self._events is not None:
             self._events.append("upload_file")
-        return f"cloud://{CLOUDBASE_ENV_ID}.bucket/{object_key}"
+        return f"{COS_ENDPOINT}/{object_key}"
 
     def delete_directory(self, *, cloud_directory: str) -> None:
         self.deleted_cloud_directories.append(cloud_directory)
@@ -303,10 +306,10 @@ def test_rewrite_markdown_local_images_updates_only_local_references() -> None:
 
     rewritten_markdown = rewrite_markdown_local_images(
         markdown_content,
-        resolve_uploaded_url=lambda reference: f"cloud://demo.bucket/{reference}",
+        resolve_uploaded_url=lambda reference: f"https://demo.example.com/{reference}",
     )
 
-    assert "cloud://demo.bucket/images/local.png" in rewritten_markdown
+    assert "https://demo.example.com/images/local.png" in rewritten_markdown
     assert "https://example.com/remote.png" in rewritten_markdown
 
 
@@ -346,22 +349,22 @@ async def test_business_case_directory_importer_recreates_existing_case_and_clea
     assert command.documents[0].document_type == BusinessCaseDocumentType.BUSINESS_CASE
     assert command.documents[2].document_type == BusinessCaseDocumentType.BUSINESS_MODEL
     assert (
-        f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
+        f"{COS_ENDPOINT}/business-cases/"
         f"{CASE_ID}/images/summary_chart1/chart.png"
         in command.summary_markdown
     )
     assert (
-        f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
+        f"{COS_ENDPOINT}/business-cases/"
         f"{CASE_ID}/images/rework_chart1/chart.png"
         in command.documents[0].markdown_content
     )
     assert (
-        f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
+        f"{COS_ENDPOINT}/business-cases/"
         f"{CASE_ID}/images/business_model_chart1/chart.png"
         in command.documents[2].markdown_content
     )
     assert command.cover_image_url == (
-        f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
+        f"{COS_ENDPOINT}/business-cases/"
         f"{CASE_ID}/images/cover/image_01.png"
     )
 
@@ -426,97 +429,42 @@ async def test_business_case_directory_importer_reads_project_how_to_do_markdown
     assert command.documents[2].document_type == BusinessCaseDocumentType.BUSINESS_MODEL
     assert command.documents[-1].document_type == BusinessCaseDocumentType.HOW_TO_DO
     assert (
-        f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
+        f"{COS_ENDPOINT}/business-cases/"
         f"{CASE_ID}/images/summary_chart1/chart.png"
         in command.summary_markdown
     )
     assert (
-        f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/"
+        f"{COS_ENDPOINT}/business-cases/"
         f"{CASE_ID}/images/how_to_do_chart1/chart.png"
         in command.documents[-1].markdown_content
     )
 
 
-def test_cloudbase_settings_from_env_reads_required_values(
+def test_cos_settings_from_env_reads_required_values(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setenv("MZ_AI_CASE_IMPORT_CLOUDBASE_ENV_ID", CLOUDBASE_ENV_ID)
-    monkeypatch.setenv("MZ_AI_CASE_IMPORT_CLOUDBASE_API_KEY", "api-key")
+    monkeypatch.setenv("MZ_AI_CASE_IMPORT_COS_APP_ID", COS_APP_ID)
+    monkeypatch.setenv("MZ_AI_CASE_IMPORT_COS_REGION", COS_REGION)
+    monkeypatch.setenv("MZ_AI_CASE_IMPORT_COS_SECRET_ID", "secret-id")
+    monkeypatch.setenv("MZ_AI_CASE_IMPORT_COS_SECRET_KEY", "secret-key")
 
-    settings = CaseImportCloudBaseSettings.from_env()
+    settings = CosStorageSettings.from_env()
 
-    assert settings.env_id == CLOUDBASE_ENV_ID
-    assert settings.api_key == "api-key"
+    assert settings.app_id == COS_APP_ID
+    assert settings.bucket_name == COS_BUCKET_NAME
+    assert settings.region == COS_REGION
+    assert settings.secret_id == "secret-id"
+    assert settings.secret_key == "secret-key"
+    assert settings.session_token is None
+    assert settings.host == COS_HOST
 
 
-def test_cloudbase_storage_client_requests_upload_ticket_and_uploads_file(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test_cos_storage_client_uploads_file_with_sdk_client(tmp_path: Path) -> None:
     asset_path = tmp_path / "cover.png"
     asset_path.write_bytes(b"png")
-    request_log: list[dict[str, object]] = []
+    sdk_client = FakeCosSdkClient()
 
-    class FakeResponse:
-        def __init__(self, *, status_code: int, payload: bytes = b"") -> None:
-            self._status_code = status_code
-            self._payload = payload
-
-        def __enter__(self) -> "FakeResponse":
-            return self
-
-        def __exit__(self, exc_type, exc, tb) -> None:
-            return None
-
-        def getcode(self) -> int:
-            return self._status_code
-
-        def read(self) -> bytes:
-            return self._payload
-
-    def fake_urlopen(request, timeout: int):
-        request_log.append(
-            {
-                "url": request.full_url,
-                "method": request.get_method(),
-                "headers": {key.lower(): value for key, value in request.header_items()},
-                "data": request.data,
-                "timeout": timeout,
-            }
-        )
-        if request.get_method() == "POST":
-            return FakeResponse(
-                status_code=200,
-                payload=json.dumps(
-                    [
-                        {
-                            "objectId": "business-cases/case-4/images/cover.png",
-                            "uploadUrl": "https://upload.example.com/cover.png",
-                            "authorization": "upload-auth",
-                            "token": "upload-token",
-                            "cloudObjectMeta": "cloud-meta",
-                            "cloudObjectId": (
-                                f"cloud://{CLOUDBASE_ENV_ID}.bucket/"
-                                "business-cases/case-4/images/cover.png"
-                            ),
-                        }
-                    ]
-                ).encode("utf-8"),
-            )
-        return FakeResponse(status_code=200)
-
-    monkeypatch.setattr(
-        "mz_ai_backend.modules.business_cases.infrastructure.importing."
-        "cloudbase_client.urllib.request.urlopen",
-        fake_urlopen,
-    )
-
-    client = CloudBaseStorageClient(
-        settings=CaseImportCloudBaseSettings(
-            env_id=CLOUDBASE_ENV_ID,
-            api_key="api-key",
-        )
-    )
+    client = CosStorageClient(settings=_build_cos_settings(), sdk_client=sdk_client)
 
     uploaded_reference = client.upload_file(
         local_path=asset_path,
@@ -524,282 +472,145 @@ def test_cloudbase_storage_client_requests_upload_ticket_and_uploads_file(
     )
 
     assert uploaded_reference == (
-        f"cloud://{CLOUDBASE_ENV_ID}.bucket/"
+        f"{COS_ENDPOINT}/"
         "business-cases/case-4/images/cover.png"
     )
-    assert request_log[0]["url"] == (
-        f"https://{CLOUDBASE_ENV_ID}.api.tcloudbasegateway.com"
-        "/v1/storages/get-objects-upload-info"
-    )
-    assert request_log[0]["method"] == "POST"
-    assert request_log[0]["headers"]["authorization"] == "Bearer api-key"
-    assert json.loads(request_log[0]["data"].decode("utf-8")) == [
-        {"objectId": "business-cases/case-4/images/cover.png"}
+    assert sdk_client.put_object_calls == [
+        {
+            "Bucket": f"{COS_BUCKET_NAME}-{COS_APP_ID}",
+            "Body": b"png",
+            "Key": "business-cases/case-4/images/cover.png",
+            "ContentType": "image/png",
+        }
     ]
-    assert request_log[1]["url"] == "https://upload.example.com/cover.png"
-    assert request_log[1]["method"] == "PUT"
-    assert request_log[1]["headers"]["authorization"] == "upload-auth"
-    assert request_log[1]["headers"]["x-cos-security-token"] == "upload-token"
-    assert request_log[1]["headers"]["x-cos-meta-fileid"] == "cloud-meta"
-    assert request_log[1]["headers"]["content-type"] == "image/png"
 
 
-def test_cloudbase_storage_client_deletes_files_in_batches_and_ignores_missing_items(
+def test_cos_storage_client_builds_sdk_client_with_session_token(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    request_log: list[dict[str, object]] = []
+    captured_config: dict[str, object] = {}
 
-    class FakeResponse:
-        def __init__(self, *, status_code: int, payload: bytes) -> None:
-            self._status_code = status_code
-            self._payload = payload
+    class FakeCosConfig:
+        def __init__(self, **kwargs: object) -> None:
+            captured_config.update(kwargs)
 
-        def __enter__(self) -> "FakeResponse":
-            return self
+    class FakeCosS3Client:
+        def __init__(self, config: FakeCosConfig) -> None:
+            self.config = config
 
-        def __exit__(self, exc_type, exc, tb) -> None:
-            return None
+    monkeypatch.setattr("mz_ai_backend.shared.cos_storage.CosConfig", FakeCosConfig)
+    monkeypatch.setattr("mz_ai_backend.shared.cos_storage.CosS3Client", FakeCosS3Client)
 
-        def getcode(self) -> int:
-            return self._status_code
-
-        def read(self) -> bytes:
-            return self._payload
-
-    def fake_urlopen(request, timeout: int):
-        request_log.append(
-            {
-                "url": request.full_url,
-                "method": request.get_method(),
-                "headers": {key.lower(): value for key, value in request.header_items()},
-                "data": request.data,
-                "timeout": timeout,
-            }
-        )
-        payload = [
-            {"cloudObjectId": item["cloudObjectId"]}
-            for item in json.loads(request.data.decode("utf-8"))
-        ]
-        if len(payload) > 1:
-            payload[-1] = {
-                "cloudObjectId": payload[-1]["cloudObjectId"],
-                "code": "OBJECT_NOT_EXIST",
-                "message": "Storage object not exists.",
-            }
-        return FakeResponse(status_code=200, payload=json.dumps(payload).encode("utf-8"))
-
-    monkeypatch.setattr(
-        "mz_ai_backend.modules.business_cases.infrastructure.importing."
-        "cloudbase_client.urllib.request.urlopen",
-        fake_urlopen,
-    )
-
-    client = CloudBaseStorageClient(
-        settings=CaseImportCloudBaseSettings(
-            env_id=CLOUDBASE_ENV_ID,
-            api_key="api-key",
+    CosStorageClient(
+        settings=CosStorageSettings(
+            app_id=COS_APP_ID,
+            region=COS_REGION,
+            secret_id="secret-id",
+            secret_key="secret-key",
+            session_token="session-token",
+            bucket_name=COS_BUCKET_NAME,
         )
     )
+
+    assert captured_config == {
+        "Region": COS_REGION,
+        "SecretId": "secret-id",
+        "SecretKey": "secret-key",
+        "Token": "session-token",
+        "Scheme": "https",
+    }
+
+
+def test_cos_storage_client_deletes_files() -> None:
+    sdk_client = FakeCosSdkClient()
+
+    client = CosStorageClient(settings=_build_cos_settings(), sdk_client=sdk_client)
 
     client.delete_files(
-        cloud_object_ids=(
-            f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/case-4/images/a.png",
-            f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/case-4/images/b.png",
-            f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/case-4/images/c.png",
+        object_urls=(
+            f"{COS_ENDPOINT}/business-cases/case-4/images/a.png",
+            f"{COS_ENDPOINT}/business-cases/case-4/images/missing.png",
         )
     )
 
-    assert len(request_log) == 1
-    assert request_log[0]["url"] == (
-        f"https://{CLOUDBASE_ENV_ID}.api.tcloudbasegateway.com"
-        "/v1/storages/delete-objects"
-    )
-    assert request_log[0]["method"] == "POST"
-    assert request_log[0]["headers"]["authorization"] == "Bearer api-key"
-    assert json.loads(request_log[0]["data"].decode("utf-8")) == [
+    assert sdk_client.delete_object_calls == [
         {
-            "cloudObjectId": (
-                f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/case-4/images/a.png"
-            )
+            "Bucket": f"{COS_BUCKET_NAME}-{COS_APP_ID}",
+            "Key": "business-cases/case-4/images/a.png",
         },
         {
-            "cloudObjectId": (
-                f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/case-4/images/b.png"
-            )
-        },
-        {
-            "cloudObjectId": (
-                f"cloud://{CLOUDBASE_ENV_ID}.bucket/business-cases/case-4/images/c.png"
-            )
+            "Bucket": f"{COS_BUCKET_NAME}-{COS_APP_ID}",
+            "Key": "business-cases/case-4/images/missing.png",
         },
     ]
 
 
-def test_cloudbase_storage_client_deletes_directory_via_tcb_cli(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    executed_commands: list[list[str]] = []
-
-    def fake_run(command: list[str], **kwargs) -> object:
-        executed_commands.append(command)
-
-        class Result:
-            returncode = 0
-            stdout = "ok"
-            stderr = ""
-
-        return Result()
-
-    monkeypatch.setattr(
-        "mz_ai_backend.modules.business_cases.infrastructure.importing."
-        "cloudbase_client.shutil.which",
-        lambda executable: "C:/mock/tcb.cmd" if executable == "tcb" else None,
-    )
-    monkeypatch.setattr(
-        "mz_ai_backend.modules.business_cases.infrastructure.importing."
-        "cloudbase_client.subprocess.run",
-        fake_run,
-    )
-
-    client = CloudBaseStorageClient(
-        settings=CaseImportCloudBaseSettings(
-            env_id=CLOUDBASE_ENV_ID,
-            api_key="api-key",
-        )
-    )
-
-    client.delete_directory(cloud_directory=f"business-cases/{CASE_ID}")
-
-    assert executed_commands == [
-        [
-            "C:/mock/tcb.cmd",
-            "storage",
-            "delete",
-            f"business-cases/{CASE_ID}",
-            "--dir",
-            "-e",
-            CLOUDBASE_ENV_ID,
+def test_cos_storage_client_deletes_directory_objects() -> None:
+    sdk_client = FakeCosSdkClient(
+        list_object_responses=[
+            {
+                "IsTruncated": "true",
+                "NextContinuationToken": "token-2",
+                "Contents": [{"Key": "business-cases/case-4/images/a.png"}],
+            },
+            {
+                "IsTruncated": "false",
+                "Contents": [{"Key": "business-cases/case-4/images/b.png"}],
+            },
         ]
-    ]
-
-
-def test_cloudbase_storage_client_retries_directory_delete_after_cli_login(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    executed_commands: list[list[str]] = []
-
-    def fake_run(command: list[str], **kwargs) -> object:
-        executed_commands.append(command)
-
-        class Result:
-            def __init__(self, *, returncode: int, stdout: str = "", stderr: str = "") -> None:
-                self.returncode = returncode
-                self.stdout = stdout
-                self.stderr = stderr
-
-        if command[1:] == [
-            "storage",
-            "delete",
-            f"business-cases/{CASE_ID}",
-            "--dir",
-            "-e",
-            CLOUDBASE_ENV_ID,
-        ] and len(executed_commands) == 1:
-            return Result(
-                returncode=1,
-                stderr="No valid identity information, please use cloudbase login to login",
-            )
-        if command[1:3] == ["login", "--apiKeyId"]:
-            return Result(returncode=0, stdout="login ok")
-        return Result(returncode=0, stdout="delete ok")
-
-    monkeypatch.setattr(
-        "mz_ai_backend.modules.business_cases.infrastructure.importing."
-        "cloudbase_client.shutil.which",
-        lambda executable: "C:/mock/tcb.cmd" if executable == "tcb" else None,
-    )
-    monkeypatch.setattr(
-        "mz_ai_backend.modules.business_cases.infrastructure.importing."
-        "cloudbase_client.subprocess.run",
-        fake_run,
     )
 
-    client = CloudBaseStorageClient(
-        settings=CaseImportCloudBaseSettings(
-            env_id=CLOUDBASE_ENV_ID,
-            api_key="api-key",
-            cli_api_key_id="secret-id",
-            cli_api_key="secret-key",
-        )
-    )
+    client = CosStorageClient(settings=_build_cos_settings(), sdk_client=sdk_client)
 
     client.delete_directory(cloud_directory=f"business-cases/{CASE_ID}")
 
-    assert executed_commands == [
-        [
-            "C:/mock/tcb.cmd",
-            "storage",
-            "delete",
-            f"business-cases/{CASE_ID}",
-            "--dir",
-            "-e",
-            CLOUDBASE_ENV_ID,
-        ],
-        [
-            "C:/mock/tcb.cmd",
-            "login",
-            "--apiKeyId",
-            "secret-id",
-            "--apiKey",
-            "secret-key",
-        ],
-        [
-            "C:/mock/tcb.cmd",
-            "storage",
-            "delete",
-            f"business-cases/{CASE_ID}",
-            "--dir",
-            "-e",
-            CLOUDBASE_ENV_ID,
-        ],
+    assert sdk_client.list_objects_calls == [
+        {
+            "Bucket": f"{COS_BUCKET_NAME}-{COS_APP_ID}",
+            "Prefix": "business-cases/case-4/",
+            "MaxKeys": "1000",
+        },
+        {
+            "Bucket": f"{COS_BUCKET_NAME}-{COS_APP_ID}",
+            "Prefix": "business-cases/case-4/",
+            "MaxKeys": "1000",
+            "ContinuationToken": "token-2",
+        },
+    ]
+    assert [call["Key"] for call in sdk_client.delete_object_calls] == [
+        "business-cases/case-4/images/a.png",
+        "business-cases/case-4/images/b.png",
     ]
 
 
-def test_cloudbase_storage_client_raises_when_cli_login_is_missing(
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    def fake_run(command: list[str], **kwargs) -> object:
-        class Result:
-            returncode = 1
-            stdout = ""
-            stderr = "No valid identity information, please use cloudbase login to login"
+class FakeCosSdkClient:
+    def __init__(self, *, list_object_responses: list[dict[str, object]] | None = None):
+        self.put_object_calls: list[dict[str, object]] = []
+        self.delete_object_calls: list[dict[str, object]] = []
+        self.list_objects_calls: list[dict[str, object]] = []
+        self._list_object_responses = list_object_responses or [
+            {"IsTruncated": "false", "Contents": []}
+        ]
 
-        if command[1:3] == ["login", "--apiKeyId"]:
-            return Result()
-        return Result()
+    def put_object(self, **kwargs: object) -> None:
+        self.put_object_calls.append(kwargs)
 
-    monkeypatch.setattr(
-        "mz_ai_backend.modules.business_cases.infrastructure.importing."
-        "cloudbase_client.shutil.which",
-        lambda executable: "C:/mock/tcb.cmd" if executable == "tcb" else None,
+    def delete_object(self, **kwargs: object) -> None:
+        self.delete_object_calls.append(kwargs)
+
+    def list_objects(self, **kwargs: object) -> dict[str, object]:
+        self.list_objects_calls.append(kwargs)
+        return self._list_object_responses.pop(0)
+
+
+def _build_cos_settings() -> CosStorageSettings:
+    return CosStorageSettings(
+        app_id=COS_APP_ID,
+        region=COS_REGION,
+        secret_id="secret-id",
+        secret_key="secret-key",
+        bucket_name=COS_BUCKET_NAME,
     )
-    monkeypatch.setattr(
-        "mz_ai_backend.modules.business_cases.infrastructure.importing."
-        "cloudbase_client.subprocess.run",
-        fake_run,
-    )
-
-    client = CloudBaseStorageClient(
-        settings=CaseImportCloudBaseSettings(
-            env_id=CLOUDBASE_ENV_ID,
-            api_key="api-key",
-        )
-    )
-
-    with pytest.raises(RuntimeError) as exc_info:
-        client.delete_directory(cloud_directory=f"business-cases/{CASE_ID}")
-
-    assert "Failed to authenticate CloudBase CLI" in str(exc_info.value)
 
 
 def _write_case_directory(
@@ -902,7 +713,7 @@ def _build_existing_case() -> BusinessCase:
         industry=BusinessCaseIndustry.OTHER,
         tags=("旧标签",),
         cover_image_url=(
-            f"cloud://{CLOUDBASE_ENV_ID}.bucket/"
+            f"{COS_ENDPOINT}/"
             f"business-cases/{CASE_ID}/images/cover/image_01.png"
         ),
         status=BusinessCaseStatus.DRAFT,
@@ -948,7 +759,7 @@ def _build_document(
         title="Existing",
         markdown_content=(
             "# Existing\n\n"
-            f"![Chart](cloud://{CLOUDBASE_ENV_ID}.bucket/"
+            f"![Chart]({COS_ENDPOINT}/"
             f"business-cases/{CASE_ID}/images/{document_slug}_chart1/chart.png)\n"
         ),
         is_deleted=False,
@@ -959,3 +770,5 @@ def _build_document(
 
 def _fixed_datetime() -> datetime:
     return datetime(2026, 1, 1, 8, 0, 0)
+
+

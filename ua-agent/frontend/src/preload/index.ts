@@ -148,6 +148,25 @@ const api = {
   },
   ping: (message?: string | null): Promise<unknown> =>
     ipcRenderer.invoke("ping", message ?? null),
+  agentAuth: {
+    getState: (): Promise<unknown> => ipcRenderer.invoke("agent-auth:get-state"),
+    requestEmailLoginCode: (email: string): Promise<unknown> =>
+      ipcRenderer.invoke("agent-auth:request-email-login-challenge", { email }),
+    verifyEmailLoginCode: (
+      loginChallengeId: string,
+      verificationCode: string,
+    ): Promise<unknown> =>
+      ipcRenderer.invoke("agent-auth:verify-email-login-challenge", {
+        loginChallengeId,
+        verificationCode,
+      }),
+    startWechatLogin: (): Promise<unknown> => ipcRenderer.invoke("agent-auth:start-wechat-login"),
+    getWechatLoginSession: (loginSessionId: string): Promise<unknown> =>
+      ipcRenderer.invoke("agent-auth:get-wechat-login-session", loginSessionId),
+    exchangeWechatLogin: (loginSessionId: string): Promise<unknown> =>
+      ipcRenderer.invoke("agent-auth:exchange-wechat-login", loginSessionId),
+    logout: (): Promise<unknown> => ipcRenderer.invoke("agent-auth:logout"),
+  },
   libraryList: (
     query: {
       from?: string | null;
@@ -178,6 +197,9 @@ const api = {
     offEvent: (id: number): void => {
       aiChatEventCallbacks.delete(id);
     },
+  },
+  persona: {
+    save: (payload: unknown): Promise<unknown> => ipcRenderer.invoke("persona:save", payload),
   },
   keyword: {
     list: (): Promise<unknown> => ipcRenderer.invoke("keyword:list"),

@@ -40,6 +40,13 @@ import type {
 } from "../contracts/hot-material-analysis";
 import type { LibraryDeleteResult, LibraryListResult } from "../contracts/library";
 import type { PingResult } from "../contracts/ping";
+import type {
+  AgentAuthMutationResult,
+  AgentAuthStateResult,
+  EmailLoginChallengeResult,
+  WechatLoginSessionResult,
+  WechatLoginSessionStatusResult,
+} from "../contracts/agent-auth";
 import type { BatchEvent } from "../contracts/keyword/batch-event";
 import type { InstallBrowserResult } from "../contracts/keyword/session-install-browser";
 import type { SessionResetResult } from "../contracts/keyword/session-reset";
@@ -60,6 +67,7 @@ import type {
   AiChatSendResult,
   AiChatStateResult,
 } from "../contracts/ai-chat";
+import type { PersonaSavePayload, PersonaSaveResult } from "../contracts/persona";
 import type {
   AppSettingsPatch,
   SettingsGetResult,
@@ -138,6 +146,18 @@ declare global {
         close: () => void;
       };
       ping: (message?: string | null) => Promise<PingResult>;
+      agentAuth: {
+        getState: () => Promise<AgentAuthStateResult>;
+        requestEmailLoginCode: (email: string) => Promise<EmailLoginChallengeResult>;
+        verifyEmailLoginCode: (
+          loginChallengeId: string,
+          verificationCode: string,
+        ) => Promise<AgentAuthMutationResult>;
+        startWechatLogin: () => Promise<WechatLoginSessionResult>;
+        getWechatLoginSession: (loginSessionId: string) => Promise<WechatLoginSessionStatusResult>;
+        exchangeWechatLogin: (loginSessionId: string) => Promise<AgentAuthMutationResult>;
+        logout: () => Promise<AgentAuthMutationResult>;
+      };
       libraryList: (query?: LibraryListQuery) => Promise<LibraryListResult>;
       libraryDelete: (postId: string) => Promise<LibraryDeleteResult>;
       settings: {
@@ -152,6 +172,9 @@ declare global {
         reset: () => Promise<AiChatResetResult>;
         onEvent: (callback: (event: AiChatEvent) => void) => number;
         offEvent: (id: number) => void;
+      };
+      persona: {
+        save: (payload: PersonaSavePayload) => Promise<PersonaSaveResult>;
       };
       keyword: {
         list: () => Promise<KeywordListResult>;

@@ -59,7 +59,7 @@ test("purchaseNormalMembership creates order, invokes requestPayment, and resolv
       if (requestCount === 1) {
         assert.equal(
           options.url,
-          "http://127.0.0.1:8000/api/v1/memberships/wechat-mini-program/orders"
+          "http://127.0.0.1:8001/api/v1/memberships/wechat-mini-program/orders"
         );
         assert.equal(options.method, "POST");
         assert.deepEqual(options.data, {
@@ -110,7 +110,7 @@ test("purchaseNormalMembership creates order, invokes requestPayment, and resolv
 
       assert.equal(
         options.url,
-        "http://127.0.0.1:8000/api/v1/memberships/wechat-mini-program/orders/90001"
+        "http://127.0.0.1:8001/api/v1/memberships/wechat-mini-program/orders/90001"
       );
       options.success({
         statusCode: 200,

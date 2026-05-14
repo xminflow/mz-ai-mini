@@ -107,7 +107,7 @@ test("syncCurrentMiniProgramUser uses backend auth endpoint and stores current u
     request(options) {
       assert.equal(
         options.url,
-        "http://127.0.0.1:8000/api/v1/auth/wechat-mini-program/users/current"
+        "http://127.0.0.1:8001/api/v1/auth/wechat-mini-program/users/current"
       );
       assert.equal(options.method, "PUT");
       assert.equal(options.header["X-WX-APPID"], "wx-local-dev");
@@ -200,7 +200,7 @@ test("updateCurrentMiniProgramUserProfile sends profile to backend and returns u
     request(options) {
       assert.equal(
         options.url,
-        "http://127.0.0.1:8000/api/v1/auth/wechat-mini-program/users/current/profile"
+        "http://127.0.0.1:8001/api/v1/auth/wechat-mini-program/users/current/profile"
       );
       assert.equal(options.method, "PUT");
       assert.deepEqual(options.data, {
@@ -252,7 +252,7 @@ test("authorizeCurrentMiniProgramUserProfile submits a partial profile patch and
     request(options) {
       assert.equal(
         options.url,
-        "http://127.0.0.1:8000/api/v1/auth/wechat-mini-program/users/current/profile"
+        "http://127.0.0.1:8001/api/v1/auth/wechat-mini-program/users/current/profile"
       );
       assert.deepEqual(options.data, {
         avatar_url: "cloud://env-id.xxx/avatars/authorized.jpg",
@@ -305,7 +305,7 @@ test("authorizeCurrentMiniProgramUserProfile refreshes the cached current user r
       if (requestCount === 1) {
         assert.equal(
           options.url,
-          "http://127.0.0.1:8000/api/v1/auth/wechat-mini-program/users/current"
+          "http://127.0.0.1:8001/api/v1/auth/wechat-mini-program/users/current"
         );
         options.success({
           statusCode: 200,
@@ -330,7 +330,7 @@ test("authorizeCurrentMiniProgramUserProfile refreshes the cached current user r
 
       assert.equal(
         options.url,
-        "http://127.0.0.1:8000/api/v1/auth/wechat-mini-program/users/current/profile"
+        "http://127.0.0.1:8001/api/v1/auth/wechat-mini-program/users/current/profile"
       );
       options.success({
         statusCode: 200,

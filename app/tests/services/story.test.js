@@ -45,7 +45,7 @@ test("fetchStoryList maps backend business cases and keeps direct cover image ur
     request(options) {
       assert.equal(
         options.url,
-        "http://127.0.0.1:8000/api/v1/business-cases?limit=6&cursor=cursor-1&industry=%E6%B6%88%E8%B4%B9&keyword=AI%20%E6%8F%90%E6%95%88"
+        "http://127.0.0.1:8001/api/v1/business-cases?limit=6&cursor=cursor-1&industry=%E6%B6%88%E8%B4%B9&keyword=AI%20%E6%8F%90%E6%95%88"
       );
       assert.equal(options.method, "GET");
       assert.equal(options.header["X-WX-OPENID"], "local-dev-openid");
@@ -113,7 +113,7 @@ test("fetchStoryDetail maps keyed documents and ordered tabs over HTTP in develo
       };
     },
     request(options) {
-      assert.equal(options.url, "http://127.0.0.1:8000/api/v1/business-cases/1001");
+      assert.equal(options.url, "http://127.0.0.1:8001/api/v1/business-cases/1001");
       assert.equal(options.method, "GET");
       assert.equal(options.header["X-WX-OPENID"], "local-dev-openid");
 
@@ -213,7 +213,7 @@ test("fetchStoryDetail maps project how_to_do document into the detail tabs", as
       };
     },
     request(options) {
-      assert.equal(options.url, "http://127.0.0.1:8000/api/v1/business-cases/2001");
+      assert.equal(options.url, "http://127.0.0.1:8001/api/v1/business-cases/2001");
       assert.equal(options.method, "GET");
 
       options.success({
@@ -273,7 +273,7 @@ test("fetchStoryDetail maps project how_to_do document into the detail tabs", as
   });
 });
 
-test("fetchStoryList resolves cloud cover image ids through CloudBase temp urls", async () => {
+test("fetchStoryList resolves cloud cover image ids through temp urls", async () => {
   global.wx = {
     getAccountInfoSync() {
       return {

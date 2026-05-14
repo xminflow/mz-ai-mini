@@ -3,6 +3,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 
 from ..modules import (
+    agent_auth_router,
     auth_router,
     business_cases_router,
     case_research_router,
@@ -29,6 +30,7 @@ def create_app() -> FastAPI:
     )
     register_middlewares(app)
     register_exception_handlers(app)
+    app.include_router(agent_auth_router, prefix=settings.api_prefix)
     app.include_router(auth_router, prefix=settings.api_prefix)
     app.include_router(business_cases_router, prefix=settings.api_prefix)
     app.include_router(case_research_router, prefix=settings.api_prefix)

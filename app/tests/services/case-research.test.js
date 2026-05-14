@@ -43,7 +43,7 @@ test("createPublicCaseResearchRequest posts the case research payload to backend
     request(options) {
       assert.equal(
         options.url,
-        "http://127.0.0.1:8000/api/v1/case-research/wechat-mini-program/requests"
+        "http://127.0.0.1:8001/api/v1/case-research/wechat-mini-program/requests"
       );
       assert.equal(options.method, "POST");
       assert.deepEqual(options.data, {

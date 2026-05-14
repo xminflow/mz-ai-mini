@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import base64
+import binascii
 from datetime import datetime
+from pathlib import PurePosixPath
 
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
@@ -76,6 +79,56 @@ def _strip_required_text(value: str, *, field_name: str) -> str:
     if normalized == "":
         raise ValueError(f"{field_name} must not be blank.")
     return normalized
+
+
+class UploadCurrentMiniProgramUserAvatarRequest(BaseModel):
+    """HTTP payload for uploading the current user's avatar binary."""
+
+    model_config = ConfigDict(frozen=True)
+
+    object_key: str
+    content_type: str
+    content_base64: str
+
+    @field_validator("object_key")
+    @classmethod
+    def validate_object_key(cls, value: str) -> str:
+        normalized = _strip_required_text(value, field_name="object_key").replace("\\", "/")
+        path = PurePosixPath(normalized)
+        if path.is_absolute() or ".." in path.parts:
+            raise ValueError("object_key must stay within the avatars directory.")
+        if path.parts[0] != "avatars":
+            raise ValueError("object_key must start with avatars/.")
+        return normalized
+
+    @field_validator("content_type")
+    @classmethod
+    def validate_content_type(cls, value: str) -> str:
+        normalized = _strip_required_text(value, field_name="content_type").lower()
+        if normalized not in {"image/jpeg", "image/png", "image/webp"}:
+            raise ValueError("content_type must be image/jpeg, image/png, or image/webp.")
+        return normalized
+
+    @field_validator("content_base64")
+    @classmethod
+    def validate_content_base64(cls, value: str) -> str:
+        normalized = _strip_required_text(value, field_name="content_base64")
+        try:
+            base64.b64decode(normalized, validate=True)
+        except (binascii.Error, ValueError) as exc:
+            raise ValueError("content_base64 must be valid base64.") from exc
+        return normalized
+
+    def decode_content(self) -> bytes:
+        return base64.b64decode(self.content_base64, validate=True)
+
+
+class UploadCurrentMiniProgramUserAvatarResponse(BaseModel):
+    """HTTP response payload for the uploaded current user avatar."""
+
+    model_config = ConfigDict(frozen=True)
+
+    avatar_url: str
 
 
 class UpdateCurrentMiniProgramUserProfileRequest(BaseModel):

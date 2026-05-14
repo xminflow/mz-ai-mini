@@ -3,8 +3,8 @@
 Usage:
 - Import `BusinessCaseDirectoryImporter` to turn one local case directory into
   a published business case recreation.
-- Import `CaseImportCloudBaseSettings` and `CloudBaseStorageClient` to configure
-  CloudBase asset uploads and cleanup for the importer.
+- Import `CosStorageSettings` and `CosStorageClient` to configure Tencent Cloud
+  COS asset uploads and cleanup for the importer.
 - Import config supports case-level short `desc`, `summary.md`, freshness
   metadata, `type`, `industry`, `tags`, and one shared case cover image.
 - Both case and project imports read `business_model.md` from the case
@@ -19,13 +19,14 @@ Development rules:
   new business case.
 """
 
-from .cloudbase_client import CloudBaseStorageClient
-from .models import CaseImportCloudBaseSettings, CaseImportResult
+from mz_ai_backend.shared import CosStorageClient, CosStorageSettings
+
+from .models import CaseImportResult
 from .service import BusinessCaseDirectoryImporter
 
 __all__ = [
     "BusinessCaseDirectoryImporter",
-    "CaseImportCloudBaseSettings",
     "CaseImportResult",
-    "CloudBaseStorageClient",
+    "CosStorageClient",
+    "CosStorageSettings",
 ]

@@ -2,6 +2,8 @@
 
 Usage:
 - Import reusable helpers from this package only.
+- Import `CosStorageSettings` and `CosStorageClient` for Tencent Cloud COS
+  object storage access.
 - Import WechatPayV3Gateway and related types for WeChat Pay integration.
 
 Development rules:
@@ -9,6 +11,7 @@ Development rules:
 - Do not place module-specific orchestration logic here.
 """
 
+from .cos_storage import CosStorageClient, CosStorageSettings
 from .snowflake import SnowflakeGenerator, get_snowflake_generator
 from .wechat_pay import (
     WechatPayConfigMissingException,
@@ -23,6 +26,8 @@ from .wechat_pay import (
 )
 
 __all__ = [
+    "CosStorageClient",
+    "CosStorageSettings",
     "SnowflakeGenerator",
     "WechatPayConfigMissingException",
     "WechatPayCreateOrderRequest",
