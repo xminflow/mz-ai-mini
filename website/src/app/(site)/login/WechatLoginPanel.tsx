@@ -81,7 +81,26 @@ export function WechatLoginPanel({ onSuccess }: WechatLoginPanelProps) {
         )
         if (signal.aborted) return
         if (!resp.ok) {
-          setPanelState({ phase: 'error', message: await parseApiError(resp) })
+          let errorCode = ''
+          let errorMessage = '登录失败，请重试'
+          try {
+            const body = (await resp.json()) as unknown
+            if (isApiErrorPayload(body)) {
+              errorCode = body.error.code
+              errorMessage = body.error.message
+            }
+          } catch {
+            // ignore parse failures, use defaults
+          }
+          if (errorCode === 'AGENT_AUTH.WECHAT_IDENTITY_NOT_SUBSCRIBED') {
+            setSessionKey((k) => k + 1)
+            return
+          }
+          if (errorCode === 'USER.DISABLED') {
+            setPanelState({ phase: 'error', message: '账户已被禁用，请联系客服' })
+            return
+          }
+          setPanelState({ phase: 'error', message: errorMessage })
           return
         }
         const { state: authState } = (await resp.json()) as ExchangeResponse
@@ -144,11 +163,11 @@ export function WechatLoginPanel({ onSuccess }: WechatLoginPanelProps) {
             } else {
               pollFailures = 0
               const { status } = (await pollResp.json()) as StatusResponse
-              if (status.status === 'authenticated' || status.status === 'consumed') {
+              if (status.status === 'authenticated') {
                 await doExchange(session.login_session_id)
                 return
               }
-              if (status.status === 'expired') {
+              if (status.status === 'consumed' || status.status === 'expired') {
                 setSessionKey((k) => k + 1)
                 return
               }
