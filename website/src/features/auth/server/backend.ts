@@ -212,7 +212,7 @@ type UpstreamWechatLoginSessionStatus = {
 export async function createWechatLoginSession(): Promise<WechatLoginSession> {
   const payload = await requestUpstream<UpstreamWechatLoginSession>(
     '/agent-auth/wechat-official/login-sessions',
-    { method: 'POST', body: '{}' },
+    { method: 'POST', body: JSON.stringify({}) },
   )
   return {
     login_session_id: asString(payload.login_session_id),
@@ -243,7 +243,7 @@ export async function getWechatLoginSession(loginSessionId: string): Promise<Wec
 export async function exchangeWechatLogin(loginSessionId: string): Promise<AuthPayload> {
   const payload = await requestUpstream<UpstreamAuthPayload>(
     `/agent-auth/wechat-official/login-sessions/${loginSessionId}/exchange`,
-    { method: 'POST', body: '{}' },
+    { method: 'POST', body: JSON.stringify({}) },
   )
   return normalizeAuthPayload(payload)
 }
