@@ -4,7 +4,6 @@ import type { LucideIcon } from "lucide-react";
 import {
   Bot,
   Compass,
-  GraduationCap,
   Globe2,
   LineChart,
   Settings as SettingsIcon,
@@ -32,10 +31,6 @@ export interface NavItem {
   children?: readonly NavChild[];
 }
 
-const SelfMediaGuide = lazy(() =>
-  import("@/features/self-media-guide").then((m) => ({ default: m.SelfMediaGuide })),
-);
-
 const Persona = lazy(() => import("@/features/persona").then((m) => ({ default: m.Persona })));
 
 const BloggerAnalysis = lazy(() =>
@@ -61,14 +56,6 @@ export const navItems: readonly NavItem[] = [
     label: "AI对话",
     icon: Bot,
     Element: AiChat,
-  },
-  {
-    path: "/self-media-guide/*",
-    navTo: "/self-media-guide",
-    label: "百万粉博主流量实战",
-    icon: GraduationCap,
-    Element: SelfMediaGuide,
-    children: [],
   },
   {
     path: "/persona/*",

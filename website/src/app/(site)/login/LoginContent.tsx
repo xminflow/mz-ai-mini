@@ -1,11 +1,10 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import type { AuthState } from '@/features/auth/types'
-import { EmailLoginPanel } from './EmailLoginPanel'
 import { WechatLoginPanel } from './WechatLoginPanel'
 
 function normalizeNextPath(value: string | null): string {
@@ -17,7 +16,6 @@ function normalizeNextPath(value: string | null): string {
 export function LoginContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [emailOpen, setEmailOpen] = useState(false)
   const nextPath = useMemo(() => normalizeNextPath(searchParams.get('next')), [searchParams])
 
   const handleLoginSuccess = (state: AuthState) => {
@@ -37,26 +35,13 @@ export function LoginContent() {
           <h1 className="mt-5 text-4xl font-semibold leading-tight text-ink sm:text-5xl">
             登录微域生光账号
           </h1>
+          <p className="mt-4 text-sm leading-relaxed text-muted">
+            扫码关注公众号即可登录；登录后可在个人信息中绑定邮箱与修改用户名。
+          </p>
         </div>
 
         <div className="rounded-[8px] border border-hairline bg-surface/80 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl sm:p-6">
           <WechatLoginPanel onSuccess={handleLoginSuccess} />
-
-          <div className="mt-5 border-t border-hairline pt-4">
-            <button
-              type="button"
-              onClick={() => setEmailOpen((v) => !v)}
-              className="flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-ink"
-            >
-              <span>{emailOpen ? '▾' : '▸'}</span>
-              使用邮箱登录
-            </button>
-            {emailOpen && (
-              <div className="mt-4">
-                <EmailLoginPanel onSuccess={handleLoginSuccess} />
-              </div>
-            )}
-          </div>
 
           <Link
             href="/"

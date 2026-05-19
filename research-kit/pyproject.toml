@@ -1,0 +1,54 @@
+[project]
+name = "research-kit"
+version = "0.2.0"
+description = "可扩展的资料收集与拆解平台。首版交付抖音博主拆解 CLI（被 Claude Code skill 编排调用）。"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "typer>=0.12",
+    "pydantic>=2.6",
+    "platformdirs>=4.2",
+    "rich>=13.7",
+    "httpx>=0.28.1",
+    "anthropic>=0.40",
+    "beautifulsoup4>=4.12",
+    # 采集链路核心依赖。
+    "patchright>=1.40",        # 浏览器自动化（Playwright 的反检测分支，抓主页与作品列表）
+    "ffmpeg-python>=0.2",      # 抽帧 / 音频提取（同时依赖系统 ffmpeg 可执行）
+]
+# 视频下载走 httpx + iesdouyin.com 解析（与 ua-agent 一致），httpx 已经在依赖中。
+# 转录走 subprocess 调 ua-agent backend 的 Fun-ASR-Nano CLI，模型与重型依赖
+# （torch、funasr、librosa）都装在 ua-agent backend 的 venv 里，research-kit
+# 自身不引入这些大依赖。
+
+[project.scripts]
+research-kit = "research_kit.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/research_kit"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+".claude/skills" = "research_kit/skills"
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+]
+
+[tool.pyright]
+include = ["src", "tests"]
+exclude = ["**/__pycache__", "**/.venv"]
+pythonVersion = "3.11"
+typeCheckingMode = "standard"
+reportMissingImports = "error"
+reportMissingTypeStubs = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q"
+asyncio_mode = "auto"

@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, Query, Request, Response
 from mz_ai_backend.core.protocol import ApiResponse, success_response
 
 from ..application import (
+    ChangeAgentUsernameUseCase,
     CreateAgentWechatLoginSessionCommand,
     CreateAgentWechatLoginSessionUseCase,
     ExchangeAgentWechatLoginUseCase,
@@ -17,11 +18,12 @@ from ..application import (
     HandleAgentWechatCallbackCommand,
     HandleAgentWechatCallbackUseCase,
     LogoutAgentSessionUseCase,
-    RequestAgentEmailLoginChallengeUseCase,
     RefreshAgentSessionUseCase,
-    VerifyAgentEmailLoginChallengeUseCase,
+    RequestEmailBindingChallengeUseCase,
+    VerifyEmailBindingChallengeUseCase,
 )
 from ..infrastructure import (
+    get_change_agent_username_use_case,
     get_create_wechat_login_session_use_case,
     get_current_agent_access_token,
     get_exchange_wechat_login_use_case,
@@ -29,61 +31,31 @@ from ..infrastructure import (
     get_get_wechat_login_session_use_case,
     get_handle_wechat_callback_use_case,
     get_logout_agent_session_use_case,
-    get_request_email_login_challenge_use_case,
     get_refresh_agent_session_use_case,
-    get_verify_email_login_challenge_use_case,
+    get_request_email_binding_challenge_use_case,
+    get_verify_email_binding_challenge_use_case,
 )
 from ..infrastructure.dependencies import get_official_wechat_gateway
 from ..infrastructure.wechat_official import WechatOfficialAccountGateway
 from .schemas import (
     AgentAuthAccountResponse,
     AgentAuthenticationResponse,
-    AgentEmailLoginChallengeResponse,
     AgentWechatLoginSessionResponse,
     AgentWechatLoginSessionStatusResponse,
+    ChangeAgentUsernameRequest,
+    ChangeAgentUsernameResponse,
+    EmailBindingChallengeResponse,
     ExchangeAgentWechatLoginRequest,
     LogoutAgentSessionRequest,
     LogoutAgentSessionResponse,
-    RequestAgentEmailLoginChallengeRequest,
     RefreshAgentSessionRequest,
-    VerifyAgentEmailLoginChallengeRequest,
+    RequestEmailBindingChallengeRequest,
+    VerifyEmailBindingChallengeRequest,
+    VerifyEmailBindingChallengeResponse,
 )
 
 
 router = APIRouter(prefix="/agent-auth", tags=["agent-auth"])
-
-
-@router.post(
-    "/email-login/challenges",
-    response_model=ApiResponse[AgentEmailLoginChallengeResponse],
-    summary="Create one email login challenge",
-)
-async def request_email_login_challenge(
-    request: RequestAgentEmailLoginChallengeRequest,
-    use_case: Annotated[
-        RequestAgentEmailLoginChallengeUseCase,
-        Depends(get_request_email_login_challenge_use_case),
-    ],
-) -> ApiResponse[AgentEmailLoginChallengeResponse]:
-    result = await use_case.execute(request.to_command())
-    return success_response(data=AgentEmailLoginChallengeResponse.from_result(result))
-
-
-@router.post(
-    "/email-login/challenges/{login_challenge_id}/verify",
-    response_model=ApiResponse[AgentAuthenticationResponse],
-    summary="Verify one email login challenge",
-)
-async def verify_email_login_challenge(
-    login_challenge_id: int,
-    request: VerifyAgentEmailLoginChallengeRequest,
-    use_case: Annotated[
-        VerifyAgentEmailLoginChallengeUseCase,
-        Depends(get_verify_email_login_challenge_use_case),
-    ],
-) -> ApiResponse[AgentAuthenticationResponse]:
-    result = await use_case.execute(request.to_command(login_challenge_id=login_challenge_id))
-    return success_response(data=AgentAuthenticationResponse.from_result(result))
 
 
 @router.post(
@@ -132,6 +104,63 @@ async def get_current_agent_account(
 ) -> ApiResponse[AgentAuthAccountResponse]:
     result = await use_case.execute(GetCurrentAgentAccountQuery(access_token=access_token))
     return success_response(data=AgentAuthAccountResponse.from_summary(result))
+
+
+@router.post(
+    "/me/email-binding/challenges",
+    response_model=ApiResponse[EmailBindingChallengeResponse],
+    summary="为当前账号请求邮箱绑定验证码",
+)
+async def request_email_binding_challenge(
+    request: RequestEmailBindingChallengeRequest,
+    access_token: Annotated[str, Depends(get_current_agent_access_token)],
+    use_case: Annotated[
+        RequestEmailBindingChallengeUseCase,
+        Depends(get_request_email_binding_challenge_use_case),
+    ],
+) -> ApiResponse[EmailBindingChallengeResponse]:
+    result = await use_case.execute(request.to_command(access_token=access_token))
+    return success_response(data=EmailBindingChallengeResponse.from_result(result))
+
+
+@router.post(
+    "/me/email-binding/challenges/{login_challenge_id}/verify",
+    response_model=ApiResponse[VerifyEmailBindingChallengeResponse],
+    summary="验证邮箱绑定验证码并把邮箱写入当前账号",
+)
+async def verify_email_binding_challenge(
+    login_challenge_id: int,
+    request: VerifyEmailBindingChallengeRequest,
+    access_token: Annotated[str, Depends(get_current_agent_access_token)],
+    use_case: Annotated[
+        VerifyEmailBindingChallengeUseCase,
+        Depends(get_verify_email_binding_challenge_use_case),
+    ],
+) -> ApiResponse[VerifyEmailBindingChallengeResponse]:
+    result = await use_case.execute(
+        request.to_command(
+            access_token=access_token,
+            login_challenge_id=login_challenge_id,
+        )
+    )
+    return success_response(data=VerifyEmailBindingChallengeResponse.from_result(result))
+
+
+@router.patch(
+    "/me/username",
+    response_model=ApiResponse[ChangeAgentUsernameResponse],
+    summary="修改当前账号的用户名",
+)
+async def change_agent_username(
+    request: ChangeAgentUsernameRequest,
+    access_token: Annotated[str, Depends(get_current_agent_access_token)],
+    use_case: Annotated[
+        ChangeAgentUsernameUseCase,
+        Depends(get_change_agent_username_use_case),
+    ],
+) -> ApiResponse[ChangeAgentUsernameResponse]:
+    result = await use_case.execute(request.to_command(access_token=access_token))
+    return success_response(data=ChangeAgentUsernameResponse.from_result(result))
 
 
 @router.post(
@@ -219,6 +248,7 @@ async def handle_wechat_callback(
         Depends(get_handle_wechat_callback_use_case),
     ],
     signature: str | None = Query(default=None),
+    msg_signature: str | None = Query(default=None),
     timestamp: str | None = Query(default=None),
     nonce: str | None = Query(default=None),
 ) -> Response:
@@ -226,6 +256,7 @@ async def handle_wechat_callback(
     await use_case.execute(
         HandleAgentWechatCallbackCommand(
             signature=signature,
+            msg_signature=msg_signature,
             timestamp=timestamp,
             nonce=nonce,
             xml_body=body,

@@ -8,26 +8,27 @@ const FOOTER_GROUPS: Array<{
     title: "浏览",
     links: [
       { label: "首页", href: "/" },
-      { label: "行业报告", href: "/cases" },
-      { label: "AI+服务", href: "/ai-services" },
-      { label: "关于我们", href: "/about" },
+      { label: "信息库", href: "/library" },
+      { label: "产品", href: "/product" },
+      { label: "咨询服务", href: "/consulting" },
+      { label: "关于", href: "/about" },
     ],
   },
   {
-    title: "我们做什么",
+    title: "信息库",
     links: [
-      { label: "IP 定位", href: "/ai-services" },
-      { label: "IP 生产系统", href: "/ai-services" },
-      { label: "长期策略顾问", href: "/ai-services" },
-      { label: "行业报告订阅", href: "/cases" },
+      { label: "爆款拆解", href: "/library?type=breakdown" },
+      { label: "博主洞察", href: "/bloggers" },
+      { label: "赛道分析", href: "/library?type=track" },
+      { label: "百万粉博主运营方法论精炼", href: "/playbook" },
     ],
   },
   {
     title: "联系",
     links: [
-      { label: "免费1v1咨询", href: "/about" },
-      { label: "加微信", href: "/about" },
-      { label: "合作邮箱", href: "/about" },
+      { label: "咨询", href: "/consulting" },
+      { label: "了解产品", href: "/product" },
+      { label: "联系订阅", href: "/product" },
     ],
   },
 ];
@@ -52,9 +53,7 @@ export const SiteFooter = () => {
               </span>
             </div>
             <p className="max-w-sm text-[13px] leading-[1.8] text-muted">
-              多数生意的放缓，不来自商业模式，而来自 AI
-              时代的价值尚未进入你的体系。我们为经营者与创业者，重构 IP
-              与品牌资产。
+              AI 时代，真实的案例才更有价值。内容是内核，AI 是生产工具——我们拆解爆款、追踪博主、读懂赛道，把研究的部分做到位。
             </p>
           </div>
           {FOOTER_GROUPS.map((group) => (

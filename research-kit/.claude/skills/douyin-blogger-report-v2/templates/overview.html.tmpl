@@ -1,0 +1,900 @@
+<!--
+============================================================================
+ overview.html · 抖音博主深度拆解报告模板（v0.3.1）
+============================================================================
+
+这是一份**完整可运行的骨架**——直接复制一份到 reports/<run_id>/overview.html，
+然后按照下面三个规则填内容：
+
+  1. `{{...}}` 占位符 → 用 profile.json / 转录素材的具体值替换。
+     大数（粉丝 / 获赞）走"万 / 亿"展示规则：例如 413000 → "41.3"，单位 → "万"。
+     字段 null 时数值位置显示 "—"，单位留空。
+
+  2. `<!-- TODO(章节): ... -->` 注释 → 这里必须写实际拆解内容，
+     注释里列出了"该写什么"，但**不要照搬注释里的措辞**——它只是指引，
+     不是文案。写完后请删掉这条 TODO 注释。
+
+  3. 每个 `<section>` 末尾的 `qa-card · 必须答的问题` **必须答完 5 个问题**，
+     这是深度的硬底线。问题清单写在 SKILL.md 各章节里，按章对照填入。
+
+填完后做两件事：
+  · Step 4：base64 内嵌图片（含 avatar.jpg + 各 aweme/N.jpg）
+  · 生成 index.json（强制 schema 见 SKILL.md §3.8）
+
+**不要**改 head 里的 CSS / Tailwind config / 字体；改了视觉一致性就垮。
+**不要**加 `<header>` sticky 顶栏 / `<footer>` 脚注；这两块在 SKILL §3.5 / §3.6
+明确禁止。
+============================================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{display_name}} · 博主拆解分析报告</title>
+
+  <!-- 字体：阿里巴巴普惠体 3（chinese-fonts-cdn，自动 subset + woff2） + JetBrains Mono（代码 / 数字） -->
+  <link rel="preconnect" href="https://chinese-fonts-cdn.deno.dev" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-55-Regular/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-65-Medium/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-85-Bold/result.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    /* 把 chinese-fonts-cdn 的三个 package 别名到统一的 "Alibaba PuHuiTi" 家族，
+       通过 font-weight 自动选权重。`local()` 命中已注册的 webfont 家族，
+       不会触发额外的网络请求。 */
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-55-Regular'), local('Alibaba PuHuiTi 3 55 Regular');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-85-Bold'), local('Alibaba PuHuiTi 3 85 Bold');
+    }
+  </style>
+
+  <!-- Tailwind CDN with Weelume brand config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#F5F5F7',
+            'ink-soft': '#D4D4D8',
+            muted: '#8A8A94',
+            canvas: '#050507',
+            surface: '#0D0D12',
+            'surface-2': '#141420',
+            hairline: 'rgba(255,255,255,0.08)',
+            'hairline-strong': 'rgba(255,255,255,0.16)',
+            accent: '#A78BFA',
+            'accent-2': '#22D3EE',
+            'accent-3': '#F472B6',
+            report: '#10b981',
+            'report-deep': '#064e3b',
+            'report-soft': 'rgba(16,185,129,0.08)',
+          },
+          fontFamily: {
+            sans: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-55-Regular"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            serif: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-85-Bold"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { scrollbar-gutter: stable; }
+    html, body {
+      margin: 0; padding: 0;
+      min-height: 100%;
+      background-color: #050507;
+      color: #F5F5F7;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-55-Regular', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-feature-settings: "palt";
+      font-variant-numeric: lining-nums proportional-nums;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    body {
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(167,139,250,0.18), transparent 45%),
+        radial-gradient(circle at 85% 0%, rgba(34,211,238,0.14), transparent 50%),
+        radial-gradient(circle at 50% 110%, rgba(244,114,182,0.12), transparent 55%);
+      background-attachment: fixed;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-optical-sizing: auto;
+      font-feature-settings: "palt";
+    }
+    /* 报告里的"中文衬线大字"位（h1/h2 + 一句话答卷 + stats 数字）
+       原本走 Noto Serif SC，现在统一切到普惠体 Bold——保留 class 名兼容
+       现存模板和已有报告，不改 markup。 */
+    .font-serif-zh {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    ::selection { background-color: rgba(167, 139, 250, 0.35); color: #fff; }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.08);
+      border-radius: 9999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); background-clip: padding-box; }
+
+    /* Hero 一句话答卷渐变文字 */
+    .text-shimmer {
+      background: linear-gradient(120deg, #F5F5F7 0%, #A78BFA 40%, #22D3EE 70%, #F5F5F7 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmerText 12s linear infinite;
+    }
+    @keyframes shimmerText {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .glass {
+      background: rgba(13,13,18,0.55);
+      backdrop-filter: saturate(160%) blur(18px);
+      -webkit-backdrop-filter: saturate(160%) blur(18px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .accent-bar { border-left: 3px solid #10b981; }
+    .accent-bar-deep { border-left: 3px solid #064e3b; }
+    .zh-justify { text-align: justify; text-justify: inter-ideograph; }
+
+    /* "必须答的问题" 答疑卡片 */
+    .qa-card {
+      border-left: 3px solid #10b981;
+      background: rgba(16,185,129,0.05);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+    }
+    .qa-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: #10b981;
+      margin-bottom: 0.6rem;
+    }
+
+    /* 表格 */
+    table.report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 14px;
+    }
+    table.report-table thead th {
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      padding: 0.75rem 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #b8aa96;
+      text-align: left;
+    }
+    table.report-table tbody td {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0.75rem 0.85rem;
+      vertical-align: top;
+      color: #D4D4D8;
+      line-height: 1.85;
+    }
+    table.report-table tbody tr:last-child td { border-bottom: none; }
+
+    /* 章节分割 */
+    .chapter-divider {
+      text-align: center;
+      letter-spacing: 1em;
+      color: rgba(255,255,255,0.15);
+      font-size: 16px;
+      margin: 3.5rem 0;
+    }
+
+    /* 引用块 */
+    blockquote.report-quote {
+      border-left: 3px solid #10b981;
+      background: rgba(255,255,255,0.04);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+      color: #e7dfd4;
+      font-size: 15.5px;
+      line-height: 1.95;
+    }
+    blockquote.report-quote cite {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: #10b981;
+      font-style: normal;
+    }
+
+    /* 内联 cite（作品标题引用） */
+    cite { font-style: normal; color: #34d399; font-weight: 500; }
+
+    /* 框架角标 */
+    .framework-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8A8A94;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    /* 正文段落 */
+    .prose-body { font-size: 15px; line-height: 2.05; color: #d6cfc4; }
+    .prose-body p { margin-bottom: 18px; }
+    .prose-body code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: rgba(255,255,255,0.06);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: #10b981;
+    }
+
+    /* 小节标题 */
+    .subhead {
+      border-left: 3px solid #10b981;
+      padding-left: 0.85rem;
+      margin: 2.5rem 0 1rem;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-65-Medium', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.04em;
+      color: #fffdf7;
+    }
+
+    strong { color: #fffdf7; font-weight: 600; }
+  </style>
+</head>
+
+<body>
+  <!-- 布局：xl+ 走 [16rem | 主内容] 双列；行内目录小屏使用，xl+ 由左侧 aside 接管。
+       不允许在此外再加 <header> sticky 顶栏。-->
+  <div class="xl:grid xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10 2xl:gap-14 mx-auto max-w-7xl">
+
+  <!-- 左侧固定目录（xl+） -->
+  <aside class="hidden xl:block xl:sticky xl:top-0 xl:self-start xl:max-h-screen xl:overflow-y-auto px-8 pt-16 pb-12">
+    <p class="font-mono text-[10px] tracking-[0.35em] uppercase text-muted mb-5">Table of Contents</p>
+    <p class="font-serif-zh text-[15px] font-medium text-ink-soft mb-6">十四章目录</p>
+    <ol class="space-y-2.5 text-[13px] text-ink-soft">
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">01</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#profile">博主画像</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">02</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#audience">观众画像与心理任务</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">03</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#positioning">内容定位</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">04</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#style">作品风格</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">05</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#value">核心价值主张</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">06</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#topics">选题策略</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">07</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#scripts">文案与脚本</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">08</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#craft">制作品质</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">09</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#growth">算法适配</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">10</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#evolution">成长路线</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">11</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#monetization">变现路径</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">12</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#transferability">方法论可迁移性</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">13</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#risk">风险与天花板</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">14</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#takeaway">可借鉴清单</a></li>
+    </ol>
+  </aside>
+
+  <main class="mx-auto max-w-3xl px-6 pt-14 pb-24 xl:mx-0 xl:max-w-3xl xl:px-10">
+
+    <!-- ====== HERO · 博主名片 + 一句话答卷 ====== -->
+    <section id="summary" class="mb-16 pt-2">
+
+      <!-- 博主名片 -->
+      <!-- 头像选项（SKILL.md §3.3）：
+           A. profile.json.avatar_path 非 null（默认场景）→ 用下面的 <img data-rk-frame="avatar.jpg">，
+              Step 4 会替换成 src="data:<mime>;base64,..."。
+           B. profile.json.avatar_path 为 null（collector 没抓到头像或下载失败）
+              → 删掉 <img>，改用首字母占位 <div>：
+              <!-- WARN: 头像本地化失败，使用首字母占位 -->
+              <div class="h-24 w-24 sm:h-28 sm:w-28 rounded-full border border-white/15
+                          bg-surface-2 flex items-center justify-center shrink-0
+                          font-serif-zh text-[34px] font-semibold text-ink-soft select-none">
+                {{display_name 第一个字符}}
+              </div>
+           **绝对不允许** 把 profile.json.avatar_url（抖音 CDN URL）填到 src 里。 -->
+      <div class="flex flex-col sm:flex-row items-start gap-7 sm:gap-8 mb-10">
+        <img
+          data-rk-frame="avatar.jpg"
+          alt="{{display_name}} 头像"
+          class="h-24 w-24 sm:h-28 sm:w-28 rounded-full border border-white/15 object-cover shrink-0 shadow-[0_8px_32px_-12px_rgba(167,139,250,0.4)]"
+        />
+        <div class="min-w-0 flex-1">
+          <h1 class="font-serif-zh text-[38px] sm:text-[46px] font-semibold leading-[1.15] tracking-[0.05em] text-ink mb-2.5">
+            {{display_name}}
+          </h1>
+          <p class="font-mono text-[12px] tracking-[0.18em] text-ink-soft mb-4 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            <span>抖音号 <span class="text-report">{{douyin_id}}</span></span>
+            <span class="text-white/15">·</span>
+            <a
+              href="{{home_url}}"
+              target="_blank" rel="noopener noreferrer"
+              class="text-report hover:text-ink transition-colors inline-flex items-center gap-1.5"
+            >访问主页<span aria-hidden="true">↗</span></a>
+          </p>
+          <p class="text-[14px] sm:text-[14.5px] leading-[1.9] tracking-[0.02em] text-ink-soft">
+            {{description}}
+          </p>
+        </div>
+      </div>
+
+      <!-- Stats 矩阵 -->
+      <dl class="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-6 border-y border-white/10 py-7 mb-12">
+        <div>
+          <dt class="font-mono text-[10.5px] tracking-[0.3em] uppercase text-muted mb-1.5">Followers · 粉丝</dt>
+          <dd class="font-serif-zh text-[26px] sm:text-[28px] font-semibold text-ink leading-none">{{follower_count_value}}<span class="text-[14px] ml-1 text-ink-soft tracking-normal align-baseline">{{follower_count_unit}}</span></dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10.5px] tracking-[0.3em] uppercase text-muted mb-1.5">Likes · 获赞</dt>
+          <dd class="font-serif-zh text-[26px] sm:text-[28px] font-semibold text-ink leading-none">{{liked_count_value}}<span class="text-[14px] ml-1 text-ink-soft tracking-normal align-baseline">{{liked_count_unit}}</span></dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10.5px] tracking-[0.3em] uppercase text-muted mb-1.5">Works · 作品</dt>
+          <dd class="font-serif-zh text-[26px] sm:text-[28px] font-semibold text-ink leading-none">{{total_works_count}}</dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10.5px] tracking-[0.3em] uppercase text-muted mb-1.5">Following · 关注</dt>
+          <dd class="font-serif-zh text-[26px] sm:text-[28px] font-semibold text-ink leading-none">{{following_count}}</dd>
+        </div>
+      </dl>
+
+      <!-- 一句话答卷 -->
+      <div class="relative my-12 px-2 py-10 text-center">
+        <span class="mx-auto mb-7 block h-px w-12 bg-report"></span>
+        <p class="font-mono text-[10.5px] tracking-[0.45em] uppercase text-report mb-5">
+          One-Sentence Verdict · 一句话答卷
+        </p>
+        <p class="font-serif-zh text-[22px] sm:text-[26px] font-semibold leading-[1.7] tracking-[0.05em] text-ink max-w-2xl mx-auto">
+          <!-- TODO(一句话答卷):
+            用一句话讲清核心招式，必须具体到动作。结构建议：
+            ta 以"<招式1> + <招式2> + <招式3>"为招式，把"<人设/位置>"，
+            钉在了一群<目标受众>的心智里。
+            可以用 <span class="text-shimmer">关键短语</span> 包裹 2-3 个招式词获得渐变效果。
+          -->
+        </p>
+        <span class="mx-auto mt-7 block h-px w-12 bg-report"></span>
+      </div>
+    </section>
+
+    <!-- 行内目录（小屏使用；xl+ 由左侧固定边栏接管） -->
+    <nav class="mb-16 border-t border-b border-white/10 py-8 xl:hidden">
+      <p class="font-mono text-[10.5px] tracking-[0.4em] uppercase text-muted mb-4">
+        Table of Contents · 十四章目录
+      </p>
+      <ol class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 text-[14px] text-ink-soft">
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">01</span><a class="hover:text-ink transition-colors" href="#profile">博主画像</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">02</span><a class="hover:text-ink transition-colors" href="#audience">观众画像与心理任务</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">03</span><a class="hover:text-ink transition-colors" href="#positioning">内容定位</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">04</span><a class="hover:text-ink transition-colors" href="#style">作品风格</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">05</span><a class="hover:text-ink transition-colors" href="#value">核心价值主张</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">06</span><a class="hover:text-ink transition-colors" href="#topics">选题策略</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">07</span><a class="hover:text-ink transition-colors" href="#scripts">文案与脚本</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">08</span><a class="hover:text-ink transition-colors" href="#craft">制作品质</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">09</span><a class="hover:text-ink transition-colors" href="#growth">算法适配</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">10</span><a class="hover:text-ink transition-colors" href="#evolution">成长路线</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">11</span><a class="hover:text-ink transition-colors" href="#monetization">变现路径</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">12</span><a class="hover:text-ink transition-colors" href="#transferability">方法论可迁移性</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">13</span><a class="hover:text-ink transition-colors" href="#risk">风险与天花板</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">14</span><a class="hover:text-ink transition-colors" href="#takeaway">可借鉴清单</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====== 第一章 · 博主画像 ====== -->
+    <section id="profile" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·01</span>
+        <span>参考《第一篇·底层逻辑》</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        博主画像
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第一章 · 博主画像):
+          按这个顺序写小节，每个小节用 <h3 class="subhead">...</h3> 起头：
+          · 基础画像：抖音号 + 总作品数 + 一句话定位
+          · 博主背景考据：从转录里挖到的"真实身份证据"（学位/职业/家庭等），用 <ul> 列点
+          · 经济模式判定：注意力 / 私域 / 粉丝（稳定型）/ 粉丝（爆品型）/ 品牌经济 → 落在哪一档？
+            用 <div class="qa-card"> 包裹结论+证据
+          · 稀缺线判断：是否稳定越过？给 3-4 条证据
+          · 8 个伪命题自检（养号/研究黄金时间/日更迷信/简化垂直/第一条爆款迷信/限流焦虑/标题封面万能/追热点万能）
+            用 <table class="report-table"> 列表
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>ta 是谁？<strong>答</strong>：</li>
+          <li>核心招式？<strong>答</strong>：</li>
+          <li>经济模式？<strong>答</strong>：</li>
+          <li>越过稀缺线？<strong>答</strong>：</li>
+          <li>有没有陷在伪命题？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第二章 · 观众画像与心理任务 ====== -->
+    <section id="audience" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·02</span>
+        <span>参考《第二篇·定位》用户心理任务</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        观众画像与心理任务
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第二章 · 观众画像与心理任务):
+          · 目标受众具体画像：列 2-3 个具体画像（A / B / C），每个含年龄段 + 职业 + 痛点
+          · 8 种用户心理任务识别（求判断 / 求身份认同 / 求替自己说话的人 /
+            求效率 / 求避坑 / 求安慰 / 求谈资 / 求陪伴）用 <table class="report-table">，
+            标"主导 / 次要 / 偶尔 / 弱"，每项给作品证据
+          · 停留 / 关注 / 复看 / 转发的具体动机：四个钩子写出来
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>真正受众？<strong>答</strong>：</li>
+          <li>主导心理任务？<strong>答</strong>：</li>
+          <li>"停留"钩子？<strong>答</strong>：</li>
+          <li>"关注"钩子？<strong>答</strong>：</li>
+          <li>"复看 / 转发"钩子？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第三章 · 内容定位 ====== -->
+    <section id="positioning" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·03</span>
+        <span>3+4+3 定位 + 6 大优势自检 · 第二篇</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        内容定位
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第三章 · 内容定位):
+          · 3.1 三位一体：商业定位 / 内容定位 / 人设定位 三栏 <table>
+          · 3.2 商业定位四阶梯：单品类 / 赛道 / 行业 / 大品类——博主在哪一档？升一档要补什么？
+          · 3.3 内容定位三原则：多维 / 原生 / 高频，逐条打"强 / 一般 / 弱"
+          · 3.4 等号是否立住：用一句"想 X 又 Y = 看 ta"的"等号"形式表述，并解释立没立住
+          · 3.5 6 大优势自检：① 原产地 ② 生产工厂 ③ 实体店 ④ 会干活 ⑤ 行业有厚度 ⑥ 说话大方
+            <table> 列出"是否拥有 / 是否用上"，主观三项（④⑤⑥）必须占满
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>三位一体哪项最强？<strong>答</strong>：</li>
+          <li>商业定位阶梯？<strong>答</strong>：</li>
+          <li>三原则哪条没达成？<strong>答</strong>：</li>
+          <li>6 大优势占了几条？<strong>答</strong>：</li>
+          <li>等号立没立住？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第四章 · 作品风格 ====== -->
+    <section id="style" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·04</span>
+        <span>视觉与叙述 · 第五篇</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        作品风格
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第四章 · 作品风格):
+          · 4.1 视觉语言：色调 / 构图 / 人物在场 / 场景 / 字幕 / 道具 / 画面密度，<ul> 列出，
+            结尾段说明"这种视觉服务于哪三件事"
+          · 4.2 叙述与语言：固定起手式 / 口头禅 / 句式节奏 / 口语化程度，<ul> 列点，
+            配 1-2 段 <blockquote class="report-quote"> 直接引用最有代表性的开头
+          · 4.3 视觉锤 / 文字钉 / 高频符号识别：明确指出博主的"3 个记忆点"
+          · 4.4 风格一致性评估：跨样本看是否稳定，给"强一致 / 一致 / 在演变 / 不稳定"四档
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>视觉锤是什么？<strong>答</strong>：</li>
+          <li>文字钉是什么？<strong>答</strong>：</li>
+          <li>3 个高频符号？<strong>答</strong>：</li>
+          <li>风格一致性档位？<strong>答</strong>：</li>
+          <li>跟同类账号的差异化锚点？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第五章 · 核心价值主张 ====== -->
+    <section id="value" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·05</span>
+        <span>价值主张 · 第二篇</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        核心价值主张
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第五章 · 核心价值主张):
+          · 5.1 一句话价值主张：用"我给 <谁> 提供 <什么>，让他们 <动作/结果>" 的句式
+          · 5.2 跟同赛道头部的差异：列 3-5 个对照（X 走 A 路线，本博主走 B 路线）
+          · 5.3 价值兑现的可信度：用 3 条最强证据作品作 <blockquote> 或 <cite> 引用
+          · 5.4 价值能否扩展：能复制到第二议题 / 第二受众群吗？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>一句话价值主张？<strong>答</strong>：</li>
+          <li>跟头部的差异？<strong>答</strong>：</li>
+          <li>兑现可信度档位？<strong>答</strong>：</li>
+          <li>3 条最强证据作品？<strong>答</strong>：</li>
+          <li>价值可扩展性？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第六章 · 选题策略 ====== -->
+    <section id="topics" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·06</span>
+        <span>五方向 + 八大爆款元素 + 情绪波点四出口 · 第三篇</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        选题策略
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第六章 · 选题策略):
+          · 6.1 五方向覆盖（痛点 / 疑问 / 坑 / 盲区 / 泛话题）：每条配 1-2 个作品 <cite>
+          · 6.2 八大爆款元素表（猎奇 / 反差 / 共鸣 / 实用 / 立场 / 故事 / 数据 / 权威），
+            用 <table class="report-table"> 列"含元素的作品 / 招牌火种"
+          · 6.3 情绪波点四出口（愤怒 / 焦虑 / 感动 / 共鸣）：博主主用哪个？给证据
+          · 6.4 选题密度与频次：每月新选题数？重复议题占比？
+          · 6.5 招牌火种：哪一种"爆款元素 × 情绪波点"是博主反复用的金线？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>五方向哪个最强？<strong>答</strong>：</li>
+          <li>八大爆款元素招牌火种？<strong>答</strong>：</li>
+          <li>主用情绪出口？<strong>答</strong>：</li>
+          <li>选题密度评估？<strong>答</strong>：</li>
+          <li>下一步该补的选题方向？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第七章 · 文案与脚本 ====== -->
+    <section id="scripts" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·07</span>
+        <span>五开头 + 四型脚本 + 五大结构 + 信息密度 · 第四篇·脚本</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        文案与脚本
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第七章 · 文案与脚本):
+          · 7.1 五开头模板识别（悬念 / 打破常识 / 对比 / 自暴自弃 / 稀缺感）：
+            从转录里至少识别 2-4 个反复出现的钩子模板，配 <blockquote class="report-quote">
+          · 7.2 四型脚本分布（聊观点 / 教知识 / 讲故事 / 晒过程）：判定主类型 + 占比 + 阶段适配性
+          · 7.3 五大结构（总分总 / 起承转合 / 倒叙 / 列表 / 对话）：博主主菜是哪个？
+          · 7.4 信息密度档位（高 / 中 / 低）：完播率与深度的权衡
+          · 7.5 收尾落点：金句 / 反问 / 留白 / 行动召唤——主用哪种？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>主用开头模板？<strong>答</strong>：</li>
+          <li>主类型脚本 + 阶段适配？<strong>答</strong>：</li>
+          <li>主用结构？<strong>答</strong>：</li>
+          <li>信息密度档位？<strong>答</strong>：</li>
+          <li>主用收尾落点？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第八章 · 制作品质 ====== -->
+    <section id="craft" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·08</span>
+        <span>拍摄 / 剪辑 / 表现力四选一 · 第六篇</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        制作品质
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第八章 · 制作品质):
+          · 8.1 拍摄设备 / 机位 / 光线观察：从帧画面推断
+          · 8.2 剪辑节奏：硬切频率 / 字幕节拍 / 配乐情况
+          · 8.3 表现力评估：镜头自信度 / 情绪起伏 / 真实感
+          · 8.4 四选一判定（拍摄精良 / 剪辑精良 / 表现力强 / 全都不强但内容好）：
+            博主把"四选一"中的哪一项做透了？
+          · 8.5 制作成本：单条耗时 / 是否团队 / 是否模板化
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>四选一选了哪个？<strong>答</strong>：</li>
+          <li>核心制作动作？<strong>答</strong>：</li>
+          <li>是否团队 / 单兵作战？<strong>答</strong>：</li>
+          <li>制作成本评估？<strong>答</strong>：</li>
+          <li>制作品质的天花板瓶颈？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第九章 · 算法适配 ====== -->
+    <section id="growth" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·09</span>
+        <span>算法四模块 + 完播三维 + 5 个反共识不要 · 第七篇</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        算法适配
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第九章 · 算法适配):
+          · 9.1 算法四模块视角下的账号画像：标签清晰度 / 内容质量 / 互动质量 / 账号权重——
+            博主在每项上推断的状态
+          · 9.2 完播曲线推断：从开头 / 中段 / 收尾看完播三维（开头钩 / 中段保 / 收尾留）
+          · 9.3 5 个反共识"不要"自检（不要养号 / 不要研究黄金时间 / 不要追日更 / 不要追第一条爆款 / 不要追热点）
+          · 9.4 阶段重点匹配：博主在哪个阶段（冷启动 / 起势 / 稳定 / 高原 / 涨粉转产品）？阶段重点是什么？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>账号在算法四模块中的强弱项？<strong>答</strong>：</li>
+          <li>完播曲线推断？<strong>答</strong>：</li>
+          <li>5 个不要里踩了几个？<strong>答</strong>：</li>
+          <li>当前阶段？<strong>答</strong>：</li>
+          <li>下一阶段的重点动作？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第十章 · 成长路线 ====== -->
+    <section id="evolution" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·10</span>
+        <span>样本时间线对比 · 第八篇</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        成长路线
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第十章 · 成长路线):
+          · 按样本 position 排序作早期 / 中期 / 近期三段对比：
+            选题、风格、信息密度、镜头表现各发生了什么变化？
+          · 10.1 早期：（最近 N 条作品里 position 最大的几条）特征
+          · 10.2 中期：过渡变化
+          · 10.3 近期：（position 最小的几条）特征——是否出现"风格收敛 / 重复 / 自我重复"？
+          · 10.4 成长曲线判断：处于上升期 / 平台期 / 下行期？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>风格演化主线？<strong>答</strong>：</li>
+          <li>近期是否出现重复 / 自我消耗？<strong>答</strong>：</li>
+          <li>当前曲线档位？<strong>答</strong>：</li>
+          <li>能识别的"招式迭代"动作？<strong>答</strong>：</li>
+          <li>下一步该补的进化？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第十一章 · 变现路径 ====== -->
+    <section id="monetization" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·11</span>
+        <span>变现四原则 + 链路五层 + 4P 带货 + 8 伪命题 · 第九篇</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        变现路径
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第十一章 · 变现路径):
+          · 11.1 现状盘点：挂车 / 小黄车 / 星图广告 / 直播 / 私域 / 课程——有什么？
+          · 11.2 变现四原则评估（离钱近 / 路径短 / 痛点痛 / 边际成本低）：逐项打"强 / 一般 / 弱"
+          · 11.3 链路五层（曝光 → 关注 → 私域 → 转化 → 复购）：每一层做没做？断在哪一层？
+          · 11.4 4P 带货检视（产品 / 价格 / 渠道 / 推广）：如有带货
+          · 11.5 给变现的具体建议：3-5 条立刻能做的动作（动词开头）
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>变现现状？<strong>答</strong>：</li>
+          <li>变现四原则中的瓶颈？<strong>答</strong>：</li>
+          <li>链路五层断在哪？<strong>答</strong>：</li>
+          <li>3 条立刻能做的变现动作？<strong>答</strong>：</li>
+          <li>变现天花板的核心数？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第十二章 · 方法论可迁移性 ====== -->
+    <section id="transferability" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·12</span>
+        <span>可借鉴清单初探 · 番外卷·行业战斗卷</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        方法论可迁移性
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第十二章 · 方法论可迁移性):
+          · 12.1 最关键前提：博主成功依赖的前提条件（缺一不可）
+          · 12.2 同行能直接抄的（动作 / 模板层面）
+          · 12.3 必须长期训练才能抄的（能力 / 心力层面）
+          · 12.4 完全抄不了的（身份 / 资源 / 不可复制要素）
+          · 12.5 跨行业映射（番外卷 5 大行业：医药 / 金融 / 教育 / 心理 / 数字产品等
+            的"能保留 / 需替换"对比表，用 <table class="report-table">）
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>依赖的最关键前提？<strong>答</strong>：</li>
+          <li>同行能直接抄什么？<strong>答</strong>：</li>
+          <li>必须长期训练才能抄什么？<strong>答</strong>：</li>
+          <li>完全抄不了什么？<strong>答</strong>：</li>
+          <li>跨场景能保留什么？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第十三章 · 风险与天花板 ====== -->
+    <section id="risk" class="scroll-mt-24 pt-4">
+      <div class="mb-5 font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·13</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        风险与天花板
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第十三章 · 风险与天花板):
+          用条件句列出 5-7 条这套打法的边界与脆弱点，每条结构：
+            "如果 <外部条件 / 内部惰性> 发生，X 会失效——损失是 Y，可以用 Z 对冲。"
+          重点关注：
+          · 赛道周期 / 平台政策 / 同行模仿 / 单品类过度依赖 /
+            日更迷信 / 心力损耗 / 跨阶段转型时机
+          最后一段：给一个"天花板的核心数"——不变现状态下能到 N 粉，变现升级后能到 N 营收。
+        -->
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第十四章 · 可借鉴清单 ====== -->
+    <section id="takeaway" class="scroll-mt-24 pt-4">
+      <div class="mb-5 font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·14</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        可借鉴清单
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第十四章 · 可借鉴清单):
+          · 14.1 立刻能抄的动作（5 条，每条动词开头）
+          · 14.2 需要训练才能抄的能力（3-5 条）
+          · 14.3 基本抄不了的要素（身份/资源/不可复制禀赋）
+          · 14.4 给同类型创作者的行动建议（5 条，每条动词开头 + 时间窗口）
+        -->
+      </div>
+    </section>
+
+  </main>
+
+  </div>
+</body>
+</html>

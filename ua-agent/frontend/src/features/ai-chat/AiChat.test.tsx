@@ -75,6 +75,11 @@ describe("AiChat", () => {
         send: vi.fn(),
         cancel: vi.fn(),
         reset: vi.fn(),
+        listSkills: vi.fn().mockResolvedValue({
+          schema_version: "1",
+          ok: true,
+          skills: [],
+        }),
         onEvent: vi.fn().mockReturnValue(1),
         offEvent: vi.fn(),
       },

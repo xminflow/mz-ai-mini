@@ -136,6 +136,7 @@ async def test_create_membership_order_creates_normal_order() -> None:
         snowflake_id_generator=StubSnowflakeGenerator(),
         current_time_provider=StubCurrentTimeProvider(),
         wechat_pay_gateway=gateway,
+        normal_price_fen=49900,
     )
 
     result = await use_case.execute(
@@ -150,7 +151,7 @@ async def test_create_membership_order_creates_normal_order() -> None:
     )
 
     assert result.order_no == "12345678901"
-    assert result.amount_fen == 10
+    assert result.amount_fen == 49900
     assert result.tier == MembershipTier.NORMAL
     assert result.status == MembershipOrderStatus.PENDING
     assert result.payment_params.package == "prepay_id=wx-prepay-001"
@@ -174,6 +175,7 @@ async def test_create_membership_order_rejects_not_open_plan() -> None:
         snowflake_id_generator=StubSnowflakeGenerator(),
         current_time_provider=StubCurrentTimeProvider(),
         wechat_pay_gateway=StubWechatPayGateway(),
+        normal_price_fen=49900,
     )
 
     with pytest.raises(MembershipPlanNotOpenException):
@@ -206,6 +208,7 @@ async def test_create_membership_order_rejects_active_normal_membership() -> Non
         snowflake_id_generator=StubSnowflakeGenerator(),
         current_time_provider=StubCurrentTimeProvider(),
         wechat_pay_gateway=StubWechatPayGateway(),
+        normal_price_fen=49900,
     )
 
     with pytest.raises(MembershipAlreadyActiveException):

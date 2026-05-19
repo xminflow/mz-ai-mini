@@ -10,7 +10,7 @@ Development rules:
 
 from .repositories import AgentAccountRepository
 from .services import (
-    EmailLoginDeliveryGateway,
+    EmailVerificationDeliveryGateway,
     OfficialWechatEvent,
     OfficialWechatQrTicket,
     OfficialWechatUserProfile,
@@ -20,7 +20,7 @@ from .services import (
 
 __all__ = [
     "AgentAccountRepository",
-    "EmailLoginDeliveryGateway",
+    "EmailVerificationDeliveryGateway",
     "OfficialWechatEvent",
     "OfficialWechatGateway",
     "OfficialWechatQrTicket",

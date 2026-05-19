@@ -1,4 +1,4 @@
-import type { AuthAccount, AuthPayload, EmailLoginChallenge, WechatLoginSession, WechatLoginSessionStatus } from '../types'
+import type { AuthAccount, AuthPayload, WechatLoginSession, WechatLoginSessionStatus } from '../types'
 
 const DEFAULT_DEV_API_BASE_URL = 'http://127.0.0.1:8000/api/v1'
 const DEFAULT_PRODUCTION_API_BASE_URL = 'https://api.weelume.com/api/v1'
@@ -29,12 +29,6 @@ type UpstreamAuthTokens = {
 type UpstreamAuthPayload = {
   account?: unknown
   tokens?: unknown
-}
-
-type UpstreamEmailLoginChallenge = {
-  login_challenge_id?: unknown
-  expires_at?: unknown
-  cooldown_seconds?: unknown
 }
 
 export class WebsiteAuthError extends Error {
@@ -136,39 +130,6 @@ async function requestUpstream<T>(
   }
 
   return envelope.data
-}
-
-export async function requestEmailLoginChallenge(email: string): Promise<EmailLoginChallenge> {
-  const payload = await requestUpstream<UpstreamEmailLoginChallenge>(
-    '/agent-auth/email-login/challenges',
-    {
-      method: 'POST',
-      body: JSON.stringify({ email }),
-    },
-  )
-
-  return {
-    login_challenge_id: asString(payload.login_challenge_id),
-    expires_at: asString(payload.expires_at),
-    cooldown_seconds:
-      typeof payload.cooldown_seconds === 'number' && Number.isFinite(payload.cooldown_seconds)
-        ? payload.cooldown_seconds
-        : 60,
-  }
-}
-
-export async function verifyEmailLoginChallenge(
-  loginChallengeId: string,
-  verificationCode: string,
-): Promise<AuthPayload> {
-  const payload = await requestUpstream<UpstreamAuthPayload>(
-    `/agent-auth/email-login/challenges/${loginChallengeId}/verify`,
-    {
-      method: 'POST',
-      body: JSON.stringify({ verification_code: verificationCode }),
-    },
-  )
-  return normalizeAuthPayload(payload)
 }
 
 export async function refreshSession(refreshToken: string): Promise<AuthPayload> {

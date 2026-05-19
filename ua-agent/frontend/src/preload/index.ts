@@ -186,9 +186,11 @@ const api = {
   },
   aiChat: {
     getState: (): Promise<unknown> => ipcRenderer.invoke("ai-chat:get-state"),
-    send: (args: { prompt: string }): Promise<unknown> => ipcRenderer.invoke("ai-chat:send", args),
+    send: (args: { prompt: string; skill_id?: string }): Promise<unknown> =>
+      ipcRenderer.invoke("ai-chat:send", args),
     cancel: (): Promise<unknown> => ipcRenderer.invoke("ai-chat:cancel"),
     reset: (): Promise<unknown> => ipcRenderer.invoke("ai-chat:reset"),
+    listSkills: (): Promise<unknown> => ipcRenderer.invoke("ai-chat:list-skills"),
     onEvent: (callback: (event: unknown) => void): number => {
       const id = aiChatEventNextId++;
       aiChatEventCallbacks.set(id, callback);
@@ -252,9 +254,6 @@ const api = {
     offEvent: (id: number): void => {
       schedulerEventCallbacks.delete(id);
     },
-  },
-  selfMediaGuide: {
-    list: (): Promise<unknown> => ipcRenderer.invoke("self-media-guide:list"),
   },
   douyinHot: {
     list: (args: { board: "hot" | "seeding" | "entertainment" | "society" }): Promise<unknown> =>

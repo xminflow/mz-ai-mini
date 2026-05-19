@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>自媒体运营手册 · 目录</title>
+<style>
+  :root {
+    --bg: #f7f3ec;
+    --bg-card: #fffdf7;
+    --ink: #2a241e;
+    --ink-soft: #5a4f44;
+    --ink-mute: #8a7e6f;
+    --rule: #d8cfbe;
+    --rule-soft: #ece4d3;
+    --accent: #8b2e2e;
+    --accent-soft: #b8693a;
+    --shadow: 0 1px 0 rgba(120,90,40,.05), 0 12px 32px rgba(120,90,40,.08);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); }
+  body {
+    font-family: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "Times New Roman", serif;
+    color: var(--ink);
+    font-size: 17px;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 80px 56px 120px;
+    background: var(--bg-card);
+    min-height: 100vh;
+    box-shadow: var(--shadow);
+  }
+  .meta-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    color: var(--ink-mute);
+    font-size: 13px;
+    letter-spacing: .15em;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .meta-top .imprint { font-style: italic; }
+  .title-block {
+    text-align: center;
+    margin: 64px 0 48px;
+  }
+  .super-title {
+    font-size: 13px;
+    letter-spacing: .8em;
+    color: var(--ink-mute);
+    padding-left: .8em;
+    margin-bottom: 28px;
+  }
+  h1.book-title {
+    font-size: 56px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: .12em;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .subtitle {
+    margin-top: 24px;
+    font-size: 16px;
+    color: var(--ink-soft);
+    letter-spacing: .25em;
+  }
+  .accent-rule {
+    width: 60px;
+    height: 2px;
+    background: var(--accent);
+    margin: 36px auto 0;
+  }
+  .pitch {
+    max-width: 540px;
+    margin: 56px auto 0;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    line-height: 2.1;
+    letter-spacing: .04em;
+  }
+  .pitch em {
+    font-style: normal;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  h2.section-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .6em;
+    color: var(--ink-mute);
+    margin: 72px 0 28px;
+    padding-left: .6em;
+  }
+  .toc {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .toc .part {
+    padding: 22px 0 18px;
+    border-top: 1px solid var(--rule-soft);
+  }
+  .toc .part:last-child { border-bottom: 1px solid var(--rule-soft); }
+  .part-head {
+    display: flex;
+    align-items: baseline;
+    gap: 28px;
+    margin-bottom: 14px;
+  }
+  .part-no {
+    font-size: 13px;
+    letter-spacing: .3em;
+    color: var(--accent);
+    width: 90px;
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+  .part-name {
+    font-size: 22px;
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: .06em;
+  }
+  .part-name a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s;
+  }
+  .part-name a:hover { border-bottom-color: var(--accent); }
+  .part-meta {
+    margin-left: auto;
+    color: var(--ink-mute);
+    font-size: 13px;
+    letter-spacing: .12em;
+  }
+  .part-desc {
+    margin-left: 118px;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    line-height: 1.85;
+    margin-bottom: 14px;
+  }
+  .chapters {
+    margin-left: 118px;
+    padding: 0;
+    list-style: none;
+    column-count: 2;
+    column-gap: 40px;
+    column-rule: 1px dotted var(--rule);
+  }
+  .chapters li {
+    break-inside: avoid;
+    padding: 4px 0;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    display: flex;
+    gap: 10px;
+  }
+  .chapters li .num {
+    color: var(--ink-mute);
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .chapters li.outtake { color: var(--accent-soft); font-weight: 600; }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin: 56px 0 0;
+    padding: 32px 0;
+    border-top: 1px solid var(--rule-soft);
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .stat { text-align: center; }
+  .stat .num {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: .02em;
+  }
+  .stat .label {
+    font-size: 12px;
+    color: var(--ink-mute);
+    letter-spacing: .35em;
+    margin-top: 6px;
+  }
+  .principles {
+    margin: 56px 0 0;
+    background: var(--bg);
+    padding: 36px 40px;
+    border-left: 3px solid var(--accent);
+  }
+  .principles h3 {
+    margin: 0 0 18px;
+    font-size: 14px;
+    letter-spacing: .35em;
+    color: var(--ink-mute);
+    font-weight: 600;
+  }
+  .principles ol {
+    margin: 0;
+    padding-left: 22px;
+    color: var(--ink);
+  }
+  .principles li {
+    padding: 6px 0;
+    line-height: 1.9;
+    letter-spacing: .03em;
+  }
+  .footer {
+    margin-top: 80px;
+    padding-top: 28px;
+    border-top: 1px solid var(--rule-soft);
+    display: flex;
+    justify-content: space-between;
+    color: var(--ink-mute);
+    font-size: 12.5px;
+    letter-spacing: .2em;
+  }
+  @media (max-width: 720px) {
+    .page { padding: 36px 22px 80px; }
+    h1.book-title { font-size: 38px; }
+    .part-head { flex-wrap: wrap; gap: 12px; }
+    .part-no { width: auto; }
+    .part-desc, .chapters { margin-left: 0; }
+    .chapters { column-count: 1; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="meta-top">
+    <span class="vol">— 卷首 / TABLE OF CONTENTS —</span>
+    <span class="imprint">creator-notes · 2026 修订版</span>
+  </div>
+
+  <div class="title-block">
+    <div class="super-title">实战手册</div>
+    <h1 class="book-title">自媒体运营手册</h1>
+    <div class="subtitle">从底层逻辑到变现链路 · 给真做事的人</div>
+    <div class="accent-rule"></div>
+  </div>
+
+  <p class="pitch">
+    这不是一本"启发你"的书,而是一本"今晚就能填"的工作手册。<br>
+    全书围绕一条因果链展开:<em>为什么做</em> → <em>做什么</em> → <em>写什么</em><br>
+     → <em>怎么拍</em> → <em>怎么放大</em> → <em>怎么赚</em>。<br>
+    每一节末尾配一张表格、一份清单或一棵决策树。
+  </p>
+
+  <div class="stats">
+    <div class="stat"><div class="num">178k</div><div class="label">总 字 数</div></div>
+    <div class="stat"><div class="num">9</div><div class="label">正卷 + 番外</div></div>
+    <div class="stat"><div class="num">30+</div><div class="label">可填工具</div></div>
+    <div class="stat"><div class="num">100+</div><div class="label">真实案例</div></div>
+  </div>
+
+  <div class="principles">
+    <h3>五条总主张</h3>
+    <ol>
+      <li>正确比多重要 —— 伪命题不消耗读者注意力。</li>
+      <li>短视频是练会的 —— 工具都是今晚就能填,不是读完受启发。</li>
+      <li>粉丝经济是终局 —— 跟流量保持顾客关系,只会越做越累。</li>
+      <li>信息密度优先 —— "短"不是时间短,是密度高;同样精彩越长越好。</li>
+      <li>向下兼容找比你弱的人;多维呈现服务于目的垂直。</li>
+    </ol>
+  </div>
+
+  <h2 class="section-title">正  卷</h2>
+
+  <ul class="toc">
+
+    <li class="part">
+      <div class="part-head">
+        <div class="part-no">序　言</div>
+        <div class="part-name">写在前面</div>
+        <div class="part-meta">3,000 字</div>
+      </div>
+      <p class="part-desc">这本书要解决什么 / 不解决什么。带着三个问题开始阅读。</p>
+      <ul class="chapters">
+        <li><span class="num">S0</span>前言</li>
+        <li><span class="num">S1</span>本书写给谁</li>
+        <li><span class="num">S2</span>怎么读这本书</li>
+      </ul>
+    </li>
+
+    <li class="part">
+      <div class="part-head">
+        <div class="part-no">第一篇</div>
+        <div class="part-name"><a href="第一篇-底层逻辑.html">底层逻辑</a></div>
+        <div class="part-meta">18,000 字 · 8 节</div>
+      </div>
+      <p class="part-desc">凭什么能做成。建立"对错"思维,从公理出发判断这件事值不值得做。读完写出一份入场判断书。</p>
+      <ul class="chapters">
+        <li><span class="num">1.0</span>导读 · 三条公理</li>
+        <li><span class="num">1.1</span>知识追求的是对错</li>
+        <li><span class="num">1.2</span>风口的本质是效率</li>
+        <li><span class="num">1.3</span>收入 = 流量 × 变现</li>
+        <li><span class="num">1.4</span>流量经济到粉丝经济</li>
+        <li><span class="num">1.5</span>短视频还能做吗</li>
+        <li><span class="num">1.6</span>信任前置颠覆生意</li>
+        <li><span class="num">1.7</span>入场判断书</li>
+      </ul>
+    </li>
+
+    <li class="part">
+      <div class="part-head">
+        <div class="part-no">第二篇</div>
+        <div class="part-name">定位</div>
+        <div class="part-meta">22,000 字 · 10 节</div>
+      </div>
+      <p class="part-desc">你是谁、对谁说话。商业定位 + 内容定位 + 人设定位三位一体,写下属于自己的定位卡片。</p>
+      <ul class="chapters">
+        <li><span class="num">2.0</span>导读 · 画等号</li>
+        <li><span class="num">2.1</span>6 大优势自检</li>
+        <li><span class="num">2.2</span>商业定位从单品到全品类</li>
+        <li><span class="num">2.3</span>内容定位三原则</li>
+        <li><span class="num">2.4</span>痛点 + 方案超级公式</li>
+        <li><span class="num">2.5</span>视觉锤与文字钉</li>
+        <li><span class="num">2.6</span>向下兼容</li>
+        <li><span class="num">2.7</span>IP 前置规划六问</li>
+        <li><span class="num">2.8</span>差异化与跨界</li>
+        <li><span class="num">2.9</span>定位卡片练习</li>
+      </ul>
+    </li>
+
+    <li class="part">
+      <div class="part-head">
+        <div class="part-no">第三篇</div>
+        <div class="part-name">选题与素材库</div>
+        <div class="part-meta">18,000 字 · 9 节</div>
+      </div>
+      <p class="part-desc">解决"今天发什么"的焦虑。从"等灵感"变成"打开素材库就能拍"。</p>
+      <ul class="chapters">
+        <li><span class="num">3.0</span>导读</li>
+        <li><span class="num">3.1</span>选题本质 + 情绪波点</li>
+        <li><span class="num">3.2</span>五方向五情感五情绪矩阵</li>
+        <li><span class="num">3.3</span>蹭热点的四套路</li>
+        <li><span class="num">3.4</span>八大爆款元素</li>
+        <li><span class="num">3.5</span>选题系列化</li>
+        <li><span class="num">3.6</span>素材库四类三工具</li>
+        <li><span class="num">3.7</span>跨领域借鉴</li>
+        <li><span class="num">3.8</span>30 条选题库练习</li>
+      </ul>
+    </li>
+
+    <li class="part">
+      <div class="part-head">
+        <div class="part-no">第四篇 上</div>
+        <div class="part-name">文案与通用结构</div>
+        <div class="part-meta">18,000 字 · 7 节</div>
+      </div>
+      <p class="part-desc">通用文案能力。无论拍什么类型,先解决"留得住人"的问题。</p>
+      <ul class="chapters">
+        <li><span class="num">4U.0</span>导读 · 短不是时间短</li>
+        <li><span class="num">4U.1</span>文案的本质是拖时间</li>
+        <li><span class="num">4U.2</span>起承转合 + 四技巧</li>
+        <li><span class="num">4U.3</span>五大开头模板</li>
+        <li><span class="num">4U.4</span>五大结构 + 小火车</li>
+        <li><span class="num">4U.5</span>五大结尾模板</li>
+        <li><span class="num">4U.6</span>单向阀前置五问</li>
+        <li><span class="num">4U.7</span>画面感 + 标题封面</li>
+      </ul>
+    </li>
+
+    <li class="part">
+      <div class="part-head">
+        <div class="part-no">第四篇 下</div>
+        <div class="part-name">四型脚本</div>
+        <div class="part-meta">22,000 字 · 6 节</div>
+      </div>
+      <p class="part-desc">把通用结构落到四种最高产出比的脚本类型。每一型对应不同账号阶段。</p>
+      <ul class="chapters">
+        <li><span class="num">4D.0</span>四型匹配决策树</li>
+        <li><span class="num">4D.1</span>聊观点</li>
+        <li><span class="num">4D.2</span>教知识</li>
+        <li><span class="num">4D.3</span>讲故事</li>
+        <li><span class="num">4D.4</span>晒过程</li>
+        <li><span class="num">4D.5</span>爆款拆片</li>
+        <li><span class="num">4D.6</span>3000 字脚本练习</li>
+      </ul>
+    </li>
+
+    <li class="part">
+      <div class="part-head">
+        <div class="part-no">第五篇</div>
+        <div class="part-name">拍摄 · 剪辑 · 表现力</div>
+        <div class="part-meta">18,000 字 · 10 节</div>
+      </div>
+      <p class="part-desc">把脚本变成视频。拒绝器材发烧,服务于"最低成本最高画质音质增益"。</p>
+      <ul class="chapters">
+        <li><span class="num">5.0</span>导读</li>
+        <li><span class="num">5.1</span>拍摄方式四选一</li>
+        <li><span class="num">5.2</span>出镜的价值</li>
+        <li><span class="num">5.3</span>置景</li>
+        <li><span class="num">5.4</span>画质音质灯光</li>
+        <li><span class="num">5.5</span>表现力训练</li>
+        <li><span class="num">5.6</span>提词器与口播节奏</li>
+        <li><span class="num">5.7</span>剪辑思维</li>
+        <li><span class="num">5.8</span>剪映十八工具栏</li>
+        <li><span class="num">5.9</span>AI 工具的边界</li>
+        <li><span class="num">5.10</span>可发布视频练习</li>
+      </ul>
+    </li>
+
+    <li class="part">
+      <div class="part-head">
+        <div class="part-no">第六篇</div>
+        <div class="part-name">增长 · 算法 · 投放</div>
+        <div class="part-meta">18,000 字 · 10 节</div>
+      </div>
+      <p class="part-desc">知道平台为什么把流量给谁、自己卡在哪、要不要投流。数据不好时知道往哪改而非换赛道。</p>
+      <ul class="chapters">
+        <li><span class="num">6.0</span>导读</li>
+        <li><span class="num">6.1</span>抖音算法 TF-IDF 聚类</li>
+        <li><span class="num">6.2</span>完播时长三维度</li>
+        <li><span class="num">6.3</span>垂直度的真相</li>
+        <li><span class="num">6.4</span>三层标签机制</li>
+        <li><span class="num">6.5</span>赛马与铁粉机制</li>
+        <li><span class="num">6.6</span>账号阶段运营重点</li>
+        <li><span class="num">6.7</span>五个反共识"不要"</li>
+        <li><span class="num">6.8</span>DOU+ 投放决策树</li>
+        <li><span class="num">6.9</span>平台规则避坑</li>
+        <li><span class="num">6.10</span>复盘仪表盘练习</li>
+      </ul>
+    </li>
+
+    <li class="part">
+      <div class="part-head">
+        <div class="part-no">第七篇</div>
+        <div class="part-name">变现与商业模式</div>
+        <div class="part-meta">18,000 字 · 10 节</div>
+      </div>
+      <p class="part-desc">把粉丝变成收入。拒绝任何"先做起来再说"的拖延借口。</p>
+      <ul class="chapters">
+        <li><span class="num">7.0</span>导读</li>
+        <li><span class="num">7.1</span>变现四原则</li>
+        <li><span class="num">7.2</span>四大变现方式取舍</li>
+        <li><span class="num">7.3</span>销售即修改价值排序</li>
+        <li><span class="num">7.4</span>课程设计 2C2B</li>
+        <li><span class="num">7.5</span>4P 带货法则</li>
+        <li><span class="num">7.6</span>引流与私域承接</li>
+        <li><span class="num">7.7</span>客户分层四层模型</li>
+        <li><span class="num">7.8</span>直播 16 字法则</li>
+        <li><span class="num">7.9</span>变现失败模式 10 例</li>
+        <li><span class="num">7.10</span>变现链路图练习</li>
+      </ul>
+    </li>
+
+    <li class="part">
+      <div class="part-head">
+        <div class="part-no">附　录</div>
+        <div class="part-name">即查即用</div>
+        <div class="part-meta">5,000 字</div>
+      </div>
+      <p class="part-desc">30+ 工具卡片合集、AI 提示词组、三档预算器材软件清单。</p>
+      <ul class="chapters">
+        <li><span class="num">A</span>工具卡片合集</li>
+        <li><span class="num">B</span>AI 提示词组</li>
+        <li><span class="num">C</span>器材与软件清单</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2 class="section-title">番  外</h2>
+
+  <ul class="toc">
+    <li class="part">
+      <div class="part-head">
+        <div class="part-no">番外卷</div>
+        <div class="part-name">行业战斗卷</div>
+        <div class="part-meta">20,000 字 · 7 节</div>
+      </div>
+      <p class="part-desc">不重复正卷方法论,只讲"该行业怎么用前面的方法"。阅读 4 问:他是谁 / 给谁说话 / 钩子是什么 / 变现链路。</p>
+      <ul class="chapters">
+        <li><span class="num">X.0</span>导读</li>
+        <li><span class="num">X.1</span>本地实体</li>
+        <li><span class="num">X.2</span>专业人士</li>
+        <li><span class="num">X.3</span>教育培训</li>
+        <li><span class="num">X.4</span>实物零售</li>
+        <li><span class="num">X.5</span>数字产品与知识付费</li>
+        <li><span class="num">X.6</span>普通行业五步通用打法</li>
+        <li><span class="num">X.7</span>同行样本库练习</li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="footer">
+    <span>《自媒体运营手册》</span>
+    <span>本卷已开篇 · 第一篇可读</span>
+  </div>
+
+</div>
+</body>
+</html>

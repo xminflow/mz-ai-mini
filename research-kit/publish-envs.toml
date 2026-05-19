@@ -1,0 +1,19 @@
+# research-kit 博主洞察 publish 分环境配置。
+#
+# - 此文件只放公开 URL；token 放在环境变量里，不进仓库。
+# - 通过 `research-kit publish --env <name>` 选择环境；
+#   也可以设置 RESEARCH_KIT_PUBLISH_ENV=<name> 当作默认。
+# - 顶层 `default` 指定缺省环境，没传 --env 且没设环境变量时生效。
+# - CLI 上显式传的 --api-base / --token 优先级最高，会覆盖此处配置。
+# - 如需个性化覆盖（例如本地反向代理），用 --envs-file 或 RESEARCH_KIT_PUBLISH_ENVS_FILE
+#   指向另一份 TOML，本文件无需修改。
+
+default = "local"
+
+[envs.local]
+api_base = "http://localhost:8000"
+token_env = "WEELUME_BLOGGER_INSIGHT_IMPORT_TOKEN_LOCAL"
+
+[envs.prod]
+api_base = "https://api.weelume.com"
+token_env = "WEELUME_BLOGGER_INSIGHT_IMPORT_TOKEN_PROD"

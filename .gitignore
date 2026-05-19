@@ -22,6 +22,8 @@ specs
 /website/.env.*
 !/website/.env.example
 !/website/.env.*.example
+/.run/
+/server/logs/
 
 # Python
 __pycache__/

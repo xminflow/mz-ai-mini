@@ -9,12 +9,8 @@ from mz_ai_backend.modules.agent_auth.application import (
     GetCurrentAgentAccountUseCase,
     LogoutAgentSessionCommand,
     LogoutAgentSessionUseCase,
-    RequestAgentEmailLoginChallengeCommand,
-    RequestAgentEmailLoginChallengeUseCase,
     RefreshAgentSessionCommand,
     RefreshAgentSessionUseCase,
-    VerifyAgentEmailLoginChallengeCommand,
-    VerifyAgentEmailLoginChallengeUseCase,
 )
 from mz_ai_backend.modules.agent_auth.application.dtos import (
     build_access_token_expiry,
@@ -26,13 +22,8 @@ from mz_ai_backend.modules.agent_auth.domain import (
     AgentAccountStatus,
     AgentAuthSession,
     AgentEmailLoginChallenge,
-    AgentEmailLoginChallengeExpiredException,
-    AgentEmailLoginCodeInvalidException,
-    AgentEmailSendCooldownException,
     AgentRefreshTokenExpiredException,
-    AgentSessionRevokedException,
     AgentWechatIdentity,
-    AgentWechatSubscribeStatus,
 )
 
 
@@ -55,14 +46,6 @@ class StubTokenService:
 
     def hash_token(self, token: str) -> str:
         return f"hashed:{token}"
-
-
-class StubEmailDeliveryGateway:
-    def __init__(self) -> None:
-        self.deliveries: list[tuple[str, str]] = []
-
-    async def send_login_code(self, *, email: str, verification_code: str) -> None:
-        self.deliveries.append((email, verification_code))
 
 
 class InMemoryAgentAccountRepository:
@@ -101,18 +84,6 @@ class InMemoryAgentAccountRepository:
         self.accounts_by_id[account.account_id] = account
         if account.email is not None:
             self.accounts_by_email[account.email] = account
-        self.identities_by_account_id[account.account_id] = AgentWechatIdentity(
-            identity_id=account.account_id + 10000,
-            account_id=account.account_id,
-            official_openid=f"openid-{account.account_id}",
-            subscribe_status=AgentWechatSubscribeStatus.SUBSCRIBED,
-            subscribed_at=now,
-            unsubscribed_at=None,
-            last_event_at=now,
-            is_deleted=False,
-            created_at=now,
-            updated_at=now,
-        )
         return account
 
     async def create_session(self, issue) -> None:
@@ -200,49 +171,6 @@ class InMemoryAgentAccountRepository:
                 },
             )()
         }
-
-    async def get_latest_email_login_challenge_by_email(self, email: str):
-        candidates = [item for item in self.email_challenges_by_id.values() if item.email == email]
-        if not candidates:
-            return None
-        return sorted(candidates, key=lambda item: item.created_at, reverse=True)[0]
-
-    async def invalidate_active_email_login_challenges_by_email(self, *, email: str) -> None:
-        now = datetime.now(UTC).replace(tzinfo=None)
-        for challenge_id, challenge in list(self.email_challenges_by_id.items()):
-            if (
-                challenge.email == email
-                and challenge.verified_at is None
-                and challenge.invalidated_at is None
-                and challenge.expires_at > now
-            ):
-                self.email_challenges_by_id[challenge_id] = challenge.model_copy(
-                    update={"invalidated_at": now}
-                )
-
-    async def create_email_login_challenge(self, create):
-        challenge = AgentEmailLoginChallenge(
-            login_challenge_id=create.login_challenge_id,
-            email=create.email,
-            code_hash=create.code_hash,
-            expires_at=create.expires_at,
-            verified_at=None,
-            invalidated_at=None,
-            created_at=datetime.now(UTC).replace(tzinfo=None),
-        )
-        self.email_challenges_by_id[challenge.login_challenge_id] = challenge
-        return challenge
-
-    async def get_email_login_challenge_by_id(self, login_challenge_id: int):
-        return self.email_challenges_by_id.get(login_challenge_id)
-
-    async def mark_email_login_challenge_verified(self, *, login_challenge_id: int, verified_at: datetime):
-        challenge = self.email_challenges_by_id.get(login_challenge_id)
-        if challenge is None:
-            return None
-        updated = challenge.model_copy(update={"verified_at": verified_at})
-        self.email_challenges_by_id[login_challenge_id] = updated
-        return updated
 
 
 @pytest.mark.asyncio
@@ -340,47 +268,6 @@ async def test_refresh_agent_session_rejects_expired_refresh_token() -> None:
 
 
 @pytest.mark.asyncio
-async def test_request_email_login_challenge_delivers_code() -> None:
-    repository = InMemoryAgentAccountRepository()
-    delivery_gateway = StubEmailDeliveryGateway()
-    use_case = RequestAgentEmailLoginChallengeUseCase(
-        account_repository=repository,
-        token_service=StubTokenService(),
-        email_delivery_gateway=delivery_gateway,
-        snowflake_id_generator=StubSnowflakeGenerator(),
-        code_ttl_seconds=600,
-        send_cooldown_seconds=60,
-    )
-
-    result = await use_case.execute(
-        RequestAgentEmailLoginChallengeCommand(email="demo@example.com")
-    )
-
-    assert result.challenge.cooldown_seconds == 60
-    assert len(delivery_gateway.deliveries) == 1
-    assert delivery_gateway.deliveries[0][0] == "demo@example.com"
-    assert len(delivery_gateway.deliveries[0][1]) == 6
-
-
-@pytest.mark.asyncio
-async def test_request_email_login_challenge_rejects_cooldown() -> None:
-    repository = InMemoryAgentAccountRepository()
-    delivery_gateway = StubEmailDeliveryGateway()
-    use_case = RequestAgentEmailLoginChallengeUseCase(
-        account_repository=repository,
-        token_service=StubTokenService(),
-        email_delivery_gateway=delivery_gateway,
-        snowflake_id_generator=StubSnowflakeGenerator(),
-        code_ttl_seconds=600,
-        send_cooldown_seconds=60,
-    )
-    await use_case.execute(RequestAgentEmailLoginChallengeCommand(email="demo@example.com"))
-
-    with pytest.raises(AgentEmailSendCooldownException):
-        await use_case.execute(RequestAgentEmailLoginChallengeCommand(email="demo@example.com"))
-
-
-@pytest.mark.asyncio
 async def test_logout_agent_session_revokes_session() -> None:
     repository = InMemoryAgentAccountRepository()
     await repository.create_session(
@@ -461,105 +348,6 @@ async def test_get_current_agent_account_rejects_revoked_session() -> None:
 
     with pytest.raises(AgentAccessTokenExpiredException):
         await use_case.execute(GetCurrentAgentAccountQuery(access_token="access"))
-
-
-@pytest.mark.asyncio
-async def test_verify_email_login_challenge_creates_account_and_issues_tokens() -> None:
-    repository = InMemoryAgentAccountRepository()
-    challenge = await repository.create_email_login_challenge(
-        type(
-            "ChallengeCreate",
-            (),
-            {
-                "login_challenge_id": 1001,
-                "email": "demo@example.com",
-                "code_hash": "hashed:123456",
-                "expires_at": datetime.now(UTC).replace(tzinfo=None) + timedelta(minutes=10),
-            },
-        )()
-    )
-    use_case = VerifyAgentEmailLoginChallengeUseCase(
-        account_repository=repository,
-        token_service=StubTokenService(),
-        snowflake_id_generator=StubSnowflakeGenerator(),
-        access_token_ttl_seconds=1800,
-        refresh_token_ttl_days=30,
-    )
-
-    result = await use_case.execute(
-        VerifyAgentEmailLoginChallengeCommand(
-            login_challenge_id=challenge.login_challenge_id,
-            verification_code="123456",
-        )
-    )
-
-    assert result.account.email == "demo@example.com"
-    assert result.account.username.startswith("agent_")
-    assert result.tokens.access_token.startswith("token-")
-
-
-@pytest.mark.asyncio
-async def test_verify_email_login_challenge_rejects_invalid_code() -> None:
-    repository = InMemoryAgentAccountRepository()
-    await repository.create_email_login_challenge(
-        type(
-            "ChallengeCreate",
-            (),
-            {
-                "login_challenge_id": 1001,
-                "email": "demo@example.com",
-                "code_hash": "hashed:123456",
-                "expires_at": datetime.now(UTC).replace(tzinfo=None) + timedelta(minutes=10),
-            },
-        )()
-    )
-    use_case = VerifyAgentEmailLoginChallengeUseCase(
-        account_repository=repository,
-        token_service=StubTokenService(),
-        snowflake_id_generator=StubSnowflakeGenerator(),
-        access_token_ttl_seconds=1800,
-        refresh_token_ttl_days=30,
-    )
-
-    with pytest.raises(AgentEmailLoginCodeInvalidException):
-        await use_case.execute(
-            VerifyAgentEmailLoginChallengeCommand(
-                login_challenge_id=1001,
-                verification_code="000000",
-            )
-        )
-
-
-@pytest.mark.asyncio
-async def test_verify_email_login_challenge_rejects_expired_challenge() -> None:
-    repository = InMemoryAgentAccountRepository()
-    await repository.create_email_login_challenge(
-        type(
-            "ChallengeCreate",
-            (),
-            {
-                "login_challenge_id": 1001,
-                "email": "demo@example.com",
-                "code_hash": "hashed:123456",
-                "expires_at": datetime.now(UTC).replace(tzinfo=None) - timedelta(minutes=1),
-            },
-        )()
-    )
-    use_case = VerifyAgentEmailLoginChallengeUseCase(
-        account_repository=repository,
-        token_service=StubTokenService(),
-        snowflake_id_generator=StubSnowflakeGenerator(),
-        access_token_ttl_seconds=1800,
-        refresh_token_ttl_days=30,
-    )
-
-    with pytest.raises(AgentEmailLoginChallengeExpiredException):
-        await use_case.execute(
-            VerifyAgentEmailLoginChallengeCommand(
-                login_challenge_id=1001,
-                verification_code="123456",
-            )
-        )
 
 
 def test_agent_token_expiry_builders_return_utc_aware_datetimes() -> None:

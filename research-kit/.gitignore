@@ -1,0 +1,32 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+dist/
+build/
+*.egg-info/
+
+# 本地工作区数据
+data/
+runs/
+*.log
+.env
+.env.local
+
+# 产出目录：每次拆解的素材与 HTML 报告
+output/*
+!output/.gitkeep
+
+# Claude Code 本地状态
+.claude/local/
+.claude/cache/
+
+# Patchright/Playwright 浏览器缓存（若 puppet-ed 进项目）
+.cache/
+
+# Whisper / funasr 模型缓存
+.models/

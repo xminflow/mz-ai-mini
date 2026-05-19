@@ -126,9 +126,14 @@ export function WechatLoginPanel({ onSuccess }: WechatLoginPanelProps) {
           return
         }
         const { session } = (await resp.json()) as SessionResponse
+        // expires_at 从后端返回时不带时区标记（naive UTC），必须追加 Z 按 UTC 解析，
+        // 否则中国用户（UTC+8）会把它当本地时间，导致倒计时计算提前 8 小时到期。
+        const expiresAtUtc = session.expires_at.endsWith('Z') || session.expires_at.includes('+')
+          ? session.expires_at
+          : `${session.expires_at}Z`
         const secondsLeft = Math.max(
-          10,
-          Math.floor((new Date(session.expires_at).getTime() - Date.now()) / 1000),
+          30,
+          Math.floor((new Date(expiresAtUtc).getTime() - Date.now()) / 1000),
         )
         setPanelState({ phase: 'ready', session, secondsLeft })
 

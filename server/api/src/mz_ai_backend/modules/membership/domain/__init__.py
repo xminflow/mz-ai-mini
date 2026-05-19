@@ -10,7 +10,6 @@ Development rules:
 
 from .entities import (
     NORMAL_MEMBERSHIP_DURATION_DAYS,
-    NORMAL_MEMBERSHIP_PRICE_FEN,
     MembershipOrder,
     MembershipOrderStatus,
     MembershipTier,
@@ -36,7 +35,6 @@ __all__ = [
     "MembershipPlanNotOpenException",
     "MembershipTier",
     "NORMAL_MEMBERSHIP_DURATION_DAYS",
-    "NORMAL_MEMBERSHIP_PRICE_FEN",
     "UserMembershipSnapshot",
     "WechatPayConfigMissingException",
     "WechatPayNotifyInvalidException",

@@ -6,6 +6,7 @@ from mz_ai_backend.modules.membership.application.dtos import (
     WechatPayCreateOrderRequest,
     WechatPayPaymentParams,
 )
+from mz_ai_backend.shared.wechat_pay import WechatPayNativeCreateOrderRequest
 from mz_ai_backend.modules.membership.domain import WechatPayOrderCreateFailedException
 from mz_ai_backend.modules.membership.infrastructure.wechat_pay_gateway import (
     WechatPayV3Gateway,
@@ -17,6 +18,9 @@ class _StubWxPay:
         self._result = result
 
     def pay(self, **kwargs):  # noqa: ANN003
+        return self._result
+
+    def query(self, **kwargs):  # noqa: ANN003
         return self._result
 
 
@@ -197,3 +201,59 @@ async def test_create_order_returns_payment_params_when_json_string_payload(
     result = await gateway.create_order(_build_request())
     assert result.prepay_id == "wx-prepay-20002"
     assert result.payment_params.package == "prepay_id=wx-prepay-20002"
+
+
+@pytest.mark.asyncio
+async def test_create_native_order_returns_code_url(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def _fake_run_in_threadpool(func, **kwargs):  # noqa: ANN001, ANN202
+        return func(**kwargs)
+
+    monkeypatch.setattr(
+        "mz_ai_backend.shared.wechat_pay.run_in_threadpool",
+        _fake_run_in_threadpool,
+    )
+    gateway = _build_gateway((200, {"code_url": "weixin://wxpay/native"}))
+
+    result = await gateway.create_native_order(
+        WechatPayNativeCreateOrderRequest(
+            order_no="WEB1900000000000000001",
+            amount_fen=49900,
+            description="test",
+        )
+    )
+
+    assert result.code_url == "weixin://wxpay/native"
+
+
+@pytest.mark.asyncio
+async def test_query_order_returns_notification(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    async def _fake_run_in_threadpool(func, **kwargs):  # noqa: ANN001, ANN202
+        return func(**kwargs)
+
+    monkeypatch.setattr(
+        "mz_ai_backend.shared.wechat_pay.run_in_threadpool",
+        _fake_run_in_threadpool,
+    )
+    gateway = _build_gateway(
+        (
+            200,
+            {
+                "out_trade_no": "WEB1900000000000000001",
+                "transaction_id": "wx-tx-1",
+                "trade_state": "SUCCESS",
+                "amount": {"total": 49900},
+                "success_time": "2026-05-18T10:00:00+08:00",
+            },
+        )
+    )
+
+    result = await gateway.query_order(order_no="WEB1900000000000000001")
+
+    assert result is not None
+    assert result.order_no == "WEB1900000000000000001"
+    assert result.trade_state == "SUCCESS"
+    assert result.amount_fen == 49900

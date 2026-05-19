@@ -13,7 +13,7 @@ from ...domain import (
 )
 from ..dtos import (
     AgentAccountRegistration,
-    AgentEmailLoginChallengeCreate,
+    AgentEmailVerificationChallengeCreate,
     AgentSessionIssue,
     AgentWechatIdentityUpsert,
     AgentWechatLoginGrantIssue,
@@ -41,6 +41,22 @@ class AgentAccountRepository(Protocol):
 
     async def create_account(self, registration: AgentAccountRegistration) -> AgentAccount:
         """Create one account and return the persisted entity."""
+
+    async def update_account_email(
+        self,
+        *,
+        account_id: int,
+        email: str,
+    ) -> AgentAccount | None:
+        """更新指定账号的 email；email 已被其他账号占用时应抛 AgentEmailTakenException。"""
+
+    async def update_account_username(
+        self,
+        *,
+        account_id: int,
+        username: str,
+    ) -> AgentAccount | None:
+        """更新指定账号的 username；冲突时应抛 AgentUsernameTakenException。"""
 
     async def create_session(self, issue: AgentSessionIssue) -> None:
         """Persist one refresh session plus its access token."""
@@ -153,7 +169,7 @@ class AgentAccountRepository(Protocol):
 
     async def create_email_login_challenge(
         self,
-        create: AgentEmailLoginChallengeCreate,
+        create: AgentEmailVerificationChallengeCreate,
     ) -> AgentEmailLoginChallenge:
         """Persist one email login challenge."""
 

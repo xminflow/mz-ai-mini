@@ -5,8 +5,10 @@ import log from "electron-log/main";
 
 import {
   AI_CHAT_EVENT_TOPIC,
+  AI_CHAT_LIST_SKILLS_CHANNEL,
   aiChatSendInputSchema,
   type AiChatEvent,
+  type AiChatListSkillsResult,
   type AiChatMessage,
   type AiChatSnapshot,
   type AiChatToolTrace,
@@ -20,6 +22,7 @@ import {
   saveAiChatSnapshot,
 } from "../services/llm/ai-chat-store";
 import { getSettingsSync } from "../services/settings/store";
+import { listBundledSkills } from "../services/weelume-skills/list";
 
 const CHANNEL_STATE = "ai-chat:get-state";
 const CHANNEL_SEND = "ai-chat:send";
@@ -282,10 +285,19 @@ async function runProviderTurn(
   }
 }
 
+function buildProviderPrompt(prompt: string, skillId: string | null): string {
+  if (skillId === null) return prompt;
+  // 强制路由到指定 skill：在用户原文前注入一条指令；CLI（Claude Code / Codex）
+  // 根据 SKILL.md 中的 name 匹配触发，等价于显式 @ 提及但更稳。原文 prompt 仍以
+  // 单独的用户消息形式留在 snapshot.messages，UI 看到的还是用户原文。
+  return `请使用 skill \`${skillId}\` 处理本次请求。\n\n${prompt}`;
+}
+
 async function executeTurn(
   win: BrowserWindow,
   prompt: string,
   snapshot: AiChatSnapshot,
+  skillId: string | null,
 ): Promise<AiChatSnapshot> {
   snapshot.messages.push({
     id: randomUUID(),
@@ -306,7 +318,12 @@ async function executeTurn(
     snapshot,
   });
 
-  let final = await runProviderTurn(win, snapshot, prompt);
+  const providerPrompt = buildProviderPrompt(prompt, skillId);
+  if (skillId !== null) {
+    log.debug(`[ai-chat] skill prefix injected: ${skillId}`);
+  }
+
+  let final = await runProviderTurn(win, snapshot, providerPrompt);
   if (final.resumeFailed) {
     snapshot.session_id = null;
     snapshot.run_status = "running";
@@ -314,7 +331,7 @@ async function executeTurn(
     if (lastAssistant?.role === "assistant" && lastAssistant.content.length === 0) {
       snapshot.messages.pop();
     }
-    final = await runProviderTurn(win, snapshot, prompt);
+    final = await runProviderTurn(win, snapshot, providerPrompt);
   }
 
   snapshot.run_status = "idle";
@@ -377,7 +394,8 @@ export function registerAiChatHandlers(): void {
     if (inflightRuns.has(win.webContents.id.toString()) || snapshot.run_status === "running") {
       return errorEnvelope("ANALYZE_BUSY", "ai chat is already running");
     }
-    void executeTurn(win, parsed.data.prompt, snapshot).catch((err) => {
+    const skillId = parsed.data.skill_id ?? null;
+    void executeTurn(win, parsed.data.prompt, snapshot, skillId).catch((err) => {
       log.error(`[ai-chat] send failed: ${err instanceof Error ? err.message : String(err)}`);
     });
     return {
@@ -418,6 +436,21 @@ export function registerAiChatHandlers(): void {
     };
   });
 
+  ipcMain.handle(AI_CHAT_LIST_SKILLS_CHANNEL, async (): Promise<AiChatListSkillsResult> => {
+    try {
+      const skills = await listBundledSkills();
+      return {
+        schema_version: SCHEMA_VERSION,
+        ok: true,
+        skills,
+      };
+    } catch (err) {
+      log.error(
+        `[ai-chat:list-skills] failed: ${err instanceof Error ? err.message : String(err)}`,
+      );
+      return errorEnvelope("INTERNAL", "failed to list skills");
+    }
+  });
 }
 
 export function unregisterAiChatHandlers(): void {
@@ -425,4 +458,5 @@ export function unregisterAiChatHandlers(): void {
   ipcMain.removeHandler(CHANNEL_SEND);
   ipcMain.removeHandler(CHANNEL_CANCEL);
   ipcMain.removeHandler(CHANNEL_RESET);
+  ipcMain.removeHandler(AI_CHAT_LIST_SKILLS_CHANNEL);
 }

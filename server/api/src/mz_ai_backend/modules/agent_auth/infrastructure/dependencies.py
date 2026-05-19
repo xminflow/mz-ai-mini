@@ -13,18 +13,19 @@ from mz_ai_backend.core.dependencies import (
 from mz_ai_backend.shared import SnowflakeGenerator, get_snowflake_generator
 
 from ..application import (
+    ChangeAgentUsernameUseCase,
     CreateAgentWechatLoginSessionUseCase,
     ExchangeAgentWechatLoginUseCase,
     GetCurrentAgentAccountUseCase,
     GetAgentWechatLoginSessionUseCase,
     HandleAgentWechatCallbackUseCase,
     LogoutAgentSessionUseCase,
-    RequestAgentEmailLoginChallengeUseCase,
     RefreshAgentSessionUseCase,
-    VerifyAgentEmailLoginChallengeUseCase,
+    RequestEmailBindingChallengeUseCase,
+    VerifyEmailBindingChallengeUseCase,
 )
 from ..domain import AgentAccessTokenExpiredException
-from .email_delivery import SmtpEmailLoginDeliveryGateway
+from .email_delivery import SmtpEmailVerificationDeliveryGateway
 from .repositories import SqlAlchemyAgentAccountRepository
 from .wechat_official import WechatOfficialAccountGateway
 
@@ -67,12 +68,12 @@ def get_token_service(
     return Sha256TokenService(pepper=settings.agent_auth_token_pepper)
 
 
-def get_email_login_delivery_gateway(
+def get_email_verification_delivery_gateway(
     settings: Annotated[Settings, Depends(get_settings_dependency)],
-) -> SmtpEmailLoginDeliveryGateway:
-    """Construct the email login delivery gateway."""
+) -> SmtpEmailVerificationDeliveryGateway:
+    """Construct the email verification delivery gateway."""
 
-    return SmtpEmailLoginDeliveryGateway(
+    return SmtpEmailVerificationDeliveryGateway(
         host=settings.agent_auth_email_smtp_host,
         port=settings.agent_auth_email_smtp_port,
         username=settings.agent_auth_email_smtp_username,
@@ -96,6 +97,11 @@ def get_official_wechat_gateway(
             else ""
         ),
         token=settings.wechat_official_token.strip() if settings.wechat_official_token else "",
+        encoding_aes_key=(
+            settings.wechat_official_encoding_aes_key.strip()
+            if settings.wechat_official_encoding_aes_key
+            else None
+        ),
     )
 
 
@@ -202,34 +208,6 @@ def get_create_wechat_login_session_use_case(
     )
 
 
-def get_request_email_login_challenge_use_case(
-    account_repository: Annotated[
-        SqlAlchemyAgentAccountRepository,
-        Depends(get_agent_account_repository),
-    ],
-    token_service: Annotated[Sha256TokenService, Depends(get_token_service)],
-    email_delivery_gateway: Annotated[
-        SmtpEmailLoginDeliveryGateway,
-        Depends(get_email_login_delivery_gateway),
-    ],
-    snowflake_id_generator: Annotated[
-        SnowflakeGenerator,
-        Depends(get_snowflake_id_generator),
-    ],
-    settings: Annotated[Settings, Depends(get_settings_dependency)],
-) -> RequestAgentEmailLoginChallengeUseCase:
-    """Construct the email login challenge request use case."""
-
-    return RequestAgentEmailLoginChallengeUseCase(
-        account_repository=account_repository,
-        token_service=token_service,
-        email_delivery_gateway=email_delivery_gateway,
-        snowflake_id_generator=snowflake_id_generator,
-        code_ttl_seconds=settings.agent_auth_email_code_ttl_seconds,
-        send_cooldown_seconds=settings.agent_auth_email_send_cooldown_seconds,
-    )
-
-
 def get_get_wechat_login_session_use_case(
     account_repository: Annotated[
         SqlAlchemyAgentAccountRepository,
@@ -284,24 +262,61 @@ def get_handle_wechat_callback_use_case(
     )
 
 
-def get_verify_email_login_challenge_use_case(
+def get_request_email_binding_challenge_use_case(
     account_repository: Annotated[
         SqlAlchemyAgentAccountRepository,
         Depends(get_agent_account_repository),
     ],
     token_service: Annotated[Sha256TokenService, Depends(get_token_service)],
+    email_delivery_gateway: Annotated[
+        SmtpEmailVerificationDeliveryGateway,
+        Depends(get_email_verification_delivery_gateway),
+    ],
     snowflake_id_generator: Annotated[
         SnowflakeGenerator,
         Depends(get_snowflake_id_generator),
     ],
     settings: Annotated[Settings, Depends(get_settings_dependency)],
-) -> VerifyAgentEmailLoginChallengeUseCase:
-    """Construct the email login challenge verification use case."""
+) -> RequestEmailBindingChallengeUseCase:
+    """构造请求邮箱绑定验证码的 use case。"""
 
-    return VerifyAgentEmailLoginChallengeUseCase(
+    return RequestEmailBindingChallengeUseCase(
         account_repository=account_repository,
         token_service=token_service,
+        email_delivery_gateway=email_delivery_gateway,
         snowflake_id_generator=snowflake_id_generator,
-        access_token_ttl_seconds=settings.agent_auth_access_token_ttl_seconds,
-        refresh_token_ttl_days=settings.agent_auth_refresh_token_ttl_days,
+        code_ttl_seconds=settings.agent_auth_email_code_ttl_seconds,
+        send_cooldown_seconds=settings.agent_auth_email_send_cooldown_seconds,
     )
+
+
+def get_verify_email_binding_challenge_use_case(
+    account_repository: Annotated[
+        SqlAlchemyAgentAccountRepository,
+        Depends(get_agent_account_repository),
+    ],
+    token_service: Annotated[Sha256TokenService, Depends(get_token_service)],
+) -> VerifyEmailBindingChallengeUseCase:
+    """构造验证邮箱绑定验证码 + 写入 account.email 的 use case。"""
+
+    return VerifyEmailBindingChallengeUseCase(
+        account_repository=account_repository,
+        token_service=token_service,
+    )
+
+
+def get_change_agent_username_use_case(
+    account_repository: Annotated[
+        SqlAlchemyAgentAccountRepository,
+        Depends(get_agent_account_repository),
+    ],
+    token_service: Annotated[Sha256TokenService, Depends(get_token_service)],
+) -> ChangeAgentUsernameUseCase:
+    """构造修改用户名 use case。"""
+
+    return ChangeAgentUsernameUseCase(
+        account_repository=account_repository,
+        token_service=token_service,
+    )
+
+

@@ -30,17 +30,17 @@ export type AuthState =
       reason: 'missing_session' | 'expired' | 'revoked'
     }
 
-export type EmailLoginChallenge = {
-  login_challenge_id: string
-  expires_at: string
-  cooldown_seconds: number
-}
-
 export type ApiErrorPayload = {
   error: {
     code: string
     message: string
   }
+}
+
+export type EmailBindingChallenge = {
+  login_challenge_id: string
+  expires_at: string
+  cooldown_seconds: number
 }
 
 export type WechatLoginSession = {

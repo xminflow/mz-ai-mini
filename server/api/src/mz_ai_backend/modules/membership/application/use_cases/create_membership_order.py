@@ -4,7 +4,6 @@ from mz_ai_backend.core.logging import get_logger
 from mz_ai_backend.modules.auth.domain import UserNotFoundException
 
 from ...domain import (
-    NORMAL_MEMBERSHIP_PRICE_FEN,
     MembershipAlreadyActiveException,
     MembershipPlanNotOpenException,
     MembershipTier,
@@ -35,11 +34,13 @@ class CreateMembershipOrderUseCase:
         snowflake_id_generator: SnowflakeIdGenerator,
         current_time_provider: CurrentTimeProvider,
         wechat_pay_gateway: WechatPayGateway,
+        normal_price_fen: int,
     ) -> None:
         self._membership_repository = membership_repository
         self._snowflake_id_generator = snowflake_id_generator
         self._current_time_provider = current_time_provider
         self._wechat_pay_gateway = wechat_pay_gateway
+        self._normal_price_fen = normal_price_fen
 
     async def execute(
         self,
@@ -63,7 +64,7 @@ class CreateMembershipOrderUseCase:
 
         order_id = self._snowflake_id_generator.generate()
         order_no = str(order_id)
-        amount_fen = NORMAL_MEMBERSHIP_PRICE_FEN
+        amount_fen = self._normal_price_fen
         order = await self._membership_repository.create_pending_order(
             MembershipOrderRegistration(
                 order_id=order_id,
