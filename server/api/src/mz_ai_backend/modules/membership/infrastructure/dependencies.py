@@ -231,6 +231,7 @@ def get_create_membership_order_use_case(
         WechatPayV3Gateway,
         Depends(get_wechat_pay_gateway),
     ],
+    settings: Annotated[Settings, Depends(get_settings_dependency)],
 ) -> CreateMembershipOrderUseCase:
     """Construct membership order creation use case."""
 
@@ -239,6 +240,7 @@ def get_create_membership_order_use_case(
         snowflake_id_generator=snowflake_id_generator,
         current_time_provider=current_time_provider,
         wechat_pay_gateway=wechat_pay_gateway,
+        normal_price_fen=settings.membership_normal_price_fen,
     )
 
 

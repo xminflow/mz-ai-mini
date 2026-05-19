@@ -5,11 +5,11 @@ from email.message import EmailMessage
 import pytest
 
 from mz_ai_backend.modules.agent_auth.infrastructure.email_delivery import (
-    SmtpEmailLoginDeliveryGateway,
+    SmtpEmailVerificationDeliveryGateway,
 )
 
 
-def test_email_login_gateway_builds_chinese_html_message(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_email_verification_gateway_builds_chinese_html_message(monkeypatch: pytest.MonkeyPatch) -> None:
     captured: dict[str, EmailMessage] = {}
 
     async def fake_to_thread(func, message):
@@ -21,7 +21,7 @@ def test_email_login_gateway_builds_chinese_html_message(monkeypatch: pytest.Mon
         fake_to_thread,
     )
 
-    gateway = SmtpEmailLoginDeliveryGateway(
+    gateway = SmtpEmailVerificationDeliveryGateway(
         host="smtp.example.com",
         port=465,
         username="no-reply@example.com",
@@ -33,10 +33,10 @@ def test_email_login_gateway_builds_chinese_html_message(monkeypatch: pytest.Mon
 
     import asyncio
 
-    asyncio.run(gateway.send_login_code(email="xminflow@gmail.com", verification_code="123456"))
+    asyncio.run(gateway.send_verification_code(email="xminflow@gmail.com", verification_code="123456"))
 
     message = captured["message"]
-    assert message["Subject"] == "微域生光 登录验证码"
+    assert message["Subject"] == "微域生光 邮箱验证码"
     assert message["To"] == "xminflow@gmail.com"
     assert message.is_multipart() is True
     payload = message.get_payload()

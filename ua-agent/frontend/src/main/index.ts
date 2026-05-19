@@ -158,10 +158,6 @@ import {
   unregisterSchedulerStatusHandler,
 } from "./ipc/scheduler-status";
 import {
-  registerSelfMediaGuideListHandler,
-  unregisterSelfMediaGuideListHandler,
-} from "./ipc/self-media-guide-list";
-import {
   registerTrackAnalysisHandlers,
   unregisterTrackAnalysisHandlers,
 } from "./ipc/track-analysis";
@@ -173,6 +169,12 @@ import { ensureBundledAgentsFile } from "./services/agents-file/bootstrap-data";
 import { ensureBundledBloggerData } from "./services/blogger/bootstrap-data";
 import { ensureDouyinBloggerReportSkill } from "./services/blogger/report-skill";
 import { ensureDouyinHotMaterialReportSkill } from "./services/hot-material/report-skill";
+import {
+  ensureWeelumeAccountDiagnosisSkill,
+  ensureWeelumeContentCreationSkill,
+  ensureWeelumeIndustryPlaybookSkill,
+  ensureWeelumePlaybookAdvisorSkill,
+} from "./services/weelume-skills/install";
 import { resetClaudeCache } from "./services/llm/claude-runner";
 import { resetCodexCache } from "./services/llm/codex-runner";
 import { resetKimiCache } from "./services/llm/kimi-runner";
@@ -371,7 +373,6 @@ app.whenReady().then(async () => {
   registerWindowControlHandlers();
   registerSettingsHandlers();
   registerSchedulerStatusHandler();
-  registerSelfMediaGuideListHandler();
   registerTrackAnalysisHandlers();
   registerDouyinHotHandler();
   registerDouyinVideoHandler();
@@ -383,6 +384,10 @@ app.whenReady().then(async () => {
   await ensureDouyinBloggerReportSkill();
   await ensureDouyinContentDiagnosisReportSkill();
   await ensureDouyinHotMaterialReportSkill();
+  await ensureWeelumeContentCreationSkill();
+  await ensureWeelumeAccountDiagnosisSkill();
+  await ensureWeelumePlaybookAdvisorSkill();
+  await ensureWeelumeIndustryPlaybookSkill();
 
   // Fan out batch events from utility → all renderer windows.
   unsubscribeBatchEvents = getUtilityHost().subscribe(BATCH_EVENT_TOPIC, (payload: unknown) => {
@@ -517,7 +522,6 @@ app.on("before-quit", () => {
   unregisterWindowControlHandlers();
   unregisterSettingsHandlers();
   unregisterSchedulerStatusHandler();
-  unregisterSelfMediaGuideListHandler();
   unregisterTrackAnalysisHandlers();
   unregisterDouyinHotHandler();
   unregisterDouyinVideoHandler();

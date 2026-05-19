@@ -53,7 +53,6 @@ import type { SessionResetResult } from "../contracts/keyword/session-reset";
 import type { SessionStartResult } from "../contracts/keyword/session-start";
 import type { SessionStatusResult } from "../contracts/keyword/session-status";
 import type { SchedulerEvent, SchedulerStatusResult } from "../contracts/scheduling";
-import type { SelfMediaGuideListResult } from "../contracts/self-media-guide";
 import type {
   TrackAnalysisGetReportRequest,
   TrackAnalysisGetReportResult,
@@ -63,7 +62,9 @@ import type {
 import type {
   AiChatCancelResult,
   AiChatEvent,
+  AiChatListSkillsResult,
   AiChatResetResult,
+  AiChatSendInput,
   AiChatSendResult,
   AiChatStateResult,
 } from "../contracts/ai-chat";
@@ -167,9 +168,10 @@ declare global {
       };
       aiChat: {
         getState: () => Promise<AiChatStateResult>;
-        send: (args: { prompt: string }) => Promise<AiChatSendResult>;
+        send: (args: AiChatSendInput) => Promise<AiChatSendResult>;
         cancel: () => Promise<AiChatCancelResult>;
         reset: () => Promise<AiChatResetResult>;
+        listSkills: () => Promise<AiChatListSkillsResult>;
         onEvent: (callback: (event: AiChatEvent) => void) => number;
         offEvent: (id: number) => void;
       };
@@ -203,9 +205,6 @@ declare global {
         status: () => Promise<SchedulerStatusResult>;
         onEvent: (callback: (event: SchedulerEvent) => void) => number;
         offEvent: (id: number) => void;
-      };
-      selfMediaGuide: {
-        list: () => Promise<SelfMediaGuideListResult>;
       };
       douyinHot: {
         list: (args: { board: DouyinHotBoardKey }) => Promise<DouyinHotListResult>;

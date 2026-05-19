@@ -41,6 +41,10 @@ class Settings(BaseSettings):
     wechat_pay_apiv3_key: str | None = Field(default=None)
     wechat_pay_appid: str | None = Field(default=None)
     wechat_pay_notify_url: str | None = Field(default=None)
+    wechat_pay_web_appid: str | None = Field(default=None)
+    wechat_pay_web_notify_url: str | None = Field(default=None)
+    account_membership_annual_fen: int = Field(default=49900, ge=1)
+    membership_normal_price_fen: int = Field(default=49900, ge=1)
     wechat_pay_cert_dir: str | None = Field(default=None)
     wechat_pay_public_key: str | None = Field(default=None)
     wechat_pay_public_key_path: str | None = Field(default=None)
@@ -61,7 +65,9 @@ class Settings(BaseSettings):
     wechat_official_appid: str | None = Field(default=None)
     wechat_official_app_secret: str | None = Field(default=None)
     wechat_official_token: str | None = Field(default=None)
+    wechat_official_encoding_aes_key: str | None = Field(default=None)
     wechat_official_qr_expire_seconds: int = Field(default=300, ge=60, le=1800)
+    blogger_insight_import_token: str | None = Field(default=None)
 
     @model_validator(mode="after")
     def apply_development_defaults(self) -> "Settings":

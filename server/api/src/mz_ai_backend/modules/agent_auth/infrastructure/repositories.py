@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..application import (
     AgentAccountRegistration,
-    AgentEmailLoginChallengeCreate,
+    AgentEmailVerificationChallengeCreate,
     AgentSessionIssue,
     AgentWechatIdentityUpsert,
     AgentWechatLoginGrantIssue,
@@ -20,6 +20,7 @@ from ..domain import (
     AgentAccountStatus,
     AgentAuthSession,
     AgentEmailLoginChallenge,
+    AgentEmailTakenException,
     AgentUsernameTakenException,
     AgentWechatIdentity,
     AgentWechatLoginSession,
@@ -116,6 +117,12 @@ def _to_email_login_challenge(model: AgentEmailLoginChallengeModel) -> AgentEmai
     )
 
 
+def _to_naive_utc(value: datetime | None) -> datetime | None:
+    if value is None or value.tzinfo is None:
+        return value
+    return value.astimezone(UTC).replace(tzinfo=None)
+
+
 class SqlAlchemyAgentAccountRepository:
     """SQLAlchemy-backed repository for ua-agent remote authentication."""
 
@@ -185,13 +192,63 @@ class SqlAlchemyAgentAccountRepository:
         await self._session.refresh(model)
         return _to_account(model)
 
+    async def update_account_email(
+        self,
+        *,
+        account_id: int,
+        email: str,
+    ) -> AgentAccount | None:
+        result = await self._session.execute(
+            select(AgentAccountModel).where(
+                AgentAccountModel.account_id == account_id,
+                AgentAccountModel.is_deleted.is_(False),
+            )
+        )
+        model = result.scalar_one_or_none()
+        if model is None:
+            return None
+        model.email = email
+        model.updated_at = datetime.now(UTC).replace(tzinfo=None)
+        try:
+            await self._session.commit()
+        except IntegrityError as exc:
+            await self._session.rollback()
+            raise AgentEmailTakenException() from exc
+        await self._session.refresh(model)
+        return _to_account(model)
+
+    async def update_account_username(
+        self,
+        *,
+        account_id: int,
+        username: str,
+    ) -> AgentAccount | None:
+        result = await self._session.execute(
+            select(AgentAccountModel).where(
+                AgentAccountModel.account_id == account_id,
+                AgentAccountModel.is_deleted.is_(False),
+            )
+        )
+        model = result.scalar_one_or_none()
+        if model is None:
+            return None
+        model.username = username
+        model.updated_at = datetime.now(UTC).replace(tzinfo=None)
+        try:
+            await self._session.commit()
+        except IntegrityError as exc:
+            await self._session.rollback()
+            raise AgentUsernameTakenException() from exc
+        await self._session.refresh(model)
+        return _to_account(model)
+
     async def create_session(self, issue: AgentSessionIssue) -> None:
         self._session.add(
             AgentAuthSessionModel(
                 session_id=issue.session_id,
                 account_id=issue.account_id,
                 refresh_token_hash=issue.refresh_token_hash,
-                expires_at=issue.refresh_token_expires_at,
+                expires_at=_to_naive_utc(issue.refresh_token_expires_at),
             )
         )
         self._session.add(
@@ -199,7 +256,7 @@ class SqlAlchemyAgentAccountRepository:
                 token_id=issue.access_token_id,
                 session_id=issue.session_id,
                 access_token_hash=issue.access_token_hash,
-                expires_at=issue.access_token_expires_at,
+                expires_at=_to_naive_utc(issue.access_token_expires_at),
             )
         )
         await self._session.commit()
@@ -270,7 +327,7 @@ class SqlAlchemyAgentAccountRepository:
         if model is None:
             return
         model.refresh_token_hash = refresh_token_hash
-        model.expires_at = refresh_token_expires_at
+        model.expires_at = _to_naive_utc(refresh_token_expires_at)
         model.updated_at = datetime.now(UTC).replace(tzinfo=None)
         await self._session.execute(
             delete(AgentAuthAccessTokenModel).where(
@@ -282,7 +339,7 @@ class SqlAlchemyAgentAccountRepository:
                 token_id=access_token_id,
                 session_id=session_id,
                 access_token_hash=access_token_hash,
-                expires_at=access_token_expires_at,
+                expires_at=_to_naive_utc(access_token_expires_at),
             )
         )
         await self._session.commit()
@@ -309,9 +366,9 @@ class SqlAlchemyAgentAccountRepository:
             account_id=registration.account_id,
             official_openid=registration.official_openid,
             subscribe_status=registration.subscribe_status.value,
-            subscribed_at=registration.subscribed_at,
-            unsubscribed_at=registration.unsubscribed_at,
-            last_event_at=registration.last_event_at,
+            subscribed_at=_to_naive_utc(registration.subscribed_at),
+            unsubscribed_at=_to_naive_utc(registration.unsubscribed_at),
+            last_event_at=_to_naive_utc(registration.last_event_at),
             is_deleted=False,
         )
         self._session.add(model)
@@ -331,9 +388,9 @@ class SqlAlchemyAgentAccountRepository:
         model = result.scalar_one()
         model.account_id = registration.account_id
         model.subscribe_status = registration.subscribe_status.value
-        model.subscribed_at = registration.subscribed_at
-        model.unsubscribed_at = registration.unsubscribed_at
-        model.last_event_at = registration.last_event_at
+        model.subscribed_at = _to_naive_utc(registration.subscribed_at)
+        model.unsubscribed_at = _to_naive_utc(registration.unsubscribed_at)
+        model.last_event_at = _to_naive_utc(registration.last_event_at)
         model.updated_at = datetime.now(UTC).replace(tzinfo=None)
         await self._session.commit()
         await self._session.refresh(model)
@@ -347,7 +404,7 @@ class SqlAlchemyAgentAccountRepository:
             login_session_id=create.login_session_id,
             scene_key=create.scene_key,
             status=create.status.value,
-            expires_at=create.expires_at,
+            expires_at=_to_naive_utc(create.expires_at),
         )
         self._session.add(model)
         await self._session.commit()
@@ -392,7 +449,7 @@ class SqlAlchemyAgentAccountRepository:
         model.status = AgentWechatLoginSessionStatus.AUTHENTICATED.value
         model.official_openid = official_openid
         model.account_id = account_id
-        model.authenticated_at = issue.authenticated_at
+        model.authenticated_at = _to_naive_utc(issue.authenticated_at)
         model.updated_at = datetime.now(UTC).replace(tzinfo=None)
         await self._session.commit()
         await self._session.refresh(model)
@@ -461,13 +518,13 @@ class SqlAlchemyAgentAccountRepository:
 
     async def create_email_login_challenge(
         self,
-        create: AgentEmailLoginChallengeCreate,
+        create: AgentEmailVerificationChallengeCreate,
     ) -> AgentEmailLoginChallenge:
         model = AgentEmailLoginChallengeModel(
             login_challenge_id=create.login_challenge_id,
             email=create.email,
             code_hash=create.code_hash,
-            expires_at=create.expires_at,
+            expires_at=_to_naive_utc(create.expires_at),
         )
         self._session.add(model)
         await self._session.commit()
@@ -500,7 +557,7 @@ class SqlAlchemyAgentAccountRepository:
         model = result.scalar_one_or_none()
         if model is None:
             return None
-        model.verified_at = verified_at
+        model.verified_at = _to_naive_utc(verified_at)
         await self._session.commit()
         await self._session.refresh(model)
         return _to_email_login_challenge(model)

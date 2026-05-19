@@ -1,6 +1,7 @@
 ---
 name: douyin-content-diagnosis-report
-description: 基于单条已采集抖音或小红书视频素材、视频转写文案、封面与过程画面素材，以及「百万粉博主流量实战」外部 Markdown 文档，生成固定结构的内容诊断报告。用于诊断短视频哪里有问题、为什么影响表现、如何修改更好。触发词：内容诊断、抖音视频诊断、小红书视频诊断、视频问题分析、视频优化建议、douyin-content-diagnosis-report。
+title: 单条视频内容诊断
+description: 对单条抖音或小红书视频生成固定结构的**内容诊断报告**，诊断短视频哪里有问题、为什么影响表现、如何修改更好。触发词：内容诊断、抖音视频诊断、小红书视频诊断、视频问题分析、视频优化建议、douyin-content-diagnosis-report。
 ---
 
 # 短视频内容诊断报告

@@ -4,14 +4,17 @@ import { toast } from "sonner";
 
 import {
   aiChatEventSchema,
+  aiChatListSkillsResultSchema,
   aiChatResetResultSchema,
   aiChatSendResultSchema,
   aiChatStateResultSchema,
   type AiChatMessage,
+  type AiChatSkill,
   type AiChatSnapshot,
 } from "@/shared/contracts/ai-chat";
 
 export const AI_CHAT_QUERY_KEY = ["ai-chat"] as const;
+export const AI_CHAT_SKILLS_QUERY_KEY = ["ai-chat", "skills"] as const;
 
 export function useAiChatState() {
   return useQuery({
@@ -102,10 +105,18 @@ export function useAiChatEvents() {
   return useMemo(() => thinkingTrail, [thinkingTrail]);
 }
 
+export interface AiChatSendArgs {
+  prompt: string;
+  skill_id?: string;
+}
+
 export function useAiChatSend() {
   return useMutation({
-    mutationFn: async (prompt: string) => {
-      const raw = await window.api.aiChat.send({ prompt });
+    mutationFn: async (args: AiChatSendArgs) => {
+      const payload: AiChatSendArgs = args.skill_id
+        ? { prompt: args.prompt, skill_id: args.skill_id }
+        : { prompt: args.prompt };
+      const raw = await window.api.aiChat.send(payload);
       const parsed = aiChatSendResultSchema.safeParse(raw);
       if (!parsed.success) {
         throw new Error(`ai-chat:send 响应未通过校验: ${JSON.stringify(raw).slice(0, 200)}`);
@@ -118,6 +129,26 @@ export function useAiChatSend() {
     onError: (err) => {
       toast.error(`发送失败：${err.message}`);
     },
+  });
+}
+
+export function useAiChatSkills() {
+  return useQuery<AiChatSkill[]>({
+    queryKey: AI_CHAT_SKILLS_QUERY_KEY,
+    queryFn: async () => {
+      const raw = await window.api.aiChat.listSkills();
+      const parsed = aiChatListSkillsResultSchema.safeParse(raw);
+      if (!parsed.success) {
+        throw new Error(
+          `ai-chat:list-skills 响应未通过校验: ${JSON.stringify(raw).slice(0, 200)}`,
+        );
+      }
+      if (!parsed.data.ok) {
+        throw new Error(parsed.data.error.message);
+      }
+      return parsed.data.skills;
+    },
+    staleTime: Infinity,
   });
 }
 

@@ -63,6 +63,24 @@ class WechatPayCreateOrderResult(BaseModel):
     payment_params: WechatPayPaymentParams
 
 
+class WechatPayNativeCreateOrderRequest(BaseModel):
+    """Outbound payload for creating a WeChat Pay Native order."""
+
+    model_config = ConfigDict(frozen=True)
+
+    order_no: str
+    amount_fen: int
+    description: str
+
+
+class WechatPayNativeCreateOrderResult(BaseModel):
+    """Outbound result for Native QR payment creation."""
+
+    model_config = ConfigDict(frozen=True)
+
+    code_url: str
+
+
 class WechatPayNotification(BaseModel):
     """Verified and decrypted WeChat Pay callback content."""
 
@@ -201,12 +219,14 @@ class WechatPayV3Gateway:
         cert_dir: str | None,
         public_key: str | None,
         public_key_id: str | None,
+        pay_type: Any | None = None,
     ) -> None:
         from wechatpayv3 import WeChatPay, WeChatPayType
 
         self._appid = appid
+        resolved_pay_type = pay_type if pay_type is not None else WeChatPayType.MINIPROG
         self._wxpay = WeChatPay(
-            wechatpay_type=WeChatPayType.MINIPROG,
+            wechatpay_type=resolved_pay_type,
             mchid=mchid,
             private_key=private_key,
             cert_serial_no=cert_serial_no,
@@ -268,6 +288,112 @@ class WechatPayV3Gateway:
         return WechatPayCreateOrderResult(
             prepay_id=prepay_id.strip(),
             payment_params=payment_params,
+        )
+
+    async def create_native_order(
+        self,
+        request: WechatPayNativeCreateOrderRequest,
+    ) -> WechatPayNativeCreateOrderResult:
+        params = {
+            "out_trade_no": request.order_no,
+            "description": request.description,
+            "amount": {"total": request.amount_fen},
+        }
+        try:
+            status_code, payload = await run_in_threadpool(self._wxpay.pay, **params)
+        except Exception as exc:  # noqa: BLE001
+            raise WechatPayOrderCreateFailedException(
+                message=f"Calling WeChat Pay Native create order failed: {exc!s}",
+            ) from exc
+
+        parsed_payload = _normalize_wechat_payload(payload)
+
+        payload_code, payload_message = _extract_wechat_error(parsed_payload)
+        if payload_code is not None:
+            details = payload_code
+            if payload_message:
+                details = f"{details}: {payload_message}"
+            raise WechatPayOrderCreateFailedException(
+                message=f"WeChat Pay Native create order failed: {details}",
+            )
+
+        if status_code != 200 or not isinstance(parsed_payload, dict):
+            raise WechatPayOrderCreateFailedException(
+                message=(
+                    "Unexpected response from WeChat Pay Native create order: "
+                    f"HTTP {status_code}, payload={_safe_payload_preview(parsed_payload)}"
+                ),
+            )
+
+        code_url = parsed_payload.get("code_url")
+        if not isinstance(code_url, str) or code_url.strip() == "":
+            raise WechatPayOrderCreateFailedException(
+                message=(
+                    "WeChat Pay Native response does not contain code_url: "
+                    f"{_safe_payload_preview(parsed_payload)}"
+                ),
+            )
+
+        return WechatPayNativeCreateOrderResult(code_url=code_url.strip())
+
+    async def query_order(self, *, order_no: str) -> WechatPayNotification | None:
+        try:
+            status_code, payload = await run_in_threadpool(
+                self._wxpay.query,
+                out_trade_no=order_no,
+            )
+        except Exception as exc:  # noqa: BLE001
+            raise WechatPayOrderCreateFailedException(
+                message=f"Calling WeChat Pay query order failed: {exc!s}",
+            ) from exc
+
+        parsed_payload = _normalize_wechat_payload(payload)
+        payload_code, payload_message = _extract_wechat_error(parsed_payload)
+        if payload_code is not None:
+            details = payload_code
+            if payload_message:
+                details = f"{details}: {payload_message}"
+            raise WechatPayOrderCreateFailedException(
+                message=f"WeChat Pay query order failed: {details}",
+            )
+
+        if status_code != 200 or not isinstance(parsed_payload, dict):
+            raise WechatPayOrderCreateFailedException(
+                message=(
+                    "Unexpected response from WeChat Pay query order: "
+                    f"HTTP {status_code}, payload={_safe_payload_preview(parsed_payload)}"
+                ),
+            )
+
+        trade_state = parsed_payload.get("trade_state")
+        amount = parsed_payload.get("amount")
+        if not isinstance(trade_state, str) or not isinstance(amount, dict):
+            return None
+        total = amount.get("total")
+        if not isinstance(total, int):
+            return None
+
+        payer = parsed_payload.get("payer")
+        payer_openid: str | None = None
+        if isinstance(payer, dict) and isinstance(payer.get("openid"), str):
+            payer_openid = payer["openid"].strip() or None
+
+        transaction_id = parsed_payload.get("transaction_id")
+        return WechatPayNotification(
+            order_no=order_no,
+            transaction_id=transaction_id.strip()
+            if isinstance(transaction_id, str) and transaction_id.strip()
+            else None,
+            trade_state=trade_state.strip(),
+            amount_fen=total,
+            payer_openid=payer_openid,
+            success_time=_parse_iso_datetime(parsed_payload.get("success_time")),
+            raw_payload=json.dumps(
+                parsed_payload,
+                ensure_ascii=False,
+                separators=(",", ":"),
+                sort_keys=True,
+            ),
         )
 
     def parse_notification(
@@ -352,6 +478,8 @@ __all__ = [
     "WechatPayConfigMissingException",
     "WechatPayCreateOrderRequest",
     "WechatPayCreateOrderResult",
+    "WechatPayNativeCreateOrderRequest",
+    "WechatPayNativeCreateOrderResult",
     "WechatPayNotification",
     "WechatPayNotifyInvalidException",
     "WechatPayNotifyMismatchException",

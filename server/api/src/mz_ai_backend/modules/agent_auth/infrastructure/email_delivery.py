@@ -7,8 +7,8 @@ from email.message import EmailMessage
 from ..domain import AgentEmailConfigMissingException, AgentEmailDeliveryFailedException
 
 
-class SmtpEmailLoginDeliveryGateway:
-    """SMTP gateway for ua-agent email login codes."""
+class SmtpEmailVerificationDeliveryGateway:
+    """SMTP gateway for ua-agent email verification codes (binding email etc)."""
 
     def __init__(
         self,
@@ -29,7 +29,7 @@ class SmtpEmailLoginDeliveryGateway:
         self._from_address = from_address.strip() if isinstance(from_address, str) else ""
         self._from_name = from_name.strip() if isinstance(from_name, str) else ""
 
-    async def send_login_code(self, *, email: str, verification_code: str) -> None:
+    async def send_verification_code(self, *, email: str, verification_code: str) -> None:
         if (
             self._host == ""
             or self._username == ""
@@ -38,7 +38,7 @@ class SmtpEmailLoginDeliveryGateway:
         ):
             raise AgentEmailConfigMissingException()
         message = EmailMessage()
-        message["Subject"] = "微域生光 登录验证码"
+        message["Subject"] = "微域生光 邮箱验证码"
         message["From"] = (
             f"{self._from_name} <{self._from_address}>"
             if self._from_name != ""
@@ -71,7 +71,7 @@ class SmtpEmailLoginDeliveryGateway:
 
     def _build_text_body(self, verification_code: str) -> str:
         return (
-            "微域生光 登录验证码\n\n"
+            "微域生光 邮箱验证码\n\n"
             f"验证码：{verification_code}\n"
             "有效期10分钟，请勿泄露于他人。"
         )
@@ -89,8 +89,8 @@ class SmtpEmailLoginDeliveryGateway:
       <div style="border:1px solid #e5e5e5;border-radius:24px;overflow:hidden;background:#ffffff;">
         <div style="padding:24px 32px;border-bottom:1px solid #ececec;">
           <div style="font-size:13px;font-weight:700;letter-spacing:.24em;color:#111111;">微域生光</div>
-          <div style="margin-top:10px;font-size:28px;line-height:1.2;font-weight:700;color:#111111;">登录验证码</div>
-          <div style="margin-top:10px;font-size:15px;line-height:1.9;color:#444444;">你正在登录微域生光账号，请使用下方验证码完成验证。</div>
+          <div style="margin-top:10px;font-size:28px;line-height:1.2;font-weight:700;color:#111111;">邮箱验证码</div>
+          <div style="margin-top:10px;font-size:15px;line-height:1.9;color:#444444;">你正在为微域生光账号绑定邮箱，请使用下方验证码完成验证。</div>
         </div>
         <div style="padding:32px;">
           <div style="font-size:13px;font-weight:700;letter-spacing:.12em;color:#777777;text-transform:uppercase;">One-time code</div>

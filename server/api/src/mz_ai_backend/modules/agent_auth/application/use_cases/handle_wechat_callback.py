@@ -31,11 +31,20 @@ class HandleAgentWechatCallbackUseCase:
         self._snowflake_id_generator = snowflake_id_generator
 
     async def execute(self, command: HandleAgentWechatCallbackCommand) -> None:
-        valid = self._wechat_gateway.verify_callback_signature(
-            signature=command.signature,
-            timestamp=command.timestamp,
-            nonce=command.nonce,
-        )
+        # 安全模式使用 msg_signature（含加密内容参与签名），明文模式使用 signature
+        if command.msg_signature:
+            valid = self._wechat_gateway.verify_msg_signature(
+                msg_signature=command.msg_signature,
+                timestamp=command.timestamp,
+                nonce=command.nonce,
+                xml_body=command.xml_body,
+            )
+        else:
+            valid = self._wechat_gateway.verify_callback_signature(
+                signature=command.signature,
+                timestamp=command.timestamp,
+                nonce=command.nonce,
+            )
         if not valid:
             raise AgentWechatCallbackInvalidException(message="WeChat callback signature is invalid.")
 

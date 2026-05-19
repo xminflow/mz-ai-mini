@@ -16,11 +16,11 @@ class TokenService(Protocol):
         """Return the stable persisted hash for one opaque token."""
 
 
-class EmailLoginDeliveryGateway(Protocol):
-    """Email delivery contract for login verification codes."""
+class EmailVerificationDeliveryGateway(Protocol):
+    """邮箱验证码发送契约（用于绑定邮箱、修改邮箱等场景）。"""
 
-    async def send_login_code(self, *, email: str, verification_code: str) -> None:
-        """Deliver one login verification code to the target email."""
+    async def send_verification_code(self, *, email: str, verification_code: str) -> None:
+        """Deliver one verification code to the target email."""
 
 
 class OfficialWechatQrTicket(BaseModel):

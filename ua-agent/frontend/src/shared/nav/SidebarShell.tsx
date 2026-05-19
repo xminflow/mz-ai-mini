@@ -1,8 +1,6 @@
 import type { ReactNode } from "react";
 import { NavLink } from "react-router-dom";
 
-import { groupedFiles } from "@/features/self-media-guide/guideStructure";
-import { useGuideFiles } from "@/features/self-media-guide/useGuideFiles";
 import {
   Sidebar,
   SidebarContent,
@@ -26,15 +24,6 @@ interface SidebarShellProps {
 }
 
 export function SidebarShell({ children }: SidebarShellProps): JSX.Element {
-  const { result } = useGuideFiles();
-  const selfMediaGuideChildren =
-    result?.ok === true
-      ? groupedFiles(result.files).map((group) => ({
-          path: `/self-media-guide/${encodeURIComponent(group.slug)}`,
-          label: group.title,
-        }))
-      : undefined;
-
   return (
     <SidebarProvider className="min-h-0 flex-1">
       <Sidebar collapsible="icon" className="top-9 h-[calc(100svh-2.25rem)]">
@@ -49,7 +38,6 @@ export function SidebarShell({ children }: SidebarShellProps): JSX.Element {
               <SidebarMenu>
                 {navItems.map((item) => {
                   const Icon = item.icon;
-                  const children = item.navTo === "/self-media-guide" ? selfMediaGuideChildren : item.children;
                   return (
                     <SidebarMenuItem key={item.navTo}>
                       <NavLink
@@ -63,9 +51,9 @@ export function SidebarShell({ children }: SidebarShellProps): JSX.Element {
                           </SidebarMenuButton>
                         )}
                       </NavLink>
-                      {children !== undefined ? (
+                      {item.children !== undefined ? (
                         <SidebarMenuSub>
-                          {children.map((child) => (
+                          {item.children.map((child) => (
                             <SidebarMenuSubItem key={child.path}>
                               <NavLink to={child.path} end>
                                 {({ isActive }) => (

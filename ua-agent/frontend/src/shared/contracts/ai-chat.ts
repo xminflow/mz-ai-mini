@@ -4,6 +4,7 @@ import { errorEnvelopeSchema, SCHEMA_VERSION } from "./error";
 import { providerIdSchema } from "./settings";
 
 export const AI_CHAT_EVENT_TOPIC = "ai-chat:event" as const;
+export const AI_CHAT_LIST_SKILLS_CHANNEL = "ai-chat:list-skills" as const;
 
 const isoMs = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
 
@@ -63,12 +64,43 @@ export const aiChatStateSuccessSchema = z
 export const aiChatStateResultSchema = z.union([aiChatStateSuccessSchema, errorEnvelopeSchema]);
 export type AiChatStateResult = z.infer<typeof aiChatStateResultSchema>;
 
+export const aiChatSkillIdSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(128)
+  .regex(/^[a-z0-9][a-z0-9-]*$/);
+export type AiChatSkillId = z.infer<typeof aiChatSkillIdSchema>;
+
 export const aiChatSendInputSchema = z
   .object({
     prompt: z.string().trim().min(1).max(64000),
+    skill_id: aiChatSkillIdSchema.optional(),
   })
   .strict();
 export type AiChatSendInput = z.infer<typeof aiChatSendInputSchema>;
+
+export const aiChatSkillSchema = z
+  .object({
+    id: aiChatSkillIdSchema,
+    title: z.string().min(1).max(80),
+    description: z.string().min(1).max(2048),
+  })
+  .strict();
+export type AiChatSkill = z.infer<typeof aiChatSkillSchema>;
+
+export const aiChatListSkillsSuccessSchema = z
+  .object({
+    schema_version: z.literal(SCHEMA_VERSION),
+    ok: z.literal(true),
+    skills: z.array(aiChatSkillSchema),
+  })
+  .strict();
+export const aiChatListSkillsResultSchema = z.union([
+  aiChatListSkillsSuccessSchema,
+  errorEnvelopeSchema,
+]);
+export type AiChatListSkillsResult = z.infer<typeof aiChatListSkillsResultSchema>;
 
 export const aiChatSendSuccessSchema = z
   .object({

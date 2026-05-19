@@ -17,6 +17,28 @@ class AgentUsernameTakenException(BusinessException):
         )
 
 
+class AgentUsernameInvalidFormatException(BusinessException):
+    """Raised when the submitted username does not match the allowed format."""
+
+    def __init__(self) -> None:
+        super().__init__(
+            error_code=ErrorCode.AGENT_AUTH_USERNAME_INVALID_FORMAT,
+            message="Username must be 3-32 characters of lowercase letters, digits or underscore.",
+            http_status=HTTPStatus.BAD_REQUEST,
+        )
+
+
+class AgentEmailTakenException(BusinessException):
+    """该邮箱已经被其他账号绑定（unique 冲突）。"""
+
+    def __init__(self) -> None:
+        super().__init__(
+            error_code=ErrorCode.AGENT_AUTH_EMAIL_TAKEN,
+            message="Email is already bound to another account.",
+            http_status=HTTPStatus.CONFLICT,
+        )
+
+
 class AgentInvalidCredentialsException(BusinessException):
     """Raised when username/password authentication fails."""
 

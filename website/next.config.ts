@@ -1,12 +1,8 @@
 import type { NextConfig } from 'next'
-import { createRequire } from 'node:module'
 
-const require = createRequire(import.meta.url)
-const { API_PREFIX, LOCAL_API_ORIGIN, PRODUCTION_API_ORIGIN } = require('../app/miniprogram/core/runtime-config.js') as {
-  API_PREFIX: string
-  LOCAL_API_ORIGIN: string
-  PRODUCTION_API_ORIGIN: string
-}
+const API_PREFIX = '/api/v1'
+const LOCAL_API_ORIGIN = 'http://127.0.0.1:8000'
+const PRODUCTION_API_ORIGIN = 'https://api.weelume.com'
 
 const trimTrailingSlashes = (value: string): string => value.replace(/\/+$/, '')
 
@@ -32,8 +28,8 @@ const config: NextConfig = {
     const target = resolveInternalApiOrigin()
     return [
       {
-        source: '/api/:path*',
-        destination: `${target}/api/:path*`,
+        source: '/api/v1/:path*',
+        destination: `${target}/api/v1/:path*`,
       },
     ]
   },

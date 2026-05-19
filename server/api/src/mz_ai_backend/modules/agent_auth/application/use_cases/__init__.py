@@ -8,24 +8,26 @@ Development rules:
 - Handle business branching here instead of routers.
 """
 
+from .change_agent_username import ChangeAgentUsernameUseCase
 from .create_wechat_login_session import CreateAgentWechatLoginSessionUseCase
 from .exchange_wechat_login import ExchangeAgentWechatLoginUseCase
 from .get_current_agent_account import GetCurrentAgentAccountUseCase
 from .get_wechat_login_session import GetAgentWechatLoginSessionUseCase
 from .handle_wechat_callback import HandleAgentWechatCallbackUseCase
 from .logout_agent_session import LogoutAgentSessionUseCase
-from .request_email_login_challenge import RequestAgentEmailLoginChallengeUseCase
 from .refresh_agent_session import RefreshAgentSessionUseCase
-from .verify_email_login_challenge import VerifyAgentEmailLoginChallengeUseCase
+from .request_email_binding_challenge import RequestEmailBindingChallengeUseCase
+from .verify_email_binding_challenge import VerifyEmailBindingChallengeUseCase
 
 __all__ = [
+    "ChangeAgentUsernameUseCase",
     "CreateAgentWechatLoginSessionUseCase",
     "ExchangeAgentWechatLoginUseCase",
     "GetCurrentAgentAccountUseCase",
     "GetAgentWechatLoginSessionUseCase",
     "HandleAgentWechatCallbackUseCase",
     "LogoutAgentSessionUseCase",
-    "RequestAgentEmailLoginChallengeUseCase",
     "RefreshAgentSessionUseCase",
-    "VerifyAgentEmailLoginChallengeUseCase",
+    "RequestEmailBindingChallengeUseCase",
+    "VerifyEmailBindingChallengeUseCase",
 ]

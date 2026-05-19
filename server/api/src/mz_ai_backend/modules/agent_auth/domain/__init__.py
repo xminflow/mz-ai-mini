@@ -27,6 +27,7 @@ from .exceptions import (
     AgentEmailLoginChallengeExpiredException,
     AgentEmailLoginCodeInvalidException,
     AgentEmailSendCooldownException,
+    AgentEmailTakenException,
     AgentRefreshTokenExpiredException,
     AgentSessionRevokedException,
     AgentWechatCallbackInvalidException,
@@ -34,6 +35,7 @@ from .exceptions import (
     AgentWechatIdentityNotSubscribedException,
     AgentWechatLoginSessionExpiredException,
     AgentWechatLoginSessionPendingException,
+    AgentUsernameInvalidFormatException,
     AgentUsernameTakenException,
 )
 
@@ -56,10 +58,12 @@ __all__ = [
     "AgentWechatConfigMissingException",
     "AgentWechatIdentity",
     "AgentWechatIdentityNotSubscribedException",
+    "AgentEmailTakenException",
     "AgentWechatLoginSession",
     "AgentWechatLoginSessionExpiredException",
     "AgentWechatLoginSessionPendingException",
     "AgentWechatLoginSessionStatus",
     "AgentWechatSubscribeStatus",
+    "AgentUsernameInvalidFormatException",
     "AgentUsernameTakenException",
 ]
