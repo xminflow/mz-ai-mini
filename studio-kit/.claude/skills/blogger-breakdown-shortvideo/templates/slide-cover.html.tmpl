@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+  <title>slide-cover — {{title}}</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'bg-base':    '#050507',
+            'accent':     '#10b981',
+            'accent-dim': 'rgba(16,185,129,0.15)',
+            'purple':     '#A78BFA',
+            'cyan':       '#22d3ee',
+            'pink':       '#f472b6',
+          },
+          fontFamily: {
+            sans:  ['AlibabaPuHuiTi', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
+            mono:  ['JetBrains Mono', 'Courier New', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Google Fonts: JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── 字体 ── */
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 400;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 700;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-75-SemiBold/AlibabaPuHuiTi-3-75-SemiBold.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 800;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-85-Bold/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');
+      font-display: swap;
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1080px; height: 1920px;
+      overflow: hidden;
+      background: #050507;
+      color: #fff;
+      font-family: 'AlibabaPuHuiTi', 'PingFang SC', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── 关键帧 ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes lineGrow {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* ── 背景渐变网格 ── */
+    .bg-mesh {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 700px 600px at 20% 15%, rgba(167,139,250,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 500px at 85% 30%, rgba(34,211,238,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 600px 700px at 50% 80%, rgba(244,114,182,0.10) 0%, transparent 70%),
+        #050507;
+    }
+
+    /* ── 装饰格线 ── */
+    .bg-grid {
+      position: absolute; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+
+    /* ── 内容层 ── */
+    .content {
+      position: relative; z-index: 1;
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      padding: 80px 64px;
+    }
+
+    /* ── 博主名大字 ── */
+    .blogger-name {
+      font-size: clamp(52px, 7.5vw, 80px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: #fff;
+      animation: fadeUp 0.4s cubic-bezier(0.22,1,0.36,1) 0.1s both;
+    }
+
+    /* 绿色下划线 */
+    .name-underline {
+      display: block;
+      height: 4px;
+      width: 100%;
+      background: linear-gradient(to right, #10b981, rgba(16,185,129,0.2));
+      border-radius: 2px;
+      margin-top: 12px;
+      transform-origin: left center;
+      animation: lineGrow 0.5s cubic-bezier(0.22,1,0.36,1) 0.45s both;
+    }
+
+    /* ── 副标题 ── */
+    .subtitle {
+      font-size: 22px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.05em;
+      margin-top: 20px;
+      animation: fadeUp 0.4s cubic-bezier(0.22,1,0.36,1) 0.3s both;
+    }
+
+    /* ── 装饰线段 ── */
+    .section-divider {
+      width: 56px; height: 2px;
+      background: linear-gradient(to right, #10b981, transparent);
+      border-radius: 1px;
+      margin: 40px 0;
+      animation: fadeIn 0.4s ease 0.4s both;
+    }
+
+    /* ── 一句话答卷 verdict 卡片 ── */
+    .verdict-card {
+      flex: 1;
+      display: flex; align-items: center;
+      animation: fadeUp 0.45s cubic-bezier(0.22,1,0.36,1) 0.55s both;
+    }
+
+    .verdict-inner {
+      border-left: 4px solid #10b981;
+      padding: 24px 28px;
+      background: rgba(16,185,129,0.07);
+      border-radius: 0 14px 14px 0;
+      backdrop-filter: blur(4px);
+    }
+
+    .verdict-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #10b981;
+      margin-bottom: 12px;
+    }
+
+    .verdict-text {
+      font-size: clamp(18px, 3vw, 24px);
+      font-weight: 600;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.92);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── 系列标签（左上角） ── */
+    .series-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 48px;
+      animation: fadeIn 0.4s ease 0s both;
+    }
+
+    /* ── 底部品牌 ── */
+    .brand-footer {
+      margin-top: auto;
+      display: flex; align-items: center;
+      gap: 14px;
+      animation: fadeIn 0.5s ease 0.8s both;
+    }
+
+    .brand-w {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 24px; font-weight: 700;
+      color: #10b981;
+    }
+
+    .brand-text-group { display: flex; flex-direction: column; gap: 2px; }
+
+    .brand-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: 0.35em;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+    }
+
+    .brand-tagline {
+      font-size: 11px;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── debug 标记（供 render 命令参考，浏览器预览时不显示） ── */
+    .duration-debug {
+      position: absolute; bottom: 12px; right: 20px; z-index: 99;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.15);
+    }
+  </style>
+</head>
+<body>
+  <div style="width:1080px;height:1920px;position:relative;overflow:hidden;">
+
+    <!-- 背景层 -->
+    <div class="bg-mesh"></div>
+    <div class="bg-grid"></div>
+
+    <!-- 内容层 -->
+    <div class="content">
+
+      <!-- 左上：系列标签 -->
+      <div class="series-tag">博主拆解系列</div>
+
+      <!-- 博主名 -->
+      <div>
+        <div class="blogger-name">{{title}}</div>
+        <span class="name-underline"></span>
+      </div>
+
+      <!-- 副标题（可选） -->
+      <div class="subtitle">{{subtitle}}</div>
+
+      <!-- 装饰分隔线 -->
+      <div class="section-divider"></div>
+
+      <!-- 一句话答卷 -->
+      <div class="verdict-card">
+        <div class="verdict-inner">
+          <div class="verdict-label">核心结论</div>
+          <div class="verdict-text">{{verdict}}</div>
+        </div>
+      </div>
+
+      <!-- 底部品牌 -->
+      <div class="brand-footer">
+        <div class="brand-w">W</div>
+        <div class="brand-text-group">
+          <div class="brand-name">WEELUME</div>
+          <div class="brand-tagline">博主拆解系列 · 真实数据驱动</div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+
+    <!-- duration debug -->
+    <div class="duration-debug">{{DURATION_MS}}ms</div>
+
+  </div>
+</body>
+</html>

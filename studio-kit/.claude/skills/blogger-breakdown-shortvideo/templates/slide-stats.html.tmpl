@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+  <title>slide-stats</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'bg-base':  '#050507',
+            'accent':   '#10b981',
+            'purple':   '#A78BFA',
+            'cyan':     '#22d3ee',
+          },
+          fontFamily: {
+            sans: ['AlibabaPuHuiTi', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
+            mono: ['JetBrains Mono', 'Courier New', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 400;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 800;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-85-Bold/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');
+      font-display: swap;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1080px; height: 1920px;
+      overflow: hidden;
+      background: #050507;
+      color: #fff;
+      font-family: 'AlibabaPuHuiTi', 'PingFang SC', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── 关键帧 ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes numberCount {
+      from { opacity: 0; transform: translateY(20px) scale(0.9); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── 背景 ── */
+    .bg-mesh {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 80% 20%, rgba(16,185,129,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 500px 500px at 10% 70%, rgba(167,139,250,0.10) 0%, transparent 70%),
+        #050507;
+    }
+
+    /* ── 内容层 ── */
+    .content {
+      position: relative; z-index: 1;
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      padding: 80px 64px;
+    }
+
+    /* ── 顶部章节标签 ── */
+    .section-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: #10b981;
+      animation: fadeIn 0.35s ease 0.05s both;
+    }
+
+    /* ── 主标题 ── */
+    .slide-title {
+      font-size: 48px; font-weight: 800;
+      line-height: 1.2; letter-spacing: -0.01em;
+      margin-top: 24px;
+      animation: fadeUp 0.4s cubic-bezier(0.22,1,0.36,1) 0.15s both;
+    }
+
+    /* ── 分隔线 ── */
+    .divider {
+      width: 56px; height: 2px;
+      background: linear-gradient(to right, #10b981, transparent);
+      border-radius: 1px;
+      margin: 36px 0;
+      animation: fadeIn 0.35s ease 0.25s both;
+    }
+
+    /* ── 三个数据卡片容器（竖排） ── */
+    .stats-grid {
+      display: flex; flex-direction: column;
+      gap: 28px;
+      flex: 1;
+    }
+
+    /* ── 单个数据卡片 ── */
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 32px 36px;
+      display: flex; flex-direction: column;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    /* stagger: 每张卡片依次出现 */
+    .stat-card:nth-child(1) { animation-delay: 0.30s; }
+    .stat-card:nth-child(2) { animation-delay: 0.45s; }
+    .stat-card:nth-child(3) { animation-delay: 0.60s; }
+
+    /* 卡片左侧绿线装饰 */
+    .stat-card::before {
+      content: '';
+      position: absolute; left: 0; top: 20%; bottom: 20%;
+      width: 3px;
+      background: linear-gradient(to bottom, #10b981, rgba(16,185,129,0.3));
+      border-radius: 2px;
+    }
+
+    .stat-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .stat-value {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-size: clamp(52px, 8vw, 72px);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+    }
+
+    /* 数字高亮色 */
+    .stat-value .num-accent { color: #10b981; }
+
+    .stat-sublabel {
+      font-size: 16px; font-weight: 400;
+      color: rgba(255,255,255,0.45);
+      margin-top: 4px;
+    }
+
+    /* ── 底部 extra 描述 ── */
+    .extra-block {
+      margin-top: 32px;
+      padding: 18px 22px;
+      background: rgba(16,185,129,0.07);
+      border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 12px;
+      animation: fadeUp 0.4s cubic-bezier(0.22,1,0.36,1) 0.75s both;
+    }
+
+    .extra-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: #10b981; margin-bottom: 6px;
+    }
+
+    .extra-text {
+      font-size: 16px; font-weight: 400;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.6;
+    }
+
+    /* ── 品牌底部 ── */
+    .brand-footer {
+      margin-top: 40px;
+      display: flex; align-items: center; gap: 12px;
+      animation: fadeIn 0.4s ease 0.9s both;
+    }
+    .brand-w {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px; font-weight: 700; color: #10b981;
+    }
+    .brand-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.3em; color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+    }
+
+    /* ── debug ── */
+    .duration-debug {
+      position: absolute; bottom: 12px; right: 20px; z-index: 99;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+  <div style="width:1080px;height:1920px;position:relative;overflow:hidden;">
+
+    <div class="bg-mesh"></div>
+
+    <div class="content">
+
+      <!-- 顶部标签 -->
+      <div class="section-tag">数据 · DATA</div>
+
+      <!-- 主标题 -->
+      <div class="slide-title">账号数据</div>
+
+      <!-- 分隔线 -->
+      <div class="divider"></div>
+
+      <!-- 三个数据卡片 -->
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <div class="stat-label">{{stat_1_label}}</div>
+          <div class="stat-value">{{stat_1_value}}</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">{{stat_2_label}}</div>
+          <div class="stat-value">{{stat_2_value}}</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">{{stat_3_label}}</div>
+          <div class="stat-value">{{stat_3_value}}</div>
+        </div>
+
+      </div>
+
+      <!-- 经济模式描述（可选，{{extra}} 为空时 Python 可移除此块） -->
+      <div class="extra-block">
+        <div class="extra-label">变现方式</div>
+        <div class="extra-text">{{extra}}</div>
+      </div>
+
+      <!-- 品牌 -->
+      <div class="brand-footer">
+        <div class="brand-w">W</div>
+        <div class="brand-name">WEELUME</div>
+      </div>
+
+    </div>
+
+    <div class="duration-debug">{{DURATION_MS}}ms</div>
+
+  </div>
+</body>
+</html>

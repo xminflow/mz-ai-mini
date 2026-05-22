@@ -1,0 +1,16 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.uv/
+
+# 产物目录
+output/
+
+# 用户音色样本（隐私）
+assets/voice-samples/
+
+# 临时 webm 录屏
+slides/_webm/

@@ -1,0 +1,407 @@
+/* deck.css — 竖屏短视频幻灯片共享样式
+ * 所有 slide-*.html.tmpl 均通过 <style> 块内联引入本文件内容，
+ * 或直接在 <style> 中复制本文件的规则（render 命令在生成时合并）。
+ *
+ * 设计基调：
+ *   - 竖屏 1080×1920，纯 CSS，无 JS 动画库
+ *   - 深黑背景 #050507，绿色强调 #10b981，紫色装饰 #A78BFA
+ *   - 字体：阿里巴巴普惠体 3.0（标题/正文），JetBrains Mono（标签/数字）
+ */
+
+/* ─── 字体声明 ─── */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+/* 阿里巴巴普惠体 3.0 — 从 jsDelivr 加载（无需 npm） */
+@font-face {
+  font-family: 'AlibabaPuHuiTi';
+  font-weight: 300;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'AlibabaPuHuiTi';
+  font-weight: 400;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'AlibabaPuHuiTi';
+  font-weight: 600;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-65-Medium/AlibabaPuHuiTi-3-65-Medium.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'AlibabaPuHuiTi';
+  font-weight: 700;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-75-SemiBold/AlibabaPuHuiTi-3-75-SemiBold.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'AlibabaPuHuiTi';
+  font-weight: 800;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-85-Bold/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');
+  font-display: swap;
+}
+
+/* ─── Reset ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #050507;
+  color: #ffffff;
+  font-family: 'AlibabaPuHuiTi', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── 根容器 ─── */
+.slide-root {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background-color: #050507;
+}
+
+/* ─── 关键帧动画 ─── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ─── 入场动画工具类 ─── */
+.fade-up {
+  animation: fadeUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out both;
+}
+
+.scale-in {
+  animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.slide-right {
+  animation: slideRight 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ─── Stagger 列表子项 ─── */
+/* 使用 CSS nth-child 为每条 stagger-item 叠加 delay */
+.stagger-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.stagger-item {
+  animation: fadeUp 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.20s; }
+.stagger-item:nth-child(2) { animation-delay: 0.35s; }
+.stagger-item:nth-child(3) { animation-delay: 0.50s; }
+.stagger-item:nth-child(4) { animation-delay: 0.65s; }
+.stagger-item:nth-child(5) { animation-delay: 0.80s; }
+
+/* ─── 左侧绿线装饰 ─── */
+.accent-line {
+  border-left: 3px solid #10b981;
+  padding-left: 16px;
+}
+
+/* ─── 大数字样式 ─── */
+.stat-number {
+  font-family: 'AlibabaPuHuiTi', sans-serif;
+  font-weight: 800;
+  font-size: clamp(40px, 10vw, 80px);
+  line-height: 1;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+/* ─── 小型标签（JetBrains Mono） ─── */
+.label-mono {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: clamp(10px, 2.2vw, 14px);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #10b981;
+}
+
+/* ─── 绿色强调文字 ─── */
+.text-accent {
+  color: #10b981;
+}
+
+/* ─── 紫色装饰文字 ─── */
+.text-purple {
+  color: #A78BFA;
+}
+
+/* ─── 青色装饰文字 ─── */
+.text-cyan {
+  color: #22d3ee;
+}
+
+/* ─── 卡片容器 ─── */
+.card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.card-green {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.card-purple {
+  background: rgba(167, 139, 250, 0.08);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* ─── 分隔线 ─── */
+.divider {
+  width: 48px;
+  height: 2px;
+  background: linear-gradient(to right, #10b981, transparent);
+  border-radius: 1px;
+}
+
+/* ─── 渐变背景光晕 ─── */
+.bg-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-glow-green {
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+}
+
+.bg-glow-purple {
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.12) 0%, transparent 70%);
+}
+
+.bg-glow-cyan {
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.10) 0%, transparent 70%);
+}
+
+/* ─── 内容层（在光晕之上） ─── */
+.content-layer {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Weelume 品牌徽标底部区域 ─── */
+.brand-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo-letter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
+  font-weight: 700;
+  color: #10b981;
+  letter-spacing: 0.02em;
+}
+
+.brand-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+.brand-tagline {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.05em;
+}
+
+/* ─── 引用号装饰 ─── */
+.quote-mark {
+  font-family: Georgia, serif;
+  font-size: clamp(80px, 18vw, 140px);
+  font-weight: 900;
+  color: #10b981;
+  opacity: 0.2;
+  line-height: 0.8;
+  user-select: none;
+}
+
+/* ─── 引用正文 ─── */
+.quote-text {
+  font-size: clamp(18px, 4.5vw, 26px);
+  font-weight: 600;
+  line-height: 1.85;
+  text-align: center;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+}
+
+/* ─── 章节标签（slide 顶部） ─── */
+.section-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #10b981;
+  opacity: 0.8;
+}
+
+/* ─── 页面主标题 ─── */
+.slide-title {
+  font-size: clamp(26px, 6vw, 44px);
+  font-weight: 800;
+  line-height: 1.25;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+/* ─── bullets 列表项 ─── */
+.bullet-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 10px;
+  font-size: clamp(14px, 3.2vw, 18px);
+  font-weight: 400;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.bullet-index {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  color: #10b981;
+  margin-top: 2px;
+}
+
+/* ─── 对照卡片 ─── */
+.compare-card-before {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.compare-card-after {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 14px;
+  padding: 20px;
+}
+
+.compare-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.compare-label-before {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.compare-label-after {
+  color: #10b981;
+}
+
+.compare-arrow {
+  text-align: center;
+  font-size: 24px;
+  color: rgba(16, 185, 129, 0.6);
+  padding: 8px 0;
+}
