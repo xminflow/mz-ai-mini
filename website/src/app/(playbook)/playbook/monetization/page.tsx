@@ -5,11 +5,11 @@ import type { ReactNode } from 'react'
 import { requireMembership } from '@/features/membership/server/require-membership'
 
 export const metadata: Metadata = {
-  title: '第七篇 · 变现与商业模式 — 微域生光自媒体运营实战',
+  title: '第七篇 · 变现与商业模式 · 自媒体运营实战手册',
   description:
-    '把粉丝变成收入。四原则 + 四方式 + 价值排序 + 课程阶梯 + 4P + 私域 + 直播 16 字 + 失败 10 例，最后画出你的变现链路。',
+    '把粉丝变成客源与收入。四原则 + 四方式 + 价值排序 + 课程阶梯 + 4P + 私域 + 直播 16 字 + 失败 10 例，最后画出你的变现链路。',
   openGraph: {
-    title: '第七篇 · 变现与商业模式 — 微域生光自媒体运营实战',
+    title: '第七篇 · 变现与商业模式 · 自媒体运营实战手册',
     description: '你不是没流量、是流量没变现。',
   },
 }

@@ -1,0 +1,1092 @@
+<!--
+============================================================================
+ 03_business_model.html · 赛道分析 · 商业模式模板（v0.1.0）
+============================================================================
+
+这是一份**骨架版**模板——直接复制到 reports/<run_id>/03_business_model.html，
+然后按下面三个规则填内容：
+
+  1. `{{...}}` 占位符 → 用 sources.json / data_index.md 的具体值替换。
+     金额 / 客单价 / 毛利率等关键数字必须 cite material/ 行号；无来源数字一律不写。
+
+  2. `<!-- TODO(章节): ... -->` 注释 → 这里必须写实际拆解内容，
+     注释里列出了"该写什么"和"该用什么 HTML 结构"，**不要照搬注释里的措辞**——
+     它只是指引，不是文案。写完后请删掉这条 TODO 注释。
+
+  3. 每个 `<section>` 末尾的 `qa-card · 必须答的问题` **必须答完 5 个问题**——
+     商业模式的深度硬底线。本份 HTML 章节多，但每章的 5 问都要答到。
+
+  4. **变现链路五层（第 9 章）只在自媒体类赛道触发**——实物 / SaaS 类赛道
+     可直接删除整个 `#five-layers` section，但其他章节都保留。
+
+填完后做两件事：
+  · 本份至少 2 张内联 SVG / CSS 数据图：收入构成（CSS 横条百分比）+ 成本拆解（SVG 环形 或 CSS 横条）
+  · 禁止外链图片，禁止任何 PNG 占位符；每张图数据点能在 raw/data_index.md 找到
+
+**不要**改 head 里的 CSS / Tailwind config / 字体；改了视觉一致性就垮。
+**不要**新增 JS——本骨架严格禁 JS。
+============================================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{track_keyword}} · 赛道分析 · 商业模式</title>
+
+  <!-- 字体：阿里巴巴普惠体 3（chinese-fonts-cdn，自动 subset + woff2） + JetBrains Mono（代码 / 数字） -->
+  <link rel="preconnect" href="https://chinese-fonts-cdn.deno.dev" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-55-Regular/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-65-Medium/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-85-Bold/result.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    /* 把 chinese-fonts-cdn 的三个 package 别名到统一的 "Alibaba PuHuiTi" 家族，
+       通过 font-weight 自动选权重。`local()` 命中已注册的 webfont 家族，
+       不会触发额外的网络请求。 */
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-55-Regular'), local('Alibaba PuHuiTi 3 55 Regular');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-85-Bold'), local('Alibaba PuHuiTi 3 85 Bold');
+    }
+  </style>
+
+  <!-- Tailwind CDN with Weelume brand config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#F5F5F7',
+            'ink-soft': '#D4D4D8',
+            muted: '#8A8A94',
+            canvas: '#050507',
+            surface: '#0D0D12',
+            'surface-2': '#141420',
+            hairline: 'rgba(255,255,255,0.08)',
+            'hairline-strong': 'rgba(255,255,255,0.16)',
+            accent: '#A78BFA',
+            'accent-2': '#22D3EE',
+            'accent-3': '#F472B6',
+            report: '#10b981',
+            'report-deep': '#064e3b',
+            'report-soft': 'rgba(16,185,129,0.08)',
+          },
+          fontFamily: {
+            sans: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-55-Regular"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            serif: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-85-Bold"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { scrollbar-gutter: stable; }
+    html, body {
+      margin: 0; padding: 0;
+      min-height: 100%;
+      background-color: #050507;
+      color: #F5F5F7;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-55-Regular', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-feature-settings: "palt";
+      font-variant-numeric: lining-nums proportional-nums;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-optical-sizing: auto;
+      font-feature-settings: "palt";
+    }
+    /* 报告里的"中文衬线大字"位（h1/h2 + 一句话答卷 + stats 数字）
+       原本走 Noto Serif SC，现在统一切到普惠体 Bold——保留 class 名兼容
+       现存模板和已有报告，不改 markup。 */
+    .font-serif-zh {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    ::selection { background-color: rgba(167, 139, 250, 0.35); color: #fff; }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.08);
+      border-radius: 9999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); background-clip: padding-box; }
+
+    /* Hero 一句话答卷渐变文字 */
+    .text-shimmer {
+      background: linear-gradient(120deg, #F5F5F7 0%, #A78BFA 40%, #22D3EE 70%, #F5F5F7 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmerText 12s linear infinite;
+    }
+    @keyframes shimmerText {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .glass {
+      background: rgba(13,13,18,0.55);
+      backdrop-filter: saturate(160%) blur(18px);
+      -webkit-backdrop-filter: saturate(160%) blur(18px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .accent-bar { border-left: 3px solid #10b981; }
+    .accent-bar-deep { border-left: 3px solid #064e3b; }
+    .zh-justify { text-align: justify; text-justify: inter-ideograph; }
+
+    /* "必须答的问题" 答疑卡片 */
+    .qa-card {
+      border-left: 3px solid #10b981;
+      background: rgba(16,185,129,0.05);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+    }
+    .qa-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: #10b981;
+      margin-bottom: 0.6rem;
+    }
+
+    /* 表格 */
+    table.report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 14px;
+    }
+    table.report-table thead th {
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      padding: 0.75rem 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #b8aa96;
+      text-align: left;
+    }
+    table.report-table tbody td {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0.75rem 0.85rem;
+      vertical-align: top;
+      color: #D4D4D8;
+      line-height: 1.85;
+    }
+    table.report-table tbody tr:last-child td { border-bottom: none; }
+
+    /* 章节分割 */
+    .chapter-divider {
+      text-align: center;
+      letter-spacing: 1em;
+      color: rgba(255,255,255,0.15);
+      font-size: 16px;
+      margin: 3.5rem 0;
+    }
+
+    /* 引用块 */
+    blockquote.report-quote {
+      border-left: 3px solid #10b981;
+      background: rgba(255,255,255,0.04);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+      color: #e7dfd4;
+      font-size: 15.5px;
+      line-height: 1.95;
+    }
+    blockquote.report-quote cite {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: #10b981;
+      font-style: normal;
+    }
+
+    /* 内联 cite（作品标题引用） */
+    cite { font-style: normal; color: #34d399; font-weight: 500; }
+
+    /* 框架角标 */
+    .framework-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8A8A94;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    /* 正文段落 */
+    .prose-body { font-size: 15px; line-height: 2.05; color: #d6cfc4; }
+    .prose-body p { margin-bottom: 18px; }
+    .prose-body code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: rgba(255,255,255,0.06);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: #10b981;
+    }
+
+    /* 小节标题 */
+    .subhead {
+      border-left: 3px solid #10b981;
+      padding-left: 0.85rem;
+      margin: 2.5rem 0 1rem;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-65-Medium', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.04em;
+      color: #fffdf7;
+    }
+
+    strong { color: #fffdf7; font-weight: 600; }
+
+    /* 切片配图 grid（参见 SKILL.md §写作规则·切片配图建议）
+       每条作品配图必须有 figcaption 解释该画面证明什么判断；
+       alt / figcaption 都不允许出现内部词（样本 / 关键帧 / pos N 等） */
+    .frame-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 1.5rem 0;
+    }
+    .frame-grid img {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: block;
+    }
+    .frame-grid figcaption {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #8A8A94;
+      margin-top: 6px;
+      letter-spacing: 0.05em;
+      line-height: 1.6;
+    }
+
+    /* 关键判断 / 压力测试卡片 */
+    .judge-card {
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .judge-card .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: #34d399;
+      margin-bottom: 0.4rem;
+    }
+
+    /* 来源脚注：嵌在正文或大字数字中的「（来源：XX，年份）」标记。
+       强制小字 + 浅色 + 等宽，避免继承父级字号（如 text-4xl 的大数字）。
+       white-space:nowrap 让每条脚注作为不可拆分的原子单位换行。 */
+    .citation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #8A8A94;
+      vertical-align: baseline;
+      margin-left: 0.4em;
+      display: inline-block;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+    .citation a,
+    .citation-link {
+      color: #8A8A94;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(255,255,255,0.22);
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .citation a:hover,
+    .citation-link:hover {
+      color: #34d399;
+      border-bottom-color: #34d399;
+    }
+
+    /* 大数字 callout 专用结构：数字单独占一行 + 来源脚注独立小字行 + 解释段落。
+       推荐与 .stat-callout 配合使用，避免把 .citation 直接塞进 .text-4xl 父元素里 */
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+    .stat-callout .stat-value {
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700;
+      color: #10b981;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+    .stat-callout .stat-source {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #8A8A94;
+      line-height: 1.4;
+    }
+    .stat-callout .stat-source a {
+      color: #8A8A94;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(255,255,255,0.22);
+    }
+    .stat-callout .stat-source a:hover {
+      color: #34d399;
+      border-bottom-color: #34d399;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 布局：xl+ 走 [16rem | 主内容] 双列；行内目录小屏使用，xl+ 由左侧 aside 接管。
+       不允许在此外再加 <header> sticky 顶栏。-->
+  <div class="xl:grid xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10 2xl:gap-14 mx-auto max-w-7xl">
+
+  <!-- 左侧固定目录（xl+） · 11 章目录 -->
+  <aside class="hidden xl:block xl:sticky xl:top-0 xl:self-start xl:max-h-screen xl:overflow-y-auto px-8 pt-16 pb-12">
+    <p class="font-mono text-[10px] tracking-[0.35em] uppercase text-muted mb-5">Table of Contents</p>
+    <p class="font-serif-zh text-[15px] font-medium text-ink-soft mb-6">11 章目录</p>
+    <ol class="space-y-2.5 text-[13px] text-ink-soft">
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">01</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#overview">商业模式总览</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">02</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#value-proposition">价值主张</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">03</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#customer">目标客户</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">04</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#revenue">收入模式</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">05</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#cost">成本结构</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">06</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#resources">核心资源</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">07</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#channels">渠道与合作</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">08</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#moat">竞争与护城河</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">09</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#five-layers">变现链路五层</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">10</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#growth">增长逻辑</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">11</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#risks">风险与可持续性</a></li>
+    </ol>
+  </aside>
+
+  <main class="mx-auto max-w-3xl px-6 pt-14 pb-24 xl:mx-0 xl:max-w-3xl xl:px-10">
+
+    <!-- ====== HERO · 商业模式页面标题 ====== -->
+    <section class="mb-16 pt-2">
+      <p class="font-mono text-[11px] tracking-[0.4em] uppercase text-report mb-4">
+        Track Research · 03 · Business Model
+      </p>
+      <h1 class="font-serif-zh text-[38px] sm:text-[46px] font-semibold leading-[1.15] tracking-[0.05em] text-ink mb-5">
+        {{track_keyword}} · 商业模式
+      </h1>
+      <p class="text-[14.5px] leading-[1.9] tracking-[0.02em] text-ink-soft max-w-2xl">
+        <!-- TODO(商业模式 · Hero):
+
+          ## 本块必写
+
+          - 一段 80-120 字引言
+          - 内容：本份采用的分析框架（商业画布九宫格 + 变现链路五层 + 4P）+ 主流商业模式分型 2-3 种
+          - 语气：结构化拆解，类商业画布解读
+
+          ## 关键提醒
+
+          - 框架名要写全，避免读者误解为"我们自创"
+          - 变现链路五层是**条件触发**——仅自媒体类赛道使用，实物/SaaS 跳过
+        -->
+      </p>
+    </section>
+
+    <!-- 行内目录（小屏使用；xl+ 由左侧固定边栏接管） -->
+    <nav class="mb-16 border-t border-b border-white/10 py-8 xl:hidden">
+      <p class="font-mono text-[10.5px] tracking-[0.4em] uppercase text-muted mb-4">
+        Table of Contents · 11 章目录
+      </p>
+      <ol class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 text-[14px] text-ink-soft">
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">01</span><a class="hover:text-ink transition-colors" href="#overview">商业模式总览</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">02</span><a class="hover:text-ink transition-colors" href="#value-proposition">价值主张</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">03</span><a class="hover:text-ink transition-colors" href="#customer">目标客户</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">04</span><a class="hover:text-ink transition-colors" href="#revenue">收入模式</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">05</span><a class="hover:text-ink transition-colors" href="#cost">成本结构</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">06</span><a class="hover:text-ink transition-colors" href="#resources">核心资源</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">07</span><a class="hover:text-ink transition-colors" href="#channels">渠道与合作</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">08</span><a class="hover:text-ink transition-colors" href="#moat">竞争与护城河</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">09</span><a class="hover:text-ink transition-colors" href="#five-layers">变现链路五层</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">10</span><a class="hover:text-ink transition-colors" href="#growth">增长逻辑</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">11</span><a class="hover:text-ink transition-colors" href="#risks">风险与可持续性</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====== 第 1 章 · 商业模式总览 ====== -->
+    <section id="overview" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·01</span>
+        <span>主流分型 + 飞轮图</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        商业模式总览
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第1章 · 商业模式总览):
+
+          ## 本章必写
+
+          - 1.1 主流商业模式分型 2-3 种（例如：注意力变现 / 私域服务 / 产品销售 / 平台抽佣）
+            每种含代表玩家 + 收入结构 + 关键指标
+          - 1.2 商业模式飞轮图（图 1，已有 figure）
+          - 1.3 不同分型的天花板对比：三档收入区间
+
+          ## 推荐 HTML 结构
+
+          - 分型 → <div class="judge-card"> 每分型一卡
+          - 天花板对比 → <table class="report-table">
+          - 飞轮图 → highcharts MCP 或内联 SVG（已有 figure 占位）
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 主流商业模式有几种？
+          - Q2 每种的天花板是多少？
+          - Q3 飞轮的最关键齿是哪个？
+          - Q4 哪种最适合新人入局？
+          - Q5 哪种正在被结构性挤压？
+
+          ## 关键提醒
+
+          - 分型不要太多——2-3 种足够，超过会稀释判断力
+        -->
+      </div>
+
+      <!-- 统计图 1：商业模式飞轮 / 桑基图 -->
+      <figure class="my-8">
+        <!-- TODO(内联 SVG / CSS · {{track_keyword}} 收入构成 + 成本拆解):
+             收入构成 → CSS 横条百分比（推荐）：
+               <div class="space-y-3 my-6">
+                 <div>
+                   <div class="flex justify-between text-[13px] mb-1.5">
+                     <span class="text-ink-soft">收入来源名</span><span class="font-mono text-report">XX%</span>
+                   </div>
+                   <div class="h-2 bg-white/[0.06] rounded-full overflow-hidden">
+                     <div class="h-full bg-report rounded-full" style="width:XX%"></div>
+                   </div>
+                 </div>
+                 ...
+               </div>
+             成本拆解 → 内联 SVG 环形/饼图 <svg viewBox="0 0 600 400">
+             数据来源：raw/data_index.md 成本与收益表
+        -->
+        <figcaption class="font-mono text-[11px] text-muted mt-3 leading-[1.6] tracking-[0.05em]">
+          图 1 · {{track_keyword}} 商业模式飞轮（或收入/成本结构桑基图） · 数据来源：见脚注
+        </figcaption>
+      </figure>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>本赛道的主流商业模式有几种？<strong>答</strong>：</li>
+          <li>每种的天花板是多少？<strong>答</strong>：</li>
+          <li>飞轮的最关键飞轮齿是哪个？<strong>答</strong>：</li>
+          <li>哪种最适合新人入局？<strong>答</strong>：</li>
+          <li>哪种正在被结构性挤压？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 2 章 · 价值主张 ====== -->
+    <section id="value-proposition" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·02</span>
+        <span>给谁解决什么问题 + 兑现可信度</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        价值主张
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第2章 · 价值主张):
+
+          ## 本章必写
+
+          - 2.1 用户视角三层价值：功能 / 情感 / 社交
+          - 2.2 与替代品对比的差异化价值（替代品列具体 3-5 个）
+          - 2.3 价值兑现可信度：承诺未兑现 / 已持续兑现 N 年 / 部分兑现
+          - 2.4 可扩展性：能否复制到第二人群 / 第二场景
+
+          ## 推荐 HTML 结构
+
+          - 三层价值 → <table class="report-table"> 三行
+          - 替代品对比 → <table class="report-table">
+          - 兑现可信度 → <blockquote class="report-quote"> 引用标杆玩家公开口径
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 一句话价值主张？
+          - Q2 替代品是什么？
+          - Q3 价值兑现的可信度？
+          - Q4 3 条最强兑现证据？
+          - Q5 可扩展性如何？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>一句话价值主张？<strong>答</strong>：</li>
+          <li>替代品是什么？<strong>答</strong>：</li>
+          <li>价值兑现的可信度档位？<strong>答</strong>：</li>
+          <li>3 条最强兑现证据？<strong>答</strong>：</li>
+          <li>可扩展性如何？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 3 章 · 目标客户 ====== -->
+    <section id="customer" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·03</span>
+        <span>分层 / 决策权 / 付费意愿</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        目标客户
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第3章 · 目标客户):
+
+          ## 本章必写
+
+          - 3.1 客户分层（2C / 2B / 2G / 2VC）：每层占比 + 主要客单
+          - 3.2 决策权与付费意愿矩阵
+          - 3.3 客户终身价值（LTV）估算：区间数 + 关键假设
+          - 3.4 客户获取成本（CAC）：哪些渠道便宜 / 贵
+
+          ## 推荐 HTML 结构
+
+          - 客户分层 → <table class="report-table">
+          - 决策权/付费意愿矩阵 → <table class="report-table">
+          - LTV / CAC → <div class="judge-card"> 两张卡（含估算公式）
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 最大单一客户分层？
+          - Q2 LTV 估算范围？
+          - Q3 CAC 估算范围？
+          - Q4 LTV/CAC 是否健康？
+          - Q5 付费意愿最高的细分人群？
+
+          ## 必须引用的 01_market.html 章节
+
+          - #user（用户分析）—— 本章的"客户分层"应与 01 的画像保持一致
+
+          ## 关键提醒
+
+          - LTV / CAC 估算必须给假设公式——"约 1000 元 LTV"是空话；"199 元客单 × 5 次复购 = 995 元"才是 LTV
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>最大单一客户分层是？<strong>答</strong>：</li>
+          <li>LTV 估算范围？<strong>答</strong>：</li>
+          <li>CAC 估算范围？<strong>答</strong>：</li>
+          <li>LTV/CAC 是否健康？<strong>答</strong>：</li>
+          <li>付费意愿最高的细分人群？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 4 章 · 收入模式 ====== -->
+    <section id="revenue" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·04</span>
+        <span>收入来源结构 + 客单价区间</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        收入模式
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第4章 · 收入模式):
+
+          ## 本章必写
+
+          - 4.1 收入来源清单：广告 / 带货分佣 / 自有产品 / 服务费 / 课程 / 会员订阅 / 平台分成 / 其他
+          - 4.2 客单价分布：低价拉新款 + 中价主力款 + 高价旗舰款（金字塔）
+          - 4.3 现金流节奏：先收后服务 / 先服务后收 / 周期付费
+
+          ## 推荐 HTML 结构
+
+          - 收入来源 → <table class="report-table">，四列：收入名 / 占比估算 / 客单 / 毛利
+          - 客单价金字塔 → 内联 SVG 或 <table> 三档
+          - 现金流节奏 → <div class="judge-card">
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 占比最大的收入来源？
+          - Q2 毛利最高的收入来源？
+          - Q3 客单价主力档？
+          - Q4 现金流节奏？
+          - Q5 哪条收入线最该新人优先做？
+
+          ## 必须引用的 data_index.md 表
+
+          - 表 3 · 成本与收益数据
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>占比最大的收入来源？<strong>答</strong>：</li>
+          <li>毛利最高的收入来源？<strong>答</strong>：</li>
+          <li>客单价主力档？<strong>答</strong>：</li>
+          <li>现金流节奏？<strong>答</strong>：</li>
+          <li>哪条收入线最该新人优先做？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 5 章 · 成本结构 ====== -->
+    <section id="cost" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·05</span>
+        <span>固定 / 变动 + 主要成本项</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        成本结构
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第5章 · 成本结构):
+
+          ## 本章必写
+
+          - 5.1 主要成本项：人力 / 内容制作 / 流量投放 / 平台抽成 / 供应链 / 仓储物流 / 其他
+          - 5.2 单条 / 单单的边际成本档位：低 / 中 / 高
+          - 5.3 隐性成本盘点：心力损耗 / 人脉损耗 / 机会成本
+
+          ## 推荐 HTML 结构
+
+          - 主要成本 → <table class="report-table">，四列：成本项 / 占比 / 固定 vs 变动 / 是否可降
+          - 边际成本 → <div class="judge-card"> + 一句话判断
+          - 隐性成本 → <ul> 列点
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 占比最大的成本项？
+          - Q2 边际成本档位？
+          - Q3 哪项隐性成本最常被低估？
+          - Q4 最该砍的浪费项？
+          - Q5 规模化后哪项成本会被摊薄？
+
+          ## 必须引用的 data_index.md 表
+
+          - 表 3 · 成本与收益数据
+
+          ## 关键提醒
+
+          - 本章每一类成本必须在 04_ai_driven_analysis.html 里有对应的"AI 可替代点"
+          - 没有对应 = 03 与 04 的接口断裂（参见 SKILL.md §2.3.4 自检）
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>占比最大的成本项？<strong>答</strong>：</li>
+          <li>边际成本档位？<strong>答</strong>：</li>
+          <li>哪项隐性成本最常被低估？<strong>答</strong>：</li>
+          <li>最该砍的浪费项？<strong>答</strong>：</li>
+          <li>规模化后哪项成本会被摊薄？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 6 章 · 核心资源 ====== -->
+    <section id="resources" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·06</span>
+        <span>有形 / 无形 / 关系</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        核心资源
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第6章 · 核心资源):
+
+          ## 本章必写
+
+          - 6.1 有形资源：场地 / 设备 / 库存 / 资金
+          - 6.2 无形资源：内容库 / IP / 品牌 / 数据
+          - 6.3 关系资源：用户关系 / 供应链关系 / 平台关系
+          - 6.4 "先有蛋还是先有鸡"循环：新人能否打破？
+
+          ## 推荐 HTML 结构
+
+          - 三类资源 → 三个 <h3 class="subhead">
+          - 循环困境 → <div class="judge-card">
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 最不可替代的资源？
+          - Q2 新人最难凑齐的资源？
+          - Q3 资源获取的"最低门票"？
+          - Q4 资源贬值速度？
+          - Q5 资源是否可以"借用 / 租用"？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>最不可替代的资源是？<strong>答</strong>：</li>
+          <li>新人最难凑齐的资源是？<strong>答</strong>：</li>
+          <li>资源获取的"最低门票"是？<strong>答</strong>：</li>
+          <li>资源贬值速度？<strong>答</strong>：</li>
+          <li>资源是否可以"借用"或"租用"？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 7 章 · 渠道与合作 ====== -->
+    <section id="channels" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·07</span>
+        <span>流量渠道 + 销售渠道 + 合作伙伴</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        渠道与合作
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第7章 · 渠道与合作):
+
+          ## 本章必写
+
+          - 7.1 流量渠道结构：自然流量 / 付费投放 / 私域 / 跨平台分发 各占多少
+          - 7.2 销售渠道：直营 / 经销 / 平台店 / 直播间 / 线下
+          - 7.3 合作伙伴矩阵：供应商 / 同业联盟 / 平台官方 / MCN / 服务商
+          - 7.4 渠道议价能力：你说了算 vs 平台说了算
+
+          ## 推荐 HTML 结构
+
+          - 流量渠道占比 → <table class="report-table"> 或饼图（内联 SVG）
+          - 合作伙伴矩阵 → <table class="report-table">
+          - 议价能力 → <div class="judge-card"> 高/中/低三档
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 最强流量渠道？
+          - Q2 渠道集中度是否过高？
+          - Q3 关键合作伙伴？
+          - Q4 渠道议价能力档位？
+          - Q5 哪个渠道最值得新人重点投入？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>最强流量渠道？<strong>答</strong>：</li>
+          <li>渠道集中度是否过高？<strong>答</strong>：</li>
+          <li>关键合作伙伴是？<strong>答</strong>：</li>
+          <li>渠道议价能力档位？<strong>答</strong>：</li>
+          <li>哪个渠道最值得新人重点投入？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 8 章 · 竞争与护城河 ====== -->
+    <section id="moat" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·08</span>
+        <span>5 种护城河 + 强度评估</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        竞争与护城河
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第8章 · 竞争与护城河):
+
+          ## 本章必写
+
+          - 5 种护城河逐条评估：网络效应 / 规模效应 / 切换成本 / 无形资产（品牌/专利）/ 成本优势
+          - 末尾给"最强 / 最弱"的护城河判断
+
+          ## 推荐 HTML 结构
+
+          - 5 种护城河 → <table class="report-table">，四列：护城河类型 / 强弱 / 证据 / 新进入者能否绕开
+          - 最强/最弱判断 → <div class="judge-card"> 两张卡（绿 + 黄/红）
+          - 框架引用 → <span class="framework-tag">FRAMEWORK · 5 MOATS</span>
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 本赛道最强的护城河？
+          - Q2 本赛道最弱的护城河？
+          - Q3 新进入者能绕开的护城河？
+          - Q4 新进入者绕不开的"必经动作"？
+          - Q5 护城河衰减速度？
+
+          ## 必须引用的 02_competition.html 章节
+
+          - #matrix（对比矩阵）—— 本章护城河强弱必须能在 02 找到具体玩家证据
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>本赛道最强的护城河？<strong>答</strong>：</li>
+          <li>本赛道最弱的护城河？<strong>答</strong>：</li>
+          <li>新进入者能绕开的护城河？<strong>答</strong>：</li>
+          <li>新进入者绕不开的"必经动作"？<strong>答</strong>：</li>
+          <li>护城河衰减速度？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 9 章 · 变现链路五层（自媒体类赛道触发，实物/SaaS 跳过） ====== -->
+    <!-- 注：如果本赛道**不是**自媒体类（例如硬件 / SaaS / 实物零售），直接删除本 section 整段。 -->
+    <section id="five-layers" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·09</span>
+        <span>曝光 → 关注 → 私域 → 转化 → 复购</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        变现链路五层
+        <span class="framework-tag">仅自媒体类触发</span>
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第9章 · 变现链路五层):
+
+          ## 触发判定（先决定要不要写本章）
+
+          - **触发**：data_index.md 标杆玩家表里超过 3 个是"内容创作者 / KOL / MCN"
+          - **跳过**：实物消费品（家用咖啡机评测）/ SaaS（AI 写作工具）
+          - 跳过时：在本 section 写一句"本赛道不适用'变现链路五层'框架，跳过本章"
+
+          ## 本章必写（触发时）
+
+          - 9.1 曝光层：流量怎么来 / 单条曝光成本估算
+          - 9.2 关注层：转化率 / 关注后的"养"动作
+          - 9.3 私域层：私域形态（公众号/微信群/微信好友）+ 私域转化率档位
+          - 9.4 转化层：客单价 + 转化率 + 转化时间窗
+          - 9.5 复购层：复购率 + 复购周期 + 客户终身价值
+          - 末尾给"链路最薄弱一层"判断
+
+          ## 推荐 HTML 结构
+
+          - 五层 → 5 个 <h3 class="subhead">
+          - 各层关键指标 → <table class="report-table">
+          - 最薄弱判断 → <div class="judge-card">
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 五层中最强的一层？
+          - Q2 五层中最弱的一层？
+          - Q3 断点在哪里？
+          - Q4 新人最应该先做哪一层？
+          - Q5 不做私域的人能不能跑通？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>五层中最强的一层？<strong>答</strong>：</li>
+          <li>五层中最弱的一层？<strong>答</strong>：</li>
+          <li>断点在哪里？<strong>答</strong>：</li>
+          <li>新人最应该先做哪一层？<strong>答</strong>：</li>
+          <li>不做私域的人能不能跑通？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 10 章 · 增长逻辑 ====== -->
+    <section id="growth" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·10</span>
+        <span>规模化路径 + 增长引擎</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        增长逻辑
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第10章 · 增长逻辑):
+
+          ## 本章必写
+
+          - 10.1 增长引擎类型：病毒 / 内容 / 销售 / 付费投放 哪种主导
+          - 10.2 单点突破 → 复制扩张：横向（多品类）vs 纵向（同品类深耕）
+          - 10.3 增长瓶颈：第几个阶段会卡住 + 卡在什么因素
+          - 10.4 第二曲线候选 3 个
+
+          ## 推荐 HTML 结构
+
+          - 增长引擎 → <div class="judge-card">
+          - 扩张路径 → 内联 SVG 流程图或文字流程
+          - 瓶颈分析 → <ul> 列点
+          - 第二曲线 → 3 个并列 <div class="judge-card">
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 主增长引擎类型？
+          - Q2 规模化的最大瓶颈？
+          - Q3 3 条第二曲线候选？
+          - Q4 规模化的临界点？
+          - Q5 是否存在"做不大"的结构性约束？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>主增长引擎类型？<strong>答</strong>：</li>
+          <li>规模化的最大瓶颈？<strong>答</strong>：</li>
+          <li>3 条第二曲线候选？<strong>答</strong>：</li>
+          <li>规模化的临界点是什么？<strong>答</strong>：</li>
+          <li>是否存在"做不大"的结构性约束？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 11 章 · 风险与可持续性 ====== -->
+    <section id="risks" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·11</span>
+        <span>商业模式视角的风险盘点</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        风险与可持续性
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第11章 · 风险与可持续性):
+
+          ## 本章必写
+
+          - 5-7 条风险，每条结构：
+            · 风险名（标签）+ 触发条件 + 量化损失估算 + 对冲方案
+          - 重点覆盖：
+            · 单一渠道依赖 / 单一收入依赖 / 单一供应商依赖 / 单一爆款依赖
+            · 政策红线 / 平台规则变化 / 团队断档 / 现金流断裂
+          - 末尾给商业模式 5 年可持续性档位（强 / 一般 / 弱）+ 一句话理由
+
+          ## 推荐 HTML 结构
+
+          - 风险清单 → <div class="judge-card"> 每条一卡，红色 label
+          - 可持续性总判定 → <blockquote class="report-quote">
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 最致命的单一依赖？
+          - Q2 政策 / 平台风险量化损失？
+          - Q3 5 年可持续性档位？
+          - Q4 新人入场最该先对冲的风险？
+          - Q5 哪种风险是"现在看不出来但 2-3 年后致命"？
+
+          ## 关键提醒
+
+          - 与 01_market.html#opportunity-risk 区分：01 是"行业层风险"，本章是"商业模式层风险"
+          - 重点在"单一依赖"——这是 0 到 1 创业者最容易死的地方
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>最致命的单一依赖？<strong>答</strong>：</li>
+          <li>政策 / 平台风险量化损失？<strong>答</strong>：</li>
+          <li>5 年可持续性档位？<strong>答</strong>：</li>
+          <li>新人入场最该先对冲的风险？<strong>答</strong>：</li>
+          <li>哪种风险是"现在看不出来但 2-3 年后致命"？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+  </main>
+
+  </div>
+</body>
+</html>

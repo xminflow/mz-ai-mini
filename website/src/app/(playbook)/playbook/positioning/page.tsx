@@ -5,11 +5,11 @@ import type { ReactNode } from 'react'
 import { requireMembership } from '@/features/membership/server/require-membership'
 
 export const metadata: Metadata = {
-  title: '第二篇 · 定位 — 微域生光自媒体运营实战',
+  title: '第二篇 · 定位 · 自媒体运营实战手册',
   description:
-    '你是谁、对谁说话。商业定位、内容定位、人设定位三位一体，写下属于自己的定位卡片。',
+    '你是谁、对谁说话。商业定位、内容定位、人设定位三位一体，写下属于自己的定位卡片——自媒体获客的起点是定位说清楚。',
   openGraph: {
-    title: '第二篇 · 定位 — 微域生光自媒体运营实战',
+    title: '第二篇 · 定位 · 自媒体运营实战手册',
     description: '画等号 · 九节展开 · 一张定位卡片。',
   },
 }

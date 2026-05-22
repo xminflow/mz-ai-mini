@@ -1,14 +1,44 @@
 import { defineConfig, externalizeDepsPlugin } from "electron-vite";
 import react from "@vitejs/plugin-react";
 import path from "node:path";
+import type { Plugin } from "vite";
+import JavaScriptObfuscator from "javascript-obfuscator";
 
 const rendererAlias = {
   "@": path.resolve(__dirname, "src"),
 };
 
+// 仅在生产打包时混淆 main / preload 代码，开发构建不受影响
+function obfuscatePlugin(): Plugin {
+  return {
+    name: "obfuscate-output",
+    apply: "build",
+    enforce: "post",
+    generateBundle(_options, bundle) {
+      for (const chunk of Object.values(bundle)) {
+        if (chunk.type !== "chunk") continue;
+        chunk.code = JavaScriptObfuscator.obfuscate(chunk.code, {
+          compact: true,
+          controlFlowFlattening: false,
+          deadCodeInjection: false,
+          debugProtection: false,
+          disableConsoleOutput: false,
+          identifierNamesGenerator: "hexadecimal",
+          renameGlobals: false,
+          rotateStringArray: true,
+          selfDefending: false,
+          stringArray: true,
+          stringArrayEncoding: ["base64"],
+          stringArrayThreshold: 0.75,
+        }).getObfuscatedCode();
+      }
+    },
+  };
+}
+
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [externalizeDepsPlugin(), obfuscatePlugin()],
     build: {
       outDir: "out/main",
       rollupOptions: {
@@ -23,7 +53,7 @@ export default defineConfig({
     resolve: { alias: rendererAlias },
   },
   preload: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [externalizeDepsPlugin(), obfuscatePlugin()],
     build: {
       outDir: "out/preload",
       rollupOptions: {

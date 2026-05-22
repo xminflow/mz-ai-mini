@@ -439,7 +439,7 @@ def scroll_works_to_bottom(
     handle: BrowserHandle,
     *,
     hard_cap: int = 500,
-    scroll_delay_ms: int = 700,
+    scroll_delay_ms: int = 1200,
     plateau_limit: int = 15,
     on_progress: callable = None,  # type: ignore[assignment]
 ) -> tuple[int, int, bool]:

@@ -5,17 +5,26 @@
 - 解析 profile.json 与 overview.html 为标准 payload，再通过 HTTP 上传，避免
   让 research-kit 直接依赖后端 ORM 或数据库连接。
 - 错误显式抛出，CLI 层负责打印；不静默吞掉失败。
+
+图片处理流程（base64 内嵌已废弃）：
+- skill 生成的 overview.html 里所有图片都是 ``data-rk-frame="<rel>"`` 占位符；
+- publish 时扫描占位符，把每张本地图片上传到腾讯云 COS，再把占位符替换为
+  ``src="https://<bucket>.cos.<region>.myqcloud.com/<key>"``；
+- object key 命名：``blogger-insights/{slug}/{run_id}/{rel_with_slash_to_underscore}``，
+  例：``avatar.jpg`` → ``blogger-insights/jane/20260520T133355Z/avatar.jpg``；
+        ``7637.../1.jpg`` → ``blogger-insights/jane/20260520T133355Z/7637..._1.jpg``；
+- avatar 不再走 base64 data URI，而是 payload.avatar_url 直接取上面同一份 COS URL。
 """
 
 from __future__ import annotations
 
-import base64
 import json
 import logging
+import re
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 
 import httpx
 
@@ -23,7 +32,22 @@ _LOGGER = logging.getLogger(__name__)
 
 DEFAULT_PLATFORM = "douyin"
 DEFAULT_TIMEOUT_SECONDS = 60.0
-MAX_REPORT_HTML_BYTES = 8 * 1024 * 1024  # 单份报告上限 8MB，避免误传超大产物
+# HTML 占位符已经走 COS 外链，正文 ≈ 100KB 量级；保留 8MB 上限作为防错兜底。
+MAX_REPORT_HTML_BYTES = 8 * 1024 * 1024
+
+# 默认 COS object key 前缀，与 server 端 blogger_insights 业务空间隔离。
+DEFAULT_COS_KEY_PREFIX = "blogger-insights"
+
+_FRAME_PLACEHOLDER_PATTERN = re.compile(r'data-rk-frame="([^"]+)"')
+
+
+class FrameUploader(Protocol):
+    """frame 上传协议：传入本地路径与 object key，返回公开 HTTPS URL。
+
+    抽成协议是为了测试时可以注入 in-memory mock，避免单测必须连真 COS。
+    """
+
+    def upload_file(self, *, local_path: Path, object_key: str) -> str: ...
 
 
 class PublishError(RuntimeError):
@@ -49,6 +73,7 @@ class BloggerInsightPayload:
     report_summary: dict[str, Any] | None
     source_run_id: str | None
     captured_at: datetime | None
+    is_free: bool = False
     status: str = "published"
 
     def to_request_body(self) -> dict[str, Any]:
@@ -58,6 +83,7 @@ class BloggerInsightPayload:
             "display_name": self.display_name,
             "tags": list(self.tags),
             "report_html": self.report_html,
+            "is_free": self.is_free,
             "status": self.status,
         }
         if self.avatar_url is not None:
@@ -161,59 +187,116 @@ def _read_report_html(report_dir: Path) -> str:
     return raw_bytes.decode("utf-8")
 
 
-def _detect_image_mime(data: bytes) -> str:
-    """从 magic bytes 推断头像 MIME。collector 落盘统一叫 avatar.jpg，但实际可能是
-    抖音 CDN 返回的 webp / png / jpeg。猜错会让浏览器拒渲染，所以读字节而不是看后缀。"""
+def _object_key_for_frame(*, prefix: str, slug: str, run_id: str, rel: str) -> str:
+    """把 ``<aweme_id>/1.jpg`` 这种 workspace 相对路径转成扁平 object key。
 
-    if data.startswith(b"\xff\xd8\xff"):
-        return "image/jpeg"
-    if data.startswith(b"\x89PNG\r\n\x1a\n"):
-        return "image/png"
-    if data.startswith(b"RIFF") and data[8:12] == b"WEBP":
-        return "image/webp"
-    if data.startswith(b"GIF87a") or data.startswith(b"GIF89a"):
-        return "image/gif"
-    return "image/jpeg"
-
-
-def _encode_avatar_data_uri(raw_dir: Path, avatar_path_value: Any) -> str | None:
-    """把 collector 下载的 avatar.jpg 转成 data:image/...;base64,... URI。
-
-    设计取舍：
-      · 抖音 CDN 头像 URL 形如 p3-pc.douyinpic.com/...?from=xxx，URL 携带
-        来源标记，未来可能升级成短期签名，外链稳定性不可靠。
-      · 官网博主卡片需要稳定渲染头像，所以上传阶段直接把本地文件 base64 化。
-      · `avatar_url` 字段后端已扩成 TEXT 类型（migration 0020），不再 2048 截断。
-      · 如果本地文件缺失（collector 下载失败 / 文件被清理），返回 None，
-        让卡片 fallback 到首字母占位——禁止再外链抖音 CDN。
+    斜杠换成下划线是为了让 COS 控制台同一个 run 下的图片排在一起，避免每个
+    aweme_id 都生成一个子目录、控制台翻起来累；同时也方便在 URL 里直接看出
+    "这是这次 run 的哪张图"。
     """
 
-    if not isinstance(avatar_path_value, str) or avatar_path_value.strip() == "":
+    safe_rel = rel.strip().lstrip("/").replace("\\", "/").replace("/", "_")
+    if safe_rel == "":
+        raise PublishError("frame 占位符相对路径为空")
+    return f"{prefix.rstrip('/')}/{slug}/{run_id}/{safe_rel}"
+
+
+def _resolve_local_frame(*, raw_dir: Path, rel: str) -> Path | None:
+    """把 ``data-rk-frame="<rel>"`` 解析到本地文件路径，含 workspace 越界保护。"""
+
+    rel_normalized = rel.strip().lstrip("/")
+    if rel_normalized == "":
         return None
-    rel = avatar_path_value.strip()
-    candidate = (raw_dir / rel).resolve()
+    candidate = (raw_dir / rel_normalized).resolve()
     raw_dir_resolved = raw_dir.resolve()
     try:
         candidate.relative_to(raw_dir_resolved)
     except ValueError:
         _LOGGER.warning(
-            "profile.json avatar_path 越出 workspace，已忽略：rel=%s", rel
+            "data-rk-frame 占位符越出 workspace，已忽略：rel=%s", rel_normalized
         )
         return None
     if not candidate.is_file():
-        _LOGGER.warning("本地头像缺失，avatar_url 将设为 null：%s", candidate)
+        _LOGGER.warning("本地图片缺失，跳过上传：%s", candidate)
         return None
-    data = candidate.read_bytes()
-    if len(data) < 256:
+    if candidate.stat().st_size < 256:
         _LOGGER.warning(
-            "本地头像字节过小（%d），疑似下载残留，avatar_url 设为 null：%s",
-            len(data),
+            "图片字节过小（%d），疑似下载残留，跳过上传：%s",
+            candidate.stat().st_size,
             candidate,
         )
         return None
-    mime = _detect_image_mime(data)
-    encoded = base64.b64encode(data).decode("ascii")
-    return f"data:{mime};base64,{encoded}"
+    return candidate
+
+
+@dataclass(frozen=True)
+class HtmlRewriteResult:
+    """rewrite 完一份 HTML 后的结果，便于 caller 和测试看清发生了什么。"""
+
+    html: str
+    uploaded: dict[str, str]  # rel -> cos_url
+    missing: tuple[str, ...]  # 占位符本地文件缺失的 rel 列表
+
+
+def rewrite_html_frames_to_cos(
+    *,
+    html: str,
+    raw_dir: Path,
+    uploader: FrameUploader,
+    slug: str,
+    run_id: str,
+    key_prefix: str = DEFAULT_COS_KEY_PREFIX,
+) -> HtmlRewriteResult:
+    """扫描 HTML 中所有 ``data-rk-frame="<rel>"``，上传 COS 并改写为 ``src="<url>"``。
+
+    · 同一 rel 在 HTML 里多次出现只会上传一次（用 dict 缓存）；
+    · 本地文件缺失时保留原占位符，由 caller 决定是否要硬失败；
+    · 上传抛出的异常一路传出，不静默吞——publish 阶段失败比"半成品报告"安全。
+    """
+
+    cache: dict[str, str] = {}
+    missing: list[str] = []
+
+    def _replace(match: re.Match[str]) -> str:
+        rel = match.group(1)
+        if rel in cache:
+            return f'src="{cache[rel]}"'
+        local = _resolve_local_frame(raw_dir=raw_dir, rel=rel)
+        if local is None:
+            missing.append(rel)
+            return match.group(0)
+        object_key = _object_key_for_frame(
+            prefix=key_prefix, slug=slug, run_id=run_id, rel=rel
+        )
+        url = uploader.upload_file(local_path=local, object_key=object_key)
+        cache[rel] = url
+        return f'src="{url}"'
+
+    rewritten = _FRAME_PLACEHOLDER_PATTERN.sub(_replace, html)
+    return HtmlRewriteResult(
+        html=rewritten,
+        uploaded=dict(cache),
+        missing=tuple(missing),
+    )
+
+
+def _avatar_cos_url(
+    *, profile: dict[str, Any], uploaded: dict[str, str]
+) -> str | None:
+    """从 rewrite 结果中找出 avatar 的 COS URL。
+
+    profile.json 里 ``avatar_path`` 通常就是 ``avatar.jpg``，本地文件被 HTML
+    通过 ``data-rk-frame="avatar.jpg"`` 占位引用，rewrite_html_frames_to_cos
+    一次就能把头像和 frame 一起上传完，这里直接复用 URL，不再重复 IO。
+    """
+
+    avatar_path = profile.get("avatar_path")
+    if not isinstance(avatar_path, str):
+        return None
+    key = avatar_path.strip().lstrip("/")
+    if key == "":
+        return None
+    return uploaded.get(key)
 
 
 def _parse_captured_at(value: Any) -> datetime | None:
@@ -245,9 +328,22 @@ def load_publish_payload(
     positioning: str | None = None,
     tags: tuple[str, ...] = (),
     cover_image_url: str | None = None,
+    is_free: bool = False,
     status: str = "published",
+    uploader: FrameUploader | None = None,
+    cos_key_prefix: str = DEFAULT_COS_KEY_PREFIX,
+    skip_cos_upload: bool = False,
 ) -> BloggerInsightPayload:
-    """从工作区解析出 publish payload。"""
+    """从工作区解析出 publish payload。
+
+    若 ``uploader`` 为 None，则按需懒加载 ``CosFrameUploader``——只在 HTML 里
+    确实出现 ``data-rk-frame`` 占位符时才会去摸 COS 凭证，纯文本报告（理论上
+    不存在但要兼容）不会被强制要求 COS 凭证存在。
+
+    ``skip_cos_upload=True`` 用于本地 dry-run：完全跳过 COS 上传，HTML 中的
+    占位符保留原样、``avatar_url`` 为 None。**这种 payload 不能真的 POST 到
+    后端**——CLI 层应该强制配 ``--dry-run`` 使用。
+    """
 
     raw_dir = _resolve_raw_dir(workspace)
     reports_dir = _resolve_reports_dir(workspace, raw_dir)
@@ -267,9 +363,6 @@ def load_publish_payload(
         raise PublishError("profile.json 中缺少 display_name")
 
     slug = slug_override.strip() if slug_override else blogger_id.strip()
-    # 不再直接透传抖音 CDN URL（会断图）：优先把本地 avatar.jpg 转 base64 data URI，
-    # 本地文件缺失则 avatar_url=None，让官网卡片走首字母占位。
-    avatar_url = _encode_avatar_data_uri(raw_dir, profile.get("avatar_path"))
     signature = profile.get("description") if isinstance(profile.get("description"), str) else None
     fans_count = profile.get("follower_count") if isinstance(profile.get("follower_count"), int) else None
     total_works = profile.get("total_works_count") if isinstance(profile.get("total_works_count"), int) else None
@@ -282,6 +375,33 @@ def load_publish_payload(
         run_id_from_index = index.get("run_id")
         if isinstance(run_id_from_index, str) and run_id_from_index.strip():
             source_run_id = run_id_from_index.strip()
+
+    avatar_url: str | None = None
+    has_placeholders = _FRAME_PLACEHOLDER_PATTERN.search(report_html) is not None
+    if has_placeholders and not skip_cos_upload:
+        effective_uploader = uploader or _default_uploader()
+        rewrite = rewrite_html_frames_to_cos(
+            html=report_html,
+            raw_dir=raw_dir,
+            uploader=effective_uploader,
+            slug=slug,
+            run_id=source_run_id,
+            key_prefix=cos_key_prefix,
+        )
+        report_html = rewrite.html
+        if rewrite.missing:
+            _LOGGER.warning(
+                "%d 个 data-rk-frame 占位符对应文件缺失，HTML 中保留原占位：%s",
+                len(rewrite.missing),
+                ", ".join(rewrite.missing),
+            )
+        avatar_url = _avatar_cos_url(profile=profile, uploaded=rewrite.uploaded)
+    elif has_placeholders and skip_cos_upload:
+        _LOGGER.warning(
+            "skip_cos_upload=True：HTML 中 %d 个 data-rk-frame 占位符未替换，"
+            "payload 不应被真实 POST 到后端。",
+            len(_FRAME_PLACEHOLDER_PATTERN.findall(report_html)),
+        )
 
     return BloggerInsightPayload(
         slug=slug,
@@ -299,8 +419,21 @@ def load_publish_payload(
         report_summary=summary_payload,
         source_run_id=source_run_id,
         captured_at=captured_at,
+        is_free=is_free,
         status=status,
     )
+
+
+def _default_uploader() -> FrameUploader:
+    """懒加载默认 CosFrameUploader，失败时抛 PublishError 而非 CosUploadError，
+    让 CLI 的统一错误捕获能拿到。"""
+
+    from .cos_storage import CosFrameUploader, CosUploadError
+
+    try:
+        return CosFrameUploader()
+    except CosUploadError as exc:
+        raise PublishError(str(exc)) from exc
 
 
 def publish_blogger_insight(

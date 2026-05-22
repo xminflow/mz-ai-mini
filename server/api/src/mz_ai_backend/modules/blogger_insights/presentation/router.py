@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Query
 
 from mz_ai_backend.core.exceptions import ValidationException
 from mz_ai_backend.core.protocol import ApiResponse, success_response
+from mz_ai_backend.shared.auth_dependencies import get_is_active_member, get_optional_account_id
 
 from ..application import (
     GetBloggerInsightQuery,
@@ -78,10 +79,16 @@ async def get_public_blogger_insight(
         GetPublicBloggerInsightUseCase,
         Depends(get_get_public_blogger_insight_use_case),
     ],
+    account_id: Annotated[int | None, Depends(get_optional_account_id)],
+    is_active_member: Annotated[bool, Depends(get_is_active_member)],
 ) -> ApiResponse[BloggerInsightDetailResponse]:
-    """根据 slug 返回博主洞察详情。"""
+    """根据 slug 返回博主洞察详情。免费内容无需鉴权，会员内容需要有效会员。"""
 
-    result = await use_case.execute(GetBloggerInsightQuery(slug=slug))
+    result = await use_case.execute(
+        GetBloggerInsightQuery(slug=slug),
+        account_id=account_id,
+        is_active_member=is_active_member,
+    )
     return success_response(data=BloggerInsightDetailResponse.from_result(result))
 
 
@@ -148,6 +155,7 @@ def _aggregate_to_detail(aggregate):
         positioning=aggregate.positioning,
         tags=aggregate.tags,
         cover_image_url=aggregate.cover_image_url,
+        is_free=aggregate.is_free,
         status=aggregate.status,
         captured_at=aggregate.captured_at,
         published_at=aggregate.published_at,

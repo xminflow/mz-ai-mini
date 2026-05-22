@@ -39,6 +39,7 @@ function reducer(state: State, action: Action): State {
           filtered_count: 0,
           current_phase: "validate",
           result_post_id: null,
+          last_error_message: null,
         },
       };
     case "progress":
@@ -69,6 +70,7 @@ function reducer(state: State, action: Action): State {
           filtered_count: event.filtered_count,
           current_phase: "done",
           result_post_id: event.result_post_id,
+          last_error_message: event.last_error_message,
         },
       };
     default:

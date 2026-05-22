@@ -13,7 +13,9 @@ default = "local"
 [envs.local]
 api_base = "http://localhost:8000"
 token_env = "WEELUME_BLOGGER_INSIGHT_IMPORT_TOKEN_LOCAL"
+track_token_env = "WEELUME_TRACK_ANALYSIS_IMPORT_TOKEN_LOCAL"
 
 [envs.prod]
 api_base = "https://api.weelume.com"
 token_env = "WEELUME_BLOGGER_INSIGHT_IMPORT_TOKEN_PROD"
+track_token_env = "WEELUME_TRACK_ANALYSIS_IMPORT_TOKEN_PROD"

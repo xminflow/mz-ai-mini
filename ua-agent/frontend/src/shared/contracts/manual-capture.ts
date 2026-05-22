@@ -176,6 +176,7 @@ export const manualCaptureSnapshotSchema = z
     filtered_count: z.number().int().nonnegative(),
     current_phase: manualCapturePhaseSchema,
     result_post_id: z.union([z.string().min(1).max(128), z.null()]).default(null),
+    last_error_message: z.union([z.string().max(1024), z.null()]).default(null),
   })
   .strict();
 export type ManualCaptureSnapshot = z.infer<typeof manualCaptureSnapshotSchema>;
@@ -277,6 +278,7 @@ export const manualCaptureTaskEndedEventSchema = z
     error_count: z.number().int().nonnegative(),
     filtered_count: z.number().int().nonnegative(),
     result_post_id: z.union([z.string().min(1).max(128), z.null()]).default(null),
+    last_error_message: z.union([z.string().max(1024), z.null()]).default(null),
   })
   .strict();
 

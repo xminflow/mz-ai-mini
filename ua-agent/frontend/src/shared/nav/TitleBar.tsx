@@ -19,7 +19,7 @@ export function TitleBar(): JSX.Element {
         <span className="grid size-5 shrink-0 place-items-center rounded bg-foreground text-background">
           <Bot className="size-3" />
         </span>
-        <span className="truncate text-xs font-medium">AI运营获客</span>
+        <span className="truncate text-xs font-medium">AI素材采集工具</span>
       </div>
       <div className="flex items-center gap-1 pr-1">
         {username ? (

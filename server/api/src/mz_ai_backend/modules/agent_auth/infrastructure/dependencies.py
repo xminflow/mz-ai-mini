@@ -15,6 +15,7 @@ from mz_ai_backend.shared import SnowflakeGenerator, get_snowflake_generator
 from ..application import (
     ChangeAgentUsernameUseCase,
     CreateAgentWechatLoginSessionUseCase,
+    DevFakeLoginUseCase,
     ExchangeAgentWechatLoginUseCase,
     GetCurrentAgentAccountUseCase,
     GetAgentWechatLoginSessionUseCase,
@@ -217,6 +218,29 @@ def get_get_wechat_login_session_use_case(
     """Construct the query WeChat login session use case."""
 
     return GetAgentWechatLoginSessionUseCase(account_repository=account_repository)
+
+
+def get_dev_fake_login_use_case(
+    account_repository: Annotated[
+        SqlAlchemyAgentAccountRepository,
+        Depends(get_agent_account_repository),
+    ],
+    token_service: Annotated[Sha256TokenService, Depends(get_token_service)],
+    snowflake_id_generator: Annotated[
+        SnowflakeGenerator,
+        Depends(get_snowflake_id_generator),
+    ],
+    settings: Annotated[Settings, Depends(get_settings_dependency)],
+) -> DevFakeLoginUseCase:
+    """Construct the dev-only fake login use case (env=production 时路由层应拒绝调用)。"""
+
+    return DevFakeLoginUseCase(
+        account_repository=account_repository,
+        token_service=token_service,
+        snowflake_id_generator=snowflake_id_generator,
+        access_token_ttl_seconds=settings.agent_auth_access_token_ttl_seconds,
+        refresh_token_ttl_days=settings.agent_auth_refresh_token_ttl_days,
+    )
 
 
 def get_exchange_wechat_login_use_case(

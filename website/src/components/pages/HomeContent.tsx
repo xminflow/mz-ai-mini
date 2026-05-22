@@ -105,9 +105,9 @@ export const HomeContent = ({ counts }: HomeContentProps) => {
             className="font-serif-zh max-w-4xl text-balance text-[26px] font-semibold leading-[1.5] tracking-[0.01em] sm:text-[38px] sm:leading-[1.4] lg:text-[48px] lg:leading-[1.35]"
             style={{ fontFeatureSettings: '"palt", "pkna", "calt"' }}
           >
-            <span className="block">AI 时代</span>
+            <span className="block">AI × 自媒体</span>
             <span className="mt-2 block sm:mt-3">
-              <GradientText className="font-semibold">真实的信息才更有价值</GradientText>
+              <GradientText className="font-semibold">让客户源源不断地找上门</GradientText>
             </span>
           </motion.h1>
 
@@ -117,9 +117,8 @@ export const HomeContent = ({ counts }: HomeContentProps) => {
             transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="mt-8 max-w-[680px] text-[15px] leading-[1.9] text-ink-soft sm:mt-10 sm:max-w-[760px] sm:text-base sm:leading-[1.85]"
           >
-            <span className="block">自媒体营销获客，不要再做无效尝试，直接帮你消除信息差</span>
-            <span className="mt-1.5 block sm:mt-2">
-              站在巨人的肩膀上，别人验证过的真实爆款 + 你能上手的 AI 信息获取工具——就是你的下一条内容
+            <span className="block">
+              自媒体营销获客，不要再做无效尝试，我们提供真实的赛道分析、一线博主拆解、可落地的百万级大V运营实战精炼方法论，加上能上手的 AI 信息工具，助你实现流量与客源的极速增长
             </span>
           </motion.p>
 
@@ -130,7 +129,7 @@ export const HomeContent = ({ counts }: HomeContentProps) => {
             className="mt-8 flex flex-col items-center gap-3 sm:mt-10 sm:flex-row"
           >
             <Link
-              href="/product"
+              href="/membership"
               className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-ink px-5 py-2.5 text-[13px] font-semibold text-canvas shadow-[0_8px_32px_rgba(167,139,250,0.3)] transition-transform hover:-translate-y-0.5 sm:px-6 sm:py-3 sm:text-sm"
             >
               <span
@@ -288,13 +287,13 @@ export const HomeContent = ({ counts }: HomeContentProps) => {
               </div>
               <div className="mt-3 flex flex-col gap-3 sm:flex-row">
                 <Link
-                  href="/product"
+                  href="/membership"
                   className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[13px] font-semibold text-canvas transition-transform hover:-translate-y-0.5 sm:text-sm"
                 >
                   了解工具
                 </Link>
                 <Link
-                  href="/product"
+                  href="/membership"
                   className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface/60 px-5 py-2.5 text-[13px] font-medium text-ink transition-colors hover:border-hairline-strong sm:text-sm"
                 >
                   了解产品

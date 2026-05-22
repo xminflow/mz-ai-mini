@@ -6,10 +6,11 @@ from .entities import (
     BloggerInsightStatus,
     BloggerInsightSummary,
 )
-from .exceptions import BloggerInsightNotFoundException
+from .exceptions import BloggerInsightAccessDeniedException, BloggerInsightNotFoundException
 
 __all__ = [
     "BloggerInsight",
+    "BloggerInsightAccessDeniedException",
     "BloggerInsightNotFoundException",
     "BloggerInsightPlatform",
     "BloggerInsightStatus",

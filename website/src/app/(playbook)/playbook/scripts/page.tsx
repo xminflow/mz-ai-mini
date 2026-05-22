@@ -5,11 +5,11 @@ import type { ReactNode } from 'react'
 import { requireMembership } from '@/features/membership/server/require-membership'
 
 export const metadata: Metadata = {
-  title: '第四篇·下 · 四型脚本 — 微域生光自媒体运营实战',
+  title: '第四篇·下 · 四型脚本 · 自媒体运营实战手册',
   description:
     '把通用结构落到四种最高产出比的脚本：聊观点、教知识、讲故事、晒过程。每一型对应不同的账号阶段与变现目标。读完，你应当能独立写出一条 3000 字脚本。',
   openGraph: {
-    title: '第四篇·下 · 四型脚本 — 微域生光自媒体运营实战',
+    title: '第四篇·下 · 四型脚本 · 自媒体运营实战手册',
     description: '四型脚本 · 一张拆片表 · 一条可拍脚本。',
   },
 }

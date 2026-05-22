@@ -26,16 +26,18 @@ description: 端到端抖音博主深度拆解 skill。用户给一个博主主�
 用户输入：博主主页 URL（可带 query 参数）
    ↓
 Step 1 · Bash 调用 Python CLI 采集
-   uv run research-kit collect --url <URL> --workspace output/<blogger_slug>/raw/
+   uv run research-kit collect --url <URL> --workspace output/bloggers/<blogger_slug>/raw/
    产物：profile.json + sampling.json + <aweme_id>/{meta.json, transcript.txt, 1-4.jpg}
    ↓
 Step 2 · Read 读所有素材，应用 14 章判定框架
    ↓
 Step 3 · Write 写出 overview.html + index.json
-   output/<blogger_slug>/reports/<run_id>/overview.html
-   output/<blogger_slug>/reports/<run_id>/index.json
+   output/bloggers/<blogger_slug>/reports/<run_id>/overview.html
+   output/bloggers/<blogger_slug>/reports/<run_id>/index.json
    ↓
-Step 4 · 用 Bash 把 HTML 中的 data-rk-frame 占位符替换为内嵌 base64
+Step 4 · 不再做图片处理（占位符原样保留到产物中）
+   · 图片上传 + URL 改写发生在 publish 阶段（research-kit publish 命令）
+   · 本地预览见 §Step 4 说明
    ↓
 最终：用一句中文总结，把产出目录路径告诉用户
 ```
@@ -49,7 +51,7 @@ Step 4 · 用 Bash 把 HTML 中的 data-rk-frame 占位符替换为内嵌 base64
 从主页 URL 中解析 `sec_uid`（`/user/<sec_uid>` 路径段）作为 blogger_slug。
 
 ```bash
-WORKSPACE="output/<blogger_slug>/raw"
+WORKSPACE="output/bloggers/<blogger_slug>/raw"
 RUN_ID=$(date -u +%Y%m%dT%H%M%SZ)
 ```
 
@@ -67,11 +69,11 @@ uv run research-kit collect \
 关键参数：
 
 - `--url`：博主主页 URL，原样传入。
-- `--workspace`：固定 `output/<blogger_slug>/raw`。
+- `--workspace`：固定 `output/bloggers/<blogger_slug>/raw`。
 - `--sample-count 0`：按总作品数自动计算（10-20 区间）。如用户明确指定 K 条，传具体数字。
 - `--user-data-dir .cache/douyin-profile`：复用已登录的 Chromium 用户目录。首次跑时浏览器会要求扫码登录。
 - 重试机制：HTTP 403 已自动重试 3 次 + 3-6s 退避，无需额外处理。
-- 幂等：workspace 已完整的样本自动跳过，第二次跑同 workspace 只补失败的样本。
+- 幂等：workspace 已完整的作品目录自动跳过，第二次跑同 workspace 只补失败的作品。
 
 ### 1.3 解析 CLI 输出
 
@@ -82,7 +84,7 @@ CLI stdout 末尾输出 JSON 摘要，例如：
   "ok": true,
   "blogger_id": "MS4wL...",
   "display_name": "晓辉博士",
-  "workspace": "/abs/path/output/.../raw",
+  "workspace": "/abs/path/output/bloggers/<blogger_slug>/raw",
   "total_works": 370,
   "samples_collected": 18,
   "samples_failed": 2,
@@ -101,7 +103,7 @@ CLI stdout 末尾输出 JSON 摘要，例如：
 - "需要登录" → 提示用户用 export-cookies skill 或直接在 `--user-data-dir .cache/douyin-profile` 里登录
 - "主页改版/解析失败" → 报错等待 DOM 选择器修复
 - 部分 HTTP 403 / SSL 失败 → 重试已用尽，可以接受（10-30% 失败率正常）
-- **如果完整样本 < 5 条**，**不要**继续 Step 2。建议用户重跑（已采的样本会幂等保留）。
+- **如果完整作品 < 5 条**，**不要**继续 Step 2。建议用户重跑（已采的作品会幂等保留）。
 
 ---
 
@@ -119,7 +121,7 @@ WORKSPACE/
 │   └── 1.jpg ~ 4.jpg      # 必读（视觉理解）
 ```
 
-**通读所有样本**（不再"挑选代表作品"，单作品拆解由其它 skill 负责）：
+**通读所有作品**（不再"挑选代表作品"，单作品拆解由其它 skill 负责）：
 
 - 每条 meta.json 都读
 - 每条 transcript.txt 都读
@@ -130,7 +132,7 @@ WORKSPACE/
 
 - 按 `position` 排序：position 越小越近期
 - 大致划分早期 / 中期 / 近期三段（粉丝量级 + 时间维度）
-- 识别哪些作品有完整转录、哪些只有标题、哪些缺转录
+- 识别哪些作品有完整口播文案、哪些只有标题、哪些没有可读文案
 
 ### 2.3 应用 14 章判定框架
 
@@ -146,11 +148,11 @@ WORKSPACE/
 
 **判定要点**：
 
-- **基础画像**：2-4 段自然文。是谁、什么量级、简介透露的定位、采样覆盖了多少作品。
-- **博主背景考据**：从作品转录里能挖出的真实身份信息（专业背景、行业经历、年龄段大致、性别角色、地域、孩子等）。这些信息是"复制门槛"的核心。
+- **基础画像**：2-4 段自然文。是谁、什么量级、简介透露的定位、近一年作品大致覆盖了哪些维度。**不要写"本次采样 N 条 / 覆盖了 N 条样本"**——读者不需要看到我们的工程口径。
+- **博主背景考据**：从作品口播原文里能挖出的真实身份信息（专业背景、行业经历、年龄段大致、性别角色、地域、孩子等）。这些信息是"复制门槛"的核心。
 - **一句话答卷**：用一句话讲清核心招式，必须具体到动作。
 - **经济模式判定**：流量经济 / 粉丝经济 / 品牌经济 之一 + 判别依据。
-- **稀缺线判断**：是否越过书里的"稀缺线"？给至少 2 条样本证据。
+- **稀缺线判断**：是否越过书里的"稀缺线"？给至少 2 条作品证据。
 - **8 个伪命题自检**：博主有没有陷在书里反复纠错的 8 个伪命题（养号 / 黄金时间 / 日更 / 简化垂直 / 第一条爆款 / 限流 / 标题封面万能 / 追热点万能）？指出博主是否清醒于这些误区。
 
 **必须答的问题**：
@@ -223,11 +225,11 @@ WORKSPACE/
 
 #### 4.1 视觉语言
 
-基于画面素材分析：色调 / 构图 / 人物是否在场 / 场景是否固定 / 字幕位置 / 画面密度 / 镜头变化 / 道具或空间特征。**至少自然引用 2 个样本**。每个视觉判断都要顺手解释：这种视觉选择是在帮助理解、建立信任、制造停留，还是强化账号记忆点。
+基于画面素材分析：色调 / 构图 / 人物是否在场 / 场景是否固定 / 字幕位置 / 画面密度 / 镜头变化 / 道具或空间特征。**至少自然引用 2 条作品**。每个视觉判断都要顺手解释：这种视觉选择是在帮助理解、建立信任、制造停留，还是强化账号记忆点。**强烈建议**在本节用 `frame-grid` 内嵌 1–2 张已抓取画面（`data-rk-frame="<aweme_id>/N.jpg"`，publish 阶段会自动上传 COS 并改写 src），让读者直接看到判断证据——这是全报告最值得配图的章节。
 
 #### 4.2 叙述与语言
 
-基于非空转录分析：口头禅 / 起手式 / 句式节奏 / 口语化程度 / 是否有方言或固定表达。**至少引用 2 句原话**。不要只描述语言表面特征，要落到这些表达是如何降低理解门槛、制造对话感、塑造立场或推动情绪的。
+基于有口播文案的作品分析：口头禅 / 起手式 / 句式节奏 / 口语化程度 / 是否有方言或固定表达。**至少引用 2 句原话**。不要只描述语言表面特征，要落到这些表达是如何降低理解门槛、制造对话感、塑造立场或推动情绪的。
 
 #### 4.3 节奏与内容承诺
 
@@ -235,7 +237,7 @@ WORKSPACE/
 
 #### 4.4 账号记忆点 / 高频符号
 
-写清这个账号被记住的具体符号：固定句式 / 固定开场 / 固定收尾 / 固定场景 / 声音 / 表情 / 字幕习惯 / 道具 / 标题习惯。每个判断都要有样本依据。
+写清这个账号被记住的具体符号：固定句式 / 固定开场 / 固定收尾 / 固定场景 / 声音 / 表情 / 字幕习惯 / 道具 / 标题习惯。每个判断都要有作品依据。
 
 **必须答的问题**：
 
@@ -263,7 +265,7 @@ WORKSPACE/
 
 #### 5.3 信任来源
 
-分析观众为什么愿意相信 ta：专业身份 / 亲历经验 / 细节密度 / 口吻克制 / 人设稳定 / 长期一致 / 敢说别人不说的话。**至少用 2 个样本作证据**。这一节不要写成人设标签列表，而要写成"信任是如何被持续确认"的过程。
+分析观众为什么愿意相信 ta：专业身份 / 亲历经验 / 细节密度 / 口吻克制 / 人设稳定 / 长期一致 / 敢说别人不说的话。**至少用 2 条作品作证据**。这一节不要写成人设标签列表，而要写成"信任是如何被持续确认"的过程。
 
 #### 5.4 商业化转化路径推断
 
@@ -308,9 +310,9 @@ WORKSPACE/
 
 #### 6.3 八大爆款元素打分
 
-对全部样本集体打分，用表格列出 8 大元素 + "是否常用" + "典型样本"：
+对全部作品集体打分，用表格列出 8 大元素 + "是否常用" + "典型作品"：
 
-| 爆款元素 | 是否常用 | 典型样本与作用机制 |
+| 爆款元素 | 是否常用 | 典型作品与作用机制 |
 |---------|---------|-------------------|
 | 成本 | … | … |
 | 人群 | … | … |
@@ -349,7 +351,7 @@ WORKSPACE/
 
 #### 7.1 起承转合与小火车模型
 
-判断博主作品是否符合标准起承转合。每个样本套用「车头 → 车身（N 节） → 车尾」做切片分析：
+判断博主作品是否符合标准起承转合。每条作品套用「车头 → 车身（N 节） → 车尾」做切片分析：
 
 - 黄金三秒车头给的是什么钩子？
 - 中段车身切片密度（每 3-5 秒一个新刺激？每 10-20 秒一个新论点？还是大段口播？）
@@ -357,7 +359,7 @@ WORKSPACE/
 
 #### 7.2 黄金三秒钩子模板识别
 
-列 2-4 个反复出现的钩子模板，每个套用书里五开头之一（怀旧 / 反差 / 悬念 / 观点 / 共鸣），先写抽象句式，再给样本例证。
+列 2-4 个反复出现的钩子模板，每个套用书里五开头之一（怀旧 / 反差 / 悬念 / 观点 / 共鸣），先写抽象句式，再给作品例证。
 
 每个模板还要回答：抓住了什么情绪 / 认知缺口、内容靠什么动作推进、为什么这种钩子适合**这个账号**而不是所有人都适用。
 
@@ -437,7 +439,7 @@ WORKSPACE/
 - **画质**：分辨率与色彩控制
 - **表现力**：镜头脱敏程度，是否像念稿
 
-只在能基于画面素材或转录推断时下判断。判断不出的项直接写"从现有样本看不出"。
+只在能基于画面素材或口播原文推断时下判断。判断不出的项直接写"从现有作品看不出"。
 
 **必须答的问题**：
 
@@ -509,7 +511,7 @@ WORKSPACE/
 
 **框架来源**：《第二篇·定位》动态调整 + 选题供给系统演化。
 
-**判定要点**：按样本 position 排序后，分早期 / 中期 / 近期做对比，重点解释"哪些东西被保留，哪些被淘汰，为什么这些变化让账号更稳定"。
+**判定要点**：按作品发布顺序分早期 / 中期 / 近期做对比，重点解释"哪些东西被保留，哪些被淘汰，为什么这些变化让账号更稳定"。**强烈建议**用 `frame-grid` 配 1 张早期画面 + 1 张近期画面做视觉对照（直接引用 `data-rk-frame="<aweme_id>/N.jpg"`，publish 阶段会自动上传 COS 并改写 src，无需额外处理）。
 
 #### 10.1 早期作品
 
@@ -525,7 +527,7 @@ WORKSPACE/
 
 #### 10.4 关键转折点
 
-如果存在明显转折，指出大概从哪些样本开始变化。没有明显转折就明确写"从现有样本看，变化更像逐步收敛，而不是单点转折"。
+如果存在明显转折，指出大概从哪条作品开始变化。没有明显转折就明确写"从现有作品看，变化更像逐步收敛，而不是单点转折"。
 
 #### 10.5 选题供给系统演化
 
@@ -717,7 +719,7 @@ WORKSPACE/
 - 各 section 的正文用 `<!-- TODO(章节): ... -->` 注释列出"该写哪几个小节"
 
 写报告时**强烈建议**：
-1. 复制 `templates/overview.html.tmpl` 为 `output/<slug>/reports/<run_id>/overview.html`
+1. 复制 `templates/overview.html.tmpl` 为 `output/bloggers/<blogger_slug>/reports/<run_id>/overview.html`
 2. 替换 `{{display_name}}` `{{douyin_id}}` `{{home_url}}` `{{description}}`
    `{{follower_count_value}}/_unit` `{{liked_count_value}}/_unit`
    `{{total_works_count}}` `{{following_count}}` 等占位符
@@ -731,7 +733,7 @@ WORKSPACE/
 ### 3.1 输出目录
 
 ```
-output/<blogger_slug>/reports/<run_id>/
+output/bloggers/<blogger_slug>/reports/<run_id>/
 ├── overview.html
 └── index.json
 ```
@@ -787,7 +789,7 @@ HTML 中展示画面素材时用占位符：
      class="h-24 w-24 sm:h-28 sm:w-28 rounded-full border border-white/15 object-cover shrink-0" />
 ```
 
-Step 4 阶段把 `data-rk-frame` 替换成 `src="data:image/jpeg;base64,..."`。**不要直接写 base64**。
+`data-rk-frame` 占位符在 skill 产物中**原样保留**。图片上传 + URL 改写发生在 `research-kit publish` 阶段（详见 §Step 4）。**不要在 HTML 里直接写 base64 或外链。**
 
 **头像本地化失败的处理**（`profile.json.avatar_path` 为 null，或本地文件确实读不到）：
 
@@ -825,7 +827,7 @@ Step 4 阶段把 `data-rk-frame` 替换成 `src="data:image/jpeg;base64,..."`。
 
 **禁止**在 `#summary` 出现：
 - 任何 eyebrow / 副标题小字（例如 `ANALYSIS · DOUYIN BLOGGER · FULL FRAME`、`Analysis Report v0.3` 等）
-- 采样信息（"本次采样 N 条 / 关键帧 N 张"等元信息）
+- 内部流程元信息——"本次采样 N 条""共 N 条作品入选""读取 N 张关键帧""转录引擎"等任何暴露我们怎么拿到素材的句子，**一律禁止**
 - 生成器水印 / 脚注式说明
 - 任何指向报告生成过程而非博主本人的描述
 
@@ -863,7 +865,7 @@ Step 4 阶段把 `data-rk-frame` 替换成 `src="data:image/jpeg;base64,..."`。
 
 ### 3.6 不写 footer
 
-`<main>` 闭合后直接到外层 `</div>` 与 `</body>`，不允许出现 `<footer>` 或任何类似"© Weelume · Analysis Report""本拆解基于 X 条采样作品…"的页脚。报告就是博主拆解本体，**不附自我介绍**。
+`<main>` 闭合后直接到外层 `</div>` 与 `</body>`，不允许出现 `<footer>` 或任何类似"© Weelume · Analysis Report""本拆解基于 X 条作品…"的页脚。报告就是博主拆解本体，**不附自我介绍**。
 
 ### 3.7 overview.html 必备锚点
 
@@ -922,7 +924,7 @@ Step 4 阶段把 `data-rk-frame` 替换成 `src="data:image/jpeg;base64,..."`。
 
 - **数据来源**：`<workspace>/profile.json` 的 `avatar_url` 与 `avatar_path` 两个字段，都由 collector 写入。
   - `avatar_url`：抖音 CDN 上的远端地址，**仅作"原始来源溯源"留档**，绝对不允许出现在 HTML 报告的 `<img src=...>` 里。
-  - `avatar_path`：collector 已经把头像下载到 `<workspace>/avatar.jpg`，写入相对路径 `"avatar.jpg"`。**官网部署和 HTML 报告唯一允许的头像来源**就是这个本地文件（最终在 Step 4 转为 base64 data URI）。
+  - `avatar_path`：collector 已经把头像下载到 `<workspace>/avatar.jpg`，写入相对路径 `"avatar.jpg"`。**官网部署和 HTML 报告唯一允许的头像来源**就是这个本地文件（publish 阶段会上传 COS 并改写 src，详见 §Step 4）。
 - **必填**：透传两个字段。
 - 如果 `profile.json` 里 `avatar_url` 为 `null`：说明 collector 这一次没抓到头像（DOM 改版或登录态失效）。`avatar_path` 同时也是 `null`。**禁止编造**——`index.json` 的两个字段都设为 `null`，HTML 报告按 3.3 节的首字母占位方案处理，并在 `summary` 章节加 `<!-- WARN: 头像未抓到 -->` 提示重跑 collector。
 - 如果 `avatar_url` 有值但 `avatar_path` 为 `null`：说明 collector 抓到了 URL 但下载失败（网络问题）。仍然**不允许**外链 `avatar_url` 兜底——HTML 报告按 3.3 节首字母占位处理，并在产物里加 `<!-- WARN: 头像本地化失败，使用首字母占位 -->`。下次重跑 collector 可以补齐本地文件。
@@ -931,7 +933,7 @@ Step 4 阶段把 `data-rk-frame` 替换成 `src="data:image/jpeg;base64,..."`。
 
 - **数据来源**：`<workspace>/profile.json` 的 `description` 字段（由 collector hover 展开按钮后抓取）。
 - **首选**：直接透传 profile.json 的原文，**保留所有 emoji、换行、@提及、#话题**。
-- **fallback**：仅当 `profile.json.description` 为 `null` 时，允许 LLM 基于**已有采集素材**（昵称、作品标题、转录文案、运营手册风格信号）写一句 ≤60 字的方法论侧写填入。
+- **fallback**：仅当 `profile.json.description` 为 `null` 时，允许 LLM 基于**已有作品素材**（昵称、作品标题、口播文案、运营手册风格信号）写一句 ≤60 字的方法论侧写填入。
   - 必须以 `[未抓到原始简介 · LLM 推断]` 作前缀，让二次阅读者知道这是推断不是事实。
   - 推断内容必须可被作品素材证伪——禁止虚构身份、职业、机构、所在地等"无证据外推"信息。
 - 禁止把 `description` 写成空串。要么是原文，要么是 `[未抓到原始简介 · LLM 推断] xxx`，要么是 `null`（极端情况：连 fallback 都无法写）。
@@ -940,72 +942,68 @@ Step 4 阶段把 `data-rk-frame` 替换成 `src="data:image/jpeg;base64,..."`。
 
 ---
 
-## Step 4 · 替换图片占位符为 base64
+## Step 4 · 不做图片处理，占位符原样保留
+
+> **v0.4 改动**：原先 Step 4 把图片转 base64 内嵌到 HTML，导致单份报告膨胀到 600 KB+。
+> 现在图片走腾讯云 COS：**skill 生成阶段保持 `data-rk-frame="<rel>"` 占位符不变**，
+> 由 `research-kit publish` 命令在上传后端时自动扫描占位符、上传 COS、改写为 `src="<cos url>"`。
+
+### 4.1 skill 终止条件
+
+skill 完成后只需验证：
 
 ```bash
-uv run python -c "
-import base64, re, pathlib, sys
-ws = pathlib.Path('<absolute workspace path>')
-rep = pathlib.Path('<absolute reports dir>')
-
-def detect_mime(buf: bytes) -> str:
-    if buf.startswith(b'\\xff\\xd8\\xff'):
-        return 'image/jpeg'
-    if buf.startswith(b'\\x89PNG\\r\\n\\x1a\\n'):
-        return 'image/png'
-    if buf.startswith(b'RIFF') and buf[8:12] == b'WEBP':
-        return 'image/webp'
-    if buf.startswith(b'GIF87a') or buf.startswith(b'GIF89a'):
-        return 'image/gif'
-    return 'image/jpeg'
-
-count = [0]
-missing: list[str] = []
-
-def make_sub():
-    def sub(m):
-        rel = m.group(1)
-        p = ws / rel
-        if not p.exists():
-            missing.append(rel)
-            return m.group(0)
-        data = p.read_bytes()
-        mime = detect_mime(data)
-        encoded = base64.b64encode(data).decode('ascii')
-        count[0] += 1
-        return f'src=\"data:{mime};base64,{encoded}\"'
-    return sub
-
-for html in rep.glob('*.html'):
-    text = html.read_text(encoding='utf-8')
-    new = re.sub(r'data-rk-frame=\"([^\"]+)\"', make_sub(), text)
-    html.write_text(new, encoding='utf-8')
-
-print(f'Total frames embedded: {count[0]}')
-if missing:
-    print('MISSING (data-rk-frame 残留，对应文件不存在):', file=sys.stderr)
-    for rel in sorted(set(missing)):
-        print(f'  - {rel}', file=sys.stderr)
-    sys.exit(1)
-"
+# overview.html 里仍有 data-rk-frame 占位符是正常的
+grep -c 'data-rk-frame=' output/bloggers/<blogger_slug>/reports/<run_id>/overview.html
+# 应返回 ≥ 1（至少有 avatar）
 ```
 
-把 `<absolute workspace path>` 和 `<absolute reports dir>` 替换为真实绝对路径。
-**Windows 注意**：必须用 `D:\...\raw` 这种反斜杠绝对路径，Git Bash 的 `/d/...` POSIX 风格 pathlib 在 Windows 不识别。
+**不要**自己跑任何 base64 / 上传脚本。
 
-行为说明：
-- 找到本地文件 → 替换为 `src="data:<mime>;base64,..."`（mime 从 magic bytes 推断，不假定 jpeg）。
-- 找不到本地文件 → 留下 `data-rk-frame` 占位符 + 脚本以 exit 1 结束，提示文件名。**这意味着报告不应该写不存在的占位符**：
-  - `avatar.jpg`：如果 `avatar_path` 为 null，按 3.3 节的首字母占位 `<div>` 处理，不要写 `<img data-rk-frame="avatar.jpg">`。
-  - 各 `<aweme_id>/N.jpg`：如果某个样本没采到画面，不要在该样本相关段落贴这条占位。
+### 4.2 报告里只允许两类图片来源
 
-验证替换成功：
+| 来源 | 允许？ | 备注 |
+|------|--------|------|
+| `<img data-rk-frame="<rel>">` 占位符 | ✓ | 唯一允许的形式 |
+| `<img src="https://...cos.../">` 远端 URL | ✗（skill 阶段） | 由 publish 命令统一改写 |
+| `<img src="data:image/...;base64,...">` 内嵌 base64 | ✗ | 已废弃 |
+| `<img src="https://...douyinpic.com/...">` 抖音 CDN 外链 | ✗ | 永久禁止，URL 会失效 |
+
+如果某条作品没有可用画面，**不要硬贴占位符**——换一条画面齐全的作品作配图。
+
+### 4.3 本地预览
+
+带 `data-rk-frame` 占位符的 HTML 在本地浏览器里**看不到图片**（src 还没改写）。如果只是在本地 review 文字内容，可以接受图位空白。
+
+如果一定要在本地预览图片，有两个办法（**不要把 base64 写回 overview.html**）：
+
+**方案 A · 跑临时 HTTP 服务把整个 workspace 暴露给浏览器**（推荐）：
 
 ```bash
-grep -c 'data-rk-frame=' output/<slug>/reports/<run_id>/overview.html
+cd output/bloggers/<blogger_slug>/raw && uv run python -m http.server 8765 --bind 127.0.0.1
+# 然后浏览器开 file:// 形式的 overview.html，但 data-rk-frame 需要先用脚本临时
+# 改写成 src="http://127.0.0.1:8765/<rel>"，记得只写到 _preview.html 副本
 ```
 
-应该返回 0。
+**方案 B · 直接调用 publish 的预览模式**（如果以后加 `--preview` flag）。
+
+### 4.4 publish 阶段做了什么（仅供理解，无需手动操作）
+
+```
+research-kit publish --workspace output/bloggers/<blogger_slug> --env prod
+   ↓
+1. 读 reports/<run_id>/overview.html + index.json + raw/profile.json
+2. 扫描 HTML 中所有 data-rk-frame="<rel>" 占位符
+3. 每个 <rel> 上传到腾讯云 COS：
+   blogger-insights/<slug>/<run_id>/<rel.replace('/', '_')>
+   例：avatar.jpg               → blogger-insights/<slug>/<run_id>/avatar.jpg
+       7637.../1.jpg            → blogger-insights/<slug>/<run_id>/7637..._1.jpg
+4. 把 data-rk-frame="<rel>" 改写为 src="https://<bucket>.cos.<region>.myqcloud.com/<key>"
+5. payload.avatar_url 复用 avatar.jpg 的 COS URL（不再 base64）
+6. POST 到 /api/v1/blogger-insights/import
+```
+
+凭证读取自环境变量 `MZ_AI_CASE_IMPORT_COS_*`（与 server 端共享一份），缺哪个都会硬失败、不静默兜底。
 
 ---
 
@@ -1019,32 +1017,72 @@ grep -c 'data-rk-frame=' output/<slug>/reports/<run_id>/overview.html
 
 1. **每一节都要写因果链**：判断 → 为什么成立 → 证据是什么 → 对同类创作者意味着什么。
 2. **每个核心判断都要回答作用机制**：不要只写"有辨识度""节奏好"。
-3. **优先跨样本归纳**：风格判断、方法论判断都要建立在多条样本上。
+3. **优先跨作品归纳**：风格判断、方法论判断都要建立在多条作品上。
 4. **每章都要回答"必须答的问题"**：上面 14 章每章末列出的问题清单是硬底线。
-5. **素材不足时降低判断强度**：可以写"从现有样本看""更像是""至少在这批样本里"，但不能用猜测把分析补满。
+5. **素材不足时降低判断强度**：可以写"从现有作品看""更像是""至少在这一年的作品里"，但不能用猜测把分析补满。**注意**：不要写"在这批样本里 / 从样本看"——这是内部词。
 6. **方法论框架是镜子不是模板**：用框架去**判别**博主，不是把框架原文复述一遍。
 7. **优先采用书里的术语**：稀缺线、黄金三秒、信息密度、小火车模型、目的垂直手段多维、四型脚本、五开头、八大爆款元素、情绪波点四出口、五大结构、变现四原则、链路五层 —— 保留原汁原味。
+8. **报告里不暴露采集机制**：不写"本次采样 N 条""转录引擎""帧 X""sec_uid"等任何透露我们是怎么拿到这些数据的内部词——读者只需要看到"这是一份对博主的深度拆解"。
 
 ### 引用规范
 
-- 内部可以用 `position` 排序，但 HTML 不要出现 `#17`、`作品 #<position>` 这类内部编号。
+- 内部排序可用 `position`，但 HTML 报告**不允许**出现 `#17`、`作品 #<position>`、`pos N` 等内部编号。
 - 提炼用户能看懂的短标题（去掉博主名前缀、话题标签和多余标点）。
 - 原话引用：`<blockquote>"…"<cite>—— 出自《作品短标题》</cite></blockquote>`
 - 标题依据：`（来自《作品短标题》的标题）`
-- 画面依据：`（来自《作品短标题》的画面素材）`
-- 多样本归纳：`（综合《作品 A》《作品 B》《作品 C》）`
-- 缺转录说明：`（《作品短标题》未提供转录，这里只基于画面素材判断）`
+- 画面依据：`（来自《作品短标题》的画面）`
+- 跨作品归纳：`（综合《作品 A》《作品 B》《作品 C》）` —— 不要写"多样本归纳"
+- 缺口播文案的作品：`（《作品短标题》没有可读的口播文案，这里只基于画面判断）` —— 不要写"缺转录""转录为空"
 
-### 禁用术语
+### 画面配图（鼓励使用）
 
-| 类别 | 禁用 |
-|------|------|
-| 采集术语 | `#17`、`#3`、`作品 #<position>` |
-| 帧术语 | `帧`、`关键帧`、`第 N 帧`、`frame`、`抽帧`、`基于 K 张帧` |
-| 系统术语 | `transcript: null`、`meta.json`、`profile.json`、`aweme_id`、`sec_uid` |
-| 吹捧腔 | `封神`、`绝了`、`无敌`、`开挂`、`降维打击` |
-| 报告腔 | `本报告`、`本拆解`、`本次分析显示`、`综上所述` |
-| 编造数据 | 任何未在 `profile.json` 中真实存在的播放、点赞、互动、增长、完播指标 |
+collector 在每条作品目录下抓了 4 张画面（`<aweme_id>/1.jpg` … `4.jpg`）。这些图**就是报告里的配图素材**——HTML 里用 `data-rk-frame="<aweme_id>/N.jpg"` 占位符引用，publish 命令会上传 COS 并改写为 `src="<cos url>"`，无需手动拷贝或上传。
+
+报告里**鼓励**用这些画面给文字判断配图，让长文有视觉呼吸感。规则：
+
+- **优先使用场景**：
+  - 第四章 · 作品风格（视觉语言 / 视觉锤 / 高频符号——直接给图，最有说服力）
+  - 第八章 · 制作品质（音质 / 画质 / 表现力的判断需要画面佐证）
+  - 第十章 · 成长路线（早期 vs 近期对照——一张早期画面 + 一张近期画面，演化一目了然）
+- **每章 ≤ 2 张**：配图是辅助判断、不是装饰，不要把报告塞成画册。
+- **必须有 `<figcaption>` 解说**：一句话说明"这张画面在证明什么判断"，把图绑回正文（比如"早期 · 户外手持 + 平头造型"对照"近期 · 固定书房 + 三件套定型"）。
+- **alt / figcaption 都不允许出现内部词**：不要写"样本 7600950..."、"pos 0 的画面"、"frame 1"、"第 N 帧"——只写作品短标题 + 视觉描述。
+- **缺画面的作品**：不要硬贴占位符（publish 阶段会跳过缺失文件并在日志里 WARN）。如果某条作品的 `<aweme_id>/N.jpg` 不存在，就换一条画面齐全的作品作配图。
+- **结构用 `frame-grid`**（template 已内置 CSS）：
+
+  ```html
+  <figure class="frame-grid">
+    <div>
+      <img data-rk-frame="<aweme_id>/1.jpg" alt="《作品短标题》画面" />
+      <figcaption>一句话解说，说明这张画面在证明什么判断</figcaption>
+    </div>
+    <div>
+      <img data-rk-frame="<aweme_id>/3.jpg" alt="《另一作品短标题》画面" />
+      <figcaption>对照解说</figcaption>
+    </div>
+  </figure>
+  ```
+
+  单张配图也可以——`frame-grid` 是 2 列 grid，只放 1 个 `<div>` 会自然居左占一格；想居中可改用 `<figure>` 直接包一张 `<img data-rk-frame="..."/>` + `<figcaption>`，CSS 走默认即可。
+
+### 禁用术语（写进 HTML 报告里就算违规）
+
+报告是面向博主本人 / 同行 / 客户的成品文本，**所有暴露"我们怎么拿到这些素材"的内部词汇都必须改写**。
+
+| 类别 | 禁用词 | 改写成 |
+|------|------|------|
+| 内部流程词 | `采样`、`采样作品`、`本次采样`、`采集`、`采集到`、`抓取`、`爬取`、`抓取到` | 直接谈"作品"，不要再提"我们怎么拿到的" |
+| 内部素材词 | `转录`、`转录文本`、`转录文案`、`音频转录` | `口播`、`口播原文`、`原话`、`视频文案` |
+| 内部数据词 | `样本`、`样本量`、`这批样本`、`样本证据`、`跨样本`、`样本数` | `作品`、`这批作品`、`作品证据`、`跨作品` |
+| 内部位置词 | `#17`、`#3`、`作品 #<position>`、`position`、`pos N` | 用作品短标题，按需配"早期 / 中期 / 近期"修饰 |
+| 帧 / 画面术语 | `帧`、`关键帧`、`第 N 帧`、`frame`、`抽帧`、`基于 K 张帧` | `画面素材`、`画面`、`镜头`（必要时） |
+| 文件 / 字段名 | `transcript: null`、`meta.json`、`profile.json`、`sampling.json`、`workspace`、`aweme_id`、`sec_uid`、`avatar_path`、`run_id` | 完全不出现——这些是工程产物名，HTML 报告里没有任何引用它们的理由 |
+| 引擎 / 工具名 | `FunASR`、`research-kit`、`collector`、`douyin-blogger-report-v2`、`Playwright`、`CDP` | 完全不出现 |
+| 吹捧腔 | `封神`、`绝了`、`无敌`、`开挂`、`降维打击` | 去掉，换成可证伪的具体判断 |
+| 报告腔 | `本报告`、`本拆解`、`本次分析显示`、`综上所述` | 直接给判断，不自指 |
+| 编造数据 | 任何未在公开页面真实存在的播放、点赞、互动、增长、完播指标 | 不写——除非来源是 `profile.json` 里有据可查的字段 |
+
+**自检办法**：写完报告 Ctrl+F 搜一遍上表每个左列词，命中任何一个都必须改写。**特别要搜的高发词**：`样本`、`转录`、`采样`、`采集`、`帧`、`pos`、`position`、`aweme`。
 
 ---
 
@@ -1056,8 +1094,8 @@ grep -c 'data-rk-frame=' output/<slug>/reports/<run_id>/overview.html
 
 - [ ] 从 `templates/overview.html.tmpl` 派生，所有 `{{...}}` 占位符 + `<!-- TODO(... -->` 注释都已替换/删除
 - [ ] `#summary` 顶部按 3.4 节结构：博主名片（头像 / 抖音号 / 完整简介）+ Stats 矩阵（粉丝 / 获赞 / 作品 / 关注）+ 一句话答卷
-- [ ] `#summary` 不含任何采样信息 / 生成器水印
-- [ ] `avatar_path` 非 null 时头像通过 `<img data-rk-frame="avatar.jpg">` 占位（Step 4 转 base64）；为 null 时按 3.3 节首字母占位 `<div>` 处理。**任何情况下都不允许出现抖音 CDN 外链 `<img src="https://...douyinpic..." >`**
+- [ ] `#summary` 不含任何内部流程元信息（采样 / 采集 / 转录 / 关键帧 / 生成器水印）
+- [ ] `avatar_path` 非 null 时头像通过 `<img data-rk-frame="avatar.jpg">` 占位（publish 会上传 COS 并改写）；为 null 时按 3.3 节首字母占位 `<div>` 处理。**任何情况下都不允许出现抖音 CDN 外链 `<img src="https://...douyinpic..." >`**
 - [ ] 左侧固定目录已挂上（详见 3.7），主内容容器有正确的左边距
 - [ ] 整个 HTML 不含任何 `<footer>` 或同类页脚
 - [ ] 14 章全部覆盖，不少
@@ -1092,11 +1130,12 @@ grep -c 'data-rk-frame=' output/<slug>/reports/<run_id>/overview.html
 
 ### 写作质量
 
-- [ ] 每个判断都有具体样本证据
+- [ ] 每个判断都有具体作品证据
 - [ ] 没有内部文件名 / 字段名 / 机器元信息
-- [ ] 没有禁用术语
+- [ ] 没有禁用术语（重点 grep：`样本` / `转录` / `采样` / `采集` / `关键帧` / `pos` / `aweme` —— 任何一个命中都必须改写）
+- [ ] 切片配图（如有使用）的 alt / figcaption 也不含禁用词
 - [ ] 没有编造数据
-- [ ] 对缺失转录的样本没有下语言、钩子、口吻方面的判断
+- [ ] 对没有可读口播文案的作品没有下语言、钩子、口吻方面的判断
 - [ ] 风险与天花板写成了**条件句**
 - [ ] 行动建议都以动词开头
 - [ ] 每章末的"必须答的问题"清单都被回答了
@@ -1113,7 +1152,7 @@ grep -c 'data-rk-frame=' output/<slug>/reports/<run_id>/overview.html
 
 ## 执行契约
 
-- 完成后用一句中文总结：`已生成博主 <display_name> 的 14 章深度全景拆解（overview.html），存于 output/<blogger_slug>/reports/<run_id>/。`
+- 完成后用一句中文总结：`已生成博主 <display_name> 的 14 章深度全景拆解（overview.html），存于 output/bloggers/<blogger_slug>/reports/<run_id>/。`
 - 如果用户问"接下来呢"，主动推荐：在浏览器中打开 `overview.html` 检查，或者跑单作品深度拆解 skill（如果可用）来对特定作品做更深拆解。
 - 任何阶段失败都不要静默吞掉。明确告知用户失败在哪一步、什么原因、下一步可以做什么。
 - 任何场景下都禁止编造数据来填补缺失。

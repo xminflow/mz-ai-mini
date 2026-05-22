@@ -1,10 +1,18 @@
-param(
+﻿param(
     [ValidateSet("all", "backend", "website")]
     [string]$Service = "all",
+    [ValidateSet("dev")]
+    [Alias("Env")]
+    [string]$Environment = "dev",
     [int]$BackendPort = 8001,
     [int]$WebsitePort = 3000,
     [string]$HostName = "127.0.0.1"
 )
+
+# -Environment dev (或 -Env dev) 表示「连接开发环境」：本地前端 + 本地后端 + 本地 PG (localhost:5432)。
+# 后端 MZ_AI_BACKEND_ENV=development；前端 WEBSITE_API_BASE_URL/INTERNAL_API_URL 指向本地后端，
+# 进程级注入以压过 website/.env.local 里的生产配置。
+# 注：参数名不能叫 $Env，否则在 Windows PowerShell 5.1 中与 Env: 驱动器冲突。
 
 $ErrorActionPreference = "Stop"
 
@@ -90,12 +98,14 @@ function Start-ServiceProcess {
 Ensure-Directory -Path $LogDir
 Ensure-Directory -Path $RunDir
 
+Write-Host "Target env: $Environment (backend MZ_AI_BACKEND_ENV=development, website API base http://${HostName}:${BackendPort}/api/v1)"
+
 if ($Service -eq "all" -or $Service -eq "backend") {
     Start-ServiceProcess `
         -Name "backend" `
         -WorkingDirectory $ServerDir `
         -Runner $BackendRunner `
-        -RunnerArguments @("-HostName", $HostName, "-Port", $BackendPort, "-LogFile", $BackendLogFile) `
+        -RunnerArguments @("-Environment", $Environment, "-HostName", $HostName, "-Port", $BackendPort, "-LogFile", $BackendLogFile) `
         -PidFile $BackendPidFile `
         -PortFile $BackendPortFile `
         -Port $BackendPort `
@@ -107,7 +117,7 @@ if ($Service -eq "all" -or $Service -eq "website") {
         -Name "website" `
         -WorkingDirectory $WebsiteDir `
         -Runner $WebsiteRunner `
-        -RunnerArguments @("-HostName", $HostName, "-Port", $WebsitePort, "-BackendPort", $BackendPort, "-LogFile", $FrontendLogFile) `
+        -RunnerArguments @("-Environment", $Environment, "-HostName", $HostName, "-Port", $WebsitePort, "-BackendPort", $BackendPort, "-LogFile", $FrontendLogFile) `
         -PidFile $WebsitePidFile `
         -PortFile $WebsitePortFile `
         -Port $WebsitePort `

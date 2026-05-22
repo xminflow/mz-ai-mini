@@ -91,6 +91,7 @@ def _to_list_item(model: BloggerInsightModel) -> BloggerInsightListItemResult:
         positioning=model.positioning,
         tags=_normalize_tags(model.tags),
         cover_image_url=model.cover_image_url,
+        is_free=model.is_free,
         status=_normalize_status(model.status),
         captured_at=model.captured_at,
         published_at=model.published_at,
@@ -112,6 +113,7 @@ def _to_aggregate(model: BloggerInsightModel) -> BloggerInsight:
         positioning=model.positioning,
         tags=_normalize_tags(model.tags),
         cover_image_url=model.cover_image_url,
+        is_free=model.is_free,
         status=_normalize_status(model.status),
         captured_at=model.captured_at,
         published_at=model.published_at,
@@ -195,6 +197,7 @@ class SqlAlchemyBloggerInsightRepository:
                 source_run_id=command.source_run_id,
                 captured_at=command.captured_at,
                 published_at=published_at,
+                is_free=command.is_free,
                 status=command.status.value,
                 is_deleted=False,
             )
@@ -214,6 +217,7 @@ class SqlAlchemyBloggerInsightRepository:
             model.report_summary = command.report_summary
             model.source_run_id = command.source_run_id
             model.captured_at = command.captured_at
+            model.is_free = command.is_free
             model.status = command.status.value
             model.is_deleted = False
             if command.status == BloggerInsightStatus.PUBLISHED and model.published_at is None:

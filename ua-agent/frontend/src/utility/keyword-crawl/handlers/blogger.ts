@@ -119,6 +119,7 @@ export async function bloggerCaptureProfileHandler(
     started_at: nowIso(),
   });
 
+  let succeeded = false;
   try {
     const exec = await getBatchExecutorReady();
     const port = exec.getPort();
@@ -173,7 +174,7 @@ export async function bloggerCaptureProfileHandler(
     });
     log.info("blogger.captureProfile.ok", { id: blogger_id });
 
-    return captureSuccessSchema.parse({
+    const result = captureSuccessSchema.parse({
       schema_version: "1",
       ok: true,
       fields: {
@@ -187,6 +188,8 @@ export async function bloggerCaptureProfileHandler(
         douyin_id: fields.douyin_id,
       },
     });
+    succeeded = true;
+    return result;
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     log.error("blogger.captureProfile.failed", { id: blogger_id, message });
@@ -206,7 +209,13 @@ export async function bloggerCaptureProfileHandler(
     }
     return errorEnvelope("INTERNAL", message);
   } finally {
-    await closeBrowserBestEffort("blogger.captureProfile", blogger_id);
+    // 失败时保留浏览器，便于用户排查或在已登录态下手动重试；
+    // 成功时按既有约定释放会话。
+    if (succeeded) {
+      await closeBrowserBestEffort("blogger.captureProfile", blogger_id);
+    } else {
+      log.info("blogger.captureProfile.browser_kept_open", { id: blogger_id });
+    }
   }
 }
 
@@ -264,6 +273,7 @@ export async function bloggerSampleVideosHandler(
     started_at: nowIso(),
   });
 
+  let succeeded = false;
   try {
     const exec = await getBatchExecutorReady();
     const port = exec.getPort();
@@ -329,12 +339,14 @@ export async function bloggerSampleVideosHandler(
       sampled: samples.length,
       total: totalWorks,
     });
-    return sampleSuccessSchema.parse({
+    const result = sampleSuccessSchema.parse({
       schema_version: "1",
       ok: true,
       total_works: totalWorks,
       samples,
     });
+    succeeded = true;
+    return result;
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     log.error("blogger.sampleVideos.failed", { id: blogger_id, message });
@@ -356,7 +368,13 @@ export async function bloggerSampleVideosHandler(
     }
     return errorEnvelope("INTERNAL", message);
   } finally {
-    await closeBrowserBestEffort("blogger.sampleVideos", blogger_id);
+    // 失败时保留浏览器，便于用户排查或在已登录态下手动重试；
+    // 成功时按既有约定释放会话。
+    if (succeeded) {
+      await closeBrowserBestEffort("blogger.sampleVideos", blogger_id);
+    } else {
+      log.info("blogger.sampleVideos.browser_kept_open", { id: blogger_id });
+    }
   }
 }
 

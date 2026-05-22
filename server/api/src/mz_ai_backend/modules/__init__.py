@@ -15,8 +15,10 @@ from .blogger_insights import router as blogger_insights_router
 from .business_cases import router as business_cases_router
 from .case_research import router as case_research_router
 from .consultations import router as consultations_router
+from .member_submissions import router as member_submissions_router
 from .membership import router as membership_router
 from .system import router as system_router
+from .track_analyses import router as track_analyses_router
 
 __all__ = [
     "agent_auth_router",
@@ -26,6 +28,8 @@ __all__ = [
     "business_cases_router",
     "case_research_router",
     "consultations_router",
+    "member_submissions_router",
     "membership_router",
     "system_router",
+    "track_analyses_router",
 ]

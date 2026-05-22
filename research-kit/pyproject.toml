@@ -14,6 +14,7 @@ dependencies = [
     # 采集链路核心依赖。
     "patchright>=1.40",        # 浏览器自动化（Playwright 的反检测分支，抓主页与作品列表）
     "ffmpeg-python>=0.2",      # 抽帧 / 音频提取（同时依赖系统 ffmpeg 可执行）
+    "cos-python-sdk-v5>=1.9.42",  # publish 阶段把 frame 图上传到腾讯云 COS
 ]
 # 视频下载走 httpx + iesdouyin.com 解析（与 ua-agent 一致），httpx 已经在依赖中。
 # 转录走 subprocess 调 ua-agent backend 的 Fun-ASR-Nano CLI，模型与重型依赖

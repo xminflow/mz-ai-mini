@@ -14,6 +14,7 @@ type UpstreamEnvelope<T> = {
   code?: unknown
   message?: unknown
   data?: T
+  details?: Record<string, unknown> | null
 }
 
 function trimTrailingSlashes(value: string): string {
@@ -33,12 +34,17 @@ function resolveBloggerInsightApiBaseUrl(): string {
 export class BloggerInsightFetchError extends Error {
   readonly status: number
   readonly code: string
+  readonly details: Record<string, unknown> | null
 
-  constructor(message: string, options: { status: number; code: string }) {
+  constructor(
+    message: string,
+    options: { status: number; code: string; details?: Record<string, unknown> | null },
+  ) {
     super(message)
     this.name = 'BloggerInsightFetchError'
     this.status = options.status
     this.code = options.code
+    this.details = options.details ?? null
   }
 }
 
@@ -61,12 +67,15 @@ function buildQueryString(query: ListQuery): string {
   return text ? `?${text}` : ''
 }
 
-async function requestJson<T>(path: string): Promise<T> {
+async function requestJson<T>(path: string, accessToken?: string): Promise<T> {
   const url = `${resolveBloggerInsightApiBaseUrl()}${path}`
+  const headers: Record<string, string> = { Accept: 'application/json' }
+  if (accessToken) headers['Authorization'] = `Bearer ${accessToken}`
+
   let response: Response
   try {
     response = await fetch(url, {
-      headers: { Accept: 'application/json' },
+      headers,
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
       cache: 'no-store',
     })
@@ -87,6 +96,7 @@ async function requestJson<T>(path: string): Promise<T> {
           typeof envelope.code === 'string'
             ? envelope.code
             : 'BLOGGER_INSIGHT.UPSTREAM_ERROR',
+        details: envelope.details ?? null,
       },
     )
   }
@@ -103,7 +113,8 @@ export async function fetchBloggerInsightList(
 
 export async function fetchBloggerInsightDetail(
   slug: string,
+  accessToken?: string,
 ): Promise<BloggerInsightDetail> {
   const encoded = encodeURIComponent(slug)
-  return requestJson<BloggerInsightDetail>(`/blogger-insights/${encoded}`)
+  return requestJson<BloggerInsightDetail>(`/blogger-insights/${encoded}`, accessToken)
 }

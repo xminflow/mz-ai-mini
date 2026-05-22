@@ -5,11 +5,11 @@ import type { ReactNode } from 'react'
 import { requireMembership } from '@/features/membership/server/require-membership'
 
 export const metadata: Metadata = {
-  title: '第三篇 · 选题与素材库 — 微域生光自媒体运营实战',
+  title: '第三篇 · 选题与素材库 · 自媒体运营实战手册',
   description:
-    '解决"今天发什么"的焦虑。建立选题流水线，让你从"等灵感"变成"打开素材库就能拍"。读完，你应当能独立产出 30 条以上可用选题。',
+    '解决"今天发什么"的焦虑。建立选题流水线，配合 AI 素材采集工具把"等灵感"变成"打开素材库就能拍"。读完，你应当能独立产出 30 条以上可用选题。',
   openGraph: {
-    title: '第三篇 · 选题与素材库 — 微域生光自媒体运营实战',
+    title: '第三篇 · 选题与素材库 · 自媒体运营实战手册',
     description: '五方向 · 八元素 · 一座永远填得满的素材库。',
   },
 }

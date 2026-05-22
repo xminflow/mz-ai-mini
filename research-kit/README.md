@@ -43,13 +43,13 @@ Claude Code 启动时会自动装载 `.claude/skills/douyin-blogger-report-v2/`�
 skill 自动按四个步骤编排：
 
 ```
-Step 1  Bash → uv run research-kit collect --url ... --workspace output/<id>/raw/
+Step 1  Bash → uv run research-kit collect --url ... --workspace output/bloggers/<id>/raw/
 Step 2  Read → 读 profile.json + 各作品 meta/transcript/帧画面
-Step 3  Write → output/<id>/reports/<run_id>/overview.html + video_*.html
+Step 3  Write → output/bloggers/<id>/reports/<run_id>/overview.html + video_*.html
 Step 4  Bash  → 用 Python 一行命令把 data-rk-frame 占位符替换为 base64 内嵌
 ```
 
-完成后产物在 `output/<blogger_slug>/reports/<run_id>/`。
+完成后产物在 `output/bloggers/<blogger_slug>/reports/<run_id>/`。
 
 ### 4. 命令行兜底用法（无 Claude Code 时）
 
@@ -59,7 +59,7 @@ Python CLI 也能独立跑采集，再手工触发分析：
 # 只采集
 uv run research-kit collect \
   --url "https://www.douyin.com/user/MS4wLjABAAAAxxx" \
-  --workspace output/MS4wLjABAAAAxxx/raw \
+  --workspace output/bloggers/MS4wLjABAAAAxxx/raw \
   --sample-count 0
 
 # 列出插件 / skill
@@ -74,20 +74,21 @@ uv run research-kit skill validate douyin-blogger-report-v2
 
 ```
 output/
-└── <blogger_slug>/                  # 通常用主页 URL 的 sec_uid
-    ├── raw/                         # 采集到的原始素材
-    │   ├── profile.json             # 博主资料
-    │   ├── sampling.json            # 抽样元信息
-    │   └── <aweme_id>/
-    │       ├── meta.json
-    │       ├── transcript.txt
-    │       ├── 1.jpg ~ 4.jpg
-    │       └── source.mp4           # 默认转录后清理；--keep-video 可保留
-    └── reports/
-        └── <run_id>/                # 每次拆解一个新 run_id
-            ├── overview.html        # 博主全景拆解
-            ├── video_<aweme_id>.html × N  # 每条代表作品独立拆解
-            └── index.json           # 产物索引
+└── bloggers/
+    └── <blogger_slug>/              # 通常用主页 URL 的 sec_uid
+        ├── raw/                     # 采集到的原始素材
+        │   ├── profile.json         # 博主资料
+        │   ├── sampling.json        # 抽样元信息
+        │   └── <aweme_id>/
+        │       ├── meta.json
+        │       ├── transcript.txt
+        │       ├── 1.jpg ~ 4.jpg
+        │       └── source.mp4       # 默认转录后清理；--keep-video 可保留
+        └── reports/
+            └── <run_id>/            # 每次拆解一个新 run_id
+                ├── overview.html    # 博主全景拆解
+                ├── video_<aweme_id>.html × N  # 每条代表作品独立拆解
+                └── index.json       # 产物索引
 ```
 
 `<blogger_slug>` 取 `sec_uid`（主页 URL 中 `/user/<sec_uid>` 段），`<run_id>` 是 UTC ISO 紧凑格式时间戳。
@@ -163,16 +164,16 @@ export WEELUME_BLOGGER_INSIGHT_IMPORT_TOKEN_PROD="<生产后端 token>"
 
 ```bash
 # 默认环境（publish-envs.toml 中 default = "local"）
-uv run research-kit publish --workspace output/<slug>
+uv run research-kit publish --workspace output/bloggers/<blogger_slug>
 
 # 指定环境
-uv run research-kit publish --workspace output/<slug> --env prod
+uv run research-kit publish --workspace output/bloggers/<blogger_slug> --env prod
 
 # 仅打印 payload，不发 HTTP，先确认产物没问题
-uv run research-kit publish --workspace output/<slug> --env prod --dry-run
+uv run research-kit publish --workspace output/bloggers/<blogger_slug> --env prod --dry-run
 
 # 临时覆盖 api_base / token，不走 envs 文件
-uv run research-kit publish --workspace output/<slug> \
+uv run research-kit publish --workspace output/bloggers/<blogger_slug> \
   --api-base http://localhost:8000 --token tk-xxx
 ```
 
@@ -225,17 +226,14 @@ cd D:\code\weelume-base\research-kit
 
 # 1) 先 dry-run，确认 payload 没问题（不发 HTTP）
 uv run research-kit publish `
-  --workspace output\MS4wLjABAAAA4LqLxq7PLK9xEB5PPazcKTG-3oInPFTDwbqiSrRL_mg `
+  --workspace output\bloggers\MS4wLjABAAAA4LqLxq7PLK9xEB5PPazcKTG-3oInPFTDwbqiSrRL_mg `
   --env prod `
   --token "<生产 token>" `
   --dry-run
 
 # 2) 真正上传到生产
 uv run research-kit publish `
-  --workspace output\MS4wLjABAAAA4LqLxq7PLK9xEB5PPazcKTG-3oInPFTDwbqiSrRL_mg `
+  --workspace output\bloggers\MS4wLjABAAAA4LqLxq7PLK9xEB5PPazcKTG-3oInPFTDwbqiSrRL_mg `
   --env prod `
   --token "<生产 token>"
 ```
-
-> ⚠️ 注意：`--token` 写在命令行里会进入 PowerShell history（默认 `~\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt`）。
-> 如果不希望 token 留痕，可以临时执行 `Set-PSReadLineOption -HistorySaveStyle SaveNothing`，或者用回 `--env` 走环境变量的方式。

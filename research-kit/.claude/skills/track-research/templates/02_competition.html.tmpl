@@ -1,0 +1,678 @@
+<!--
+============================================================================
+ 02_competition.html · 赛道分析 · 竞争格局模板（v0.1.0）
+============================================================================
+
+这是一份**骨架版**模板——直接复制到 reports/<run_id>/02_competition.html，
+然后按下面三个规则填内容：
+
+  1. `{{...}}` 占位符 → 用 sources.json / data_index.md 的具体值替换。
+     公开渠道不可得的数据**明确标注**"公开渠道不可得，本报告不提供"，
+     **严禁**编造、揣测、模拟登录。
+
+  2. `<!-- TODO(章节): ... -->` 注释 → 这里必须写实际拆解内容，
+     注释里列出了"该写什么"和"该用什么 HTML 结构"，**不要照搬注释里的措辞**——
+     它只是指引，不是文案。写完后请删掉这条 TODO 注释。
+
+  3. 本份 HTML 的 qa-card 只放在 `#matrix` 章末（一个总 qa-card），
+     不是每章都放——因为前三章是描述性内容，第 4 章才需要做"差异化空间"
+     的总拷问。
+
+填完后做两件事：
+  · 本份至少 2 张内联 SVG / CSS 数据图：Top 5 玩家定位矩阵图 + 能力对比（雷达 或 CSS 横条评分卡）
+  · 禁止外链图片，禁止任何 PNG 占位符；每张图数据点能在 raw/data_index.md 找到
+
+**不要**改 head 里的 CSS / Tailwind config / 字体；改了视觉一致性就垮。
+**不要**新增 JS——本骨架严格禁 JS。
+============================================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{track_keyword}} · 赛道分析 · 竞争格局</title>
+
+  <!-- 字体：阿里巴巴普惠体 3（chinese-fonts-cdn，自动 subset + woff2） + JetBrains Mono（代码 / 数字） -->
+  <link rel="preconnect" href="https://chinese-fonts-cdn.deno.dev" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-55-Regular/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-65-Medium/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-85-Bold/result.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    /* 把 chinese-fonts-cdn 的三个 package 别名到统一的 "Alibaba PuHuiTi" 家族，
+       通过 font-weight 自动选权重。`local()` 命中已注册的 webfont 家族，
+       不会触发额外的网络请求。 */
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-55-Regular'), local('Alibaba PuHuiTi 3 55 Regular');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-85-Bold'), local('Alibaba PuHuiTi 3 85 Bold');
+    }
+  </style>
+
+  <!-- Tailwind CDN with Weelume brand config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#F5F5F7',
+            'ink-soft': '#D4D4D8',
+            muted: '#8A8A94',
+            canvas: '#050507',
+            surface: '#0D0D12',
+            'surface-2': '#141420',
+            hairline: 'rgba(255,255,255,0.08)',
+            'hairline-strong': 'rgba(255,255,255,0.16)',
+            accent: '#A78BFA',
+            'accent-2': '#22D3EE',
+            'accent-3': '#F472B6',
+            report: '#10b981',
+            'report-deep': '#064e3b',
+            'report-soft': 'rgba(16,185,129,0.08)',
+          },
+          fontFamily: {
+            sans: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-55-Regular"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            serif: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-85-Bold"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { scrollbar-gutter: stable; }
+    html, body {
+      margin: 0; padding: 0;
+      min-height: 100%;
+      background-color: #050507;
+      color: #F5F5F7;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-55-Regular', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-feature-settings: "palt";
+      font-variant-numeric: lining-nums proportional-nums;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-optical-sizing: auto;
+      font-feature-settings: "palt";
+    }
+    /* 报告里的"中文衬线大字"位（h1/h2 + 一句话答卷 + stats 数字）
+       原本走 Noto Serif SC，现在统一切到普惠体 Bold——保留 class 名兼容
+       现存模板和已有报告，不改 markup。 */
+    .font-serif-zh {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    ::selection { background-color: rgba(167, 139, 250, 0.35); color: #fff; }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.08);
+      border-radius: 9999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); background-clip: padding-box; }
+
+    /* Hero 一句话答卷渐变文字 */
+    .text-shimmer {
+      background: linear-gradient(120deg, #F5F5F7 0%, #A78BFA 40%, #22D3EE 70%, #F5F5F7 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmerText 12s linear infinite;
+    }
+    @keyframes shimmerText {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .glass {
+      background: rgba(13,13,18,0.55);
+      backdrop-filter: saturate(160%) blur(18px);
+      -webkit-backdrop-filter: saturate(160%) blur(18px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .accent-bar { border-left: 3px solid #10b981; }
+    .accent-bar-deep { border-left: 3px solid #064e3b; }
+    .zh-justify { text-align: justify; text-justify: inter-ideograph; }
+
+    /* "必须答的问题" 答疑卡片 */
+    .qa-card {
+      border-left: 3px solid #10b981;
+      background: rgba(16,185,129,0.05);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+    }
+    .qa-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: #10b981;
+      margin-bottom: 0.6rem;
+    }
+
+    /* 表格 */
+    table.report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 14px;
+    }
+    table.report-table thead th {
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      padding: 0.75rem 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #b8aa96;
+      text-align: left;
+    }
+    table.report-table tbody td {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0.75rem 0.85rem;
+      vertical-align: top;
+      color: #D4D4D8;
+      line-height: 1.85;
+    }
+    table.report-table tbody tr:last-child td { border-bottom: none; }
+
+    /* 章节分割 */
+    .chapter-divider {
+      text-align: center;
+      letter-spacing: 1em;
+      color: rgba(255,255,255,0.15);
+      font-size: 16px;
+      margin: 3.5rem 0;
+    }
+
+    /* 引用块 */
+    blockquote.report-quote {
+      border-left: 3px solid #10b981;
+      background: rgba(255,255,255,0.04);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+      color: #e7dfd4;
+      font-size: 15.5px;
+      line-height: 1.95;
+    }
+    blockquote.report-quote cite {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: #10b981;
+      font-style: normal;
+    }
+
+    /* 内联 cite（作品标题引用） */
+    cite { font-style: normal; color: #34d399; font-weight: 500; }
+
+    /* 框架角标 */
+    .framework-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8A8A94;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    /* 正文段落 */
+    .prose-body { font-size: 15px; line-height: 2.05; color: #d6cfc4; }
+    .prose-body p { margin-bottom: 18px; }
+    .prose-body code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: rgba(255,255,255,0.06);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: #10b981;
+    }
+
+    /* 小节标题 */
+    .subhead {
+      border-left: 3px solid #10b981;
+      padding-left: 0.85rem;
+      margin: 2.5rem 0 1rem;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-65-Medium', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.04em;
+      color: #fffdf7;
+    }
+
+    strong { color: #fffdf7; font-weight: 600; }
+
+    /* 切片配图 grid（参见 SKILL.md §写作规则·切片配图建议）
+       每条作品配图必须有 figcaption 解释该画面证明什么判断；
+       alt / figcaption 都不允许出现内部词（样本 / 关键帧 / pos N 等） */
+    .frame-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 1.5rem 0;
+    }
+    .frame-grid img {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: block;
+    }
+    .frame-grid figcaption {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #8A8A94;
+      margin-top: 6px;
+      letter-spacing: 0.05em;
+      line-height: 1.6;
+    }
+
+    /* 关键判断 / 压力测试卡片 */
+    .judge-card {
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .judge-card .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: #34d399;
+      margin-bottom: 0.4rem;
+    }
+
+    /* 来源脚注：嵌在正文或大字数字中的「（来源：XX，年份）」标记。
+       强制小字 + 浅色 + 等宽，避免继承父级字号（如 text-4xl 的大数字）。
+       white-space:nowrap 让每条脚注作为不可拆分的原子单位换行。 */
+    .citation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #8A8A94;
+      vertical-align: baseline;
+      margin-left: 0.4em;
+      display: inline-block;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+    .citation a,
+    .citation-link {
+      color: #8A8A94;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(255,255,255,0.22);
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .citation a:hover,
+    .citation-link:hover {
+      color: #34d399;
+      border-bottom-color: #34d399;
+    }
+
+    /* 大数字 callout 专用结构：数字单独占一行 + 来源脚注独立小字行 + 解释段落。
+       推荐与 .stat-callout 配合使用，避免把 .citation 直接塞进 .text-4xl 父元素里 */
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+    .stat-callout .stat-value {
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700;
+      color: #10b981;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+    .stat-callout .stat-source {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #8A8A94;
+      line-height: 1.4;
+    }
+    .stat-callout .stat-source a {
+      color: #8A8A94;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(255,255,255,0.22);
+    }
+    .stat-callout .stat-source a:hover {
+      color: #34d399;
+      border-bottom-color: #34d399;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 布局：xl+ 走 [16rem | 主内容] 双列；行内目录小屏使用，xl+ 由左侧 aside 接管。
+       不允许在此外再加 <header> sticky 顶栏。-->
+  <div class="xl:grid xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10 2xl:gap-14 mx-auto max-w-7xl">
+
+  <!-- 左侧固定目录（xl+） · 4 章目录 -->
+  <aside class="hidden xl:block xl:sticky xl:top-0 xl:self-start xl:max-h-screen xl:overflow-y-auto px-8 pt-16 pb-12">
+    <p class="font-mono text-[10px] tracking-[0.35em] uppercase text-muted mb-5">Table of Contents</p>
+    <p class="font-serif-zh text-[15px] font-medium text-ink-soft mb-6">4 章目录</p>
+    <ol class="space-y-2.5 text-[13px] text-ink-soft">
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">01</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#ecosystem">赛道生态全景</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">02</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#top-players">Top 5 玩家拆解</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">03</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#matrix">对比矩阵</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">04</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#whitespace">差异化空间</a></li>
+    </ol>
+  </aside>
+
+  <main class="mx-auto max-w-3xl px-6 pt-14 pb-24 xl:mx-0 xl:max-w-3xl xl:px-10">
+
+    <!-- ====== HERO · 竞争格局页面标题 ====== -->
+    <section class="mb-16 pt-2">
+      <p class="font-mono text-[11px] tracking-[0.4em] uppercase text-report mb-4">
+        Track Research · 02 · Competitive Landscape
+      </p>
+      <h1 class="font-serif-zh text-[38px] sm:text-[46px] font-semibold leading-[1.15] tracking-[0.05em] text-ink mb-5">
+        {{track_keyword}} · 竞争格局
+      </h1>
+      <p class="text-[14.5px] leading-[1.9] tracking-[0.02em] text-ink-soft max-w-2xl">
+        <!-- TODO(竞争格局 · Hero):
+
+          ## 本块必写
+
+          - 一段 80-120 字的引言
+          - 内容：Top 5 玩家的入选标准（GMV / 粉丝量 / 媒体曝光 / 融资轮次）+ "明显头部但公开数据缺失"已记入数据缺口的玩家
+          - 语气：客观对标，类竞品分析师
+
+          ## 关键提醒
+
+          - 入选标准必须**事先讲清**——避免读者质疑"为什么这 5 个不是别的 5 个"
+          - **禁用术语**：登录墙 / 抓取 / WebSearch 等（参见 SKILL.md §2.5）
+        -->
+      </p>
+    </section>
+
+    <!-- 行内目录（小屏使用；xl+ 由左侧固定边栏接管） -->
+    <nav class="mb-16 border-t border-b border-white/10 py-8 xl:hidden">
+      <p class="font-mono text-[10.5px] tracking-[0.4em] uppercase text-muted mb-4">
+        Table of Contents · 4 章目录
+      </p>
+      <ol class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 text-[14px] text-ink-soft">
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">01</span><a class="hover:text-ink transition-colors" href="#ecosystem">赛道生态全景</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">02</span><a class="hover:text-ink transition-colors" href="#top-players">Top 5 玩家拆解</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">03</span><a class="hover:text-ink transition-colors" href="#matrix">对比矩阵</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">04</span><a class="hover:text-ink transition-colors" href="#whitespace">差异化空间</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====== 第 1 章 · 赛道生态全景 ====== -->
+    <section id="ecosystem" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·01</span>
+        <span>玩家分层 + 价值链 + 集中度</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        赛道生态全景
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第1章 · 赛道生态全景):
+
+          ## 本章必写
+
+          - 1.1 玩家分层：头部 / 腰部 / 尾部 / 新锐 四档，每档代表玩家 3-5 个
+          - 1.2 价值链拆解：供给端 → 流通端 → 用户端的链路
+          - 1.3 集中度指标：CR3 / CR5 / CR10 量级 + 结构判定（分散 / 寡头 / 垄断）
+          - 1.4 跨界玩家盘点：从相邻赛道切入的"异业搅局者" + 他们带的资源
+
+          ## 推荐 HTML 结构
+
+          - 玩家分层 → <table class="report-table">，四列：分层 / 代表玩家 / 共同特征 / 进入门槛
+          - 价值链 → 简化内联 SVG 或文字流程图
+          - 集中度 → <div class="judge-card"> + 一句话判断
+          - 跨界玩家 → <ul> 列点
+
+          ## 关键提醒
+
+          - 集中度数字若公开渠道无法估算，写"公开渠道不可得"，不要硬猜
+          - 跨界玩家必须给具体公司名，不要写"互联网巨头"这种模糊词
+        -->
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 2 章 · Top 5 玩家深度拆解 ====== -->
+    <section id="top-players" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·02</span>
+        <span>每个玩家：基本信息 + 定价 + 口碑 + 公开数据 + 媒体曝光</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        Top 5 玩家深度拆解
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第2章 · Top 5 玩家):
+
+          ## 本章必写（每个玩家固定 5 小节）
+
+          - 基本信息：成立时间 / 创始人 / 主营业务 / 融资轮次（引维基 / 巨潮 / 启信宝公开部分）
+          - 产品 / 定价：主力 SKU + 价位段 + 渠道结构（内容类 → 代表作 + 报价段）
+          - 用户口碑：公开评论抽样要点（**只引公开渠道**；不可得标"公开渠道不可得，本报告不提供"）
+          - 公开数据：粉丝量 / GMV / 销量分布（只引官方或权威媒体披露）
+          - 媒体曝光：近 6 个月关键报道（引 36 氪 / 虎嗅 / 晚点等深度报道）
+
+          ## 推荐 HTML 结构
+
+          - 每玩家 → <h3 class="subhead">Player N · 玩家名</h3>
+          - 5 小节 → 5 个 <h4 class="subhead"> 或紧凑 <div>
+          - 产品/定价 → <table class="report-table">
+          - 用户口碑 → <blockquote class="report-quote"> + <cite> 标来源
+
+          ## 硬约束
+
+          - **不绕反爬，不模拟登录**——需要 SaaS 才能看的数据明示"公开渠道不可得"
+          - 公开数据列若编造，立即删除整行（参见 SKILL.md §2.3.3 自检）
+          - 5 个玩家结构必须一致——便于读者对比
+
+          ## 关键提醒
+
+          每玩家末尾用一句话给"心智份额定位"——例如"专业人群心智第一" / "性价比代名词"
+        -->
+
+        <h3 class="subhead">Player 1 · {{player_1_name}}</h3>
+        <!-- TODO(Player 1):
+             按上述 5 小节模板填（基本信息 / 产品定价 / 用户口碑 / 公开数据 / 媒体曝光）
+             末尾给一句"心智份额定位"
+        -->
+
+        <h3 class="subhead">Player 2 · {{player_2_name}}</h3>
+        <!-- TODO(Player 2):
+             按上述 5 小节模板填（基本信息 / 产品定价 / 用户口碑 / 公开数据 / 媒体曝光）
+             末尾给一句"心智份额定位"
+        -->
+
+        <h3 class="subhead">Player 3 · {{player_3_name}}</h3>
+        <!-- TODO(Player 3):
+             按上述 5 小节模板填（基本信息 / 产品定价 / 用户口碑 / 公开数据 / 媒体曝光）
+             末尾给一句"心智份额定位"
+        -->
+
+        <h3 class="subhead">Player 4 · {{player_4_name}}</h3>
+        <!-- TODO(Player 4):
+             按上述 5 小节模板填（基本信息 / 产品定价 / 用户口碑 / 公开数据 / 媒体曝光）
+             末尾给一句"心智份额定位"
+        -->
+
+        <h3 class="subhead">Player 5 · {{player_5_name}}</h3>
+        <!-- TODO(Player 5):
+             按上述 5 小节模板填（基本信息 / 产品定价 / 用户口碑 / 公开数据 / 媒体曝光）
+             末尾给一句"心智份额定位"
+        -->
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 3 章 · 对比矩阵 ====== -->
+    <section id="matrix" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·03</span>
+        <span>定位轴 × 差异化轴 + 大对照表</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        对比矩阵
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第3章 · 对比矩阵):
+
+          ## 本章必写
+
+          - 3.1 大对照表：5 个玩家成行成列
+          - 3.2 定位矩阵图（图 1，已有 figure）：X 轴 = 定位维度 / Y 轴 = 差异化维度
+          - 3.3 能力对比表（可选）：6 个能力维度（产品力 / 品牌力 / 渠道力 / 内容力 / 服务力 / 资金力）打分对比
+
+          ## 推荐 HTML 结构
+
+          - 大对照表 → <table class="report-table">，列：定位 / 主打产品 / 主战场 / 价格档位 / 渠道结构 / 内容打法 / 用户画像 / 护城河
+          - 能力对比 → <table class="report-table">，行 = 能力维度 / 列 = 5 玩家
+          - 框架引用 → <span class="framework-tag">FRAMEWORK · POSITIONING MATRIX</span>
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 谁是市场领导者（按什么口径）？
+          - Q2 谁增长最快（近 12 个月）？
+          - Q3 谁最差异化？
+          - Q4 谁最危险（你想做的位置上）？
+          - Q5 还有什么空白？
+
+          ## 关键提醒
+
+          - 大对照表是本份 HTML 的"骨架表"——务必信息密度高、对比鲜明
+          - 矩阵图轴名要清晰（如"专业 ↔ 大众" / "性价比 ↔ 高端"），避免轴名歧义
+        -->
+      </div>
+
+      <!-- 统计图 1：Top 5 玩家定位矩阵图 -->
+      <figure class="my-8">
+        <!-- TODO(内联 SVG · {{track_keyword}} Top 5 玩家定位矩阵):
+             用 <svg viewBox="0 0 800 600"> 画散点矩阵：
+               · X 轴 = 定位维度（专业 ↔ 大众）
+               · Y 轴 = 差异化维度（性价比 ↔ 高端）
+               · 5 个玩家以圆点表示，旁边带名字标签
+               · 必含坐标轴 + 网格 + 轴名 + 数据标签
+             数据来源：raw/data_index.md 标杆玩家表
+        -->
+        <figcaption class="font-mono text-[11px] text-muted mt-3 leading-[1.6] tracking-[0.05em]">
+          图 1 · {{track_keyword}} Top 5 玩家定位矩阵（X 轴：定位维度，Y 轴：差异化维度） · 数据来源：见脚注
+        </figcaption>
+      </figure>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>Top 5 之间真正的差异维度是什么？<strong>答</strong>：</li>
+          <li>谁的护城河最深？什么构成的？<strong>答</strong>：</li>
+          <li>谁是最脆弱的头部？为什么？<strong>答</strong>：</li>
+          <li>新进入者最难绕开的"必经动作"是什么？<strong>答</strong>：</li>
+          <li>定位矩阵里的空白象限是什么？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 4 章 · 差异化空间分析 ====== -->
+    <section id="whitespace" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·04</span>
+        <span>未被满足的人群 + 未被占据的位置 + 招式空白</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        差异化空间分析
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第4章 · 差异化空间):
+
+          ## 本章必写
+
+          - 4.1 未被满足的细分人群：3-5 条 + 每条"为什么没人做 / 做不了"
+          - 4.2 未被占据的内容/产品位置：3-5 条，结构="X 价位 + Y 渠道 + Z 调性"
+          - 4.3 招式空白：现存玩家普遍没用的招式 3 条（具体动作）
+          - 4.4 给新进入者的"立脚点"建议：2-3 个推荐立脚点，每个含"切入人群 + 起手产品 + 6 个月 KPI"
+
+          ## 推荐 HTML 结构
+
+          - 细分人群 / 内容位置 → <table class="report-table">
+          - 立脚点建议 → <div class="judge-card"> 一立脚点一卡
+          - 招式空白 → <ul> 列点 + 每条 cite material 行号
+
+          ## 关键提醒
+
+          - 空白不能凭直觉编——必须能在前 3 章（生态全景 / Top 5 / 对比矩阵）找到"为什么是空白"的证据链
+          - 4.4 立脚点建议会被 05_playbook.html 引用，写得越具体，05 越好写
+        -->
+      </div>
+    </section>
+
+  </main>
+
+  </div>
+</body>
+</html>

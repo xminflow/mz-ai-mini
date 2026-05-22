@@ -60,6 +60,7 @@ interface TaskState {
   filtered: number;
   currentPhase: ManualCapturePhase;
   resultPostId: string | null;
+  lastErrorMessage: string | null;
 }
 
 function nowIso(): string {
@@ -83,6 +84,7 @@ function snapshotTask(state: TaskState): ManualCaptureSnapshot {
     filtered_count: state.filtered,
     current_phase: state.currentPhase,
     result_post_id: state.resultPostId,
+    last_error_message: state.lastErrorMessage,
   };
 }
 
@@ -146,6 +148,7 @@ export class ManualCaptureExecutor {
       filtered: 0,
       currentPhase: "validate",
       resultPostId: null,
+      lastErrorMessage: null,
     };
     this.state = state;
     this.cancelToken = { cancelled: false };
@@ -225,6 +228,7 @@ export class ManualCaptureExecutor {
       error_count: this.state.errors,
       filtered_count: this.state.filtered,
       result_post_id: this.state.resultPostId,
+      last_error_message: this.state.lastErrorMessage,
     });
   }
 
@@ -241,6 +245,7 @@ export class ManualCaptureExecutor {
       const sessionReady = await this.ensureSession();
       if (!sessionReady) {
         state.errors += 1;
+        state.lastErrorMessage = "浏览器会话未就绪";
         this.finish("error", "capture-failed");
         return;
       }
@@ -258,18 +263,28 @@ export class ManualCaptureExecutor {
       const message = err instanceof Error ? err.message : String(err);
       log.error("manualCapture.failed", { task_id: state.id, platform: state.platform, message });
       state.errors += 1;
+      state.lastErrorMessage = message.slice(0, 1024);
       if (this.cancelToken.cancelled) {
         this.finish("stopped", "user");
       } else {
         this.finish("error", message.includes("login") ? "login-required" : "capture-failed");
       }
     } finally {
-      try {
-        await this.port.closeSession?.();
-      } catch (err) {
-        log.warn("manualCapture.closeSession.failed", {
-          message: err instanceof Error ? err.message : String(err),
+      // 失败时（status === "error"）保留浏览器，便于用户排查或在已登录态下手动重试；
+      // 成功（"done"）与用户主动停止（"stopped"）则按既有约定释放会话。
+      if (state.status === "error") {
+        log.info("manualCapture.browser_kept_open_after_failure", {
+          task_id: state.id,
+          stop_reason: state.stopReason,
         });
+      } else {
+        try {
+          await this.port.closeSession?.();
+        } catch (err) {
+          log.warn("manualCapture.closeSession.failed", {
+            message: err instanceof Error ? err.message : String(err),
+          });
+        }
       }
     }
   }

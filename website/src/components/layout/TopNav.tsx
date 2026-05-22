@@ -35,7 +35,7 @@ const NAV_LINKS: NavLink[] = [
       { label: '赛道地图', href: '#', desc: '即将上线 · 决策性地图', soon: true },
     ],
   },
-  { href: '/product', label: '产品' },
+  { href: '/membership', label: '会员', matchPrefix: '/membership' },
   { href: '/consulting', label: '咨询服务' },
   { href: '/about', label: '关于' },
 ]

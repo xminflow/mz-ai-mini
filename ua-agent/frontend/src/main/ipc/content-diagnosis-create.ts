@@ -6,18 +6,26 @@ import {
   contentDiagnosisCreateSuccessSchema,
   type ContentDiagnosisCreateResult,
 } from "../../shared/contracts/content-diagnosis";
-import { parseManualCaptureUrl } from "../../shared/contracts/manual-capture";
+import {
+  manualCaptureSnapshotSchema,
+  parseManualCaptureUrl,
+  type ManualCaptureSnapshot,
+} from "../../shared/contracts/manual-capture";
 import { getSharedStore } from "../../utility/keyword-crawl/domain/library";
 import { createContentDiagnosisFromEntry } from "../services/content-diagnosis/store-fs";
 import { getUtilityHost } from "../utility-host";
 
 const CHANNEL = "content-diagnosis:create";
 
+type WaitOutcome =
+  | { kind: "snapshot"; snapshot: ManualCaptureSnapshot }
+  | { kind: "timeout" };
+
 function nowIso(): string {
   return new Date().toISOString();
 }
 
-async function waitForManualCapturePostId(): Promise<string | null> {
+async function waitForManualCaptureSnapshot(): Promise<WaitOutcome> {
   const deadline = Date.now() + 120_000;
   while (Date.now() < deadline) {
     const raw = await getUtilityHost().rpc("manualCaptureStatus", {});
@@ -27,16 +35,43 @@ async function waitForManualCapturePostId(): Promise<string | null> {
       (raw as { ok?: unknown }).ok === true
     ) {
       const task = (raw as { task?: unknown }).task;
-      if (task !== null && typeof task === "object") {
-        const t = task as { status?: unknown; result_post_id?: unknown };
-        if (t.status === "done" || t.status === "stopped" || t.status === "error") {
-          return typeof t.result_post_id === "string" ? t.result_post_id : null;
+      const parsed = manualCaptureSnapshotSchema.safeParse(task);
+      if (parsed.success) {
+        const snap = parsed.data;
+        if (snap.status === "done" || snap.status === "stopped" || snap.status === "error") {
+          return { kind: "snapshot", snapshot: snap };
         }
       }
     }
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
-  return null;
+  return { kind: "timeout" };
+}
+
+function describeCaptureFailure(snapshot: ManualCaptureSnapshot): string {
+  const detail = snapshot.last_error_message;
+  if (snapshot.status === "stopped" && snapshot.stop_reason === "user") {
+    return "采集已取消";
+  }
+  if (snapshot.status === "error") {
+    switch (snapshot.stop_reason) {
+      case "login-required":
+        return "需要先登录抖音/小红书后再试";
+      case "invalid-url":
+        return "链接无效";
+      case "unsupported-url":
+        return "链接暂不支持";
+      case "capture-failed":
+        return detail !== null && detail.length > 0
+          ? `采集失败：${detail}`
+          : "采集失败：请检查浏览器或网络后重试";
+      default:
+        return detail !== null && detail.length > 0 ? `采集失败：${detail}` : "采集失败";
+    }
+  }
+  return detail !== null && detail.length > 0
+    ? `采集完成但未定位到素材：${detail}`
+    : "采集完成后未能定位素材记录";
 }
 
 export function registerContentDiagnosisCreateHandler(): void {
@@ -73,12 +108,29 @@ export function registerContentDiagnosisCreateHandler(): void {
         return startRaw as ContentDiagnosisCreateResult;
       }
 
-      const postId = await waitForManualCapturePostId();
-      if (postId === null) {
+      const outcome = await waitForManualCaptureSnapshot();
+      if (outcome.kind === "timeout") {
         return {
           schema_version: "1",
           ok: false,
-          error: { code: "INTERNAL", message: "采集完成后未能定位素材记录" },
+          error: { code: "INTERNAL", message: "采集超时（120 秒），请重试" },
+        };
+      }
+      const snapshot = outcome.snapshot;
+      const postId = snapshot.result_post_id;
+      if (postId === null) {
+        const message = describeCaptureFailure(snapshot);
+        log.warn(
+          `${CHANNEL} no post_id status=${snapshot.status} stop_reason=${snapshot.stop_reason ?? "null"} detail=${snapshot.last_error_message ?? ""}`,
+        );
+        const code =
+          snapshot.stop_reason === "invalid-url" || snapshot.stop_reason === "unsupported-url"
+            ? ("UNSUPPORTED_URL" as const)
+            : ("INTERNAL" as const);
+        return {
+          schema_version: "1",
+          ok: false,
+          error: { code, message },
         };
       }
 

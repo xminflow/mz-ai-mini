@@ -5,11 +5,11 @@ import type { ReactNode } from 'react'
 import { requireMembership } from '@/features/membership/server/require-membership'
 
 export const metadata: Metadata = {
-  title: '第一篇 · 底层逻辑 — 微域生光自媒体运营实战',
+  title: '第一篇 · 底层逻辑 · 自媒体运营实战手册',
   description:
-    '凭什么能做成。建立"对错"思维，从公理出发判断这件事值不值得做。读完，你应当能独立写出一份"入场判断书"。',
+    '凭什么能做成 AI × 自媒体获客。建立"对错"思维，从公理出发判断这件事值不值得做。读完，你应当能独立写出一份"入场判断书"。',
   openGraph: {
-    title: '第一篇 · 底层逻辑 — 微域生光自媒体运营实战',
+    title: '第一篇 · 底层逻辑 · 自媒体运营实战手册',
     description: '三条公理 · 七节展开 · 一份入场判断书。',
   },
 }

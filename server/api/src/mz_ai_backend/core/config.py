@@ -51,7 +51,7 @@ class Settings(BaseSettings):
     wechat_pay_public_key_id: str | None = Field(default=None)
     agent_auth_token_pepper: str | None = Field(default=None)
     agent_auth_access_token_ttl_seconds: int = Field(default=1800, ge=60)
-    agent_auth_refresh_token_ttl_days: int = Field(default=30, ge=1, le=365)
+    agent_auth_refresh_token_ttl_days: int = Field(default=7, ge=1, le=365)
     agent_auth_wechat_login_session_ttl_seconds: int = Field(default=300, ge=60, le=1800)
     agent_auth_email_smtp_host: str | None = Field(default=None)
     agent_auth_email_smtp_port: int = Field(default=465, ge=1, le=65535)
@@ -68,6 +68,7 @@ class Settings(BaseSettings):
     wechat_official_encoding_aes_key: str | None = Field(default=None)
     wechat_official_qr_expire_seconds: int = Field(default=300, ge=60, le=1800)
     blogger_insight_import_token: str | None = Field(default=None)
+    track_analysis_import_token: str | None = Field(default=None)
 
     @model_validator(mode="after")
     def apply_development_defaults(self) -> "Settings":

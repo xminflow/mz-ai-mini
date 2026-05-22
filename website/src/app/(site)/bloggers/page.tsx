@@ -8,11 +8,11 @@ import {
 import { bloggerPlatformLabel } from '@/types/blogger-insight'
 
 export const metadata: Metadata = {
-  title: '博主洞察 · 我们分析过的真实博主',
+  title: '一线博主拆解 · 真实博主深度洞察',
   description:
-    '查看微域生光团队基于真实数据完成的博主深度拆解：账号画像、内容策略、变现路径、增长节点，一份一个博主。',
+    '基于真实数据完成的一线博主深度拆解：账号画像 · 内容策略 · 变现路径 · 增长节点。一份一个博主，把别人验证过的经验变成你的 AI × 自媒体获客方法。',
   openGraph: {
-    title: '博主洞察 | 微域生光',
+    title: '博主洞察 · 微域生光',
     description: '我们分析过的真实博主，逐个看他们如何长出来。',
   },
 }
@@ -56,13 +56,24 @@ export default async function BloggersPage({ searchParams }: BloggersPageProps) 
 
   return (
     <div className="mx-auto w-full max-w-[1180px] px-5 pb-24 pt-12 sm:px-8 sm:pt-16">
-      <header className="mb-10 flex flex-col gap-3">
-        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
-          Blogger Insights
-        </span>
-        <h1 className="font-serif-zh text-[28px] font-semibold leading-[1.3] text-ink sm:text-[34px]">
-          博主洞察 · 我们分析过的真实博主
-        </h1>
+      <header className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+        <div className="flex flex-col gap-3">
+          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+            Blogger Insights
+          </span>
+          <h1 className="font-serif-zh text-[28px] font-semibold leading-[1.3] text-ink sm:text-[34px]">
+            博主洞察 · 我们分析过的真实博主
+          </h1>
+        </div>
+        <a
+          href="/membership#submit-blogger"
+          className="inline-flex h-10 shrink-0 items-center gap-1.5 self-start rounded-full bg-ink px-5 text-[13px] font-medium text-canvas transition-transform hover:-translate-y-0.5 sm:self-auto"
+        >
+          想拆某个博主？提交分析
+          <svg viewBox="0 0 16 16" className="h-3 w-3" fill="currentColor" aria-hidden>
+            <path d="M8.22 3.22a.75.75 0 011.06 0l4 4a.75.75 0 010 1.06l-4 4a.75.75 0 01-1.06-1.06l2.72-2.72H3a.75.75 0 010-1.5h7.94L8.22 4.28a.75.75 0 010-1.06z" />
+          </svg>
+        </a>
       </header>
 
       <BloggerFilterPanel

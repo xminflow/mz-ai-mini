@@ -161,18 +161,26 @@ class CosStorageClient:
         content: bytes,
         object_key: str,
         content_type: str,
+        content_disposition: str | None = None,
     ) -> str:
-        """Upload one binary payload and return its public HTTPS object URL."""
+        """Upload one binary payload and return its public HTTPS object URL.
+
+        `content_disposition` 用于 HTML 等需要浏览器内联渲染（而非下载）的场景，
+        传 "inline" 可对抗 COS 默认对 HTML 文件强制 attachment 的安全策略。
+        """
 
         normalized_object_key = _normalize_object_key(object_key)
         normalized_content_type = _normalize_content_type(content_type)
+        put_kwargs: dict[str, object] = {
+            "Bucket": self._settings.bucket,
+            "Body": content,
+            "Key": normalized_object_key,
+            "ContentType": normalized_content_type,
+        }
+        if content_disposition is not None:
+            put_kwargs["ContentDisposition"] = content_disposition
         try:
-            self._client.put_object(
-                Bucket=self._settings.bucket,
-                Body=content,
-                Key=normalized_object_key,
-                ContentType=normalized_content_type,
-            )
+            self._client.put_object(**put_kwargs)
         except (CosClientError, CosServiceError) as exc:
             raise RuntimeError(
                 f"Failed to upload COS object '{normalized_object_key}': "

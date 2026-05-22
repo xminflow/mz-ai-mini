@@ -259,8 +259,9 @@ def run_collect(job: CollectJob) -> CollectResult:
     if skipped_count > 0:
         _log.info("幂等跳过 %d 条已完整样本，剩 %d 条待采", skipped_count, len(pending_picks))
 
-    # 样本之间加随机延迟，避免短时间对 iesdouyin / aweme.snssdk.com 多次解析触发反爬。
-    inter_sample_sleep_range = (1.5, 3.5)
+    # 作品之间加随机延迟，避免短时间对 iesdouyin / aweme.snssdk.com 多次解析触发反爬。
+    # 抖音的速率限制窗口在 15-60s 量级，5-10s 的间隔能让连续请求看起来不那么"机器"。
+    inter_sample_sleep_range = (5.0, 10.0)
     assert profile is not None
     for idx, (position, work) in enumerate(pending_picks):
         if idx > 0:

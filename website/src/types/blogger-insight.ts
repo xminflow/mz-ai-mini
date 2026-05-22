@@ -17,6 +17,7 @@ export interface BloggerInsightListItem {
   positioning: string | null
   tags: string[]
   cover_image_url: string | null
+  is_free: boolean
   status: string
   captured_at: string | null
   published_at: string | null

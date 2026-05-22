@@ -157,10 +157,6 @@ import {
   registerSchedulerStatusHandler,
   unregisterSchedulerStatusHandler,
 } from "./ipc/scheduler-status";
-import {
-  registerTrackAnalysisHandlers,
-  unregisterTrackAnalysisHandlers,
-} from "./ipc/track-analysis";
 import { registerSettingsHandlers, unregisterSettingsHandlers } from "./ipc/settings";
 import { registerClaudeCodeProvider } from "./services/llm/claude-code-provider";
 import { registerCodexProvider } from "./services/llm/codex-provider";
@@ -373,7 +369,6 @@ app.whenReady().then(async () => {
   registerWindowControlHandlers();
   registerSettingsHandlers();
   registerSchedulerStatusHandler();
-  registerTrackAnalysisHandlers();
   registerDouyinHotHandler();
   registerDouyinVideoHandler();
   registerTranscriptExtractHandler();
@@ -522,7 +517,6 @@ app.on("before-quit", () => {
   unregisterWindowControlHandlers();
   unregisterSettingsHandlers();
   unregisterSchedulerStatusHandler();
-  unregisterTrackAnalysisHandlers();
   unregisterDouyinHotHandler();
   unregisterDouyinVideoHandler();
   unregisterTranscriptExtractHandler();

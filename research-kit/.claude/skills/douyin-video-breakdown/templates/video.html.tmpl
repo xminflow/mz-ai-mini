@@ -1,0 +1,673 @@
+<!--
+============================================================================
+ video.html · 抖音单视频深度拆解报告模板（v0.1.0）
+============================================================================
+
+这是一份**完整可运行的骨架**——复制一份到 output/videos/<aweme_id>/report.html，
+然后按照下面三个规则填内容：
+
+  1. `{{...}}` 占位符 → 用 meta.json 的具体值替换。
+     大数（播放/点赞）走"万/亿"展示规则：例如 413000 → "41.3"，单位 → "万"。
+     字段 null 时数值位置显示 "—"，单位留空。
+     时长：duration_seconds 转为 MM:SS 格式。
+
+  2. `<!-- TODO(章节): ... -->` 注释 → 必须填实际拆解内容，注释只是指引，
+     填完后删掉注释本身。
+
+  3. 每章末尾的 `qa-card · 必须答的问题` **必须逐条作答**，这是深度的硬底线。
+
+填完后写 index.json（schema 见 SKILL.md §3.2）。
+
+CH·01 参考《第四篇·文案》小火车模型 + 五开头 + 五大结构
+CH·02 参考《第五篇·拍摄剪辑》拍摄方式 + 三优先级
+CH·03 参考《第三篇·选题》八大爆款元素 + 情绪波点四出口
+CH·04 参考全书结构抽象
+CH·05 参考《第十四章》可借鉴清单格式
+
+**不要**改 head 里的 CSS / Tailwind config / 字体；改了视觉一致性就垮。
+**不要**加 `<header>` sticky 顶栏 / `<footer>` 脚注。
+**绝对不允许**把 meta.json 里的 cover_url（抖音 CDN URL）填到 src 里。
+============================================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{title_clean}} · 视频拆解分析报告</title>
+
+  <!-- 字体：阿里巴巴普惠体 3 + JetBrains Mono -->
+  <link rel="preconnect" href="https://chinese-fonts-cdn.deno.dev" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-55-Regular/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-65-Medium/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-85-Bold/result.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-55-Regular'), local('Alibaba PuHuiTi 3 55 Regular');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-85-Bold'), local('Alibaba PuHuiTi 3 85 Bold');
+    }
+  </style>
+
+  <!-- Tailwind CDN with Weelume brand config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#F5F5F7',
+            'ink-soft': '#D4D4D8',
+            muted: '#8A8A94',
+            canvas: '#050507',
+            surface: '#0D0D12',
+            'surface-2': '#141420',
+            hairline: 'rgba(255,255,255,0.08)',
+            'hairline-strong': 'rgba(255,255,255,0.16)',
+            accent: '#A78BFA',
+            'accent-2': '#22D3EE',
+            'accent-3': '#F472B6',
+            report: '#10b981',
+            'report-deep': '#064e3b',
+            'report-soft': 'rgba(16,185,129,0.08)',
+          },
+          fontFamily: {
+            sans: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-55-Regular"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            serif: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-85-Bold"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { scrollbar-gutter: stable; }
+    html, body {
+      margin: 0; padding: 0;
+      min-height: 100%;
+      background-color: #050507;
+      color: #F5F5F7;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-55-Regular', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-feature-settings: "palt";
+      font-variant-numeric: lining-nums proportional-nums;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    body {
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(167,139,250,0.18), transparent 45%),
+        radial-gradient(circle at 85% 0%, rgba(34,211,238,0.14), transparent 50%),
+        radial-gradient(circle at 50% 110%, rgba(244,114,182,0.12), transparent 55%);
+      background-attachment: fixed;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-optical-sizing: auto;
+      font-feature-settings: "palt";
+    }
+    .font-serif-zh {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    ::selection { background-color: rgba(167, 139, 250, 0.35); color: #fff; }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.08);
+      border-radius: 9999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); background-clip: padding-box; }
+
+    .text-shimmer {
+      background: linear-gradient(120deg, #F5F5F7 0%, #A78BFA 40%, #22D3EE 70%, #F5F5F7 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmerText 12s linear infinite;
+    }
+    @keyframes shimmerText {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .glass {
+      background: rgba(13,13,18,0.55);
+      backdrop-filter: saturate(160%) blur(18px);
+      -webkit-backdrop-filter: saturate(160%) blur(18px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .accent-bar { border-left: 3px solid #10b981; }
+    .zh-justify { text-align: justify; text-justify: inter-ideograph; }
+
+    .qa-card {
+      border-left: 3px solid #10b981;
+      background: rgba(16,185,129,0.05);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+    }
+    .qa-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: #10b981;
+      margin-bottom: 0.6rem;
+    }
+
+    table.report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 14px;
+    }
+    table.report-table thead th {
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      padding: 0.75rem 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #b8aa96;
+      text-align: left;
+    }
+    table.report-table tbody td {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0.75rem 0.85rem;
+      vertical-align: top;
+      color: #D4D4D8;
+      line-height: 1.85;
+    }
+    table.report-table tbody tr:last-child td { border-bottom: none; }
+
+    .chapter-divider {
+      text-align: center;
+      letter-spacing: 1em;
+      color: rgba(255,255,255,0.15);
+      font-size: 16px;
+      margin: 3.5rem 0;
+    }
+
+    blockquote.report-quote {
+      border-left: 3px solid #10b981;
+      background: rgba(255,255,255,0.04);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+      color: #e7dfd4;
+      font-size: 15.5px;
+      line-height: 1.95;
+    }
+    blockquote.report-quote cite {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: #10b981;
+      font-style: normal;
+    }
+
+    cite { font-style: normal; color: #34d399; font-weight: 500; }
+
+    .framework-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8A8A94;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    .prose-body { font-size: 15px; line-height: 2.05; color: #d6cfc4; }
+    .prose-body p { margin-bottom: 18px; }
+    .prose-body code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: rgba(255,255,255,0.06);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: #10b981;
+    }
+
+    .subhead {
+      border-left: 3px solid #10b981;
+      padding-left: 0.85rem;
+      margin: 2.5rem 0 1rem;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-65-Medium', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.04em;
+      color: #fffdf7;
+    }
+
+    strong { color: #fffdf7; font-weight: 600; }
+
+  </style>
+</head>
+
+<body>
+  <!-- 布局：xl+ 走 [16rem | 主内容] 双列；行内目录小屏使用，xl+ 由左侧 aside 接管。-->
+  <div class="xl:grid xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10 2xl:gap-14 mx-auto max-w-7xl">
+
+  <!-- 左侧固定目录（xl+） -->
+  <aside class="hidden xl:block xl:sticky xl:top-0 xl:self-start xl:max-h-screen xl:overflow-y-auto px-8 pt-16 pb-12">
+    <p class="font-mono text-[10px] tracking-[0.35em] uppercase text-muted mb-5">Table of Contents</p>
+    <p class="font-serif-zh text-[15px] font-medium text-ink-soft mb-6">五章目录</p>
+    <ol class="space-y-2.5 text-[13px] text-ink-soft">
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">01</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#script">文案/脚本结构</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">02</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#visual">视觉/画面分析</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">03</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#viral">爆款因素诊断</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">04</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#template">可复用模板提炼</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">05</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#actions">可抄动作清单</a></li>
+    </ol>
+    <!-- 视频信息摘要 -->
+    <div class="mt-10 pt-8 border-t border-white/08">
+      <p class="font-mono text-[10px] tracking-[0.3em] uppercase text-muted mb-4">Video Info</p>
+      <div class="space-y-2 text-[12px] text-ink-soft">
+        <p><span class="text-muted">时长</span> <span class="font-mono text-report">{{duration_mm_ss}}</span></p>
+        <p><span class="text-muted">发布</span> <span class="font-mono">{{publish_date}}</span></p>
+        <p><span class="text-muted">作者</span> {{author_name}}</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="mx-auto max-w-3xl px-6 pt-14 pb-24 xl:mx-0 xl:max-w-3xl xl:px-10">
+
+    <!-- ====== HERO · 视频名片 + 一句话判断 ====== -->
+    <section id="summary" class="mb-16 pt-2">
+
+      <!-- 视频标签 -->
+      <p class="font-mono text-[10.5px] tracking-[0.4em] uppercase text-report mb-4">
+        Video Breakdown · 单视频拆解
+      </p>
+
+      <!-- 视频标题 -->
+      <h1 class="font-serif-zh text-[32px] sm:text-[40px] font-semibold leading-[1.2] tracking-[0.03em] text-ink mb-4">
+        {{title_clean}}
+      </h1>
+
+      <!-- 作者 + 元数据 -->
+      <p class="font-mono text-[12px] tracking-[0.18em] text-ink-soft mb-8 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+        <span class="text-ink">{{author_name}}</span>
+        <span class="text-white/15">·</span>
+        <span>@<span class="text-report">{{author_douyin_id}}</span></span>
+        <span class="text-white/15">·</span>
+        <span>{{duration_mm_ss}}</span>
+        <span class="text-white/15">·</span>
+        <span>{{publish_date}}</span>
+      </p>
+
+      <!-- Stats 矩阵（播放/点赞/评论/分享） -->
+      <dl class="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-6 border-y border-white/10 py-7 mb-12">
+        <div>
+          <dt class="font-mono text-[10.5px] tracking-[0.3em] uppercase text-muted mb-1.5">Plays · 播放</dt>
+          <dd class="font-serif-zh text-[26px] sm:text-[28px] font-semibold text-ink leading-none">{{play_count_value}}<span class="text-[14px] ml-1 text-ink-soft tracking-normal align-baseline">{{play_count_unit}}</span></dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10.5px] tracking-[0.3em] uppercase text-muted mb-1.5">Likes · 点赞</dt>
+          <dd class="font-serif-zh text-[26px] sm:text-[28px] font-semibold text-ink leading-none">{{digg_count_value}}<span class="text-[14px] ml-1 text-ink-soft tracking-normal align-baseline">{{digg_count_unit}}</span></dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10.5px] tracking-[0.3em] uppercase text-muted mb-1.5">Comments · 评论</dt>
+          <dd class="font-serif-zh text-[26px] sm:text-[28px] font-semibold text-ink leading-none">{{comment_count_value}}<span class="text-[14px] ml-1 text-ink-soft tracking-normal align-baseline">{{comment_count_unit}}</span></dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[10.5px] tracking-[0.3em] uppercase text-muted mb-1.5">Shares · 分享</dt>
+          <dd class="font-serif-zh text-[26px] sm:text-[28px] font-semibold text-ink leading-none">{{share_count_value}}<span class="text-[14px] ml-1 text-ink-soft tracking-normal align-baseline">{{share_count_unit}}</span></dd>
+        </div>
+      </dl>
+
+      <!-- 一句话判断 -->
+      <div class="relative my-12 px-2 py-10 text-center">
+        <span class="mx-auto mb-7 block h-px w-12 bg-report"></span>
+        <p class="font-mono text-[10.5px] tracking-[0.45em] uppercase text-report mb-5">
+          One-Sentence Verdict · 一句话判断
+        </p>
+        <p class="font-serif-zh text-[20px] sm:text-[24px] font-semibold leading-[1.7] tracking-[0.05em] text-ink max-w-2xl mx-auto">
+          <!-- TODO(summary): 用一句话说清这条视频的核心武器。
+            结构建议：「这条视频靠 <span class="text-shimmer">XXX</span>，打中了一群
+            <目标受众>的<心理任务>。」
+            核心武器词用 <span class="text-shimmer"> 包裹（1-3 个关键词）获得渐变效果。
+          -->
+        </p>
+        <span class="mx-auto mt-7 block h-px w-12 bg-report"></span>
+      </div>
+    </section>
+
+    <!-- 行内目录（小屏使用；xl+ 由左侧固定边栏接管） -->
+    <nav class="mb-16 border-t border-b border-white/10 py-8 xl:hidden">
+      <p class="font-mono text-[10.5px] tracking-[0.4em] uppercase text-muted mb-4">
+        Table of Contents · 目录
+      </p>
+      <ol class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 text-[14px] text-ink-soft">
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">01</span><a class="hover:text-ink transition-colors" href="#script">文案/脚本结构</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">02</span><a class="hover:text-ink transition-colors" href="#visual">视觉/画面分析</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">03</span><a class="hover:text-ink transition-colors" href="#viral">爆款因素诊断</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">04</span><a class="hover:text-ink transition-colors" href="#template">可复用模板提炼</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">05</span><a class="hover:text-ink transition-colors" href="#actions">可抄动作清单</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====== CH·01 · 文案/脚本结构 ====== -->
+    <section id="script" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span>CH · 01</span>
+        <span class="text-report">小火车模型</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[34px] font-semibold leading-[1.25] tracking-[0.04em] text-ink mb-8">
+        文案 / 脚本结构拆解
+      </h2>
+
+      <div class="prose-body">
+        <!-- TODO(script-head): 车头诊断（黄金三秒）
+          - 开场钩子类型：怀旧 / 反差 / 悬念 / 观点 / 共鸣
+          - 引用转录里的原始开场句（1-2句）
+          - 解释为什么这个钩子能让人不划走
+        -->
+
+        <h3 class="subhead">车头 · 黄金三秒</h3>
+        <p><!-- 车头分析正文 --></p>
+
+        <blockquote class="report-quote">
+          <!-- TODO(script-quote-1): 引用转录原文的开场句 -->
+          <cite>— 转录原文 · 开场</cite>
+        </blockquote>
+
+        <!-- TODO(script-body): 车身诊断
+          - 叙述结构归类：分类式 / 递进式 / 对比式 / 故事式 / 实验式
+          - 信息密度档位：低（≥15s/刺激）/ 中（5-15s）/ 高（≤5s）
+          - 引用 1 句中段原文
+        -->
+
+        <h3 class="subhead">车身 · 中段切片</h3>
+        <p><!-- 车身分析正文 --></p>
+
+        <blockquote class="report-quote">
+          <!-- TODO(script-quote-2): 引用转录原文的中段句 -->
+          <cite>— 转录原文 · 中段</cite>
+        </blockquote>
+
+        <!-- TODO(script-tail): 车尾分析
+          - 结尾类型：金句 / 反问 / 悬念 / 反转 / 行动建议 / 留白
+          - CTA 是否明确
+        -->
+
+        <h3 class="subhead">车尾 · 落点与 CTA</h3>
+        <p><!-- 车尾分析正文 --></p>
+      </div>
+
+      <!-- 必须答的问题 · CH·01 -->
+      <div class="qa-card">
+        <p class="qa-card-label">必须答的问题 · CH·01 文案/脚本结构</p>
+        <ol class="space-y-3 text-[14px] text-ink-soft list-decimal list-inside">
+          <li><!-- Q1: 车头靠什么钩子？属于五开头哪类？ --></li>
+          <li><!-- Q2: 车身走的是五大结构哪种？为什么？ --></li>
+          <li><!-- Q3: 信息密度是哪个档位？ --></li>
+          <li><!-- Q4: 车尾是什么类型？有没有 CTA？ --></li>
+          <li><!-- Q5: 用一句抽象公式概括这条视频的完整句式框架 --></li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider" aria-hidden="true">· · ·</div>
+
+    <!-- ====== CH·02 · 视觉/画面分析 ====== -->
+    <section id="visual" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span>CH · 02</span>
+        <span class="text-report">三优先级</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[34px] font-semibold leading-[1.25] tracking-[0.04em] text-ink mb-8">
+        视觉 / 画面分析
+      </h2>
+
+      <div class="prose-body">
+        <!-- TODO(visual-frames): 4 帧逐析（或合并归纳）
+          对 1.jpg / 2.jpg / 3.jpg / 4.jpg 分别或统一描述：
+          - 拍摄方式归类：口播1.0 / 口播2.0 / Vlog / 情景剧
+          - 构图与镜头：人物是否在场 / 机位 / 运镜
+          - 色调与画质：色系 / 光线 / 清晰度
+        -->
+
+        <h3 class="subhead">拍摄方式 · 关键帧描述</h3>
+        <p><!-- 帧分析正文 --></p>
+
+        <!-- TODO(visual-subtitle): 字幕与标识分析
+          - 字体大小 / 颜色 / 关键词高亮
+          - 贴纸 / 特效
+        -->
+
+        <h3 class="subhead">字幕 · 标识风格</h3>
+        <p><!-- 字幕分析正文 --></p>
+
+        <!-- TODO(visual-quality): 三优先级评估（音质 > 画质 > 表现力）
+          - 从转录质量推断收音（缺词多 = 收音差）
+          - 从关键帧判断画质
+          - 表现力：自然度 / 念稿感
+        -->
+
+        <h3 class="subhead">三优先级评估</h3>
+        <p><!-- 三优先级正文 --></p>
+      </div>
+
+      <!-- 必须答的问题 · CH·02 -->
+      <div class="qa-card">
+        <p class="qa-card-label">必须答的问题 · CH·02 视觉/画面分析</p>
+        <ol class="space-y-3 text-[14px] text-ink-soft list-decimal list-inside">
+          <li><!-- Q1: 拍摄方式归到哪类？最强的视觉记忆点是什么？ --></li>
+          <li><!-- Q2: 三优先级里哪项最弱？影响观看体验了吗？ --></li>
+          <li><!-- Q3: 字幕风格是否帮助了内容传播？ --></li>
+          <li><!-- Q4: 如果只改一个画面元素来提升完播率，应该改哪个？ --></li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider" aria-hidden="true">· · ·</div>
+
+    <!-- ====== CH·03 · 爆款因素诊断 ====== -->
+    <section id="viral" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span>CH · 03</span>
+        <span class="text-report">8 大爆款元素</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[34px] font-semibold leading-[1.25] tracking-[0.04em] text-ink mb-8">
+        爆款因素诊断
+      </h2>
+
+      <div class="prose-body">
+        <!-- 8 大爆款元素打分表（必须生成） -->
+        <h3 class="subhead">8 大爆款元素</h3>
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th>元素</th>
+              <th>激活</th>
+              <th>激活方式（一句话）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- TODO(viral-table): 逐行填写 8 个元素
+              ✓ = 激活，— = 未激活
+            -->
+            <tr><td>成本</td><td><!-- ✓ / — --></td><td><!-- 激活方式 --></td></tr>
+            <tr><td>人群</td><td><!-- ✓ / — --></td><td><!-- 激活方式 --></td></tr>
+            <tr><td>猎奇</td><td><!-- ✓ / — --></td><td><!-- 激活方式 --></td></tr>
+            <tr><td>反差</td><td><!-- ✓ / — --></td><td><!-- 激活方式 --></td></tr>
+            <tr><td>最差</td><td><!-- ✓ / — --></td><td><!-- 激活方式 --></td></tr>
+            <tr><td>怀旧</td><td><!-- ✓ / — --></td><td><!-- 激活方式 --></td></tr>
+            <tr><td>荷尔蒙</td><td><!-- ✓ / — --></td><td><!-- 激活方式 --></td></tr>
+            <tr><td>头牌</td><td><!-- ✓ / — --></td><td><!-- 激活方式 --></td></tr>
+          </tbody>
+        </table>
+
+        <!-- TODO(viral-emotion): 情绪波点四出口识别 -->
+        <h3 class="subhead">情绪波点 · 四出口</h3>
+        <p><!-- 情绪波点正文：来自哪个象限？为什么？ --></p>
+
+        <!-- TODO(viral-psychology): 受众心理任务（主导 1-2 种） -->
+        <h3 class="subhead">受众心理任务</h3>
+        <p><!-- 心理任务分析正文 --></p>
+      </div>
+
+      <!-- 必须答的问题 · CH·03 -->
+      <div class="qa-card">
+        <p class="qa-card-label">必须答的问题 · CH·03 爆款因素诊断</p>
+        <ol class="space-y-3 text-[14px] text-ink-soft list-decimal list-inside">
+          <li><!-- Q1: 8 大元素里哪 1-2 个是核心火种？为什么？ --></li>
+          <li><!-- Q2: 情绪波点来自四出口哪个象限？ --></li>
+          <li><!-- Q3: 受众主要完成什么心理任务（主导 1-2 种）？ --></li>
+          <li><!-- Q4: 最弱的完播点在哪个时间段？为什么？ --></li>
+          <li><!-- Q5: 为什么这条视频的播放量是现在这个水平？诊断性判断。 --></li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider" aria-hidden="true">· · ·</div>
+
+    <!-- ====== CH·04 · 可复用模板提炼 ====== -->
+    <section id="template" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span>CH · 04</span>
+        <span class="text-report">结构抽象</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[34px] font-semibold leading-[1.25] tracking-[0.04em] text-ink mb-8">
+        可复用模板提炼
+      </h2>
+
+      <div class="prose-body">
+        <!-- TODO(template-formula): 三段模板句式
+          - 车头模板：[钩子类型]：[抽象句式]
+          - 车身骨架：[结构名] × [节数] × [切片频率]
+          - 车尾公式：[结语类型] + [CTA类型]
+        -->
+
+        <h3 class="subhead">三段模板句式</h3>
+
+        <!-- 用 glass 卡片展示模板公式 -->
+        <div class="glass rounded-xl p-5 my-5 space-y-4">
+          <div>
+            <p class="font-mono text-[10px] tracking-[0.3em] uppercase text-muted mb-1.5">车头模板 · Hook</p>
+            <p class="text-ink text-[15px]"><!-- 车头抽象句式 --></p>
+          </div>
+          <div class="border-t border-white/08 pt-4">
+            <p class="font-mono text-[10px] tracking-[0.3em] uppercase text-muted mb-1.5">车身骨架 · Body</p>
+            <p class="text-ink text-[15px]"><!-- 车身结构骨架 --></p>
+          </div>
+          <div class="border-t border-white/08 pt-4">
+            <p class="font-mono text-[10px] tracking-[0.3em] uppercase text-muted mb-1.5">车尾公式 · Tail</p>
+            <p class="text-ink text-[15px]"><!-- 车尾落点公式 --></p>
+          </div>
+        </div>
+
+        <!-- TODO(template-title): 标题模板
+          去掉专有名词，留下可复用的框架句式
+        -->
+        <h3 class="subhead">标题模板</h3>
+        <p><!-- 标题模板公式 --></p>
+
+        <!-- TODO(template-scope): 适用场景 + 复用风险 -->
+        <h3 class="subhead">适用场景 · 复用边界</h3>
+        <p><!-- 适用场景分析正文 --></p>
+      </div>
+
+      <!-- 必须答的问题 · CH·04 -->
+      <div class="qa-card">
+        <p class="qa-card-label">必须答的问题 · CH·04 可复用模板提炼</p>
+        <ol class="space-y-3 text-[14px] text-ink-soft list-decimal list-inside">
+          <li><!-- Q1: 车头/车身/车尾各自的模板句式是什么？ --></li>
+          <li><!-- Q2: 标题模板抽象成什么？ --></li>
+          <li><!-- Q3: 哪类账号最适合直接套这个模板？ --></li>
+          <li><!-- Q4: 复用时必须保留什么、可以替换什么？ --></li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider" aria-hidden="true">· · ·</div>
+
+    <!-- ====== CH·05 · 可抄动作清单 ====== -->
+    <section id="actions" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span>CH · 05</span>
+        <span class="text-report">三层清单</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[34px] font-semibold leading-[1.25] tracking-[0.04em] text-ink mb-8">
+        可抄动作清单
+      </h2>
+
+      <div class="prose-body">
+        <!-- 立刻能抄（3-5条） -->
+        <h3 class="subhead">立刻能抄的动作</h3>
+        <!-- TODO(actions-now): 3-5条，以动词开头，具体到操作层面 -->
+        <ul class="space-y-3 text-[14.5px] text-ink-soft list-none">
+          <li class="flex gap-3"><span class="text-report font-mono text-[11px] shrink-0 mt-[5px]">▸</span><span><!-- 动作1 --></span></li>
+          <li class="flex gap-3"><span class="text-report font-mono text-[11px] shrink-0 mt-[5px]">▸</span><span><!-- 动作2 --></span></li>
+          <li class="flex gap-3"><span class="text-report font-mono text-[11px] shrink-0 mt-[5px]">▸</span><span><!-- 动作3 --></span></li>
+        </ul>
+
+        <!-- 需要训练才能抄（2-3条） -->
+        <h3 class="subhead">需要训练才能抄的能力</h3>
+        <!-- TODO(actions-train): 2-3条，说明需要积累什么前提 -->
+        <ul class="space-y-3 text-[14.5px] text-ink-soft list-none">
+          <li class="flex gap-3"><span class="text-accent font-mono text-[11px] shrink-0 mt-[5px]">◆</span><span><!-- 能力1 --></span></li>
+          <li class="flex gap-3"><span class="text-accent font-mono text-[11px] shrink-0 mt-[5px]">◆</span><span><!-- 能力2 --></span></li>
+        </ul>
+
+        <!-- 基本抄不了（1-2条） -->
+        <h3 class="subhead">基本抄不了的要素</h3>
+        <!-- TODO(actions-cant): 1-2条，说明是哪种个人禀赋或资源壁垒 -->
+        <ul class="space-y-3 text-[14.5px] text-ink-soft list-none">
+          <li class="flex gap-3"><span class="text-muted font-mono text-[11px] shrink-0 mt-[5px]">✕</span><span><!-- 无法复制的要素1 --></span></li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+  </div>
+</body>
+</html>

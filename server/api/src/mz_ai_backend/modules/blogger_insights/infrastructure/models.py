@@ -57,6 +57,7 @@ class BloggerInsightModel(Base):
     published_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=False), nullable=True
     )
+    is_free: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     status: Mapped[str] = mapped_column(String(16), nullable=False, default="published")
     is_deleted: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     created_at: Mapped[datetime] = mapped_column(

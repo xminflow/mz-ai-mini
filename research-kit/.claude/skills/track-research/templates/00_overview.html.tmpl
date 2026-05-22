@@ -1,0 +1,804 @@
+<!--
+============================================================================
+ 00_overview.html · 赛道分析 · 执行摘要模板（v0.1.0）
+============================================================================
+
+这是一份**骨架版**模板——直接复制到 reports/<run_id>/00_overview.html，
+然后按下面三个规则填内容：
+
+  1. `{{...}}` 占位符 → 用 sources.json / data_index.md 的具体值替换。
+     大数字（市场规模 / 营收 / 用户数等）走"万 / 亿"展示规则；字段不可得时
+     数值位置显示 "—"，单位留空。
+
+  2. `<!-- TODO(章节): ... -->` 注释 → 这里必须写实际拆解内容，
+     注释里列出了"该写什么"和"该用什么 HTML 结构"，**不要照搬注释里的措辞**——
+     它只是指引，不是文案。写完后请删掉这条 TODO 注释。
+
+  3. 本份 HTML 是引流型摘要，**不放 qa-card·必须答的问题**——封面摘要的目的是
+     30 秒拉住读者，不做拷问。深度问答留给 01-05。
+
+填完后做两件事：
+  · 顶部数据图区直接写内联 <svg viewBox="0 0 800 360">（市场规模 3 年走势），禁止外链图片，禁止任何 PNG 占位符
+  · 生成 index.json / index.md（schema 见 SKILL.md）
+
+**不要**改 head 里的 CSS / Tailwind config / 字体；改了视觉一致性就垮。
+**不要**加 `<header>` sticky 顶栏；左侧 sticky 目录 + 行内目录已足够。
+**不要**新增 JS——本骨架严格禁 JS。
+============================================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{track_keyword}} · 赛道分析 · 执行摘要</title>
+
+  <!-- 字体：阿里巴巴普惠体 3（chinese-fonts-cdn，自动 subset + woff2） + JetBrains Mono（代码 / 数字） -->
+  <link rel="preconnect" href="https://chinese-fonts-cdn.deno.dev" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-55-Regular/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-65-Medium/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-85-Bold/result.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    /* 把 chinese-fonts-cdn 的三个 package 别名到统一的 "Alibaba PuHuiTi" 家族，
+       通过 font-weight 自动选权重。`local()` 命中已注册的 webfont 家族，
+       不会触发额外的网络请求。 */
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-55-Regular'), local('Alibaba PuHuiTi 3 55 Regular');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-85-Bold'), local('Alibaba PuHuiTi 3 85 Bold');
+    }
+  </style>
+
+  <!-- Tailwind CDN with Weelume brand config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#F5F5F7',
+            'ink-soft': '#D4D4D8',
+            muted: '#8A8A94',
+            canvas: '#050507',
+            surface: '#0D0D12',
+            'surface-2': '#141420',
+            hairline: 'rgba(255,255,255,0.08)',
+            'hairline-strong': 'rgba(255,255,255,0.16)',
+            accent: '#A78BFA',
+            'accent-2': '#22D3EE',
+            'accent-3': '#F472B6',
+            report: '#10b981',
+            'report-deep': '#064e3b',
+            'report-soft': 'rgba(16,185,129,0.08)',
+          },
+          fontFamily: {
+            sans: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-55-Regular"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            serif: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-85-Bold"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { scrollbar-gutter: stable; }
+    html, body {
+      margin: 0; padding: 0;
+      min-height: 100%;
+      background-color: #050507;
+      color: #F5F5F7;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-55-Regular', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-feature-settings: "palt";
+      font-variant-numeric: lining-nums proportional-nums;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-optical-sizing: auto;
+      font-feature-settings: "palt";
+    }
+    /* 报告里的"中文衬线大字"位（h1/h2 + 一句话答卷 + stats 数字）
+       原本走 Noto Serif SC，现在统一切到普惠体 Bold——保留 class 名兼容
+       现存模板和已有报告，不改 markup。 */
+    .font-serif-zh {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    ::selection { background-color: rgba(167, 139, 250, 0.35); color: #fff; }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.08);
+      border-radius: 9999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); background-clip: padding-box; }
+
+    /* Hero 一句话答卷渐变文字 */
+    .text-shimmer {
+      background: linear-gradient(120deg, #F5F5F7 0%, #A78BFA 40%, #22D3EE 70%, #F5F5F7 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmerText 12s linear infinite;
+    }
+    @keyframes shimmerText {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .glass {
+      background: rgba(13,13,18,0.55);
+      backdrop-filter: saturate(160%) blur(18px);
+      -webkit-backdrop-filter: saturate(160%) blur(18px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .accent-bar { border-left: 3px solid #10b981; }
+    .accent-bar-deep { border-left: 3px solid #064e3b; }
+    .zh-justify { text-align: justify; text-justify: inter-ideograph; }
+
+    /* "必须答的问题" 答疑卡片 */
+    .qa-card {
+      border-left: 3px solid #10b981;
+      background: rgba(16,185,129,0.05);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+    }
+    .qa-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: #10b981;
+      margin-bottom: 0.6rem;
+    }
+
+    /* 表格 */
+    table.report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 14px;
+    }
+    table.report-table thead th {
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      padding: 0.75rem 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #b8aa96;
+      text-align: left;
+    }
+    table.report-table tbody td {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0.75rem 0.85rem;
+      vertical-align: top;
+      color: #D4D4D8;
+      line-height: 1.85;
+    }
+    table.report-table tbody tr:last-child td { border-bottom: none; }
+
+    /* 章节分割 */
+    .chapter-divider {
+      text-align: center;
+      letter-spacing: 1em;
+      color: rgba(255,255,255,0.15);
+      font-size: 16px;
+      margin: 3.5rem 0;
+    }
+
+    /* 引用块 */
+    blockquote.report-quote {
+      border-left: 3px solid #10b981;
+      background: rgba(255,255,255,0.04);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+      color: #e7dfd4;
+      font-size: 15.5px;
+      line-height: 1.95;
+    }
+    blockquote.report-quote cite {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: #10b981;
+      font-style: normal;
+    }
+
+    /* 内联 cite（作品标题引用） */
+    cite { font-style: normal; color: #34d399; font-weight: 500; }
+
+    /* 框架角标 */
+    .framework-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8A8A94;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    /* 正文段落 */
+    .prose-body { font-size: 15px; line-height: 2.05; color: #d6cfc4; }
+    .prose-body p { margin-bottom: 18px; }
+    .prose-body code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: rgba(255,255,255,0.06);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: #10b981;
+    }
+
+    /* 小节标题 */
+    .subhead {
+      border-left: 3px solid #10b981;
+      padding-left: 0.85rem;
+      margin: 2.5rem 0 1rem;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-65-Medium', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.04em;
+      color: #fffdf7;
+    }
+
+    strong { color: #fffdf7; font-weight: 600; }
+
+    /* 切片配图 grid（参见 SKILL.md §写作规则·切片配图建议）
+       每条作品配图必须有 figcaption 解释该画面证明什么判断；
+       alt / figcaption 都不允许出现内部词（样本 / 关键帧 / pos N 等） */
+    .frame-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 1.5rem 0;
+    }
+    .frame-grid img {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: block;
+    }
+    .frame-grid figcaption {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #8A8A94;
+      margin-top: 6px;
+      letter-spacing: 0.05em;
+      line-height: 1.6;
+    }
+
+    /* 关键判断 / 压力测试卡片 */
+    .judge-card {
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .judge-card .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: #34d399;
+      margin-bottom: 0.4rem;
+    }
+
+    /* 来源脚注：嵌在正文或大字数字中的「（来源：XX，年份）」标记。
+       强制小字 + 浅色 + 等宽，避免继承父级字号（如 text-4xl 的大数字）。
+       white-space:nowrap 让每条脚注作为不可拆分的原子单位换行。 */
+    .citation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #8A8A94;
+      vertical-align: baseline;
+      margin-left: 0.4em;
+      display: inline-block;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+    .citation a,
+    .citation-link {
+      color: #8A8A94;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(255,255,255,0.22);
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .citation a:hover,
+    .citation-link:hover {
+      color: #34d399;
+      border-bottom-color: #34d399;
+    }
+
+    /* 大数字 callout 专用结构：数字单独占一行 + 来源脚注独立小字行 + 解释段落。
+       推荐与 .stat-callout 配合使用，避免把 .citation 直接塞进 .text-4xl 父元素里 */
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+    .stat-callout .stat-value {
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700;
+      color: #10b981;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+    .stat-callout .stat-source {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #8A8A94;
+      line-height: 1.4;
+    }
+    .stat-callout .stat-source a {
+      color: #8A8A94;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(255,255,255,0.22);
+    }
+    .stat-callout .stat-source a:hover {
+      color: #34d399;
+      border-bottom-color: #34d399;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 布局：xl+ 走 [16rem | 主内容] 双列；行内目录小屏使用，xl+ 由左侧 aside 接管。
+       不允许在此外再加 <header> sticky 顶栏。-->
+  <div class="xl:grid xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10 2xl:gap-14 mx-auto max-w-7xl">
+
+  <!-- 左侧固定目录（xl+） · 8 章目录 -->
+  <aside class="hidden xl:block xl:sticky xl:top-0 xl:self-start xl:max-h-screen xl:overflow-y-auto px-8 pt-16 pb-12">
+    <p class="font-mono text-[10px] tracking-[0.35em] uppercase text-muted mb-5">Table of Contents</p>
+    <p class="font-serif-zh text-[15px] font-medium text-ink-soft mb-6">8 章目录</p>
+    <ol class="space-y-2.5 text-[13px] text-ink-soft">
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">01</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#timestamp">数据时效声明</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">02</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#hero">标题 / 钩子 / 一句话判断</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">03</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#three-numbers">三个关键数字</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">04</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#why-now">为什么是现在</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">05</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#verdicts">关键结论</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">06</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#audience">适合谁做</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">07</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#answers">能帮你回答什么</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">08</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#guide">阅读指南</a></li>
+    </ol>
+  </aside>
+
+  <main class="mx-auto max-w-3xl px-6 pt-14 pb-24 xl:mx-0 xl:max-w-3xl xl:px-10">
+
+    <!-- ====== 报告页眉 + 顶部数据图 ====== -->
+    <!-- 禁止装饰性 SVG 封面。顶部只允许：报告标签 + 大标题 + 一张承载数据的内联 SVG。-->
+    <section class="mb-12">
+      <p class="font-mono text-[11px] tracking-[0.4em] uppercase text-report mb-4">
+        Track Research · 00 · Executive Summary
+      </p>
+      <h1 class="font-serif-zh text-[40px] sm:text-[52px] font-semibold leading-[1.15] tracking-[0.05em] text-ink mb-8">
+        {{track_keyword}} · 执行摘要
+      </h1>
+
+      <!-- 顶部市场规模数据图（必填，取代旧装饰 SVG）
+           创作 agent 必须把这里替换为一张承载真实数据的内联 SVG，要求：
+             · viewBox="0 0 800 360"
+             · 含柱状或折线（市场规模 3 年走势）+ 坐标轴 + 网格 + 数据标签
+             · 预测段 stroke-dasharray + opacity 0.55 + "E" 文字标注
+             · 每个数据点能在 raw/data_index.md 找到
+             · 配色：主色 #10b981 / 辅色 #A78BFA / 文字 #F5F5F7
+           不允许出现"渐变背景 + 几何装饰 + 文字 callout 卡"的纯装饰 SVG。
+      -->
+      <figure class="my-8">
+        <!-- TODO(顶部市场规模数据图):
+             用内联 <svg viewBox="0 0 800 360"> 画市场规模 3 年走势柱状/折线图，
+             含坐标轴、网格、数据标签、预测段虚线。删掉本 TODO 注释后再开始画。
+        -->
+        <figcaption class="font-mono text-[11px] text-muted mt-3 leading-[1.6] tracking-[0.05em]">
+          图 0 · {{track_keyword}} 市场规模走势（含 CAGR 与预测） · 数据来源：见脚注
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- 行内目录（小屏使用；xl+ 由左侧固定边栏接管） -->
+    <nav class="mb-16 border-t border-b border-white/10 py-8 xl:hidden">
+      <p class="font-mono text-[10.5px] tracking-[0.4em] uppercase text-muted mb-4">
+        Table of Contents · 8 章目录
+      </p>
+      <ol class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 text-[14px] text-ink-soft">
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">01</span><a class="hover:text-ink transition-colors" href="#timestamp">数据时效声明</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">02</span><a class="hover:text-ink transition-colors" href="#hero">标题 / 钩子 / 一句话判断</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">03</span><a class="hover:text-ink transition-colors" href="#three-numbers">三个关键数字</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">04</span><a class="hover:text-ink transition-colors" href="#why-now">为什么是现在</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">05</span><a class="hover:text-ink transition-colors" href="#verdicts">关键结论</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">06</span><a class="hover:text-ink transition-colors" href="#audience">适合谁做</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">07</span><a class="hover:text-ink transition-colors" href="#answers">能帮你回答什么</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">08</span><a class="hover:text-ink transition-colors" href="#guide">阅读指南</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====== 第 1 节 · 数据时效声明 ====== -->
+    <section id="timestamp" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">SEC·01</span>
+        <span>数据透明度 · Data Freshness</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        数据时效声明
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第1节 · 数据时效声明):
+
+          ## 本章必写
+
+          - 一段说明：报告生成日期 {{report_date}} + 主要数据时效窗（市场规模截至 X 年、趋势引用至 Y E）
+          - 一张数据缺口表：缺口项 / 影响范围 / 替代依据，至少 3 行
+          - 一句"证据等级总判定"：用一句话给出整体证据强度（如"主流数据为机构 X / 机构 Y 双源交叉"）
+
+          ## 推荐 HTML 结构
+
+          - 缺口表 → <table class="report-table">，三列必填
+          - 证据强度总判定 → <blockquote class="report-quote"> 或独立段落
+          - **禁用**：S 级 / A 级一手 / 置信度 等术语（参见 SKILL.md §2.5）
+
+          ## 关键提醒
+
+          这是给读者的"信号"——告诉读者"哪些可以信、哪些请自行判断"，而不是给作者交代工程过程。
+          缺口要写成"读者视角"：影响读者哪类决策、有什么替代依据。
+        -->
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 2 节 · 标题 + 钩子开场 + 一句话判断 ====== -->
+    <section id="hero" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">SEC·02</span>
+        <span>30 秒开场 · Investor Memo Style</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        标题 · 钩子 · 一句话判断
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第2节 · 标题/钩子/一句话判断):
+
+          ## 本章必写
+
+          - 大标题：用 <h3 class="subhead"> 起头，**必须含锋利判断或反差数字**
+            示例："家用咖啡机：18% CAGR 背后，前五品牌已吃掉 73% 市场"
+          - 钩子开场（1 段 80-120 字）：反常识 / 强对比 / 紧迫性，**三选一切入**
+          - 一句话判断写在下方的"一句话答卷"区块（≤ 30 字，必须含 看好 / 谨慎 / 看空 表态）
+
+          ## 推荐 HTML 结构
+
+          - 大标题 → <h3 class="subhead">
+          - 钩子段落 → 普通 <p>，避免列表
+          - 渐变高亮短语 → <span class="text-shimmer">关键词</span>
+
+          ## 关键提醒
+
+          语气：投资备忘录。句子短、动词强、判断词不含糊。
+          钩子三选一，**不要同时用三种**——会稀释冲击力。
+        -->
+      </div>
+
+      <!-- 一句话判断 -->
+      <div class="relative my-12 px-2 py-10 text-center">
+        <span class="mx-auto mb-7 block h-px w-12 bg-report"></span>
+        <p class="font-mono text-[10.5px] tracking-[0.45em] uppercase text-report mb-5">
+          One-Sentence Verdict · 一句话判断
+        </p>
+        <p class="font-serif-zh text-[22px] sm:text-[26px] font-semibold leading-[1.7] tracking-[0.05em] text-ink max-w-2xl mx-auto">
+          <!-- TODO(一句话判断):
+
+            ## 本块必写
+
+            - 一句话讲清核心矛盾 + 机会窗口，**总长 ≤ 30 字**
+            - 必须含一个明确表态：看好 / 谨慎 / 看空
+            - 用 <span class="text-shimmer">关键短语</span> 包裹 2-3 个判断词获得渐变效果
+
+            ## 结构建议
+
+            "{{track_keyword}} 是一个 <现状形容>、但 <转折> 的赛道——
+             未来 <时间窗> 内 <谁> 能赢，<谁> 会被甩出去。"
+
+            ## 关键提醒
+
+            ≤ 30 字是硬约束（参见 SKILL.md §2.3.1 硬底线）。
+            不要在这里再放数字 callout——三个关键数字留给下一节。
+          -->
+        </p>
+        <span class="mx-auto mt-7 block h-px w-12 bg-report"></span>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 3 节 · 三个关键数字 ====== -->
+    <section id="three-numbers" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">SEC·03</span>
+        <span>关键数字 · Key Numbers</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        三个关键数字
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第3节 · 三个关键数字):
+
+          ## 本章必写
+
+          - 3 个数字 callout，每个：
+            · 数字本身（font-serif-zh text-[28px] 大字 + 单位 align-baseline）
+            · 标签（font-mono uppercase 小字）
+            · 一句洞察解释（为什么这个数字对决策有价值）+ 来源脚注
+
+          ## 推荐 HTML 结构
+
+          - 三栏 → <dl class="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-6 border-y border-white/10 py-7">
+          - 每栏 → <div> 包数字 + 标签 + 解释
+          - 来源 → 行尾 "（来源：[机构](URL)，年份）"
+
+          ## 硬约束
+
+          - 三个数字**必须是事实类**（fact），**禁止预测数字**（参见 write.md §3.1 硬底线 3）
+          - 每个数字必须能在 data_index.md 找到行号
+          - 选数字优先级：① 打破直觉的（反常识）② 头部集中度 / 规模量级 ③ 增速反转；无论哪类，都必须是"帮助读者 30 秒内做决策"的信息
+        -->
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 4 节 · 为什么是现在 ====== -->
+    <section id="why-now" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">SEC·04</span>
+        <span>时间窗口 · Why Now</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        为什么是现在
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第4节 · 为什么是现在):
+
+          ## 本章必写
+
+          - 3 条窗口期分析，每条结构：
+            · 标签：政策窗 / 技术窗 / 需求窗 / 资本窗 / 平台窗 五选一
+            · 标题（一句话）：含具体时间锚点（如"小家电以旧换新政策延长至 2026 年底"）
+            · 主体（2-3 句）：什么时候开 / 什么时候关 / 为什么现在最优
+            · 窗口剩余时长：半年 / 1 年 / 2 年 三档明示
+
+          ## 推荐 HTML 结构
+
+          - 每条窗口 → <div class="judge-card">
+          - 类型标签 → <div class="label">（用颜色区分类型）
+          - 标题 → <h4 class="subhead"> 起头
+          - 主体 → <p>
+
+          ## 硬约束
+
+          每条窗口期必须有"具体时间锚点"（参见 SKILL.md §2.3.1 硬底线 4）——
+          没有时间锚点的判断 = 空话，删掉重写。
+        -->
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 5 节 · 关键结论 ====== -->
+    <section id="verdicts" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">SEC·05</span>
+        <span>3-5 条主结论 · Bullish / Cautious / Bearish</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        关键结论
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第5节 · 关键结论):
+
+          ## 本章必写
+
+          - 3-5 条主结论，每条结构：
+            · 立场标签：✅ 看好 / ⚠️ 谨慎 / ❌ 看空
+            · 一句话结论（强陈述句）
+            · 2-3 条证据（cite material/ 行号）
+
+          ## 推荐 HTML 结构
+
+          - 主表 → <table class="report-table">，三列：立场 / 结论 / 证据要点
+          - 或：每条结论 → <div class="judge-card"> + 表态色标签
+
+          ## 硬约束
+
+          - **不要重复第 3 节的反常识数字**——这一节是判断，不是数字
+          - 每条结论必须配证据（参见 SKILL.md §2.3.1 硬底线 5）
+          - 不允许"我们认为"/"可以认为"开头——直接给立场词
+        -->
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 6 节 · 适合谁做 ====== -->
+    <section id="audience" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">SEC·06</span>
+        <span>读者筛选 · Who Should / Shouldn't Enter</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        适合谁做
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第6节 · 适合谁做):
+
+          ## 本章必写
+
+          - 三栏 grid：✅ 适合 / ⚠️ 慎入 / ❌ 不适合
+          - 每栏 3-5 条具体画像
+          - 每条画像必须具体到"角色 + 资源 + 心力门槛"
+            示例："独立咖啡师转评测博主 + 有 3 年门店经验 + 能投入 6 个月零收入"
+
+          ## 推荐 HTML 结构
+
+          ```
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="judge-card"><div class="label" style="color:#34d399">✅ 适合</div><ul>...</ul></div>
+            <div class="judge-card"><div class="label" style="color:#fbbf24">⚠️ 慎入</div><ul>...</ul></div>
+            <div class="judge-card"><div class="label" style="color:#f87171">❌ 不适合</div><ul>...</ul></div>
+          </div>
+          ```
+
+          ## 关键提醒
+
+          画像不能笼统——"想做副业的人"是空话；"全职在一线城市、月入 ≥ 1.5 万、有 5 年家电导购经验"才是画像。
+        -->
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 7 节 · 这份报告能帮你回答什么 ====== -->
+    <section id="answers" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">SEC·07</span>
+        <span>问题清单 · What You'll Get Answered</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        这份报告能帮你回答什么
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第7节 · 能帮你回答什么):
+
+          ## 本章必写
+
+          - 5-8 条**能回答的**具体问题，每条**纯文字**列出（**禁止挂跨页跳转链接**——本份 HTML 独立完整，读者不需要跳到其他 5 份）
+          - 一个独立小节列**不能回答的**问题（数据缺口决定）—— 这是诚实但又不暴露工程术语的做法
+
+          ## 推荐 HTML 结构
+
+          ```
+          <ol class="list-decimal pl-5 space-y-2">
+            <li>这个赛道未来 3 年的增长曲线长什么样？</li>
+            <li>头部 5 家是谁？我能挤进哪个位置？</li>
+            <li>新进入者从零到一第 1 / 3 / 6 个月该做什么？</li>
+            ...
+          </ol>
+          ```
+
+          末尾"不能回答"区块 → <div class="judge-card"> + 浅灰标签
+
+          ## 硬约束
+
+          - 问题必须**具体**——"如何做好这个赛道"是空泛问句，禁止
+          - **严禁出现 `<a href="0X_xxx.html">` 跨页跳转链接**——6 份 HTML 之间互不跳转
+        -->
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 8 节 · 阅读指南 ====== -->
+    <section id="guide" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">SEC·08</span>
+        <span>使用说明 · How to Read</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        阅读指南
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第8节 · 阅读指南):
+
+          ## 本章必写
+
+          - 一段说明（约 150 字）：本份报告的读法逻辑
+          - 推荐路径列表，分 4 档读者：
+            · 30 秒读者：只看本份 00 即可
+            · 5 分钟读者：00 + 01 + 关注 05 的"你适合做这个吗"
+            · 30 分钟读者：完整通读 01-05
+            · 1 小时读者：先看 02 + 03 决定立项方向，再看 05 排施工计划
+
+          ## 推荐 HTML 结构
+
+          - 4 档读者 → <table class="report-table"> 两列（读者时长 / 推荐顺序）
+          - 或：<ol class="list-decimal pl-5 space-y-2">
+
+          ## 关键提醒
+
+          这一节的目的是**帮读者节省时间**——给出"按时间长度选读法"的清单。
+          不要写成"建议先读 01 再读 02"这种线性流水账。
+        -->
+      </div>
+    </section>
+
+  </main>
+
+  </div>
+</body>
+</html>

@@ -5,11 +5,11 @@ import type { ReactNode } from 'react'
 import { requireMembership } from '@/features/membership/server/require-membership'
 
 export const metadata: Metadata = {
-  title: '第四篇 · 上 — 文案与通用结构 · 微域生光自媒体运营实战',
+  title: '第四篇·上 · 文案与通用结构 · 自媒体运营实战手册',
   description:
-    '怎么把人留下来。文案的本质是拖时间，结构服务于信息密度，每 5 秒都要给一个新刺激。',
+    '怎么把人留下来。文案的本质是拖时间，结构服务于信息密度，每 5 秒都要给一个新刺激——自媒体获客文案的底层方法论。',
   openGraph: {
-    title: '第四篇 · 上 — 文案与通用结构 · 微域生光自媒体运营实战',
+    title: '第四篇·上 · 文案与通用结构 · 自媒体运营实战手册',
     description: '一个公式 · 八节展开 · 一份文案训练手册。',
   },
 }

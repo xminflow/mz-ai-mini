@@ -260,7 +260,7 @@ def _run_pipeline_with_options(
 def cmd_collect(
     plugin: str = typer.Option("douyin-browser", "--plugin", help="collector 名称"),
     url: str = typer.Option(..., "--url", help="博主主页 URL"),
-    workspace: Path = typer.Option(..., "--workspace", help="工作区目录（通常 output/<blogger>/raw/）"),
+    workspace: Path = typer.Option(..., "--workspace", help="工作区目录（通常 output/bloggers/<blogger_slug>/raw/）"),
     sample_count: int = typer.Option(0, "--sample-count", help="采样作品数量；0 表示按总作品数自动计算（10-20）"),
     run_id: str | None = typer.Option(None, "--run-id"),
     # 浏览器选项
@@ -427,6 +427,11 @@ def cmd_publish(
         "--cover-image-url",
         help="卡片封面图 URL",
     ),
+    is_free: bool = typer.Option(
+        False,
+        "--is-free/--no-is-free",
+        help="标记为免费内容（无会员也可查看），默认为会员专属",
+    ),
     status: str = typer.Option(
         "published",
         "--status",
@@ -436,6 +441,14 @@ def cmd_publish(
         False,
         "--dry-run",
         help="仅打印 payload，不发起 HTTP 请求",
+    ),
+    skip_cos_upload: bool = typer.Option(
+        False,
+        "--skip-cos-upload",
+        help=(
+            "跳过 frame 图的 COS 上传，HTML 占位符保留原样。"
+            "用于本地排查，必须配 --dry-run 一起用——保留占位符的 payload 不应真实 POST。"
+        ),
     ),
     timeout: float = typer.Option(
         60.0,
@@ -451,6 +464,13 @@ def cmd_publish(
         publish_blogger_insight,
         resolve_publish_target,
     )
+
+    if skip_cos_upload and not dry_run:
+        console.print(
+            "[red]--skip-cos-upload 必须与 --dry-run 同时使用："
+            "保留 data-rk-frame 占位符的 HTML 上传到后端会渲染失败。[/red]"
+        )
+        raise typer.Exit(code=1)
 
     try:
         target = resolve_publish_target(
@@ -473,7 +493,9 @@ def cmd_publish(
             positioning=positioning,
             tags=tuple(tags),
             cover_image_url=cover_image_url,
+            is_free=is_free,
             status=status,
+            skip_cos_upload=skip_cos_upload,
         )
     except PublishError as exc:
         console.print(f"[red]解析失败：{exc}[/red]")
@@ -511,6 +533,169 @@ def cmd_publish(
     )
 
 
+@app.command("publish-track")
+def cmd_publish_track(
+    workspace: Path = typer.Option(
+        ...,
+        "--workspace",
+        help=(
+            "赛道工作区目录（含 reports/<run_id>/index.json），"
+            "也可直接传入 reports/<run_id> 或 reports 目录"
+        ),
+    ),
+    env: str | None = typer.Option(
+        None,
+        "--env",
+        envvar="RESEARCH_KIT_PUBLISH_ENV",
+        help=(
+            "命名环境（在 publish-envs.toml 的 [envs.*] 中定义）；"
+            "缺省取文件中的 default。"
+        ),
+    ),
+    envs_file: Path | None = typer.Option(
+        None,
+        "--envs-file",
+        envvar="RESEARCH_KIT_PUBLISH_ENVS_FILE",
+        help="覆盖默认 publish-envs.toml 路径",
+    ),
+    api_base: str | None = typer.Option(
+        None,
+        "--api-base",
+        help="Weelume 后端基地址，覆盖 --env 选中的 api_base",
+    ),
+    token: str | None = typer.Option(
+        None,
+        "--token",
+        help=(
+            "后端 track_analysis_import_token，通过 X-Import-Token 请求头校验。"
+            "显式传入时覆盖环境配置；缺省读取 WEELUME_TRACK_ANALYSIS_IMPORT_TOKEN"
+            "（或所选环境 publish-envs.toml 中的 track_token_env 字段指定的变量）。"
+        ),
+    ),
+    run_id: str | None = typer.Option(
+        None,
+        "--run-id",
+        help="指定要上传的 reports/<run_id>；缺省取字典序最大的最近一次",
+    ),
+    slug: str | None = typer.Option(
+        None,
+        "--slug",
+        help=(
+            "自定义 slug。缺省使用 index.json.track_slug，"
+            "若仍缺失则退回 workspace 目录名。"
+        ),
+    ),
+    industry: str | None = typer.Option(
+        None,
+        "--industry",
+        help="行业标签（用于卡片筛选），例如 AI/内容 / 教育 / 出海",
+    ),
+    tags: list[str] = typer.Option(
+        [],
+        "--tag",
+        help="补充标签，可重复传入",
+    ),
+    cover_image_url: str | None = typer.Option(
+        None,
+        "--cover-image-url",
+        help="卡片封面图 URL（可选）",
+    ),
+    is_free: bool = typer.Option(
+        False,
+        "--is-free/--no-is-free",
+        help="标记为免费内容（无会员也可查看），默认为会员专属",
+    ),
+    status: str = typer.Option(
+        "published",
+        "--status",
+        help="published / draft",
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="仅打印 payload 概要，不发起 HTTP 请求",
+    ),
+    timeout: float = typer.Option(
+        60.0,
+        "--timeout",
+        help="HTTP 超时秒数",
+    ),
+) -> None:
+    """把 workspace 中的赛道分析报告上传到 Weelume 后端。"""
+
+    from research_kit.publishing import (
+        PublishError,
+        load_track_publish_payload,
+        publish_track_analysis,
+        resolve_track_publish_target,
+    )
+
+    try:
+        target = resolve_track_publish_target(
+            env_name=env,
+            api_base_override=api_base,
+            token_override=token,
+            envs_file=envs_file,
+        )
+    except PublishError as exc:
+        console.print(f"[red]环境解析失败：{exc}[/red]")
+        raise typer.Exit(code=1) from exc
+
+    try:
+        payload = load_track_publish_payload(
+            workspace=workspace,
+            run_id=run_id,
+            slug_override=slug,
+            industry_override=industry,
+            extra_tags=tuple(tags),
+            cover_image_url=cover_image_url,
+            is_free=is_free,
+            status=status,
+        )
+    except PublishError as exc:
+        console.print(f"[red]解析失败：{exc}[/red]")
+        raise typer.Exit(code=1) from exc
+
+    env_label = target.env_name or "(未命名)"
+    total_html_bytes = sum(len(r.html.encode("utf-8")) for r in payload.reports)
+    console.print(
+        f"[bold]准备上传赛道：[/bold] env={env_label} api_base={target.api_base} "
+        f"slug={payload.slug} keyword={payload.track_keyword} stance={payload.stance} "
+        f"status={payload.status} run={payload.source_run_id}"
+    )
+    console.print(
+        f"  region={payload.region} audience={payload.audience} "
+        f"industry={payload.industry} tags={list(payload.tags)} "
+        f"reports={len(payload.reports)} total_html={total_html_bytes} bytes"
+    )
+    for report in payload.reports:
+        console.print(
+            f"    - {report.key}: {report.title} "
+            f"(sections={report.sections}, charts={report.charts}, "
+            f"html={len(report.html)} chars)"
+        )
+
+    if dry_run:
+        console.print("[yellow]--dry-run 已开启，跳过 HTTP 上传。[/yellow]")
+        return
+
+    try:
+        result = publish_track_analysis(
+            payload=payload,
+            api_base=target.api_base,
+            token=target.token,
+            timeout_seconds=timeout,
+        )
+    except PublishError as exc:
+        console.print(f"[red]上传失败：{exc}[/red]")
+        raise typer.Exit(code=1) from exc
+
+    console.print(
+        f"[green]上传成功[/green]: env={env_label} slug={result.slug} "
+        f"keyword={result.track_keyword} published_at={result.published_at}"
+    )
+
+
 @app.command("run")
 def cmd_run(
     collector: str = typer.Option("douyin-browser", "--collector"),
@@ -534,6 +719,51 @@ def cmd_run(
         stages=["collect", "analyze", "report"],
         run_id=run_id,
     )
+
+
+@app.command("video-collect")
+def cmd_video_collect(
+    url: str = typer.Option(..., "--url", help="单条抖音视频 URL（分享链接 / 完整链接 / v.douyin.com 短链）"),
+    workspace_root: Path = typer.Option(
+        Path("output/videos"),
+        "--workspace-root",
+        help="输出根目录；视频产物写入 <workspace-root>/<aweme_id>/",
+    ),
+    proxy: str | None = typer.Option(None, "--proxy", envvar="HTTPS_PROXY", help="HTTPS 代理，例如 http://127.0.0.1:7078"),
+    keep_video: bool = typer.Option(False, "--keep-video", help="保留下载的 video.mp4（默认转录后删除）"),
+    skip_transcribe: bool = typer.Option(False, "--skip-transcribe", help="跳过转录（只抓元数据和关键帧）"),
+    skip_frames: bool = typer.Option(False, "--skip-frames", help="跳过 ffmpeg 抽帧"),
+    frame_count: int = typer.Option(4, "--frame-count", min=1, max=8, help="抽帧数量"),
+) -> None:
+    """下载单条抖音视频，提取元数据 / 关键帧 / 转录，写入 workspace-root/<aweme_id>/。"""
+    import json as _json
+
+    from research_kit.collectors.single_video.runner import (
+        VideoCollectOptions,
+        run_video_collect,
+    )
+
+    opts = VideoCollectOptions(
+        proxy=proxy,
+        keep_video=keep_video,
+        skip_transcribe=skip_transcribe,
+        skip_frames=skip_frames,
+        frame_count=frame_count,
+    )
+    result = run_video_collect(url, workspace_root.resolve(), options=opts)
+    summary = {
+        "ok": not any("video_download" in f for f in result.failures),
+        "aweme_id": result.aweme_id,
+        "workspace": str(result.workspace),
+        "title": result.meta.title[:80],
+        "duration_seconds": result.meta.duration_seconds,
+        "frames": len(result.frame_paths),
+        "transcript_ok": result.transcript_ok,
+        "failures": result.failures,
+    }
+    console.print_json(_json.dumps(summary, ensure_ascii=False))
+    if not summary["ok"]:
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":  # pragma: no cover

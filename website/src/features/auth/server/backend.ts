@@ -208,3 +208,13 @@ export async function exchangeWechatLogin(loginSessionId: string): Promise<AuthP
   )
   return normalizeAuthPayload(payload)
 }
+
+// dev-only：直连后端 POST /agent-auth/dev/fake-login 拿 token；后端 env=production 时会 404。
+export async function devFakeLogin(username?: string): Promise<AuthPayload> {
+  const body = username && username.trim() !== '' ? { username: username.trim() } : {}
+  const payload = await requestUpstream<UpstreamAuthPayload>('/agent-auth/dev/fake-login', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
+  return normalizeAuthPayload(payload)
+}

@@ -33,6 +33,18 @@ const config: NextConfig = {
       },
     ]
   },
+  // www.weelume.com → weelume.com 兜底重定向。优先依赖 CDN/DNS 层的 301；
+  // 这里作为应用层 safety net，避免 CDN 配置漏掉时两个域名同时被搜索引擎收录。
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.weelume.com' }],
+        destination: 'https://weelume.com/:path*',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default config

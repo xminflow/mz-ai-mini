@@ -5,11 +5,11 @@ import type { ReactNode } from 'react'
 import { requireMembership } from '@/features/membership/server/require-membership'
 
 export const metadata: Metadata = {
-  title: '序言 · 写在前面 — 微域生光自媒体运营实战',
+  title: '序言 · 写在前面 · 自媒体运营实战手册',
   description:
-    '这本书要解决什么、不解决什么。做对，比做多重要——带着三个问题开始阅读。',
+    '这本书要解决什么、不解决什么。做对，比做多重要——带着三个问题开始阅读，把 AI × 自媒体获客的方法论真正读进去。',
   openGraph: {
-    title: '序言 · 写在前面 — 微域生光自媒体运营实战',
+    title: '序言 · 写在前面 · 自媒体运营实战手册',
     description: '三句反共识金句 · 五类读者画像 · 三种阅读路径。',
   },
 }

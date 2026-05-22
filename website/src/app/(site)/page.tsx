@@ -1,18 +1,21 @@
 import type { Metadata } from 'next'
 import { HomeContent } from '@/components/pages/HomeContent'
-import { fetchLibraryList } from '@/services/library'
+import { fetchLibraryHubData } from '@/services/library'
 
 export const metadata: Metadata = {
-  title: '微域生光 — AI 时代，真实的案例才更有价值',
+  title: 'AI × 自媒体，让客户源源不断地找上门 · 微域生光',
   description:
-    '自媒体是当下最大的获客通路，信任建立在内容上。AI 让二手解读过剩，真实跑出来的案例反而稀缺——我们拆解爆款、追踪博主、读懂赛道，让内容 + AI 工具放大你的产能。',
+    '自媒体营销获客不要再做无效尝试。真实赛道分析 + 一线博主拆解 + 可落地的百万级大V运营实战精炼方法论 + 能上手的 AI 信息工具，把别人验证过的经验变成你的方法，助你消除信息差、实现流量与客源的极速增长。',
   openGraph: {
-    title: '微域生光 — AI 时代，真实的案例才更有价值',
-    description: '内容是内核，AI 是生产工具——只有两者结合，才能产生真正的价值。',
+    title: 'AI × 自媒体，让客户源源不断地找上门 · 微域生光',
+    description:
+      '自媒体获客不再做无效尝试——赛道分析、博主拆解、运营方法论与 AI 信息工具，把别人验证过的经验变成你的方法。',
   },
 }
 
-export default function HomePage() {
-  const initial = fetchLibraryList({ limit: 0 })
-  return <HomeContent counts={initial.counts} />
+export const dynamic = 'force-dynamic'
+
+export default async function HomePage() {
+  const hub = await fetchLibraryHubData()
+  return <HomeContent counts={hub.counts} />
 }

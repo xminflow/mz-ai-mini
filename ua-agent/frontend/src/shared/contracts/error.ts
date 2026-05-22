@@ -42,8 +42,6 @@ export const errorCodeSchema = z.enum([
   "LOAD_MORE_TIMEOUT",
   // Introduced by 实时热点 (Douyin open hot-list page)
   "DOUYIN_HOT_FETCH_FAILED",
-  // Introduced by AI 分析报告 (weelume-base remote reports)
-  "TRACK_ANALYSIS_FETCH_FAILED",
   // Introduced by 抖音视频下载链接 (on-demand share-page → mp4 resolver)
   "DOUYIN_VIDEO_RESOLVE_FAILED",
   "VIDEO_RESOLVE_FAILED",

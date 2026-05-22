@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from typing import Generic, TypeVar
+from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, ConfigDict
 
@@ -20,6 +20,8 @@ class ApiResponse(BaseModel, Generic[T]):
     code: str
     message: str
     data: T | None
+    # 仅在业务异常场景下按需携带结构化细节（如付费墙所需的元数据），成功响应不填此字段。
+    details: dict[str, Any] | None = None
     request_id: str
     timestamp: datetime
 
@@ -56,6 +58,7 @@ def error_response(
     *,
     error_code: ErrorCode | str,
     message: str,
+    details: dict[str, Any] | None = None,
     request_id: str | None = None,
     timestamp: datetime | None = None,
 ) -> ApiResponse[None]:
@@ -65,6 +68,7 @@ def error_response(
         code=str(error_code),
         message=message,
         data=None,
+        details=details,
         request_id=_resolve_request_id(request_id),
         timestamp=_resolve_timestamp(timestamp),
     )

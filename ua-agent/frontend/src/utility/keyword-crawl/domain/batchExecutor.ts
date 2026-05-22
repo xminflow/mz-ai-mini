@@ -1148,7 +1148,16 @@ export class BatchExecutor {
         representative_errors: run.representative,
       });
 
-      await this.closeSessionAfterKeyword(run, log);
+      // 关键词失败时保留浏览器，便于用户排查或在已登录态下手动重试；
+      // 成功（"done"）与用户主动停止（"stopped"）则按既有约定释放会话，确保下一个关键词从干净环境开始。
+      if (run.status === "error") {
+        log.info("keyword.browser_kept_open_after_failure", {
+          keyword: run.keywordText,
+          stop_reason: run.stopReason,
+        });
+      } else {
+        await this.closeSessionAfterKeyword(run, log);
+      }
 
       if (earlyEndReason !== null) break;
     }

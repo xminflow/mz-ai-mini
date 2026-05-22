@@ -48,36 +48,69 @@ export async function readAuthCookies(): Promise<AuthCookieSnapshot> {
   }
 }
 
-export async function writeAuthCookies(payload: AuthPayload): Promise<void> {
-  const cookieStore = await cookies()
-  cookieStore.set(
-    ACCESS_TOKEN_COOKIE,
-    payload.tokens.access_token,
-    cookieOptions(payload.tokens.access_token_expires_at),
-  )
-  cookieStore.set(
-    REFRESH_TOKEN_COOKIE,
-    payload.tokens.refresh_token,
-    cookieOptions(payload.tokens.refresh_token_expires_at),
-  )
-  cookieStore.set(
-    ACCESS_EXPIRES_COOKIE,
-    payload.tokens.access_token_expires_at,
-    metadataCookieOptions(payload.tokens.access_token_expires_at),
-  )
-  cookieStore.set(
-    REFRESH_EXPIRES_COOKIE,
-    payload.tokens.refresh_token_expires_at,
-    metadataCookieOptions(payload.tokens.refresh_token_expires_at),
+// Next.js 15.5+ 在 Server Component 渲染期间禁止改 cookie；只有 Server Action / Route Handler 可以。
+// getWebsiteAuthState 同时被 layout(Server Component) 和 /api/auth/* (Route Handler) 复用，
+// 因此 write/clear 在 layout 路径上需要显式跳过，避免抛错把整个页面打挂。
+// 跳过不是静默兜底：会发出 console.warn，调用方拿到 false 也能据此推断写入是否生效。
+function isReadonlyCookieContextError(error: unknown): boolean {
+  if (!(error instanceof Error)) return false
+  return /Cookies can only be modified in a Server Action or Route Handler/i.test(
+    error.message,
   )
 }
 
-export async function clearAuthCookies(): Promise<void> {
+export async function writeAuthCookies(payload: AuthPayload): Promise<boolean> {
   const cookieStore = await cookies()
-  cookieStore.delete(ACCESS_TOKEN_COOKIE)
-  cookieStore.delete(REFRESH_TOKEN_COOKIE)
-  cookieStore.delete(ACCESS_EXPIRES_COOKIE)
-  cookieStore.delete(REFRESH_EXPIRES_COOKIE)
+  try {
+    cookieStore.set(
+      ACCESS_TOKEN_COOKIE,
+      payload.tokens.access_token,
+      cookieOptions(payload.tokens.access_token_expires_at),
+    )
+    cookieStore.set(
+      REFRESH_TOKEN_COOKIE,
+      payload.tokens.refresh_token,
+      cookieOptions(payload.tokens.refresh_token_expires_at),
+    )
+    cookieStore.set(
+      ACCESS_EXPIRES_COOKIE,
+      payload.tokens.access_token_expires_at,
+      metadataCookieOptions(payload.tokens.access_token_expires_at),
+    )
+    cookieStore.set(
+      REFRESH_EXPIRES_COOKIE,
+      payload.tokens.refresh_token_expires_at,
+      metadataCookieOptions(payload.tokens.refresh_token_expires_at),
+    )
+    return true
+  } catch (error) {
+    if (isReadonlyCookieContextError(error)) {
+      console.warn(
+        '[auth] writeAuthCookies skipped: called from a read-only render context; cookie write deferred until next route handler / server action',
+      )
+      return false
+    }
+    throw error
+  }
+}
+
+export async function clearAuthCookies(): Promise<boolean> {
+  const cookieStore = await cookies()
+  try {
+    cookieStore.delete(ACCESS_TOKEN_COOKIE)
+    cookieStore.delete(REFRESH_TOKEN_COOKIE)
+    cookieStore.delete(ACCESS_EXPIRES_COOKIE)
+    cookieStore.delete(REFRESH_EXPIRES_COOKIE)
+    return true
+  } catch (error) {
+    if (isReadonlyCookieContextError(error)) {
+      console.warn(
+        '[auth] clearAuthCookies skipped: called from a read-only render context; cookie cleanup deferred until next route handler / server action',
+      )
+      return false
+    }
+    throw error
+  }
 }
 
 export function isExpired(value: string | null): boolean {

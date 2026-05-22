@@ -3,7 +3,6 @@ import { lazy } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   Bot,
-  Compass,
   Globe2,
   LineChart,
   Settings as SettingsIcon,
@@ -35,10 +34,6 @@ const Persona = lazy(() => import("@/features/persona").then((m) => ({ default: 
 
 const BloggerAnalysis = lazy(() =>
   import("@/features/blogger-analysis").then((m) => ({ default: m.BloggerAnalysis })),
-);
-
-const TrackAnalysis = lazy(() =>
-  import("@/features/track-analysis").then((m) => ({ default: m.TrackAnalysis })),
 );
 
 const AiChat = lazy(() => import("@/features/ai-chat").then((m) => ({ default: m.AiChat })));
@@ -76,18 +71,6 @@ export const navItems: readonly NavItem[] = [
     Element: BloggerAnalysis,
     children: [
       { path: "/blogger-analysis/douyin", label: "抖音博主拆解" },
-      { path: "/blogger-analysis/xiaohongshu", label: "小红书博主拆解" },
-    ],
-  },
-  {
-    path: "/track-analysis/*",
-    navTo: "/track-analysis",
-    label: "AI分析报告",
-    icon: Compass,
-    Element: TrackAnalysis,
-    children: [
-      { path: "/track-analysis/track", label: "赛道分析" },
-      { path: "/track-analysis/product", label: "产品分析" },
     ],
   },
   {

@@ -39,6 +39,7 @@ class BloggerInsightSummary(BaseModel):
     positioning: str | None
     tags: tuple[str, ...]
     cover_image_url: str | None
+    is_free: bool
     status: BloggerInsightStatus
     captured_at: datetime | None
     published_at: datetime | None
@@ -47,7 +48,7 @@ class BloggerInsightSummary(BaseModel):
 
 
 class BloggerInsight(BloggerInsightSummary):
-    """博主洞察聚合根，包含完整 HTML 报告与结构化摘要。"""
+    """博主洞察聚合根，HTML 报告作为 TEXT 字段随聚合一同持久化。"""
 
     signature: str | None
     report_html: str

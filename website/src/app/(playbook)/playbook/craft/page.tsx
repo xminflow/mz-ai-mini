@@ -5,11 +5,11 @@ import type { ReactNode } from 'react'
 import { requireMembership } from '@/features/membership/server/require-membership'
 
 export const metadata: Metadata = {
-  title: '第五篇 · 拍摄 · 剪辑 · 表现力 — 微域生光自媒体运营实战',
+  title: '第五篇 · 拍摄 / 剪辑 / 表现力 · 自媒体运营实战手册',
   description:
     '把脚本变成视频。拍摄方式、置景、画质音质、表现力、提词器、剪辑、剪映工具、AI 边界——读完，你应当能独立完成一条 60-90 秒可发布视频。',
   openGraph: {
-    title: '第五篇 · 拍摄 · 剪辑 · 表现力 — 微域生光自媒体运营实战',
+    title: '第五篇 · 拍摄 / 剪辑 / 表现力 · 自媒体运营实战手册',
     description: '画质音质优先 · 器材按预算配 · 三分拍七分剪。',
   },
 }

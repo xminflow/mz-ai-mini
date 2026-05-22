@@ -13,6 +13,8 @@ from ..application import (
     ChangeAgentUsernameCommand,
     ChangeAgentUsernameResult,
     CreateAgentWechatLoginSessionResult,
+    DEV_FAKE_LOGIN_DEFAULT_USERNAME,
+    DevFakeLoginCommand,
     ExchangeAgentWechatLoginCommand,
     LogoutAgentSessionCommand,
     LogoutAgentSessionResult,
@@ -124,6 +126,17 @@ class ExchangeAgentWechatLoginRequest(BaseModel):
 
     def to_command(self, *, login_session_id: int) -> ExchangeAgentWechatLoginCommand:
         return ExchangeAgentWechatLoginCommand(login_session_id=login_session_id)
+
+
+class DevFakeLoginRequest(BaseModel):
+    """dev-only fake login 请求体；不传 username 时使用默认 dev-local 账号。"""
+
+    model_config = ConfigDict(frozen=True)
+
+    username: str = DEV_FAKE_LOGIN_DEFAULT_USERNAME
+
+    def to_command(self) -> DevFakeLoginCommand:
+        return DevFakeLoginCommand(username=self.username)
 
 
 class AgentWechatLoginSessionResponse(BaseModel):

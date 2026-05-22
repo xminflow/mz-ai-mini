@@ -54,12 +54,6 @@ import type { SessionStartResult } from "../contracts/keyword/session-start";
 import type { SessionStatusResult } from "../contracts/keyword/session-status";
 import type { SchedulerEvent, SchedulerStatusResult } from "../contracts/scheduling";
 import type {
-  TrackAnalysisGetReportRequest,
-  TrackAnalysisGetReportResult,
-  TrackAnalysisListRequest,
-  TrackAnalysisListResult,
-} from "../contracts/track-analysis";
-import type {
   AiChatCancelResult,
   AiChatEvent,
   AiChatListSkillsResult,
@@ -208,12 +202,6 @@ declare global {
       };
       douyinHot: {
         list: (args: { board: DouyinHotBoardKey }) => Promise<DouyinHotListResult>;
-      };
-      trackAnalysis: {
-        list: (args?: TrackAnalysisListRequest) => Promise<TrackAnalysisListResult>;
-        getReport: (
-          args: TrackAnalysisGetReportRequest,
-        ) => Promise<TrackAnalysisGetReportResult>;
       };
       douyinVideo: {
         resolve: (args: DouyinVideoResolveRequest) => Promise<DouyinVideoResolveResult>;

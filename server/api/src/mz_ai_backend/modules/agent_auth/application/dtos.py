@@ -376,3 +376,24 @@ def build_access_token_expiry(*, ttl_seconds: int) -> datetime:
 
 def build_refresh_token_expiry(*, ttl_days: int) -> datetime:
     return datetime.now(UTC) + timedelta(days=ttl_days)
+
+
+# dev-only: 本地调试用，跳过微信扫码直接以指定用户名换 token。生产环境必须在路由层拒绝。
+# 默认 username 必须满足 USERNAME_INPUT_PATTERN（3-32 个字符，仅 a-z / 0-9 / _），不可含 hyphen。
+DEV_FAKE_LOGIN_DEFAULT_USERNAME = "dev_local"
+
+
+class DevFakeLoginCommand(BaseModel):
+    """Input command for the dev-only fake login backdoor.
+
+    用法仅限本地开发联调，绕过微信扫码与公众号回调；handler 必须在 env=production 时拒绝调用。
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    username: str = DEV_FAKE_LOGIN_DEFAULT_USERNAME
+
+    @field_validator("username")
+    @classmethod
+    def validate_username(cls, value: str) -> str:
+        return normalize_agent_username_input(value)

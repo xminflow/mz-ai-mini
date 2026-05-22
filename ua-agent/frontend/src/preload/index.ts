@@ -259,16 +259,6 @@ const api = {
     list: (args: { board: "hot" | "seeding" | "entertainment" | "society" }): Promise<unknown> =>
       ipcRenderer.invoke("douyin-hot:list", args),
   },
-  trackAnalysis: {
-    list: (args: {
-      cursor?: string;
-      limit?: number;
-      industry?: string;
-      keyword?: string;
-    } = {}): Promise<unknown> => ipcRenderer.invoke("track-analysis:list", args),
-    getReport: (args: { id: string }): Promise<unknown> =>
-      ipcRenderer.invoke("track-analysis:get-report", args),
-  },
   douyinVideo: {
     resolve: (args: { share_url: string }): Promise<unknown> =>
       ipcRenderer.invoke("douyin-video:resolve", args),

@@ -5,11 +5,11 @@ import type { ReactNode } from 'react'
 import { requireMembership } from '@/features/membership/server/require-membership'
 
 export const metadata: Metadata = {
-  title: '番外卷 · 行业战斗卷 — 微域生光自媒体运营实战',
+  title: '番外卷 · 行业战斗卷 · 自媒体运营实战手册',
   description:
-    '本地实体、专业人士、教育培训、实物零售、数字产品——五大行业怎么把正卷方法论用起来。不重复方法，只讲落地。',
+    '本地实体、专业人士、教育培训、实物零售、数字产品——五大行业怎么把 AI × 自媒体获客方法论用起来。不重复方法，只讲落地。',
   openGraph: {
-    title: '番外卷 · 行业战斗卷 — 微域生光自媒体运营实战',
+    title: '番外卷 · 行业战斗卷 · 自媒体运营实战手册',
     description: '行业案例不是抄答案，是看别人怎么做选择题。',
   },
 }

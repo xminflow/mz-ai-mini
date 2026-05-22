@@ -10,6 +10,7 @@ import { getAccessTokenOrThrow, resolveMembershipApiBaseUrl } from '@/app/api/me
 export const metadata: Metadata = {
   title: '我的账号',
   description: '管理微域生光官网账号的个人信息与会员状态。',
+  robots: { index: false, follow: false },
 }
 
 async function loadMembership(): Promise<MyMembershipResponse> {

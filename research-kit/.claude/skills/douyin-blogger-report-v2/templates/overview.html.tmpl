@@ -6,7 +6,7 @@
 这是一份**完整可运行的骨架**——直接复制一份到 reports/<run_id>/overview.html，
 然后按照下面三个规则填内容：
 
-  1. `{{...}}` 占位符 → 用 profile.json / 转录素材的具体值替换。
+  1. `{{...}}` 占位符 → 用 profile.json / 作品口播文案的具体值替换。
      大数（粉丝 / 获赞）走"万 / 亿"展示规则：例如 413000 → "41.3"，单位 → "万"。
      字段 null 时数值位置显示 "—"，单位留空。
 
@@ -109,7 +109,6 @@
 
   <style>
     :root { color-scheme: dark; }
-    html { scrollbar-gutter: stable; }
     html, body {
       margin: 0; padding: 0;
       min-height: 100%;
@@ -300,6 +299,50 @@
     }
 
     strong { color: #fffdf7; font-weight: 600; }
+
+    /* 切片配图 grid（参见 SKILL.md §写作规则·切片配图建议）
+       每条作品配图必须有 figcaption 解释该画面证明什么判断；
+       alt / figcaption 都不允许出现内部词（样本 / 关键帧 / pos N 等） */
+    .frame-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 1.5rem 0;
+    }
+    .frame-grid img {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: block;
+    }
+    .frame-grid figcaption {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #8A8A94;
+      margin-top: 6px;
+      letter-spacing: 0.05em;
+      line-height: 1.6;
+    }
+
+    /* 关键判断 / 压力测试卡片 */
+    .judge-card {
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .judge-card .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: #34d399;
+      margin-bottom: 0.4rem;
+    }
   </style>
 </head>
 
@@ -309,7 +352,7 @@
   <div class="xl:grid xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10 2xl:gap-14 mx-auto max-w-7xl">
 
   <!-- 左侧固定目录（xl+） -->
-  <aside class="hidden xl:block xl:sticky xl:top-0 xl:self-start xl:max-h-screen xl:overflow-y-auto px-8 pt-16 pb-12">
+  <aside class="hidden xl:block xl:sticky xl:top-0 xl:h-screen xl:overflow-y-auto px-8 pt-16 pb-12">
     <p class="font-mono text-[10px] tracking-[0.35em] uppercase text-muted mb-5">Table of Contents</p>
     <p class="font-serif-zh text-[15px] font-medium text-ink-soft mb-6">十四章目录</p>
     <ol class="space-y-2.5 text-[13px] text-ink-soft">
@@ -414,7 +457,7 @@
     <!-- 行内目录（小屏使用；xl+ 由左侧固定边栏接管） -->
     <nav class="mb-16 border-t border-b border-white/10 py-8 xl:hidden">
       <p class="font-mono text-[10.5px] tracking-[0.4em] uppercase text-muted mb-4">
-        Table of Contents · 十四章目录
+        Table of Contents · 目录
       </p>
       <ol class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 text-[14px] text-ink-soft">
         <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">01</span><a class="hover:text-ink transition-colors" href="#profile">博主画像</a></li>
@@ -448,7 +491,7 @@
         <!-- TODO(第一章 · 博主画像):
           按这个顺序写小节，每个小节用 <h3 class="subhead">...</h3> 起头：
           · 基础画像：抖音号 + 总作品数 + 一句话定位
-          · 博主背景考据：从转录里挖到的"真实身份证据"（学位/职业/家庭等），用 <ul> 列点
+          · 博主背景考据：从口播原文里挖到的"真实身份证据"（学位/职业/家庭等），用 <ul> 列点
           · 经济模式判定：注意力 / 私域 / 粉丝（稳定型）/ 粉丝（爆品型）/ 品牌经济 → 落在哪一档？
             用 <div class="qa-card"> 包裹结论+证据
           · 稀缺线判断：是否稳定越过？给 3-4 条证据
@@ -557,7 +600,8 @@
           · 4.2 叙述与语言：固定起手式 / 口头禅 / 句式节奏 / 口语化程度，<ul> 列点，
             配 1-2 段 <blockquote class="report-quote"> 直接引用最有代表性的开头
           · 4.3 视觉锤 / 文字钉 / 高频符号识别：明确指出博主的"3 个记忆点"
-          · 4.4 风格一致性评估：跨样本看是否稳定，给"强一致 / 一致 / 在演变 / 不稳定"四档
+          · 4.4 风格一致性评估：跨作品看是否稳定，给"强一致 / 一致 / 在演变 / 不稳定"四档
+          · 建议在本节用 1–2 张 frame-grid 切片配图（必须配 figcaption 说明该画面证明什么判断）
         -->
       </div>
 
@@ -656,7 +700,7 @@
       <div class="prose-body zh-justify">
         <!-- TODO(第七章 · 文案与脚本):
           · 7.1 五开头模板识别（悬念 / 打破常识 / 对比 / 自暴自弃 / 稀缺感）：
-            从转录里至少识别 2-4 个反复出现的钩子模板，配 <blockquote class="report-quote">
+            从口播原文里至少识别 2-4 个反复出现的钩子模板，配 <blockquote class="report-quote">
           · 7.2 四型脚本分布（聊观点 / 教知识 / 讲故事 / 晒过程）：判定主类型 + 占比 + 阶段适配性
           · 7.3 五大结构（总分总 / 起承转合 / 倒叙 / 列表 / 对话）：博主主菜是哪个？
           · 7.4 信息密度档位（高 / 中 / 低）：完播率与深度的权衡
@@ -751,7 +795,7 @@
     <section id="evolution" class="scroll-mt-24 pt-4">
       <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
         <span class="font-semibold text-report">CH·10</span>
-        <span>样本时间线对比 · 第八篇</span>
+        <span>作品时间线对比 · 第八篇</span>
       </div>
       <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
         成长路线
@@ -759,12 +803,13 @@
 
       <div class="prose-body zh-justify">
         <!-- TODO(第十章 · 成长路线):
-          · 按样本 position 排序作早期 / 中期 / 近期三段对比：
+          · 按作品发布顺序作早期 / 中期 / 近期三段对比：
             选题、风格、信息密度、镜头表现各发生了什么变化？
-          · 10.1 早期：（最近 N 条作品里 position 最大的几条）特征
+          · 10.1 早期：（一年前左右的几条作品）特征
           · 10.2 中期：过渡变化
-          · 10.3 近期：（position 最小的几条）特征——是否出现"风格收敛 / 重复 / 自我重复"？
+          · 10.3 近期：（最新的几条作品）特征——是否出现"风格收敛 / 重复 / 自我重复"？
           · 10.4 成长曲线判断：处于上升期 / 平台期 / 下行期？
+          · 强烈建议：用一张 frame-grid 配早期画面 + 近期画面对照，让读者直接看到演化
         -->
       </div>
 

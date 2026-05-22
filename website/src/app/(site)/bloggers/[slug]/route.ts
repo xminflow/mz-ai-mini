@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 
+import { readAuthCookies } from '@/features/auth/server/cookies'
 import { getWebsiteAuthState } from '@/features/auth/server/session'
 import {
   BloggerInsightFetchError,
@@ -15,20 +16,51 @@ interface RouteContext {
   params: Promise<{ slug: string }>
 }
 
-// 博主洞察详情页直接返回 research-kit 生成的 HTML 报告，并把符合"运营实战"风格的顶部栏
-// （返回主页 / 返回列表 / 登录状态）注入到原始 HTML 中，
-// 让浏览器加载的就是带统一品牌导航的完整报告网页，不再被官网 layout 切成"嵌入式"视觉。
+// 博主洞察详情页：拿到后端返回的完整 HTML 报告，把顶部导航 sticky 注入到 body
+// 头部后返回。不再走 iframe + COS——HTML 直接由 weelume 主域服务，移动端和
+// 微信 WebView 均可 inline 渲染。
 export async function GET(_request: Request, context: RouteContext): Promise<Response> {
   const { slug } = await context.params
+  const pathname = `/bloggers/${slug}`
+
+  // 先获取 auth 状态和 access token，确保 cookie 已刷新后再读取 token。
+  const authState = await getWebsiteAuthState()
+  const cookies = await readAuthCookies()
+  const accessToken = authState.authenticated ? (cookies.accessToken ?? undefined) : undefined
+
   let detail: BloggerInsightDetail
   try {
-    detail = await fetchBloggerInsightDetail(slug)
+    detail = await fetchBloggerInsightDetail(slug, accessToken)
   } catch (error) {
-    if (error instanceof BloggerInsightFetchError && error.status === 404) {
-      return new NextResponse(renderNotFound(slug), {
-        status: 404,
-        headers: { 'Content-Type': 'text/html; charset=utf-8' },
-      })
+    if (error instanceof BloggerInsightFetchError) {
+      if (error.status === 404) {
+        return new NextResponse(renderNotFound(slug), {
+          status: 404,
+          headers: { 'Content-Type': 'text/html; charset=utf-8' },
+        })
+      }
+      if (error.status === 401) {
+        // 未登录用户访问付费内容，跳转到登录页
+        return NextResponse.redirect(
+          new URL(`/login?next=${encodeURIComponent(pathname)}`, _request.url),
+        )
+      }
+      if (error.status === 403) {
+        // 已登录但无有效会员，展示付费墙
+        const html = renderBloggerPaywall({
+          slug,
+          details: error.details,
+          authState,
+          loginNext: pathname,
+        })
+        return new NextResponse(html, {
+          status: 200,
+          headers: {
+            'Content-Type': 'text/html; charset=utf-8',
+            'Cache-Control': 'private, no-store',
+          },
+        })
+      }
     }
     const message =
       error instanceof BloggerInsightFetchError
@@ -40,15 +72,13 @@ export async function GET(_request: Request, context: RouteContext): Promise<Res
     })
   }
 
-  const authState = await getWebsiteAuthState()
-  const pathname = `/bloggers/${slug}`
-  const enriched = injectTopBar(detail.report_html, {
+  const html = injectTopBar(detail.report_html, {
     authState,
     loginNext: pathname,
     detail,
   })
 
-  return new NextResponse(enriched, {
+  return new NextResponse(html, {
     status: 200,
     headers: {
       'Content-Type': 'text/html; charset=utf-8',
@@ -65,20 +95,24 @@ interface InjectContext {
   detail: BloggerInsightDetail
 }
 
-function injectTopBar(html: string, ctx: InjectContext): string {
+// 把顶部导航 style 注入到 </head> 之前，nav HTML 注入到 <body> 开标签之后。
+// nav 用 position:sticky 占流，自然把报告内容推下 56-64px，无需手动 padding。
+function injectTopBar(reportHtml: string, ctx: InjectContext): string {
   const style = buildTopBarStyle()
   const nav = buildTopBarHtml(ctx)
-  const withStyle = html.includes('</head>')
-    ? html.replace('</head>', `${style}</head>`)
-    : `${style}${html}`
-  return injectAfterBodyOpen(withStyle, nav)
-}
-
-function injectAfterBodyOpen(html: string, fragment: string): string {
-  const match = html.match(/<body\b[^>]*>/i)
-  if (!match) return `${fragment}${html}`
-  const insertAt = match.index! + match[0].length
-  return `${html.slice(0, insertAt)}${fragment}${html.slice(insertAt)}`
+  let result = reportHtml
+  if (/<\/head>/i.test(result)) {
+    result = result.replace(/<\/head>/i, `${style}\n</head>`)
+  } else {
+    // 极少数报告 HTML 没有 </head>，兜底直接前置 style + nav。
+    return `${style}\n${nav}\n${reportHtml}`
+  }
+  if (/<body(\s[^>]*)?>/i.test(result)) {
+    result = result.replace(/<body(\s[^>]*)?>/i, (match) => `${match}\n${nav}`)
+  } else {
+    result = `${result}\n${nav}`
+  }
+  return result
 }
 
 function buildTopBarStyle(): string {
@@ -154,6 +188,105 @@ function buildTopBarHtml(ctx: InjectContext): string {
         .finally(function(){window.location.reload();});
     });
   })();</script>`
+}
+
+interface BoggerPaywallContext {
+  slug: string
+  details: Record<string, unknown> | null
+  authState: AuthState
+  loginNext: string
+}
+
+function renderBloggerPaywall(ctx: BoggerPaywallContext): string {
+  const { slug, details, authState, loginNext } = ctx
+  const displayName =
+    typeof details?.display_name === 'string' ? details.display_name : slug
+  const avatarUrl =
+    typeof details?.avatar_url === 'string' ? details.avatar_url : null
+  const platform =
+    typeof details?.platform === 'string' ? bloggerPlatformLabel(details.platform) : null
+  const industry =
+    typeof details?.industry === 'string' ? details.industry : null
+  const positioning =
+    typeof details?.positioning === 'string' ? details.positioning : null
+
+  const accountLabel = authState.authenticated
+    ? authState.account.email || authState.account.username || '已登录'
+    : null
+
+  const metaLine = [platform, industry].filter(Boolean).join(' · ')
+
+  const avatarHtml = avatarUrl
+    ? `<img src="${escapeAttr(avatarUrl)}" alt="${escapeHtml(displayName)} 头像" referrerpolicy="no-referrer" style="width:72px;height:72px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);object-fit:cover;flex-shrink:0;" />`
+    : `<div style="width:72px;height:72px;border-radius:50%;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#fffdf7;flex-shrink:0;">${escapeHtml(displayName.charAt(0) || '·')}</div>`
+
+  const loginHref = `/login?next=${encodeURIComponent(loginNext)}`
+  const rightSide = accountLabel
+    ? `<span style="font-size:12px;color:#b8aa96;">${escapeHtml(accountLabel)}</span>`
+    : `<a href="${escapeAttr(loginHref)}" style="display:inline-flex;align-items:center;gap:6px;border-radius:9999px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);padding:6px 12px;font-size:12px;font-weight:500;color:#d6cfc4;text-decoration:none;">登录</a>`
+
+  return `<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${escapeHtml(displayName)} · 博主洞察</title>
+<style>
+:root{color-scheme:dark;}
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;background:#050507;color:#e8e1d9;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;}
+.topbar{position:sticky;top:0;z-index:50;width:100%;border-bottom:1px solid rgba(255,255,255,0.10);background:rgba(5,5,7,0.82);backdrop-filter:saturate(140%) blur(18px);}
+.topbar__inner{max-width:1152px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px;height:56px;}
+@media(min-width:640px){.topbar__inner{padding:0 24px;height:64px;}}
+.topbar__back{display:inline-flex;align-items:center;gap:6px;border-radius:9999px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);padding:6px 12px;font-size:12px;font-weight:500;color:#d6cfc4;text-decoration:none;}
+.paywall{max-width:640px;margin:80px auto 40px;padding:0 20px;}
+@media(min-width:640px){.paywall{padding:0 32px;margin-top:100px;}}
+.paywall__header{display:flex;align-items:center;gap:20px;margin-bottom:28px;}
+.paywall__name{font-size:22px;font-weight:700;color:#fffdf7;margin:0 0 4px;}
+.paywall__meta{font-size:13px;color:#b8aa96;}
+.paywall__positioning{font-size:14px;line-height:1.85;color:#b8aa96;margin-bottom:28px;padding:16px 20px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);}
+.paywall__preview{position:relative;border-radius:16px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);padding:28px;margin-bottom:28px;overflow:hidden;}
+.paywall__preview-content{filter:blur(6px);opacity:0.4;user-select:none;pointer-events:none;font-size:14px;line-height:2;color:#e8e1d9;}
+.paywall__preview-content p{margin:0 0 12px;}
+.paywall__lock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(to bottom,transparent,rgba(5,5,7,0.7) 60%);}
+.paywall__lock-text{font-size:14px;color:#b8aa96;text-align:center;}
+.paywall__cta{display:block;width:100%;padding:15px 0;border-radius:12px;background:linear-gradient(135deg,rgba(184,105,58,0.9),rgba(139,46,46,0.85));border:1px solid rgba(184,105,58,0.35);font-size:16px;font-weight:700;color:#fffdf7;text-align:center;text-decoration:none;letter-spacing:0.04em;transition:filter .2s;}
+.paywall__cta:hover{filter:brightness(1.1);}
+.paywall__note{margin-top:16px;text-align:center;font-size:12px;color:#6b6460;}
+a{color:#b8693a;text-decoration:none;}
+</style>
+</head>
+<body>
+<nav class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__back" href="/bloggers">← 返回博主洞察</a>
+    <div>${rightSide}</div>
+  </div>
+</nav>
+<div class="paywall">
+  <div class="paywall__header">
+    ${avatarHtml}
+    <div>
+      <div class="paywall__name">${escapeHtml(displayName)}</div>
+      ${metaLine ? `<div class="paywall__meta">${escapeHtml(metaLine)}</div>` : ''}
+    </div>
+  </div>
+  ${positioning ? `<div class="paywall__positioning">${escapeHtml(positioning)}</div>` : ''}
+  <div class="paywall__preview">
+    <div class="paywall__preview-content">
+      <p>本报告深度拆解该博主的内容策略、选题逻辑与流量密码，包含完整的账号定位分析、爆款内容复盘、变现路径梳理，以及可直接复用的操盘手册……</p>
+      <p>数据维度涵盖粉丝画像、互动分布、发布节奏、合作品牌偏好及竞品对比，帮助你在进入赛道前做出有依据的决策……</p>
+      <p>会员专属报告持续更新，覆盖抖音、小红书、B 站等主流平台的头部博主洞察……</p>
+    </div>
+    <div class="paywall__lock">
+      <div class="paywall__lock-text">🔒 此博主洞察报告为会员专属</div>
+    </div>
+  </div>
+  <a class="paywall__cta" href="/membership">开通会员 · 解锁全部报告</a>
+  <p class="paywall__note">年费 ¥499，解锁全部博主洞察 + 赛道分析报告</p>
+</div>
+</body>
+</html>`
 }
 
 function renderNotFound(slug: string): string {

@@ -2,14 +2,17 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query, Request, Response
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 
+from mz_ai_backend.core.config import Settings
+from mz_ai_backend.core.dependencies import get_settings_dependency
 from mz_ai_backend.core.protocol import ApiResponse, success_response
 
 from ..application import (
     ChangeAgentUsernameUseCase,
     CreateAgentWechatLoginSessionCommand,
     CreateAgentWechatLoginSessionUseCase,
+    DevFakeLoginUseCase,
     ExchangeAgentWechatLoginUseCase,
     GetCurrentAgentAccountQuery,
     GetCurrentAgentAccountUseCase,
@@ -26,6 +29,7 @@ from ..infrastructure import (
     get_change_agent_username_use_case,
     get_create_wechat_login_session_use_case,
     get_current_agent_access_token,
+    get_dev_fake_login_use_case,
     get_exchange_wechat_login_use_case,
     get_get_current_agent_account_use_case,
     get_get_wechat_login_session_use_case,
@@ -44,6 +48,7 @@ from .schemas import (
     AgentWechatLoginSessionStatusResponse,
     ChangeAgentUsernameRequest,
     ChangeAgentUsernameResponse,
+    DevFakeLoginRequest,
     EmailBindingChallengeResponse,
     ExchangeAgentWechatLoginRequest,
     LogoutAgentSessionRequest,
@@ -210,6 +215,30 @@ async def exchange_wechat_login_session(
     ],
 ) -> ApiResponse[AgentAuthenticationResponse]:
     result = await use_case.execute(request.to_command(login_session_id=login_session_id))
+    return success_response(data=AgentAuthenticationResponse.from_result(result))
+
+
+@router.post(
+    "/dev/fake-login",
+    response_model=ApiResponse[AgentAuthenticationResponse],
+    summary="[dev-only] Bypass WeChat scan and issue tokens for a fixed username",
+    description=(
+        "本地联调专用：跳过微信扫码 + 公众平台回调，按 username find-or-create 一个账号后直接签发 token。"
+        "生产环境 (env=production) 会返回 404 拒绝调用。"
+    ),
+)
+async def dev_fake_login(
+    request: DevFakeLoginRequest,
+    settings: Annotated[Settings, Depends(get_settings_dependency)],
+    use_case: Annotated[
+        DevFakeLoginUseCase,
+        Depends(get_dev_fake_login_use_case),
+    ],
+) -> ApiResponse[AgentAuthenticationResponse]:
+    # 双保险：env=production 直接 404，避免生产环境意外暴露
+    if settings.env == "production":
+        raise HTTPException(status_code=404, detail="Not Found")
+    result = await use_case.execute(request.to_command())
     return success_response(data=AgentAuthenticationResponse.from_result(result))
 
 

@@ -40,6 +40,15 @@ export const BloggerInsightCard = ({ item }: BloggerInsightCardProps) => {
             博主洞察
           </span>
           <span className="text-[11.5px] text-muted">#{platformLabel}</span>
+          {item.is_free ? (
+            <span className="rounded-full border border-emerald-400/40 bg-emerald-400/10 px-2.5 py-0.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-emerald-300">
+              免费
+            </span>
+          ) : (
+            <span className="rounded-full border border-amber-300/40 bg-amber-300/10 px-2.5 py-0.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-amber-200">
+              会员
+            </span>
+          )}
         </div>
 
         <h3 className="font-serif-zh truncate text-[17px] font-semibold leading-[1.4] text-ink sm:text-[18px]">

@@ -5,11 +5,11 @@ import type { ReactNode } from 'react'
 import { requireMembership } from '@/features/membership/server/require-membership'
 
 export const metadata: Metadata = {
-  title: '第六篇 · 增长 · 算法 · 投放 — 微域生光自媒体运营实战',
+  title: '第六篇 · 增长 / 算法 / 投放 · 自媒体运营实战手册',
   description:
-    '知道平台为什么把流量给谁、自己卡在哪、要不要投流。数据不好时知道往哪里改，而不是换赛道。',
+    '知道抖音 / 小红书平台为什么把流量给谁、自己卡在哪、要不要投流。数据不好时知道往哪里改，而不是换赛道——自媒体获客的流量诊断方法。',
   openGraph: {
-    title: '第六篇 · 增长 · 算法 · 投放 — 微域生光自媒体运营实战',
+    title: '第六篇 · 增长 / 算法 / 投放 · 自媒体运营实战手册',
     description: '一套算法心法 · 一份阶段诊断卡 · 一棵 DOU+ 决策树。',
   },
 }

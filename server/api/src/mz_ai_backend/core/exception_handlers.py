@@ -72,9 +72,12 @@ def register_exception_handlers(app: FastAPI) -> None:
     ) -> JSONResponse:
         request_id = _resolve_request_id(request)
         _log_app_exception(exc, request_id=request_id)
+        # 只对 BusinessException 携带 details：SystemException 的 details 可能含敏感信息。
+        expose_details = isinstance(exc, BusinessException) and exc.details is not None
         response = error_response(
             error_code=exc.error_code,
             message=exc.message,
+            details=exc.details if expose_details else None,
             request_id=request_id,
         )
         return JSONResponse(

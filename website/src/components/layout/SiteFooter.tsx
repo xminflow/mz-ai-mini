@@ -9,7 +9,6 @@ const FOOTER_GROUPS: Array<{
     links: [
       { label: "首页", href: "/" },
       { label: "信息库", href: "/library" },
-      { label: "产品", href: "/product" },
       { label: "咨询服务", href: "/consulting" },
       { label: "关于", href: "/about" },
     ],
@@ -27,8 +26,8 @@ const FOOTER_GROUPS: Array<{
     title: "联系",
     links: [
       { label: "咨询", href: "/consulting" },
-      { label: "了解产品", href: "/product" },
-      { label: "联系订阅", href: "/product" },
+      { label: "了解会员", href: "/membership" },
+      { label: "联系订阅", href: "/membership" },
     ],
   },
 ];

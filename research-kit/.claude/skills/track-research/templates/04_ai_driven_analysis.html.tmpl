@@ -1,0 +1,734 @@
+<!--
+============================================================================
+ 04_ai_driven_analysis.html · 赛道分析 · AI 落地模板（v0.1.0）
+============================================================================
+
+这是一份**骨架版**模板——直接复制到 reports/<run_id>/04_ai_driven_analysis.html，
+然后按下面三个规则填内容：
+
+  1. `{{...}}` 占位符 → 用 sources.json / data_index.md 的具体值替换。
+     **每一个 AI 工具/模型必须能在 material/ 找到公开来源**——只写"已上线"或
+     "已公开宣称"的事实，不写"我推测"或"我设计"。
+
+  2. `<!-- TODO(章节): ... -->` 注释 → 这里必须写实际拆解内容，
+     注释里列出了"该写什么"和"该用什么 HTML 结构"，**不要照搬注释里的措辞**——
+     它只是指引，不是文案。写完后请删掉这条 TODO 注释。
+
+  3. 本份 HTML 的 qa-card 只放在 `#scenarios` 和 `#roadmap` 两章末——
+     场景层和路线图是 AI 落地的"决策硬底线"，其他章节是描述性内容。
+
+填完后做两件事：
+  · 本份至少 1 张内联 SVG 数据图：AI 介入价值链流程图（节点 + AI 介入点高亮）
+  · 禁止外链图片，禁止任何 PNG 占位符
+
+**不要**改 head 里的 CSS / Tailwind config / 字体；改了视觉一致性就垮。
+**不要**新增 JS——本骨架严格禁 JS。
+============================================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{track_keyword}} · 赛道分析 · AI 落地</title>
+
+  <!-- 字体：阿里巴巴普惠体 3（chinese-fonts-cdn，自动 subset + woff2） + JetBrains Mono（代码 / 数字） -->
+  <link rel="preconnect" href="https://chinese-fonts-cdn.deno.dev" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-55-Regular/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-65-Medium/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-85-Bold/result.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    /* 把 chinese-fonts-cdn 的三个 package 别名到统一的 "Alibaba PuHuiTi" 家族，
+       通过 font-weight 自动选权重。`local()` 命中已注册的 webfont 家族，
+       不会触发额外的网络请求。 */
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-55-Regular'), local('Alibaba PuHuiTi 3 55 Regular');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-85-Bold'), local('Alibaba PuHuiTi 3 85 Bold');
+    }
+  </style>
+
+  <!-- Tailwind CDN with Weelume brand config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#F5F5F7',
+            'ink-soft': '#D4D4D8',
+            muted: '#8A8A94',
+            canvas: '#050507',
+            surface: '#0D0D12',
+            'surface-2': '#141420',
+            hairline: 'rgba(255,255,255,0.08)',
+            'hairline-strong': 'rgba(255,255,255,0.16)',
+            accent: '#A78BFA',
+            'accent-2': '#22D3EE',
+            'accent-3': '#F472B6',
+            report: '#10b981',
+            'report-deep': '#064e3b',
+            'report-soft': 'rgba(16,185,129,0.08)',
+          },
+          fontFamily: {
+            sans: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-55-Regular"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            serif: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-85-Bold"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { scrollbar-gutter: stable; }
+    html, body {
+      margin: 0; padding: 0;
+      min-height: 100%;
+      background-color: #050507;
+      color: #F5F5F7;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-55-Regular', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-feature-settings: "palt";
+      font-variant-numeric: lining-nums proportional-nums;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-optical-sizing: auto;
+      font-feature-settings: "palt";
+    }
+    /* 报告里的"中文衬线大字"位（h1/h2 + 一句话答卷 + stats 数字）
+       原本走 Noto Serif SC，现在统一切到普惠体 Bold——保留 class 名兼容
+       现存模板和已有报告，不改 markup。 */
+    .font-serif-zh {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    ::selection { background-color: rgba(167, 139, 250, 0.35); color: #fff; }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.08);
+      border-radius: 9999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); background-clip: padding-box; }
+
+    /* Hero 一句话答卷渐变文字 */
+    .text-shimmer {
+      background: linear-gradient(120deg, #F5F5F7 0%, #A78BFA 40%, #22D3EE 70%, #F5F5F7 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmerText 12s linear infinite;
+    }
+    @keyframes shimmerText {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .glass {
+      background: rgba(13,13,18,0.55);
+      backdrop-filter: saturate(160%) blur(18px);
+      -webkit-backdrop-filter: saturate(160%) blur(18px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .accent-bar { border-left: 3px solid #10b981; }
+    .accent-bar-deep { border-left: 3px solid #064e3b; }
+    .zh-justify { text-align: justify; text-justify: inter-ideograph; }
+
+    /* "必须答的问题" 答疑卡片 */
+    .qa-card {
+      border-left: 3px solid #10b981;
+      background: rgba(16,185,129,0.05);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+    }
+    .qa-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: #10b981;
+      margin-bottom: 0.6rem;
+    }
+
+    /* 表格 */
+    table.report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 14px;
+    }
+    table.report-table thead th {
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      padding: 0.75rem 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #b8aa96;
+      text-align: left;
+    }
+    table.report-table tbody td {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0.75rem 0.85rem;
+      vertical-align: top;
+      color: #D4D4D8;
+      line-height: 1.85;
+    }
+    table.report-table tbody tr:last-child td { border-bottom: none; }
+
+    /* 章节分割 */
+    .chapter-divider {
+      text-align: center;
+      letter-spacing: 1em;
+      color: rgba(255,255,255,0.15);
+      font-size: 16px;
+      margin: 3.5rem 0;
+    }
+
+    /* 引用块 */
+    blockquote.report-quote {
+      border-left: 3px solid #10b981;
+      background: rgba(255,255,255,0.04);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+      color: #e7dfd4;
+      font-size: 15.5px;
+      line-height: 1.95;
+    }
+    blockquote.report-quote cite {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: #10b981;
+      font-style: normal;
+    }
+
+    /* 内联 cite（作品标题引用） */
+    cite { font-style: normal; color: #34d399; font-weight: 500; }
+
+    /* 框架角标 */
+    .framework-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8A8A94;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    /* 正文段落 */
+    .prose-body { font-size: 15px; line-height: 2.05; color: #d6cfc4; }
+    .prose-body p { margin-bottom: 18px; }
+    .prose-body code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: rgba(255,255,255,0.06);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: #10b981;
+    }
+
+    /* 小节标题 */
+    .subhead {
+      border-left: 3px solid #10b981;
+      padding-left: 0.85rem;
+      margin: 2.5rem 0 1rem;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-65-Medium', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.04em;
+      color: #fffdf7;
+    }
+
+    strong { color: #fffdf7; font-weight: 600; }
+
+    /* 切片配图 grid（参见 SKILL.md §写作规则·切片配图建议）
+       每条作品配图必须有 figcaption 解释该画面证明什么判断；
+       alt / figcaption 都不允许出现内部词（样本 / 关键帧 / pos N 等） */
+    .frame-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 1.5rem 0;
+    }
+    .frame-grid img {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: block;
+    }
+    .frame-grid figcaption {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #8A8A94;
+      margin-top: 6px;
+      letter-spacing: 0.05em;
+      line-height: 1.6;
+    }
+
+    /* 关键判断 / 压力测试卡片 */
+    .judge-card {
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .judge-card .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: #34d399;
+      margin-bottom: 0.4rem;
+    }
+
+    /* 来源脚注：嵌在正文或大字数字中的「（来源：XX，年份）」标记。
+       强制小字 + 浅色 + 等宽，避免继承父级字号（如 text-4xl 的大数字）。
+       white-space:nowrap 让每条脚注作为不可拆分的原子单位换行。 */
+    .citation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #8A8A94;
+      vertical-align: baseline;
+      margin-left: 0.4em;
+      display: inline-block;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+    .citation a,
+    .citation-link {
+      color: #8A8A94;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(255,255,255,0.22);
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .citation a:hover,
+    .citation-link:hover {
+      color: #34d399;
+      border-bottom-color: #34d399;
+    }
+
+    /* 大数字 callout 专用结构：数字单独占一行 + 来源脚注独立小字行 + 解释段落。
+       推荐与 .stat-callout 配合使用，避免把 .citation 直接塞进 .text-4xl 父元素里 */
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+    .stat-callout .stat-value {
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700;
+      color: #10b981;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+    .stat-callout .stat-source {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #8A8A94;
+      line-height: 1.4;
+    }
+    .stat-callout .stat-source a {
+      color: #8A8A94;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(255,255,255,0.22);
+    }
+    .stat-callout .stat-source a:hover {
+      color: #34d399;
+      border-bottom-color: #34d399;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 布局：xl+ 走 [16rem | 主内容] 双列；行内目录小屏使用，xl+ 由左侧 aside 接管。
+       不允许在此外再加 <header> sticky 顶栏。-->
+  <div class="xl:grid xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10 2xl:gap-14 mx-auto max-w-7xl">
+
+  <!-- 左侧固定目录（xl+） · 5 章目录 -->
+  <aside class="hidden xl:block xl:sticky xl:top-0 xl:self-start xl:max-h-screen xl:overflow-y-auto px-8 pt-16 pb-12">
+    <p class="font-mono text-[10px] tracking-[0.35em] uppercase text-muted mb-5">Table of Contents</p>
+    <p class="font-serif-zh text-[15px] font-medium text-ink-soft mb-6">5 章目录</p>
+    <ol class="space-y-2.5 text-[13px] text-ink-soft">
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">01</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#landscape">AI 应用全景</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">02</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#scenarios">核心场景拆解</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">03</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#tool-matrix">工具对比矩阵</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">04</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#roadmap">AI 落地路线图</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">05</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#risk">风险（合规/版权/质量/接受度）</a></li>
+    </ol>
+  </aside>
+
+  <main class="mx-auto max-w-3xl px-6 pt-14 pb-24 xl:mx-0 xl:max-w-3xl xl:px-10">
+
+    <!-- ====== HERO · AI 落地页面标题 ====== -->
+    <section class="mb-16 pt-2">
+      <p class="font-mono text-[11px] tracking-[0.4em] uppercase text-report mb-4">
+        Track Research · 04 · AI Driven Analysis
+      </p>
+      <h1 class="font-serif-zh text-[38px] sm:text-[46px] font-semibold leading-[1.15] tracking-[0.05em] text-ink mb-5">
+        {{track_keyword}} · AI 落地
+      </h1>
+      <p class="text-[14.5px] leading-[1.9] tracking-[0.02em] text-ink-soft max-w-2xl">
+        <!-- TODO(AI 落地 · Hero):
+
+          ## 本块必写
+
+          - 一段 80-120 字引言
+          - 强调约束：**只写已上线 / 已公开宣称**，不写"理论上可以做" / "我推测"
+          - 语气：技术 + 商业兼具，类产品白皮书
+
+          ## 关键提醒
+
+          - 这是本份最重要的红线——读者最容易在 AI 章节看到"PPT 工具"。我们写实证清单
+        -->
+      </p>
+    </section>
+
+    <!-- 行内目录（小屏使用；xl+ 由左侧固定边栏接管） -->
+    <nav class="mb-16 border-t border-b border-white/10 py-8 xl:hidden">
+      <p class="font-mono text-[10.5px] tracking-[0.4em] uppercase text-muted mb-4">
+        Table of Contents · 5 章目录
+      </p>
+      <ol class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 text-[14px] text-ink-soft">
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">01</span><a class="hover:text-ink transition-colors" href="#landscape">AI 应用全景</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">02</span><a class="hover:text-ink transition-colors" href="#scenarios">核心场景拆解</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">03</span><a class="hover:text-ink transition-colors" href="#tool-matrix">工具对比矩阵</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">04</span><a class="hover:text-ink transition-colors" href="#roadmap">AI 落地路线图</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">05</span><a class="hover:text-ink transition-colors" href="#risk">风险</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====== 第 1 章 · AI 在该赛道的应用全景 ====== -->
+    <section id="landscape" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·01</span>
+        <span>业务链路 + AI 介入点流程图</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        AI 在该赛道的应用全景
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第1章 · AI 应用全景):
+
+          ## 本章必写
+
+          - 1.1 业务链路概览：供给 → 生产 → 营销 → 销售 → 服务
+          - 1.2 AI 介入点流程图（图 1，已有 figure）：业务链路上标 3-5 个 AI 已落地节点
+          - 1.3 渗透率盘点：头部玩家"AI 已深度 / 浅度 / 暂未"使用的比例（仅在有公开数据时）
+
+          ## 推荐 HTML 结构
+
+          - 业务链路 → 内联 SVG 流程图或 <ul> 步骤
+          - AI 介入点流程图 → 已有 figure（highcharts MCP 或内联 SVG）
+          - 渗透率 → <div class="judge-card"> + 一句话判断
+
+          ## 独有框架：AI 升级三层模型
+
+          - 替代层（直接替代人）
+          - 增强层（辅助人决策）
+          - 创造层（创造原本不存在的体验）
+
+          每个 AI 介入点必须标属于哪一层。
+
+          ## 关键提醒
+
+          - 介入点必须能在 material 找到具体玩家证据；找不到 = 删除
+        -->
+      </div>
+
+      <!-- 统计图 1：AI 升级全景流程图（含业务链路 + AI 介入点） -->
+      <figure class="my-8">
+        <!-- TODO(内联 SVG · {{track_keyword}} AI 介入价值链流程图):
+             用 <svg viewBox="0 0 1000 400"> 画业务链路节点图：
+               · 横向 4-6 个业务节点（rect + text），用箭头串连
+               · AI 介入的节点用 #10b981 高亮 + "AI" 角标
+               · 节点下方标"替代层 / 增强层 / 创造层"分类
+             数据来源：raw/material/ 各 AI 工具来源
+        -->
+        <figcaption class="font-mono text-[11px] text-muted mt-3 leading-[1.6] tracking-[0.05em]">
+          图 1 · {{track_keyword}} AI 升级全景：业务链路 × AI 介入点 · 数据来源：见脚注
+        </figcaption>
+      </figure>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 2 章 · 核心场景拆解 ====== -->
+    <section id="scenarios" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·02</span>
+        <span>3-5 个核心场景 · 场景描述 + 用户价值 + 现有工具 + 落地成本</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        核心场景拆解
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第2章 · 核心场景拆解):
+
+          ## 本章必写（3-5 个场景，每个固定 4 小节）
+
+          - 场景描述：1 段用户故事（什么人 / 什么场景 / 做什么）
+          - 用户价值：量化的省时 / 省钱 / 提质效果
+          - 现有工具盘点：3-5 个市面已上线工具（每个必须 cite material 来源）
+          - 落地成本：人 / 钱 / 时间 三维度，各给区间数
+
+          ## 推荐 HTML 结构
+
+          - 每场景 → <h3 class="subhead">Scenario N · 场景名</h3>
+          - 4 小节 → 4 个 <h4 class="subhead">
+          - 现有工具 → <table class="report-table"> 或 <ul> + cite
+
+          ## 硬约束
+
+          - **只写已落地或已公开宣称的事实**
+          - 禁用："我推测" / "理论上" / "我设计了一个" / "可以这么做"
+          - 每个场景需标 AI 升级三层模型属于哪一层（替代 / 增强 / 创造）
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 最快回本的场景？
+          - Q2 价值最大但落地最难的场景？
+          - Q3 每个场景的"已落地证据"？
+          - Q4 新人最该先选哪个场景试水？
+          - Q5 哪个场景目前还不成熟，建议观望？
+        -->
+
+        <h3 class="subhead">Scenario 1 · {{scenario_1_name}}</h3>
+        <!-- TODO(Scenario 1):
+             按上述 4 小节填（场景描述 / 用户价值 / 现有工具盘点 / 落地成本）
+             末尾标 AI 升级三层模型属于哪一层（替代 / 增强 / 创造）
+        -->
+
+        <h3 class="subhead">Scenario 2 · {{scenario_2_name}}</h3>
+        <!-- TODO(Scenario 2):
+             按上述 4 小节填（场景描述 / 用户价值 / 现有工具盘点 / 落地成本）
+             末尾标 AI 升级三层模型属于哪一层（替代 / 增强 / 创造）
+        -->
+
+        <h3 class="subhead">Scenario 3 · {{scenario_3_name}}</h3>
+        <!-- TODO(Scenario 3):
+             按上述 4 小节填（场景描述 / 用户价值 / 现有工具盘点 / 落地成本）
+             末尾标 AI 升级三层模型属于哪一层（替代 / 增强 / 创造）
+        -->
+
+        <!-- 如有第 4 / 第 5 个场景，按需追加；不足 3 个则需调整或合并 -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>最快回本的场景是？<strong>答</strong>：</li>
+          <li>价值最大但落地最难的场景是？<strong>答</strong>：</li>
+          <li>每个场景的"已落地证据"是？<strong>答</strong>：</li>
+          <li>新人最该先选哪个场景试水？<strong>答</strong>：</li>
+          <li>哪个场景目前还不成熟，建议观望？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 3 章 · 工具对比矩阵 ====== -->
+    <section id="tool-matrix" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·03</span>
+        <span>已上线工具横评 · 价格 / 上手 / 效果 / 接入难度</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        工具对比矩阵
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第3章 · 工具对比矩阵):
+
+          ## 本章必写
+
+          - 3.1 横向对比 5-8 个主流工具
+          - 3.2 每个工具有"已公开宣称"或"已被某玩家使用"的证据
+          - 3.3 工具组合推荐：3 套预算档（0 投入 / 月千元 / 月万元）
+
+          ## 推荐 HTML 结构
+
+          - 工具对比表 → <table class="report-table"> **七列固定**：
+            工具名 / 厂商 / 定价 / 适用场景 / 优势 / 劣势 / 公开来源 URL
+          - 工具组合推荐 → 3 个 <div class="judge-card"> 预算档
+
+          ## 硬约束（参见 SKILL.md §2.3.5）
+
+          - 表头七列固定，缺一不可
+          - 每个工具必须能在 material 找到公开来源 URL；找不到 = 删除整行
+          - "公开来源 URL" 列必须是真实可点开的链接，禁止编造
+
+          ## 必答 5 题
+
+          - Q1 哪个工具适合个人 / 团队 / 企业？
+          - Q2 哪个最便宜？
+          - Q3 哪个最专业？
+          - Q4 哪个有平替（开源 / 国产）？
+          - Q5 哪个的厂商最不稳定（创业期 / 易倒闭）？
+        -->
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 4 章 · AI 落地路线图 ====== -->
+    <section id="roadmap" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·04</span>
+        <span>3 阶段路线图 + 每阶段 KPI</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        AI 落地路线图
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第4章 · AI 落地路线图):
+
+          ## 本章必写
+
+          - 3 阶段路线，每阶段必给：动作清单 + 投入预算 + KPI（量化）+ 完成判定
+            · 阶段一（0-3 月，试水期）：单点 AI 工具替代某固定动作；目标 = 验证可行性
+            · 阶段二（3-9 月，固化期）：把 AI 嵌入 SOP，跑通工作流
+            · 阶段三（9-18 月，差异化期）：用 AI 做"非 AI 团队做不到"的事
+
+          ## 推荐 HTML 结构
+
+          - 三阶段 → 3 个 <h3 class="subhead">
+          - 每阶段细节 → <table class="report-table"> 或 <div class="judge-card">
+          - KPI → 量化数字，禁止"显著提升"这种虚词
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 0-3 个月最该先做的 1 件 AI 动作？
+          - Q2 跑通工作流的关键 KPI？
+          - Q3 第二阶段的预算预估？
+          - Q4 哪一阶段最容易卡住？怎么过？
+          - Q5 什么时候应该放弃单纯依赖 AI、转回"人 + AI"混合？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>0-3 个月最该先做的 1 件 AI 动作？<strong>答</strong>：</li>
+          <li>跑通工作流的关键 KPI 是？<strong>答</strong>：</li>
+          <li>第二阶段的预算预估？<strong>答</strong>：</li>
+          <li>哪一阶段最容易卡住？怎么过？<strong>答</strong>：</li>
+          <li>什么时候应该放弃单纯依赖 AI、转回"人 + AI"混合？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 5 章 · 风险（合规/版权/质量/接受度） ====== -->
+    <section id="risk" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·05</span>
+        <span>4 类风险盘点 + 对冲方案</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        风险（合规 / 版权 / 质量 / 接受度）
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第5章 · 风险):
+
+          ## 本章必写
+
+          - 4 类风险逐条盘点：
+            · 5.1 合规风险：生成式 AI 服务管理办法 / 深度合成标识 / 数据出境 / 医疗金融特定合规
+            · 5.2 版权风险：训练数据来源 / 生成内容著作权归属 / 第三方素材使用边界
+            · 5.3 质量风险：幻觉 / 事实错误 / 风格漂移 / 低质量稀释品牌
+            · 5.4 用户接受度风险：用户对"AI 内容"的排斥/接受度 / 标识义务 / 信任成本
+          - 每类至少给 1 条具体规避动作
+
+          ## 推荐 HTML 结构
+
+          - 每类风险 → <div class="judge-card"> 红色 label
+          - 规避动作 → <ul> 列点（动词开头）
+
+          ## 必答 5 题（建议补 qa-card）
+
+          - Q1 数据合规风险最大的一条？
+          - Q2 版权争议高发场景？
+          - Q3 内容质量塌方的早期信号？
+          - Q4 用户接受度的拐点？
+          - Q5 监管收紧的概率？
+
+          ## 关键提醒
+
+          - 合规风险必须引具体法规名 + 出台时间，不要写"相关法规"
+          - 与 03_business_model.html#risks 区分：03 是商业模式风险，本章只盘 AI 相关风险
+        -->
+      </div>
+    </section>
+
+  </main>
+
+  </div>
+</body>
+</html>

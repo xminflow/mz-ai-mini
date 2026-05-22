@@ -1,0 +1,842 @@
+<!--
+============================================================================
+ 05_playbook.html · 赛道分析 · 操盘手册模板（v0.1.0）
+============================================================================
+
+这是一份**骨架版**模板——直接复制到 reports/<run_id>/05_playbook.html，
+然后按下面三个规则填内容：
+
+  1. `{{...}}` 占位符 → 用 sources.json / data_index.md 的具体值替换。
+     启动成本、爬坡曲线等所有数字必须**三场景（保守/中性/乐观）**，
+     **每个数字标计算依据**——不允许"拍脑袋"。
+
+  2. `<!-- TODO(章节): ... -->` 注释 → 这里必须写实际拆解内容，
+     注释里列出了"该写什么"和"该用什么 HTML 结构"，**不要照搬注释里的措辞**——
+     它只是指引，不是文案。写完后请删掉这条 TODO 注释。
+
+  3. 每个 `<section>` 末尾的 `qa-card · 必须答的问题` **必须答完 5 个问题**——
+     操盘手册的深度硬底线，特别是 `#monetize-how-much` 章必须有完整的财务三场景。
+
+填完后做两件事：
+  · 本份至少 2 张内联 SVG 数据图：财务预测三场景趋势图（多色折线 + 预测段虚线）+ 启动成本结构图（环形 或 CSS 横条）
+  · 禁止外链图片，禁止任何 PNG 占位符
+
+**不要**改 head 里的 CSS / Tailwind config / 字体；改了视觉一致性就垮。
+**不要**新增 JS——本骨架严格禁 JS。
+============================================================================
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{track_keyword}} · 赛道分析 · 操盘手册</title>
+
+  <!-- 字体：阿里巴巴普惠体 3（chinese-fonts-cdn，自动 subset + woff2） + JetBrains Mono（代码 / 数字） -->
+  <link rel="preconnect" href="https://chinese-fonts-cdn.deno.dev" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-55-Regular/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-65-Medium/result.css">
+  <link rel="stylesheet" href="https://chinese-fonts-cdn.deno.dev/packages/AlibabaPuHuiTi-3/dist/AlibabaPuHuiTi-3-85-Bold/result.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    /* 把 chinese-fonts-cdn 的三个 package 别名到统一的 "Alibaba PuHuiTi" 家族，
+       通过 font-weight 自动选权重。`local()` 命中已注册的 webfont 家族，
+       不会触发额外的网络请求。 */
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-55-Regular'), local('Alibaba PuHuiTi 3 55 Regular');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-65-Medium'), local('Alibaba PuHuiTi 3 65 Medium');
+    }
+    @font-face {
+      font-family: 'Alibaba PuHuiTi';
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+      src: local('AlibabaPuHuiTi-3-85-Bold'), local('Alibaba PuHuiTi 3 85 Bold');
+    }
+  </style>
+
+  <!-- Tailwind CDN with Weelume brand config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#F5F5F7',
+            'ink-soft': '#D4D4D8',
+            muted: '#8A8A94',
+            canvas: '#050507',
+            surface: '#0D0D12',
+            'surface-2': '#141420',
+            hairline: 'rgba(255,255,255,0.08)',
+            'hairline-strong': 'rgba(255,255,255,0.16)',
+            accent: '#A78BFA',
+            'accent-2': '#22D3EE',
+            'accent-3': '#F472B6',
+            report: '#10b981',
+            'report-deep': '#064e3b',
+            'report-soft': 'rgba(16,185,129,0.08)',
+          },
+          fontFamily: {
+            sans: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-55-Regular"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            serif: ['"Alibaba PuHuiTi"', '"AlibabaPuHuiTi-3-85-Bold"', '"PingFang SC"', '"Microsoft YaHei"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { color-scheme: dark; }
+    html { scrollbar-gutter: stable; }
+    html, body {
+      margin: 0; padding: 0;
+      min-height: 100%;
+      background-color: #050507;
+      color: #F5F5F7;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-55-Regular', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-feature-settings: "palt";
+      font-variant-numeric: lining-nums proportional-nums;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-optical-sizing: auto;
+      font-feature-settings: "palt";
+    }
+    /* 报告里的"中文衬线大字"位（h1/h2 + 一句话答卷 + stats 数字）
+       原本走 Noto Serif SC，现在统一切到普惠体 Bold——保留 class 名兼容
+       现存模板和已有报告，不改 markup。 */
+    .font-serif-zh {
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-85-Bold', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    ::selection { background-color: rgba(167, 139, 250, 0.35); color: #fff; }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.08);
+      border-radius: 9999px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); background-clip: padding-box; }
+
+    /* Hero 一句话答卷渐变文字 */
+    .text-shimmer {
+      background: linear-gradient(120deg, #F5F5F7 0%, #A78BFA 40%, #22D3EE 70%, #F5F5F7 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmerText 12s linear infinite;
+    }
+    @keyframes shimmerText {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .glass {
+      background: rgba(13,13,18,0.55);
+      backdrop-filter: saturate(160%) blur(18px);
+      -webkit-backdrop-filter: saturate(160%) blur(18px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .accent-bar { border-left: 3px solid #10b981; }
+    .accent-bar-deep { border-left: 3px solid #064e3b; }
+    .zh-justify { text-align: justify; text-justify: inter-ideograph; }
+
+    /* "必须答的问题" 答疑卡片 */
+    .qa-card {
+      border-left: 3px solid #10b981;
+      background: rgba(16,185,129,0.05);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+    }
+    .qa-card-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.35em;
+      color: #10b981;
+      margin-bottom: 0.6rem;
+    }
+
+    /* 表格 */
+    table.report-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 14px;
+    }
+    table.report-table thead th {
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      padding: 0.75rem 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: #b8aa96;
+      text-align: left;
+    }
+    table.report-table tbody td {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0.75rem 0.85rem;
+      vertical-align: top;
+      color: #D4D4D8;
+      line-height: 1.85;
+    }
+    table.report-table tbody tr:last-child td { border-bottom: none; }
+
+    /* 章节分割 */
+    .chapter-divider {
+      text-align: center;
+      letter-spacing: 1em;
+      color: rgba(255,255,255,0.15);
+      font-size: 16px;
+      margin: 3.5rem 0;
+    }
+
+    /* 引用块 */
+    blockquote.report-quote {
+      border-left: 3px solid #10b981;
+      background: rgba(255,255,255,0.04);
+      padding: 1rem 1.5rem;
+      margin: 1.5rem 0;
+      backdrop-filter: blur(8px);
+      color: #e7dfd4;
+      font-size: 15.5px;
+      line-height: 1.95;
+    }
+    blockquote.report-quote cite {
+      display: block;
+      margin-top: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      color: #10b981;
+      font-style: normal;
+    }
+
+    /* 内联 cite（作品标题引用） */
+    cite { font-style: normal; color: #34d399; font-weight: 500; }
+
+    /* 框架角标 */
+    .framework-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #8A8A94;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    /* 正文段落 */
+    .prose-body { font-size: 15px; line-height: 2.05; color: #d6cfc4; }
+    .prose-body p { margin-bottom: 18px; }
+    .prose-body code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      background: rgba(255,255,255,0.06);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: #10b981;
+    }
+
+    /* 小节标题 */
+    .subhead {
+      border-left: 3px solid #10b981;
+      padding-left: 0.85rem;
+      margin: 2.5rem 0 1rem;
+      font-family: 'Alibaba PuHuiTi', 'AlibabaPuHuiTi-3-65-Medium', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.4;
+      letter-spacing: 0.04em;
+      color: #fffdf7;
+    }
+
+    strong { color: #fffdf7; font-weight: 600; }
+
+    /* 切片配图 grid（参见 SKILL.md §写作规则·切片配图建议）
+       每条作品配图必须有 figcaption 解释该画面证明什么判断；
+       alt / figcaption 都不允许出现内部词（样本 / 关键帧 / pos N 等） */
+    .frame-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin: 1.5rem 0;
+    }
+    .frame-grid img {
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      display: block;
+    }
+    .frame-grid figcaption {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #8A8A94;
+      margin-top: 6px;
+      letter-spacing: 0.05em;
+      line-height: 1.6;
+    }
+
+    /* 关键判断 / 压力测试卡片 */
+    .judge-card {
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+    .judge-card .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: #34d399;
+      margin-bottom: 0.4rem;
+    }
+
+    /* 来源脚注：嵌在正文或大字数字中的「（来源：XX，年份）」标记。
+       强制小字 + 浅色 + 等宽，避免继承父级字号（如 text-4xl 的大数字）。
+       white-space:nowrap 让每条脚注作为不可拆分的原子单位换行。 */
+    .citation {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #8A8A94;
+      vertical-align: baseline;
+      margin-left: 0.4em;
+      display: inline-block;
+      white-space: nowrap;
+      line-height: 1.4;
+    }
+    .citation a,
+    .citation-link {
+      color: #8A8A94;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(255,255,255,0.22);
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .citation a:hover,
+    .citation-link:hover {
+      color: #34d399;
+      border-bottom-color: #34d399;
+    }
+
+    /* 大数字 callout 专用结构：数字单独占一行 + 来源脚注独立小字行 + 解释段落。
+       推荐与 .stat-callout 配合使用，避免把 .citation 直接塞进 .text-4xl 父元素里 */
+    .stat-callout {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+    .stat-callout .stat-value {
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700;
+      color: #10b981;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+    }
+    .stat-callout .stat-source {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #8A8A94;
+      line-height: 1.4;
+    }
+    .stat-callout .stat-source a {
+      color: #8A8A94;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(255,255,255,0.22);
+    }
+    .stat-callout .stat-source a:hover {
+      color: #34d399;
+      border-bottom-color: #34d399;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 布局：xl+ 走 [16rem | 主内容] 双列；行内目录小屏使用，xl+ 由左侧 aside 接管。
+       不允许在此外再加 <header> sticky 顶栏。-->
+  <div class="xl:grid xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10 2xl:gap-14 mx-auto max-w-7xl">
+
+  <!-- 左侧固定目录（xl+） · 6 章目录 -->
+  <aside class="hidden xl:block xl:sticky xl:top-0 xl:self-start xl:max-h-screen xl:overflow-y-auto px-8 pt-16 pb-12">
+    <p class="font-mono text-[10px] tracking-[0.35em] uppercase text-muted mb-5">Table of Contents</p>
+    <p class="font-serif-zh text-[15px] font-medium text-ink-soft mb-6">6 章目录</p>
+    <ol class="space-y-2.5 text-[13px] text-ink-soft">
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">01</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#fit-check">你适合做这个吗</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">02</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#failures">常见失败模式</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">03</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#zero-to-one">从零到一启动指南</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">04</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#monetize-how">怎么赚钱</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">05</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#monetize-how-much">能赚多少</a></li>
+      <li class="flex gap-3"><span class="font-mono text-[10.5px] text-report w-5 shrink-0">06</span><a class="hover:text-ink transition-colors leading-[1.5]" href="#resources">行业资源导航</a></li>
+    </ol>
+  </aside>
+
+  <main class="mx-auto max-w-3xl px-6 pt-14 pb-24 xl:mx-0 xl:max-w-3xl xl:px-10">
+
+    <!-- ====== HERO · 操盘手册页面标题 ====== -->
+    <section class="mb-16 pt-2">
+      <p class="font-mono text-[11px] tracking-[0.4em] uppercase text-report mb-4">
+        Track Research · 05 · Playbook
+      </p>
+      <h1 class="font-serif-zh text-[38px] sm:text-[46px] font-semibold leading-[1.15] tracking-[0.05em] text-ink mb-5">
+        {{track_keyword}} · 操盘手册
+      </h1>
+      <p class="text-[14.5px] leading-[1.9] tracking-[0.02em] text-ink-soft max-w-2xl">
+        <!-- TODO(操盘手册 · Hero):
+
+          ## 本块必写
+
+          - 一段 80-120 字引言
+          - 强调：本份是给"决定要做"的人看的施工图；数字三场景化；动作周级颗粒度
+          - 语气：直白教练，类创业者手册
+
+          ## 关键提醒
+
+          - 不要在这里堆形容词——读者已经决定要做，他要的是路线图
+        -->
+      </p>
+    </section>
+
+    <!-- 行内目录（小屏使用；xl+ 由左侧固定边栏接管） -->
+    <nav class="mb-16 border-t border-b border-white/10 py-8 xl:hidden">
+      <p class="font-mono text-[10.5px] tracking-[0.4em] uppercase text-muted mb-4">
+        Table of Contents · 6 章目录
+      </p>
+      <ol class="grid grid-cols-1 sm:grid-cols-2 gap-y-2 text-[14px] text-ink-soft">
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">01</span><a class="hover:text-ink transition-colors" href="#fit-check">你适合做这个吗</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">02</span><a class="hover:text-ink transition-colors" href="#failures">常见失败模式</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">03</span><a class="hover:text-ink transition-colors" href="#zero-to-one">从零到一启动指南</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">04</span><a class="hover:text-ink transition-colors" href="#monetize-how">怎么赚钱</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">05</span><a class="hover:text-ink transition-colors" href="#monetize-how-much">能赚多少</a></li>
+        <li class="flex gap-3"><span class="font-mono text-[11px] text-report w-6">06</span><a class="hover:text-ink transition-colors" href="#resources">行业资源导航</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====== 第 1 章 · 你适合做这个吗 ====== -->
+    <section id="fit-check" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·01</span>
+        <span>决策清单 + 决策树 + 止损标准</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        你适合做这个吗
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第1章 · 你适合做这个吗):
+
+          ## 本章必写
+
+          - 1.1 决策清单：10-15 条 yes/no 自检题（资金 / 时间 / 心力 / 资源 / 技能 / 人脉）
+          - 1.2 决策树：图示或文字流程，3-4 个关键分叉点
+          - 1.3 止损标准：3 个量化止损线（如"6 个月零收入即止 / 投入超 X 万即止"）
+
+          ## 推荐 HTML 结构
+
+          - 决策清单 → <table class="report-table">，列：自检项 / 通过线 / 你的情况
+          - 决策树 → 内联 SVG（节点 + 分支）或 <details> 嵌套
+          - 止损标准 → 3 个 <div class="judge-card"> 红色 label
+          - 框架引用 → <span class="framework-tag">FRAMEWORK · FIT-CHECK 3D</span>
+
+          ## 独有框架 · fit-check 三维
+
+          - 资源匹配（资金 / 时间 / 技能 / 关系）
+          - 心力匹配（能扛多久零回报）
+          - 时机匹配（错过窗口的代价）
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 15 条自检你通过几条？
+          - Q2 3 条最不可妥协的条件？
+          - Q3 你的"最大可承受亏损"？
+          - Q4 什么信号出现你就该撤？
+          - Q5 什么背景的人最不适合做？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>15 条自检你通过几条？<strong>答</strong>：</li>
+          <li>3 条最不可妥协的条件？<strong>答</strong>：</li>
+          <li>你的"最大可承受亏损"是多少？<strong>答</strong>：</li>
+          <li>什么信号出现你就该撤？<strong>答</strong>：</li>
+          <li>什么背景的人最不适合做？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 2 章 · 常见失败模式 ====== -->
+    <section id="failures" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·02</span>
+        <span>3-5 种失败模式 · 模式名 + 根因 + 真实案例 + 早期信号</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        常见失败模式
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第2章 · 常见失败模式):
+
+          ## 本章必写（**≥ 3 种**失败模式，每种固定 4 小节）
+
+          - 模式名（强陈述句，如"前期狂砸 SEM、零自然流量积累"）
+          - 根本原因（拆到底层结构性原因，不是表面现象）
+          - 真实案例（cite material 来源；如无公开案例，写"未找到具名公开案例"）
+          - 早期信号（3-5 个可观察的预警指标）
+
+          ## 推荐 HTML 结构
+
+          - 每种 → <h3 class="subhead">Failure N · 模式名</h3>
+          - 4 小节 → <h4 class="subhead"> 或 <div class="judge-card"> 红色 label
+
+          ## 失败模式分类（参见 SKILL.md §2.3.6 独有框架）
+
+          - 方向错（赛道选错）
+          - 节奏错（时间分配错）
+          - 资源错（钱花错地方）
+          - 心态错（情绪化决策）
+
+          至少覆盖其中 3 类。
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 最常见的失败模式？
+          - Q2 新人最容易踩的坑？
+          - Q3 哪种失败最难挽回？
+          - Q4 3 个最早期的预警信号？
+          - Q5 如何防住这些失败模式？
+        -->
+
+        <h3 class="subhead">Failure 1 · {{failure_1_name}}</h3>
+        <!-- TODO(Failure 1):
+             按上述 4 小节填（模式名 / 根本原因 / 真实案例 / 早期信号）
+             标失败分类（方向错 / 节奏错 / 资源错 / 心态错）
+        -->
+
+        <h3 class="subhead">Failure 2 · {{failure_2_name}}</h3>
+        <!-- TODO(Failure 2):
+             按上述 4 小节填（模式名 / 根本原因 / 真实案例 / 早期信号）
+             标失败分类（方向错 / 节奏错 / 资源错 / 心态错）
+        -->
+
+        <h3 class="subhead">Failure 3 · {{failure_3_name}}</h3>
+        <!-- TODO(Failure 3):
+             按上述 4 小节填（模式名 / 根本原因 / 真实案例 / 早期信号）
+             标失败分类（方向错 / 节奏错 / 资源错 / 心态错）
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>最常见的失败模式？<strong>答</strong>：</li>
+          <li>新人最容易踩的坑？<strong>答</strong>：</li>
+          <li>哪种失败最难挽回？<strong>答</strong>：</li>
+          <li>3 个最早期的预警信号？<strong>答</strong>：</li>
+          <li>如何防住这些失败模式？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 3 章 · 从零到一启动指南 ====== -->
+    <section id="zero-to-one" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·03</span>
+        <span>4 阶段 · 周级颗粒度 · 每阶段验收</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        从零到一启动指南
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第3章 · 从零到一):
+
+          ## 本章必写（4 阶段，**周级颗粒度**）
+
+          - 3.1 阶段一（第 1-4 周）：调研 + 立项 — 必做动作清单 + 产出物
+          - 3.2 阶段二（第 5-8 周）：MVP 构建 — MVP 形态 + 第一批种子用户
+          - 3.3 阶段三（第 9-12 周）：迭代 + 找到第一条爆款 — 迭代节奏 + 关键指标
+          - 3.4 阶段四（第 13-26 周）：稳定输出 + 第一笔收入 — 收入路径 + 团队雏形
+
+          每阶段必给 5 项：
+          - 本阶段目标（一句话 + 数字化）
+          - 本阶段产出物（具体可见）
+          - 本阶段周计划（按周列任务）
+          - 本阶段烧钱预算（精确到月）
+          - 本阶段止损线（满足什么条件应撤）
+
+          ## 推荐 HTML 结构
+
+          - 每阶段 → <section> 子块 + <h3 class="subhead">
+          - 周计划 → <table class="report-table"> 列：周次 / 任务 / 产出物 / 量化指标
+          - 烧钱预算 → <table class="report-table">
+          - 止损线 → <div class="judge-card"> 红色 label
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 第 1-4 周最关键的产出物？
+          - Q2 第 5-8 周的拐点动作？
+          - Q3 第 9-12 周的爬坡指标？
+          - Q4 第 13-26 周的扩张时机？
+          - Q5 每个阶段的烧钱上限？
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>第一周该做的 3 件事？<strong>答</strong>：</li>
+          <li>MVP 的最小形态？<strong>答</strong>：</li>
+          <li>第一条"爆款"的判定标准？<strong>答</strong>：</li>
+          <li>到第 12 周该达到什么里程碑？<strong>答</strong>：</li>
+          <li>到第 26 周该达到什么里程碑？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 4 章 · 怎么赚钱 ====== -->
+    <section id="monetize-how" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·04</span>
+        <span>每种收入来源结构化拆解</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        怎么赚钱
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第4章 · 怎么赚钱):
+
+          ## 本章必写
+
+          - 3-5 种本赛道适合新人的收入来源，每种结构化：
+            · 收入名 + 启动门槛 + 客单价区间 + 毛利率 + 现金流节奏 + 适合什么阶段做
+          - 末尾给"先做哪个 / 再做哪个"的优先级排序 + 理由
+
+          ## 推荐 HTML 结构
+
+          - 收入来源对比 → <table class="report-table">
+          - 优先级排序 → <ol class="list-decimal pl-5"> 或 <div class="judge-card"> 依次列
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 最先该跑通的一条收入线？
+          - Q2 毛利最高的收入线？
+          - Q3 启动门槛最低的收入线？
+          - Q4 现金流最健康的收入线？
+          - Q5 建议新人不要先做的是？
+
+          ## 必须引用的 03_business_model.html 章节
+
+          - #revenue（收入模式）—— 与 03 保持一致，**不要**自行新增收入类型
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>最先该跑通的一条收入线？<strong>答</strong>：</li>
+          <li>毛利最高的收入线？<strong>答</strong>：</li>
+          <li>启动门槛最低的收入线？<strong>答</strong>：</li>
+          <li>现金流最健康的收入线？<strong>答</strong>：</li>
+          <li>建议新人**不要**先做的是？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 5 章 · 能赚多少 ====== -->
+    <section id="monetize-how-much" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·05</span>
+        <span>启动成本 + 三场景爬坡 + 敏感性分析</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        能赚多少
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第5章 · 能赚多少):
+
+          ## 本章必写（全份 HTML 最硬的一章）
+
+          - 5.1 启动成本三场景（保守 / 中性 / 乐观）：含设备 / 流量 / 库存 / 人力 / 学习费等子项
+          - 5.2 1 / 3 / 6 / 12 月营收爬坡曲线（已有图 1 figure，三场景）
+          - 5.3 启动成本结构图（已有图 2 figure）
+          - 5.4 敏感性分析：2-3 个关键变量（流量获取成本 / 转化率 / 客单价）× +30% / 持平 / -30%
+          - 5.5 三场景判定：保守 / 中性 / 乐观各自的前提条件
+
+          ## 推荐 HTML 结构
+
+          - 启动成本三场景 → <table class="report-table"> 三列对照
+          - 敏感性分析 → <table class="report-table">
+          - 三场景前提 → 3 个 <div class="judge-card">（绿 / 黄 / 红 三色）
+
+          ## 硬约束（参见 SKILL.md §2.3.6 monetize-how-much 三场景模板）
+
+          - **每个数字必须标计算依据**：如"客单价 199 元 = data_index.md 表 3 行 5 的中位数"
+            不能在表格旁标 = 数字凭空冒出，立即补依据或删除
+          - 敏感性分析变量 **≥ 2 个**
+          - 预测段在图表中必须**虚线 + 浅色 + "E" 标识**
+          - 乐观场景的天花板不能脱离 02 头部玩家的水平
+
+          ## 必答 5 题（紧扣下方 qa-card）
+
+          - Q1 保守 / 中性 / 乐观三场景的 12 月营收区间？
+          - Q2 启动总投入区间？
+          - Q3 盈亏平衡点在第几个月？
+          - Q4 最敏感的关键变量？
+          - Q5 不接受哪个数字就别做？
+        -->
+      </div>
+
+      <!-- 统计图 1：财务预测三场景趋势图 -->
+      <figure class="my-8">
+        <!-- TODO(内联 SVG · {{track_keyword}} 1/3/6/12 月营收爬坡 · 三场景):
+             用 <svg viewBox="0 0 800 400"> 画 3 条折线：
+               · 保守（灰 #8A8A94）/ 中性（绿 #10b981）/ 乐观（紫 #A78BFA）
+               · 全部预测段（X ≥ 1 月）用 stroke-dasharray="6,4" + opacity="0.7" + "E" 标注
+               · 横轴月份（1/3/6/12），纵轴营收（元 / 万元）
+               · 每个点带数据标签 + 图例
+             数据来源：raw/data_index.md 成本与收益表 + 用户行为表
+        -->
+        <figcaption class="font-mono text-[11px] text-muted mt-3 leading-[1.6] tracking-[0.05em]">
+          图 1 · {{track_keyword}} 1/3/6/12 月营收爬坡 · 保守 / 中性 / 乐观 三场景 · 预测段使用虚线 · 数据来源：见脚注
+        </figcaption>
+      </figure>
+
+      <!-- 统计图 2：启动成本结构图 -->
+      <figure class="my-8">
+        <!-- TODO(内联 SVG / CSS · {{track_keyword}} 启动成本结构):
+             两种实现二选一：
+               1) 内联 SVG 环形/饼图 <svg viewBox="0 0 600 400">：设备 / 流量 / 库存 / 人力 / 学习费 分扇区，旁标百分比
+               2) CSS 横条百分比：每项一行，<div style="width:X%"> 横条
+             配色：主色 #10b981 / 辅色 #A78BFA / 中性 #8A8A94
+             数据来源：raw/data_index.md 成本与收益表
+        -->
+        <figcaption class="font-mono text-[11px] text-muted mt-3 leading-[1.6] tracking-[0.05em]">
+          图 2 · {{track_keyword}} 启动成本结构（含设备 / 流量 / 库存 / 人力 / 学习费） · 数据来源：见脚注
+        </figcaption>
+      </figure>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>保守 / 中性 / 乐观三场景的 12 月营收区间？<strong>答</strong>：</li>
+          <li>启动总投入区间（保守 / 中性 / 乐观）？<strong>答</strong>：</li>
+          <li>盈亏平衡点在第几个月？<strong>答</strong>：</li>
+          <li>最敏感的关键变量是哪一个？<strong>答</strong>：</li>
+          <li>不接受哪个数字就别做？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="chapter-divider">·　·　·</div>
+
+    <!-- ====== 第 6 章 · 行业资源导航 ====== -->
+    <section id="resources" class="scroll-mt-24 pt-4">
+      <div class="mb-5 flex items-baseline justify-between font-mono text-[10.5px] tracking-[0.35em] uppercase text-muted">
+        <span class="font-semibold text-report">CH·06</span>
+        <span>必看清单 + 必关注账号 + 必参加活动</span>
+      </div>
+      <h2 class="font-serif-zh text-[28px] sm:text-[32px] font-semibold leading-[1.35] tracking-[0.06em] text-ink mb-9">
+        行业资源导航
+      </h2>
+
+      <div class="prose-body zh-justify">
+        <!-- TODO(第6章 · 行业资源导航):
+
+          ## 本章必写
+
+          - 6.1 必读清单：5-8 份"教科书级"行业报告 / 书籍 / 长文 + 每条配 1 句"为什么必读"
+          - 6.2 必关注账号：头部博主 / 行业媒体 / KOL（**禁止付费引流账号**）
+          - 6.3 必参加活动：行业展会 / 闭门会 / 公开可加入的圈层社群
+          - 6.4 工具栈速查：5-10 个最常用工具（产品名 + 用途 + 价格档）
+
+          ## 推荐 HTML 结构
+
+          - 4 类资源 → 4 个 <h3 class="subhead">
+          - 必读 / 账号 / 活动 / 工具 → <ul> 列点 + 每条带公开来源链接
+          - 工具栈 → <table class="report-table">
+
+          ## 关键提醒
+
+          - 每条资源必须带公开来源（URL）——避免"行业内大家都知道"这种空话
+          - 不要写"加 XX 微信"这种引流性推荐
+        -->
+      </div>
+
+      <div class="qa-card mt-10">
+        <div class="qa-card-label">必须答的问题 · 5 problems</div>
+        <ol class="list-decimal pl-5 space-y-1.5 text-[14px] leading-[1.9]">
+          <li>3 份必读资料？<strong>答</strong>：</li>
+          <li>3 个必关注账号？<strong>答</strong>：</li>
+          <li>2 个值得参加的活动？<strong>答</strong>：</li>
+          <li>3 个一定要会用的工具？<strong>答</strong>：</li>
+          <li>哪个圈层最值得花时间混？<strong>答</strong>：</li>
+        </ol>
+      </div>
+    </section>
+
+  </main>
+
+  </div>
+</body>
+</html>

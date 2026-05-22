@@ -10,6 +10,7 @@ Development rules:
 
 from .change_agent_username import ChangeAgentUsernameUseCase
 from .create_wechat_login_session import CreateAgentWechatLoginSessionUseCase
+from .dev_fake_login import DevFakeLoginUseCase
 from .exchange_wechat_login import ExchangeAgentWechatLoginUseCase
 from .get_current_agent_account import GetCurrentAgentAccountUseCase
 from .get_wechat_login_session import GetAgentWechatLoginSessionUseCase
@@ -22,6 +23,7 @@ from .verify_email_binding_challenge import VerifyEmailBindingChallengeUseCase
 __all__ = [
     "ChangeAgentUsernameUseCase",
     "CreateAgentWechatLoginSessionUseCase",
+    "DevFakeLoginUseCase",
     "ExchangeAgentWechatLoginUseCase",
     "GetCurrentAgentAccountUseCase",
     "GetAgentWechatLoginSessionUseCase",

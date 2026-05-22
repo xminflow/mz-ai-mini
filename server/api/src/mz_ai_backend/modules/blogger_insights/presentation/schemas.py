@@ -44,6 +44,7 @@ class BloggerInsightImportRequest(BaseModel):
     report_summary: dict[str, Any] | None = None
     source_run_id: str | None = Field(default=None, max_length=64)
     captured_at: datetime | None = None
+    is_free: bool = False
     status: BloggerInsightStatus = BloggerInsightStatus.PUBLISHED
 
     @field_validator("slug", "display_name")
@@ -81,6 +82,7 @@ class BloggerInsightImportRequest(BaseModel):
             report_summary=self.report_summary,
             source_run_id=self.source_run_id,
             captured_at=self.captured_at,
+            is_free=self.is_free,
             status=self.status,
         )
 
@@ -100,6 +102,7 @@ class BloggerInsightListItemResponse(BaseModel):
     positioning: str | None
     tags: tuple[str, ...]
     cover_image_url: str | None
+    is_free: bool
     status: BloggerInsightStatus
     captured_at: str | None
     published_at: str | None
@@ -141,7 +144,7 @@ class BloggerInsightListResponse(BaseModel):
 
 
 class BloggerInsightDetailResponse(BaseModel):
-    """详情场景对外响应（含完整 HTML 报告与摘要）。"""
+    """详情场景对外响应（含 HTML 报告全文与摘要）。"""
 
     model_config = ConfigDict(frozen=True)
 
@@ -156,6 +159,7 @@ class BloggerInsightDetailResponse(BaseModel):
     positioning: str | None
     tags: tuple[str, ...]
     cover_image_url: str | None
+    is_free: bool
     status: BloggerInsightStatus
     captured_at: str | None
     published_at: str | None

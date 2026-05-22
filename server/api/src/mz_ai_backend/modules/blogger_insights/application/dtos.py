@@ -28,6 +28,7 @@ class BloggerInsightUpsertCommand(BaseModel):
     report_summary: dict[str, Any] | None
     source_run_id: str | None
     captured_at: datetime | None
+    is_free: bool = False
     status: BloggerInsightStatus = BloggerInsightStatus.PUBLISHED
 
 
@@ -75,6 +76,7 @@ class BloggerInsightListItemResult(BaseModel):
     positioning: str | None
     tags: tuple[str, ...]
     cover_image_url: str | None
+    is_free: bool
     status: BloggerInsightStatus
     captured_at: datetime | None
     published_at: datetime | None
@@ -83,7 +85,7 @@ class BloggerInsightListItemResult(BaseModel):
 
 
 class BloggerInsightDetailResult(BloggerInsightListItemResult):
-    """详情场景包含完整 HTML 报告与摘要。"""
+    """详情场景包含 HTML 报告全文与摘要。"""
 
     signature: str | None
     report_html: str

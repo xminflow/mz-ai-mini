@@ -2,12 +2,12 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: '百万粉博主运营方法论精炼 · 微域生光自媒体运营实战',
+  title: '百万博主运营方法论精炼 · 自媒体运营实战手册',
   description:
-    '从底层逻辑到变现链路，面向实体老板、专业人士与个人 IP 创业者的自媒体运营方法论书站。',
+    '从底层逻辑、定位、选题到文案、脚本、拍摄剪辑、增长、变现——面向实体老板、专业人士与个人 IP 创业者的 AI × 自媒体获客实战方法论手册，把别人验证过的经验变成你的方法。',
   openGraph: {
-    title: '百万粉博主运营方法论精炼 · 微域生光自媒体运营实战',
-    description: '正确比多重要，短视频是练会的，粉丝经济是终局。',
+    title: '百万博主运营方法论精炼 · 自媒体运营实战手册',
+    description: '正确比多重要，短视频是练会的，粉丝经济是终局——AI × 自媒体获客方法论。',
   },
 }
 

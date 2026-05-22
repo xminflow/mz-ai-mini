@@ -127,6 +127,17 @@ def resolve_douyin_video_mp4_url(
     return play_url.replace("playwm", "play")
 
 
+def _exponential_backoff(attempt: int, base_range: tuple[float, float]) -> float:
+    """指数退避：第 attempt 次失败后等待的秒数。
+
+    factor = 2 ** (attempt - 1)，最高封顶 4 倍——避免极端情况单条卡死。
+    例：base=(15, 30) 时实际等待区间为：
+        attempt=1 → 15-30s；attempt=2 → 30-60s；attempt=3+ → 60-120s。
+    """
+    factor = min(2 ** (attempt - 1), 4)
+    return random.uniform(base_range[0] * factor, base_range[1] * factor)
+
+
 def download_video(
     page_url: str,
     output_path: Path,
@@ -135,18 +146,19 @@ def download_video(
     cookies_path: Path | None = None,  # 保留兼容性，本路径不用
     cookies_from_browser_dir: Path | None = None,  # 保留兼容性，本路径不用
     timeout_seconds: int = 120,
-    max_retries: int = 3,
-    retry_backoff_seconds: tuple[float, float] = (3.0, 6.0),
+    max_retries: int = 5,
+    retry_backoff_seconds: tuple[float, float] = (15.0, 30.0),
 ) -> Path:
     """下载抖音作品视频到 `output_path`。失败抛 RuntimeError。
 
     流程：page URL → iesdouyin 解析 → 流式下载 mp4。
 
     针对抖音 mp4 直链的反爬限速（HTTP 403）做重试：
-    - max_retries：最多尝试次数（含首次）。默认 3 次。
-    - retry_backoff_seconds：重试前的随机等待区间（秒）。每次重试前 sleep 一段随机时间，
-      并且重新调 iesdouyin 解析拿一个**新的**带签名 mp4 URL（同一个 URL 可能在窗口内
-      被持续限速）。
+    - max_retries：最多尝试次数（含首次）。默认 5 次。
+    - retry_backoff_seconds：第一次重试前的随机等待区间（秒）。后续重试按指数退避增长
+      （factor=1/2/4/4 封顶），并且重新调 iesdouyin 解析拿一个**新的**带签名 mp4 URL
+      （同一个 URL 可能在窗口内被持续限速）。
+      抖音的限速窗口往往在 15-60s 量级，这个默认值是按那个窗口校准的。
     """
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -192,8 +204,8 @@ def download_video(
                         )
                         # 触发重试（不写文件，下面循环 sleep + 重新解析）
                         if attempt < max_retries:
-                            wait = random.uniform(*retry_backoff_seconds)
-                            _log.info("等待 %.1fs 后重试…", wait)
+                            wait = _exponential_backoff(attempt, retry_backoff_seconds)
+                            _log.info("等待 %.1fs 后重试（指数退避 attempt=%d）…", wait, attempt)
                             time.sleep(wait)
                             continue
                         raise RuntimeError(
@@ -215,8 +227,8 @@ def download_video(
             last_exc = exc
             _log.warning("下载网络错误（尝试 %d/%d）: %s", attempt, max_retries, exc)
             if attempt < max_retries:
-                wait = random.uniform(*retry_backoff_seconds)
-                _log.info("等待 %.1fs 后重试…", wait)
+                wait = _exponential_backoff(attempt, retry_backoff_seconds)
+                _log.info("等待 %.1fs 后重试（指数退避 attempt=%d）…", wait, attempt)
                 time.sleep(wait)
                 continue
             raise RuntimeError(f"下载失败 {page_url}: {exc}") from exc
