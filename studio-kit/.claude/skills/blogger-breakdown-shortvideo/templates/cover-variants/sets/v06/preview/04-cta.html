@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- v06 多窗口分屏 · slide-cta · 中央主 panel 微域生光金色大字 + 真实博主拆解副标，背景叠加 5 个小型空 panel 作为不对称拼贴氛围 -->
+<head>
+  <meta charset="UTF-8">
+  <title>slide-cta — 微域生光</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1080px; height: 1920px; overflow: hidden;
+      background: #080808; color: #fff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .stage {
+      position: relative; width: 1080px; height: 1920px;
+      background:
+        radial-gradient(ellipse 800px 700px at 50% 46%, rgba(201,162,39,0.14) 0%, transparent 62%),
+        radial-gradient(ellipse 500px 500px at 18% 22%, rgba(180,100,20,0.10) 0%, transparent 68%),
+        radial-gradient(ellipse 420px 420px at 82% 72%, rgba(201,162,39,0.09) 0%, transparent 68%),
+        #080808;
+    }
+
+    /* 顶部 ticker */
+    .topbar {
+      position: absolute; top: 0; left: 0;
+      width: 1080px; height: 46px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      border-bottom: 1px solid rgba(201,162,39,0.35);
+      background: rgba(8,8,8,0.6);
+      z-index: 10;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 14px; letter-spacing: 0.18em;
+      color: rgba(232,196,107,0.9);
+    }
+    .topbar .dot {
+      display: inline-block; width: 8px; height: 8px;
+      background: #c9a227; border-radius: 50%;
+      margin-right: 10px; animation: blink 1.4s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    .grid {
+      position: absolute; top: 46px; left: 0;
+      width: 1080px; height: 1874px;
+    }
+
+    /* 背景叠加的小型空 panel（仅边框，无内容） */
+    .ghost {
+      position: absolute;
+      background: rgba(14,14,14,0.35);
+      border: 1px solid rgba(201,162,39,0.28);
+      opacity: 0;
+      animation: ghostIn 0.55s cubic-bezier(.2,.7,.2,1) forwards;
+    }
+    @keyframes ghostIn { to { opacity: 1; } }
+
+    .g1 { left: 40px;   top: 80px;   width: 220px; height: 280px; animation-delay: 0.05s; }
+    .g2 { left: 820px;  top: 120px;  width: 220px; height: 200px; animation-delay: 0.15s; }
+    .g3 { left: 60px;   top: 1380px; width: 260px; height: 240px; animation-delay: 0.25s; }
+    .g4 { left: 800px;  top: 1420px; width: 240px; height: 280px; animation-delay: 0.35s; }
+    .g5 { left: 880px;  top: 760px;  width: 160px; height: 360px; animation-delay: 0.45s; }
+    .g6 { left: 40px;   top: 760px;  width: 160px; height: 360px; animation-delay: 0.55s; background: rgba(201,162,39,0.05); }
+
+    /* 装饰：每个 ghost 内部加小标记，不写内容 */
+    .ghost::before {
+      content: "//";
+      position: absolute; top: 14px; left: 18px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 14px; letter-spacing: 0.25em;
+      color: rgba(232,196,107,0.5);
+    }
+    .ghost::after {
+      content: "";
+      position: absolute; bottom: 18px; left: 18px; right: 18px;
+      height: 1px;
+      background: linear-gradient(to right, rgba(201,162,39,0.5), transparent);
+    }
+
+    /* 内部脉冲圆点（g1） */
+    .g1 .pulse {
+      position: absolute; right: 22px; top: 18px;
+      width: 12px; height: 12px;
+    }
+    .g1 .pulse::before, .g1 .pulse::after {
+      content: ""; position: absolute; inset: 0;
+      border-radius: 50%; background: #c9a227;
+    }
+    .g1 .pulse::after { animation: pulseRing 1.8s ease-out infinite; }
+    @keyframes pulseRing { 0%{transform:scale(1);opacity:0.8} 100%{transform:scale(3.6);opacity:0} }
+
+    /* g3 mini bars */
+    .g3 .mini-bars {
+      position: absolute; left: 18px; right: 18px; bottom: 36px;
+      height: 60px; display: flex; align-items: end; gap: 6px;
+    }
+    .g3 .mini-bars b {
+      flex: 1; background: linear-gradient(180deg, #e8c46b, #c9a227);
+      height: 0; animation: barRise 0.9s cubic-bezier(.2,.7,.2,1) forwards;
+    }
+    .g3 .mini-bars b:nth-child(1){--h:32%;animation-delay:1.0s}
+    .g3 .mini-bars b:nth-child(2){--h:55%;animation-delay:1.15s}
+    .g3 .mini-bars b:nth-child(3){--h:75%;animation-delay:1.30s}
+    .g3 .mini-bars b:nth-child(4){--h:100%;animation-delay:1.45s}
+    @keyframes barRise { to { height: var(--h); } }
+
+    /* g4 阶梯 */
+    .g4 .mini-stairs {
+      position: absolute; left: 18px; right: 18px; bottom: 36px;
+      height: 80px; display: flex; align-items: end; gap: 4px;
+    }
+    .g4 .mini-stairs i {
+      flex: 1;
+      background: rgba(201,162,39,0.2);
+      border: 1px solid rgba(201,162,39,0.5);
+      border-bottom: none;
+      opacity: 0.25;
+      animation: stairOn 0.5s ease-out forwards;
+    }
+    .g4 .mini-stairs i:nth-child(1){height:25%;animation-delay:1.2s}
+    .g4 .mini-stairs i:nth-child(2){height:55%;animation-delay:1.4s}
+    .g4 .mini-stairs i:nth-child(3){height:82%;animation-delay:1.6s}
+    .g4 .mini-stairs i:nth-child(4){height:100%;animation-delay:1.8s;animation-name:stairOnTop}
+    @keyframes stairOn { to { opacity: 1; background: rgba(232,196,107,0.55); } }
+    @keyframes stairOnTop { to { opacity: 1; background: #e8c46b; box-shadow: 0 0 14px rgba(232,196,107,0.55); } }
+
+    /* g2 进度条 */
+    .g2 .mini-bar {
+      position: absolute; left: 18px; right: 18px; bottom: 30px;
+      height: 4px; background: rgba(255,255,255,0.08);
+    }
+    .g2 .mini-bar i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, #c9a227, #e8c46b);
+      animation: barFill 1.6s cubic-bezier(.2,.7,.2,1) 1.0s forwards;
+    }
+    @keyframes barFill { to { width: 82%; } }
+
+    /* 中央主 panel */
+    .main-panel {
+      position: absolute;
+      left: 90px; right: 90px;
+      top: 410px; height: 1054px;
+      background:
+        linear-gradient(135deg, rgba(201,162,39,0.10) 0%, rgba(8,8,8,0) 60%),
+        rgba(14,14,14,0.72);
+      border: 1px solid rgba(201,162,39,0.55);
+      overflow: hidden;
+      opacity: 0; transform: translateY(20px);
+      animation: panelIn 0.65s cubic-bezier(.2,.7,.2,1) 0.65s forwards;
+      z-index: 5;
+    }
+    @keyframes panelIn { to { opacity: 1; transform: translateY(0); } }
+
+    .main-panel .m-label {
+      position: absolute; top: 32px; left: 40px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 18px; letter-spacing: 0.32em;
+      color: rgba(232,196,107,0.85);
+    }
+    .main-panel .m-tag {
+      position: absolute; top: 32px; right: 40px;
+      font-family: 'Inter', system-ui, monospace;
+      font-size: 14px; letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* 微域生光金色大字 */
+    .brand-big {
+      position: absolute; left: 0; right: 0; top: 280px;
+      text-align: center;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-size: 180px; font-weight: 900;
+      color: #e8c46b;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      text-shadow:
+        0 0 40px rgba(232,196,107,0.55),
+        0 0 100px rgba(201,162,39,0.25),
+        0 0 160px rgba(201,162,39,0.10);
+      opacity: 0; transform: scale(0.85);
+      animation: brandIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 1.0s forwards;
+    }
+    @keyframes brandIn { to { opacity: 1; transform: scale(1); } }
+
+    /* 中间金色横线 */
+    .center-divider {
+      position: absolute; left: 50%; top: 560px;
+      width: 0; height: 2px;
+      transform: translateX(-50%);
+      background: linear-gradient(to right, transparent, #f0d060, #c9a227, #f0d060, transparent);
+      background-size: 200% 100%;
+      box-shadow: 0 0 18px rgba(201,162,39,0.5);
+      animation:
+        cdGrow 0.5s ease 1.45s forwards,
+        shimmer 2.6s linear 2.0s infinite;
+    }
+    @keyframes cdGrow { to { width: 280px; } }
+    @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+    /* 副标 */
+    .brand-sub {
+      position: absolute; left: 0; right: 0; top: 620px;
+      text-align: center;
+      font-size: 52px; font-weight: 500;
+      color: rgba(255,255,255,0.95);
+      letter-spacing: 0.18em;
+      opacity: 0; transform: translateY(20px);
+      animation: subIn 0.6s cubic-bezier(.2,.7,.2,1) 1.65s forwards;
+    }
+    @keyframes subIn { to { opacity: 1; transform: translateY(0); } }
+
+    .brand-sub-small {
+      position: absolute; left: 0; right: 0; top: 720px;
+      text-align: center;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 26px; font-weight: 400;
+      letter-spacing: 0.32em;
+      color: rgba(255,255,255,0.45);
+      opacity: 0;
+      animation: subIn 0.5s ease 2.0s forwards;
+    }
+
+    /* 主 panel 底部装饰：5 dot row */
+    .dot-row {
+      position: absolute; left: 0; right: 0; bottom: 80px;
+      display: flex; justify-content: center; align-items: center; gap: 14px;
+      opacity: 0;
+      animation: subIn 0.5s ease 2.3s forwards;
+    }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+    }
+    .dot.active {
+      background: #c9a227;
+      box-shadow: 0 0 12px rgba(201,162,39,0.7);
+    }
+
+    .main-panel .m-id {
+      position: absolute; left: 40px; bottom: 32px;
+      font-family: 'Inter', system-ui, monospace;
+      font-size: 14px; color: #c9a227;
+      letter-spacing: 0.22em;
+      opacity: 0;
+      animation: subIn 0.5s ease 2.5s forwards;
+    }
+    .main-panel .m-id::before {
+      content: ""; display: inline-block;
+      width: 28px; height: 1px; background: #c9a227;
+      vertical-align: middle; margin-right: 12px;
+    }
+    .main-panel .m-end {
+      position: absolute; right: 40px; bottom: 32px;
+      font-family: 'Inter', system-ui, monospace;
+      font-size: 14px; color: rgba(255,255,255,0.4);
+      letter-spacing: 0.22em;
+      opacity: 0;
+      animation: subIn 0.5s ease 2.5s forwards;
+    }
+
+    /* 底部 ticker */
+    .footer {
+      position: absolute; left: 0; bottom: 0; width: 1080px; height: 46px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 36px;
+      border-top: 1px solid rgba(201,162,39,0.35);
+      background: rgba(8,8,8,0.6);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 13px; color: rgba(232,196,107,0.7);
+      letter-spacing: 0.22em; z-index: 10;
+    }
+
+    .duration-debug {
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="topbar">
+    <div><span class="dot"></span>END · cta · LIVE</div>
+    <div>No.4 / 14 · CTA</div>
+  </div>
+
+  <div class="grid">
+
+    <!-- 背景氛围 ghost panels -->
+    <div class="ghost g1" aria-hidden="true">
+      <div class="pulse"></div>
+    </div>
+    <div class="ghost g2" aria-hidden="true">
+      <div class="mini-bar"><i></i></div>
+    </div>
+    <div class="ghost g3" aria-hidden="true">
+      <div class="mini-bars">
+        <b></b><b></b><b></b><b></b>
+      </div>
+    </div>
+    <div class="ghost g4" aria-hidden="true">
+      <div class="mini-stairs">
+        <i></i><i></i><i></i><i></i>
+      </div>
+    </div>
+    <div class="ghost g5" aria-hidden="true"></div>
+    <div class="ghost g6" aria-hidden="true"></div>
+
+    <!-- 中央主 panel -->
+    <div class="main-panel">
+      <div class="m-label">// END</div>
+      <div class="m-tag">CH.4 / 14</div>
+
+      <div class="brand-big">微域生光</div>
+      <div class="center-divider" aria-hidden="true"></div>
+      <div class="brand-sub">真实博主拆解</div>
+      <div class="brand-sub-small">真实数据 · 真实增长</div>
+
+      <div class="dot-row" aria-hidden="true">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="m-id">微域生光 · 博主拆解系列</div>
+      <div class="m-end">END · 14 OF 14</div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div>微域生光 · 真实博主拆解</div>
+    <div>cta · CONSOLE</div>
+  </div>
+
+  <div class="duration-debug">8200ms</div>
+</div>
+</body>
+</html>

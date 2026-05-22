@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!--
+  v03 数据瀑布 · slide-hook
+  视觉语言：深底 + 金色脊柱 + 单个超大数字（{{hook_big_text}}）从屏顶弹性坠落 + 金色拖尾 + 副标淡入
+  版式：超大金字垂直居中（主视觉），副标位于其下方，整体强戏剧、强冲击
+  动画时间轴：
+    t=0.0s   背景立即可见，顶部金光条 + 中央脊柱呼吸
+    t=0.2s   HOOK 顶部标签淡入
+    t=0.5s   超大数字 {{hook_big_text}} 从屏顶坠入（带模糊→清晰、长拖尾）
+    t=1.7s   金光下划线划开
+    t=2.1s   副标 {{hook_sub_text}} 淡入上浮
+    t=2.6s   底部"微域生光"脚标渐显
+    t=2.6–5.0s 全部元素定格，金色脊柱呼吸 idle
+-->
+<title>slide-hook · v03</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #080808;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background:
+      radial-gradient(ellipse 800px 1100px at 50% 55%, rgba(201,162,39,0.10) 0%, transparent 65%),
+      radial-gradient(ellipse 600px 400px at 50% 8%, rgba(232,196,107,0.20) 0%, transparent 70%),
+      linear-gradient(180deg, #0a0a0a 0%, #080808 60%, #050505 100%);
+    overflow: hidden;
+  }
+
+  .top-glow {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, transparent 0%, #d4af37 20%, #e8c46b 50%, #d4af37 80%, transparent 100%);
+    box-shadow: 0 0 24px #c9a227, 0 0 48px rgba(201,162,39,0.4);
+  }
+
+  .spine {
+    position: absolute;
+    left: 50%; top: 80px;
+    width: 2px; height: 1760px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(212,175,55,0.0) 5%,
+      rgba(212,175,55,0.35) 50%,
+      rgba(212,175,55,0.0) 95%,
+      transparent 100%);
+    animation: spineBreath 3s ease-in-out infinite alternate;
+  }
+  @keyframes spineBreath {
+    0%   { opacity: 0.4; }
+    100% { opacity: 0.85; }
+  }
+
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(212,175,55,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,175,55,0.04) 1px, transparent 1px);
+    background-size: 120px 120px;
+    mask-image: radial-gradient(ellipse 700px 1100px at 50% 50%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 700px 1100px at 50% 50%, #000 30%, transparent 75%);
+  }
+
+  /* HOOK 顶部标签 */
+  .hook-tag {
+    position: absolute;
+    top: 220px; left: 0; right: 0;
+    text-align: center;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 36px;
+    font-weight: 400;
+    color: rgba(232,196,107,0.85);
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeIn 0.5s ease 0.2s forwards;
+    z-index: 3;
+  }
+  .hook-tag::before, .hook-tag::after {
+    content: '—';
+    margin: 0 22px;
+    color: rgba(232,196,107,0.45);
+  }
+
+  /* 中央超大数字（hook_big_text） */
+  .hook-big-wrap {
+    position: absolute;
+    left: 0; right: 0;
+    top: 760px;
+    text-align: center;
+    z-index: 2;
+  }
+  .hook-big {
+    display: inline-block;
+    position: relative;
+    font-family: 'Inter', 'SF Pro Display', system-ui, 'Microsoft YaHei', sans-serif;
+    font-size: 280px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    background: linear-gradient(180deg, #f4d97a 0%, #e8c46b 40%, #c9a227 70%, #9b7b1f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 60px rgba(232,196,107,0.4);
+    opacity: 0;
+    transform: translateY(-1200px);
+    filter: blur(10px);
+    animation: hookDrop 1.2s cubic-bezier(0.34, 1.56, 0.4, 1) 0.5s forwards;
+    will-change: transform, opacity, filter;
+    max-width: 900px;
+    padding: 0 40px;
+    word-break: break-all;
+  }
+  .hook-big.is-text { font-size: 156px; padding: 0 80px; }
+
+  @keyframes hookDrop {
+    0%   { transform: translateY(-1200px); opacity: 0; filter: blur(10px); }
+    70%  { filter: blur(0); }
+    100% { transform: translateY(0); opacity: 1; filter: blur(0); }
+  }
+
+  /* 拖尾（伪元素附着在 hook-big 上） */
+  .hook-big::before {
+    content: '';
+    position: absolute;
+    left: 50%; bottom: 100%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(232,196,107,0.0) 0%, rgba(232,196,107,0.75) 100%);
+    opacity: 0;
+    animation: tailFade 1.2s ease 0.5s forwards;
+  }
+  @keyframes tailFade {
+    0%   { height: 0;   opacity: 0; }
+    40%  { height: 540px; opacity: 0.9; }
+    100% { height: 0;   opacity: 0; }
+  }
+
+  /* 金光下划线 */
+  .hook-underline {
+    margin: 56px auto 0;
+    height: 6px;
+    width: 0;
+    border-radius: 3px;
+    background: linear-gradient(to right, transparent, #f0d060, #c9a227, #f0d060, transparent);
+    background-size: 300% 100%;
+    box-shadow: 0 0 24px rgba(240,208,96,0.45);
+    animation:
+      ulGrow 0.6s ease 1.7s forwards,
+      shimmer 2.6s linear 2.4s infinite;
+  }
+  @keyframes ulGrow {
+    0%   { width: 0; }
+    100% { width: 320px; }
+  }
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+  }
+
+  /* 副标 */
+  .hook-sub {
+    margin-top: 56px;
+    font-size: 50px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.86);
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    text-align: center;
+    padding: 0 90px;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: subFade 0.7s cubic-bezier(0.22,1,0.36,1) 2.1s forwards;
+  }
+  @keyframes subFade {
+    0%   { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 底部品牌脚标 */
+  .footer {
+    position: absolute;
+    bottom: 130px; left: 0; right: 0;
+    display: flex; justify-content: center; align-items: center;
+    gap: 18px;
+    opacity: 0;
+    animation: fadeIn 0.7s ease 2.6s forwards;
+    z-index: 3;
+  }
+  .brand-w {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 46px; font-weight: 700;
+    color: #c9a227; line-height: 1;
+    text-shadow: 0 0 20px rgba(201,162,39,0.45);
+  }
+  .brand-name {
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    font-size: 28px; font-weight: 400;
+    letter-spacing: 10px;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .bottom-glow {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent 0%, #c9a227 30%, #c9a227 70%, transparent 100%);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 2.6s forwards;
+  }
+
+  @keyframes fadeIn {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .duration-debug {
+    position: absolute; bottom: 14px; right: 22px; z-index: 99;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 10px; color: rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="top-glow"></div>
+  <div class="grid-bg"></div>
+  <div class="spine"></div>
+
+  <div class="hook-tag">HOOK</div>
+
+  <div class="hook-big-wrap">
+    <div class="hook-big" id="hookBig">{{hook_big_text}}</div>
+    <div class="hook-underline" aria-hidden="true"></div>
+    <div class="hook-sub">{{hook_sub_text}}</div>
+  </div>
+
+  <div class="footer">
+    <span class="brand-w">W</span>
+    <span class="brand-name">微域生光</span>
+  </div>
+  <div class="bottom-glow"></div>
+
+  <div class="duration-debug">{{DURATION_MS}}ms · slide-{{index}} · {{slide_type}}</div>
+</div>
+
+<script>
+  // 若 hook_big_text 不含数字 / 货币符号 / 单位，视作纯文字，缩小字号
+  (function(){
+    var el = document.getElementById('hookBig');
+    if (!el) return;
+    var t = (el.textContent || '').trim();
+    if (!/[0-9¥$%×倍万亿家年岁]/.test(t)) {
+      el.classList.add('is-text');
+    }
+  })();
+</script>
+</body>
+</html>

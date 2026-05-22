@@ -1,0 +1,273 @@
+<!-- v08 金线绘制 · slide-hook · 六边形金线框被一笔画出 → 框内大数字字形描边 → 填金色 → 副标 fadeUp -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>slide-hook</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: #080808;
+      color: #ffffff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .stage {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(201,162,39,0.12) 0%, transparent 55%),
+        #080808;
+      overflow: hidden;
+    }
+
+    /* 蓝图细网格 */
+    .blueprint {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.55;
+    }
+
+    /* 顶部 HOOK 标 */
+    .hook-tag {
+      position: absolute;
+      top: 240px; left: 0; right: 0;
+      text-align: center;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 30px;
+      letter-spacing: 0.45em;
+      color: rgba(232,196,107,0.85);
+      opacity: 0;
+      animation: fadeIn 0.5s ease 0.2s forwards;
+    }
+    .hook-tag::before,
+    .hook-tag::after {
+      content: "—";
+      margin: 0 18px;
+      color: rgba(232,196,107,0.45);
+    }
+
+    /* 主绘制层（六边形框 + 内部辅助线） */
+    .draw {
+      position: absolute;
+      inset: 0;
+      width: 1080px;
+      height: 1920px;
+    }
+    .draw .line {
+      fill: none;
+      stroke: #c9a227;
+      stroke-width: 2.2;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 5px rgba(201,162,39,0.5));
+    }
+    .draw .hex {
+      stroke-dasharray: 2400;
+      stroke-dashoffset: 2400;
+      animation: draw 1.5s ease-out 0.3s forwards;
+    }
+    .draw .hex-inner {
+      fill: none;
+      stroke: rgba(201,162,39,0.35);
+      stroke-width: 1.2;
+      stroke-dasharray: 2200;
+      stroke-dashoffset: 2200;
+      animation: draw 1.2s ease-out 0.8s forwards;
+    }
+    .draw .tick {
+      stroke: #c9a227;
+      stroke-width: 2;
+      stroke-dasharray: 40;
+      stroke-dashoffset: 40;
+      animation: draw 0.4s ease-out forwards;
+    }
+    .draw .tick.t1 { animation-delay: 1.7s; }
+    .draw .tick.t2 { animation-delay: 1.8s; }
+    .draw .tick.t3 { animation-delay: 1.9s; }
+    .draw .tick.t4 { animation-delay: 2.0s; }
+    .draw .tick.t5 { animation-delay: 2.1s; }
+    .draw .tick.t6 { animation-delay: 2.2s; }
+
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+
+    /* 框内大字（描边 + 填色） */
+    .big-wrap {
+      position: absolute;
+      top: 760px;
+      left: 0;
+      width: 1080px;
+      text-align: center;
+      pointer-events: none;
+    }
+    .big-wrap svg { width: 1080px; height: 320px; overflow: visible; }
+    .big-stroke {
+      fill: transparent;
+      stroke: #f0d060;
+      stroke-width: 2.4;
+      stroke-dasharray: 2000;
+      stroke-dashoffset: 2000;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-weight: 900;
+      font-size: 240px;
+      letter-spacing: -0.02em;
+      animation: draw 1.7s ease-out 1.6s forwards;
+      filter: drop-shadow(0 0 10px rgba(240,208,96,0.55));
+    }
+    .big-fill {
+      fill: #f0d060;
+      stroke: none;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-weight: 900;
+      font-size: 240px;
+      letter-spacing: -0.02em;
+      opacity: 0;
+      animation: fadeIn 0.7s ease 3.0s forwards, glyphGlow 2.6s ease-in-out 3.7s infinite;
+    }
+    .big-fill.is-text { font-size: 156px; fill: #ffffff; }
+    .big-stroke.is-text { font-size: 156px; }
+
+    @keyframes glyphGlow {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(240,208,96,0.55)); }
+      50%      { filter: drop-shadow(0 0 28px rgba(240,208,96,0.9)); }
+    }
+
+    /* 副标 */
+    .hook-sub {
+      position: absolute;
+      top: 1170px;
+      left: 0;
+      width: 1080px;
+      text-align: center;
+      padding: 0 100px;
+      font-size: 44px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: rgba(255,255,255,0.88);
+      opacity: 0;
+      transform: translateY(20px);
+      animation: subIn 0.7s ease 3.5s forwards;
+    }
+    @keyframes subIn { to { opacity: 1; transform: translateY(0); } }
+
+    /* 底部一根金线脊柱 */
+    .spine-wrap {
+      position: absolute;
+      bottom: 160px;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: center;
+    }
+    .spine {
+      width: 720px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, #c9a227, #f0d060, #c9a227, transparent);
+      transform: scaleX(0);
+      transform-origin: center;
+      animation: spineGrow 0.7s ease-out 3.7s forwards;
+      box-shadow: 0 0 14px rgba(201,162,39,0.5);
+    }
+    @keyframes spineGrow { to { transform: scaleX(1); } }
+
+    /* 底部品牌 */
+    .brand-footer {
+      position: absolute;
+      bottom: 90px;
+      left: 0; right: 0;
+      text-align: center;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 22px;
+      letter-spacing: 8px;
+      color: rgba(232,196,107,0.6);
+      opacity: 0;
+      animation: fadeIn 0.6s ease 4.0s forwards;
+    }
+
+    .duration-debug {
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+<div class="stage">
+  <div class="blueprint"></div>
+
+  <div class="hook-tag">HOOK</div>
+
+  <!-- 主绘制层：金色六边形 -->
+  <svg class="draw" viewBox="0 0 1080 1920" preserveAspectRatio="none">
+    <!-- 外层六边形（六个顶点环绕中央大字）-->
+    <path class="line hex" d="
+      M 540 620
+      L 920 820
+      L 920 1180
+      L 540 1380
+      L 160 1180
+      L 160 820
+      Z
+    "/>
+    <!-- 内层呼应六边形 -->
+    <path class="hex-inner" d="
+      M 540 680
+      L 870 850
+      L 870 1150
+      L 540 1320
+      L 210 1150
+      L 210 850
+      Z
+    "/>
+    <!-- 六个顶点小刻度（每个顶点向外延伸的小金线） -->
+    <line class="tick t1" x1="540" y1="620" x2="540" y2="570"/>
+    <line class="tick t2" x1="920" y1="820" x2="970" y2="790"/>
+    <line class="tick t3" x1="920" y1="1180" x2="970" y2="1210"/>
+    <line class="tick t4" x1="540" y1="1380" x2="540" y2="1430"/>
+    <line class="tick t5" x1="160" y1="1180" x2="110" y2="1210"/>
+    <line class="tick t6" x1="160" y1="820" x2="110" y2="790"/>
+  </svg>
+
+  <!-- 框内大数字（描边 + 填色） -->
+  <div class="big-wrap">
+    <svg viewBox="0 0 1080 320" preserveAspectRatio="xMidYMid meet">
+      <text class="big-stroke" id="bigStroke" x="540" y="245" text-anchor="middle">{{hook_big_text}}</text>
+      <text class="big-fill"   id="bigFill"   x="540" y="245" text-anchor="middle">{{hook_big_text}}</text>
+    </svg>
+  </div>
+
+  <!-- 副标 -->
+  <div class="hook-sub">{{hook_sub_text}}</div>
+
+  <div class="spine-wrap"><div class="spine"></div></div>
+  <div class="brand-footer">微 域 生 光</div>
+
+  <div class="duration-debug">{{DURATION_MS}}ms · {{slide_type}} · #{{index}}</div>
+</div>
+
+<script>
+  // 若 hook_big_text 不含数字 / 货币符号 / % / × / 倍 / 万 / 亿，视作纯文字，缩小字号
+  (function(){
+    var s = document.getElementById('bigStroke');
+    var f = document.getElementById('bigFill');
+    if (!s || !f) return;
+    var t = (f.textContent || '').trim();
+    if (!/[0-9¥$%×倍万亿]/.test(t)) {
+      s.classList.add('is-text');
+      f.classList.add('is-text');
+    }
+  })();
+</script>
+</body>
+</html>

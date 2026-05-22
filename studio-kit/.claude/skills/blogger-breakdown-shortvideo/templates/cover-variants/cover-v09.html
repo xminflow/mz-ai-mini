@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>陈厂长 · 3D 卡片堆叠</title>
+<!--
+  cover-v09 — 3D Card Carousel · 金色 KPI 卡片堆叠翻动
+  设计意图：把博主拆解的 KPI 当作"摆在桌上的实体卡片"。屏幕中央一摞金色描边的 KPI 卡，
+  以 CSS 3D perspective + preserve-3d 透视堆叠，像翻名片一样依次翻起每张正面给镜头看 0.5s，
+  最后博主名片定格在最上面，下面叠 7 张半露的 KPI 卡轻微错位露出金色边线。气质：实体感、有重量、
+  桌面物质性，跟 v10 的"粒子云"形成"离散实体 vs 连续流动"的强对比。
+  数据维度：粉丝 103万 / 获赞 757.5万 / 作品 1291 / 企业 230家 / 公司 4家 / 客单 13万 / 数字人 4亿 / 场景 7套（共 8 个）
+  动画时间轴：
+    t=0     卡片堆从右下方屏幕外飞入，背景金色辉光升起
+    t=1.5   卡片堆抵达中央，名片占位定格
+    t=1.5-5.0  7 张 KPI 卡依次翻起 → 每张正面停 ~0.5s 后翻到下张（stagger）
+    t=5.0   博主名片落到最上面、所有卡叠合
+    t=5.0-7.0  末态定格 2.0s，名片轻微浮动呼吸，底部金线脚标显形
+-->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#080808;font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif;color:#fff}
+
+  .stage{
+    position:relative;width:1080px;height:1920px;
+    background:
+      radial-gradient(ellipse 700px 500px at 50% 55%, rgba(201,162,39,0.18), transparent 70%),
+      radial-gradient(ellipse 900px 700px at 50% 90%, rgba(180,100,20,0.12), transparent 70%),
+      linear-gradient(180deg,#0a0a0a 0%,#080808 60%,#050505 100%);
+    overflow:hidden;
+  }
+
+  /* 顶部小字 */
+  .topline{
+    position:absolute;top:90px;left:0;right:0;text-align:center;
+    font-size:26px;letter-spacing:14px;color:rgba(232,196,107,0.78);
+    opacity:0;animation:topIn 0.8s ease-out 0.3s forwards;
+  }
+  .topline::before,.topline::after{content:"";display:inline-block;width:60px;height:1px;background:#c9a227;vertical-align:middle;margin:0 18px}
+
+  @keyframes topIn{to{opacity:1}}
+
+  /* 副标 */
+  .subtitle{
+    position:absolute;top:1640px;left:0;right:0;text-align:center;
+    font-size:32px;letter-spacing:8px;color:rgba(255,255,255,0.78);
+    opacity:0;animation:subIn 0.8s ease-out 5.0s forwards;
+  }
+  @keyframes subIn{to{opacity:1}}
+
+  /* 底部金线脚标 */
+  .footer{
+    position:absolute;bottom:90px;left:0;right:0;text-align:center;
+    font-size:24px;letter-spacing:10px;color:#c9a227;
+    opacity:0;animation:footIn 1.0s ease-out 5.2s forwards;
+  }
+  .footer::before,.footer::after{content:"";display:inline-block;width:80px;height:1px;background:linear-gradient(90deg,transparent,#c9a227,transparent);vertical-align:middle;margin:0 24px}
+
+  @keyframes footIn{to{opacity:1}}
+
+  /* 3D 舞台 */
+  .deck-wrap{
+    position:absolute;left:50%;top:50%;
+    transform:translate(-50%,-50%);
+    width:760px;height:1000px;
+    perspective:1800px;
+    perspective-origin:50% 40%;
+  }
+  .deck{
+    position:relative;width:100%;height:100%;
+    transform-style:preserve-3d;
+    transform:translateX(900px) translateY(500px) rotateZ(25deg);
+    animation:deckIn 1.5s cubic-bezier(.2,.7,.2,1) 0.2s forwards;
+  }
+  @keyframes deckIn{
+    to{transform:translateX(0) translateY(0) rotateZ(0deg)}
+  }
+
+  /* 卡片基类 */
+  .card{
+    position:absolute;left:50%;top:50%;
+    width:620px;height:820px;margin-left:-310px;margin-top:-410px;
+    border-radius:32px;
+    background:
+      linear-gradient(160deg, #1a1408 0%, #221a0c 50%, #100c06 100%);
+    border:2px solid #c9a227;
+    box-shadow:
+      0 30px 60px rgba(0,0,0,0.6),
+      0 12px 24px rgba(0,0,0,0.5),
+      inset 0 0 0 1px rgba(232,196,107,0.18),
+      inset 0 80px 120px rgba(201,162,39,0.05);
+    transform-style:preserve-3d;
+    backface-visibility:hidden;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:60px;
+  }
+  /* 卡片内描金细框 */
+  .card::before{
+    content:"";position:absolute;inset:18px;border:1px solid rgba(232,196,107,0.4);border-radius:22px;pointer-events:none;
+  }
+  /* 卡片四角金角 */
+  .card::after{
+    content:"";position:absolute;inset:14px;border-radius:24px;pointer-events:none;
+    background:
+      linear-gradient(135deg, #e8c46b 0%, transparent 8%, transparent 92%, #e8c46b 100%) 0 0/100% 100%,
+      linear-gradient(45deg, #e8c46b 0%, transparent 8%, transparent 92%, #e8c46b 100%) 0 0/100% 100%;
+    mix-blend-mode:overlay;opacity:0.25;
+  }
+
+  .card .label{
+    font-size:34px;letter-spacing:10px;color:rgba(232,196,107,0.8);
+    margin-bottom:60px;
+  }
+  .card .value{
+    font-family:'Inter','SF Pro Display',system-ui,'Microsoft YaHei',sans-serif;
+    font-size:170px;font-weight:900;line-height:1;
+    background:linear-gradient(180deg, #fff7d9 0%, #e8c46b 45%, #c9a227 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 4px 30px rgba(201,162,39,0.4);
+    letter-spacing:-4px;
+  }
+  .card .unit{
+    font-size:54px;color:#e8c46b;margin-top:14px;letter-spacing:8px;font-weight:600;
+  }
+  .card .note{
+    margin-top:80px;font-size:28px;letter-spacing:6px;color:rgba(255,255,255,0.55);
+  }
+  .card .idx{
+    position:absolute;top:46px;right:60px;
+    font-family:'Inter',sans-serif;font-size:30px;font-weight:600;
+    color:#c9a227;letter-spacing:2px;opacity:0.7;
+  }
+  .card .idx::before{content:"NO.";font-size:18px;margin-right:6px;letter-spacing:4px;opacity:0.7}
+
+  /* 名片（最上面那张）特殊样式 */
+  .card.namecard{
+    background:
+      radial-gradient(ellipse 500px 500px at 50% 30%, rgba(201,162,39,0.25), transparent 70%),
+      linear-gradient(160deg, #1a1408 0%, #2a1f0c 50%, #100c06 100%);
+    border:3px solid #e8c46b;
+    box-shadow:
+      0 40px 80px rgba(0,0,0,0.7),
+      0 16px 36px rgba(0,0,0,0.6),
+      0 0 60px rgba(201,162,39,0.25),
+      inset 0 0 0 1px rgba(232,196,107,0.35);
+  }
+  .card.namecard .name{
+    font-size:180px;font-weight:900;letter-spacing:8px;
+    background:linear-gradient(180deg, #fff 0%, #fff7d9 40%, #e8c46b 75%, #c9a227 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 4px 40px rgba(201,162,39,0.5);
+    line-height:1;
+  }
+  .card.namecard .role{
+    margin-top:46px;font-size:38px;letter-spacing:10px;color:rgba(255,255,255,0.92);
+  }
+  .card.namecard .role span{color:#e8c46b}
+  .card.namecard .handle{
+    margin-top:44px;font-family:'Inter',sans-serif;
+    font-size:30px;letter-spacing:4px;color:#c9a227;
+    padding:14px 36px;border:1px solid rgba(201,162,39,0.5);border-radius:40px;
+  }
+  .card.namecard .deco{
+    position:absolute;left:0;right:0;display:flex;justify-content:center;gap:14px;
+  }
+  .card.namecard .deco.top{top:50px}
+  .card.namecard .deco.bot{bottom:60px}
+  .card.namecard .deco i{display:block;width:6px;height:6px;background:#c9a227;border-radius:50%;opacity:0.8}
+  .card.namecard .deco i:nth-child(2){width:24px;border-radius:3px}
+  .card.namecard .deco i:nth-child(4){width:24px;border-radius:3px}
+
+  /* 7 张 KPI 卡 + 1 张名片
+     初始：全部背面朝上（rotateX(-180deg)）叠在中间，沿 z 轴轻微错位形成"一摞"
+     翻起：依次旋转回 rotateX(0)，让正面对镜头
+     最终：名片在最上层 z 最大，KPI 卡按顺序下沉但保留可见错位 */
+
+  .card{
+    will-change:transform,opacity;
+  }
+
+  /* 公共起始：在堆里背面朝向、轻微 z 错位、stack 锁定旋转 0 */
+  /* 翻动节奏：每张占 0.5s，0.2s flip + 0.3s 停留 */
+
+  /* KPI 卡按顺序：c1..c7。第 i 张：
+     - 0..1.5s 跟着 deck 飞入（保持 rotateX(-180) 背面）
+     - 1.5 + (i-1)*0.5s 起翻
+     - 1.5 + (i-1)*0.5 + 0.5s 翻完，停留
+     - 5.0s 全部翻完，最终态 = 半露错位
+  */
+
+  .c1{transform:translateZ(7px) translateX(-14px) translateY(-10px) rotateX(-180deg);animation:flip1 6.5s ease-in-out 0s forwards}
+  .c2{transform:translateZ(14px) translateX(10px) translateY(-6px) rotateX(-180deg);animation:flip2 6.5s ease-in-out 0s forwards}
+  .c3{transform:translateZ(21px) translateX(-8px) translateY(-2px) rotateX(-180deg);animation:flip3 6.5s ease-in-out 0s forwards}
+  .c4{transform:translateZ(28px) translateX(12px) translateY(2px) rotateX(-180deg);animation:flip4 6.5s ease-in-out 0s forwards}
+  .c5{transform:translateZ(35px) translateX(-10px) translateY(6px) rotateX(-180deg);animation:flip5 6.5s ease-in-out 0s forwards}
+  .c6{transform:translateZ(42px) translateX(8px) translateY(10px) rotateX(-180deg);animation:flip6 6.5s ease-in-out 0s forwards}
+  .c7{transform:translateZ(49px) translateX(-12px) translateY(14px) rotateX(-180deg);animation:flip7 6.5s ease-in-out 0s forwards}
+  .cn{transform:translateZ(60px) translateX(0) translateY(18px) rotateX(-180deg);animation:flipName 6.5s ease-in-out 0s forwards}
+
+  /* 翻牌关键帧：each 卡 i 在 t_i = 1.5 + (i-1)*0.5 起翻
+     总轴 6.5s，百分比换算：
+     1.5/6.5 ≈ 23.1%
+     2.0/6.5 ≈ 30.8%
+     2.5/6.5 ≈ 38.5%
+     3.0/6.5 ≈ 46.2%
+     3.5/6.5 ≈ 53.8%
+     4.0/6.5 ≈ 61.5%
+     4.5/6.5 ≈ 69.2%
+     5.0/6.5 ≈ 76.9%
+     7.0s 末态... 但 deck 已经 1.5s 走完飞入 => 我们用主轴 6.5s 表达 1.5入 + 5翻 + (6.5..7.0之间是定格的最后 0.5s, 由 deck-in 之后 6.0s 翻完 + 1.0s 定格)
+     调整：动画总时长就给 6.5s，加 deck-in 0.2s 延迟 + deck-in 1.5s 飞入 共 1.7s 起翻时间。
+  */
+
+  @keyframes flip1{
+    0%,23%{transform:translateZ(7px) translateX(-14px) translateY(-10px) rotateX(-180deg)}
+    30%,40%{transform:translateZ(160px) translateX(0) translateY(-90px) rotateX(0deg)}
+    62%{transform:translateZ(7px) translateX(-14px) translateY(-10px) rotateX(0deg)}
+    100%{transform:translateZ(7px) translateX(-22px) translateY(-26px) rotateX(0deg)}
+  }
+  @keyframes flip2{
+    0%,30%{transform:translateZ(14px) translateX(10px) translateY(-6px) rotateX(-180deg)}
+    38%,48%{transform:translateZ(170px) translateX(0) translateY(-90px) rotateX(0deg)}
+    70%{transform:translateZ(14px) translateX(10px) translateY(-6px) rotateX(0deg)}
+    100%{transform:translateZ(14px) translateX(22px) translateY(-18px) rotateX(0deg)}
+  }
+  @keyframes flip3{
+    0%,38%{transform:translateZ(21px) translateX(-8px) translateY(-2px) rotateX(-180deg)}
+    46%,56%{transform:translateZ(180px) translateX(0) translateY(-90px) rotateX(0deg)}
+    76%{transform:translateZ(21px) translateX(-8px) translateY(-2px) rotateX(0deg)}
+    100%{transform:translateZ(21px) translateX(-26px) translateY(-10px) rotateX(0deg)}
+  }
+  @keyframes flip4{
+    0%,46%{transform:translateZ(28px) translateX(12px) translateY(2px) rotateX(-180deg)}
+    54%,64%{transform:translateZ(190px) translateX(0) translateY(-90px) rotateX(0deg)}
+    78%{transform:translateZ(28px) translateX(12px) translateY(2px) rotateX(0deg)}
+    100%{transform:translateZ(28px) translateX(26px) translateY(-2px) rotateX(0deg)}
+  }
+  @keyframes flip5{
+    0%,54%{transform:translateZ(35px) translateX(-10px) translateY(6px) rotateX(-180deg)}
+    62%,72%{transform:translateZ(200px) translateX(0) translateY(-90px) rotateX(0deg)}
+    82%{transform:translateZ(35px) translateX(-10px) translateY(6px) rotateX(0deg)}
+    100%{transform:translateZ(35px) translateX(-22px) translateY(6px) rotateX(0deg)}
+  }
+  @keyframes flip6{
+    0%,62%{transform:translateZ(42px) translateX(8px) translateY(10px) rotateX(-180deg)}
+    70%,80%{transform:translateZ(210px) translateX(0) translateY(-90px) rotateX(0deg)}
+    88%{transform:translateZ(42px) translateX(8px) translateY(10px) rotateX(0deg)}
+    100%{transform:translateZ(42px) translateX(22px) translateY(14px) rotateX(0deg)}
+  }
+  @keyframes flip7{
+    0%,70%{transform:translateZ(49px) translateX(-12px) translateY(14px) rotateX(-180deg)}
+    78%,88%{transform:translateZ(220px) translateX(0) translateY(-90px) rotateX(0deg)}
+    94%{transform:translateZ(49px) translateX(-12px) translateY(14px) rotateX(0deg)}
+    100%{transform:translateZ(49px) translateX(-18px) translateY(22px) rotateX(0deg)}
+  }
+  @keyframes flipName{
+    0%,78%{transform:translateZ(60px) translateX(0) translateY(18px) rotateX(-180deg)}
+    86%,96%{transform:translateZ(260px) translateX(0) translateY(-30px) rotateX(0deg) scale(1.04)}
+    100%{transform:translateZ(80px) translateX(0) translateY(0) rotateX(0deg) scale(1)}
+  }
+
+  /* 名片浮动呼吸 */
+  .breathing{
+    animation:breathe 3.6s ease-in-out 5.2s infinite;
+    transform-origin:center;
+  }
+  @keyframes breathe{
+    0%,100%{filter:drop-shadow(0 0 0px rgba(201,162,39,0))}
+    50%{filter:drop-shadow(0 0 18px rgba(201,162,39,0.35))}
+  }
+
+  /* 背面 hint（朝下时也有点金色边能看见） */
+  .card .back{
+    position:absolute;inset:0;
+    transform:rotateX(180deg);
+    backface-visibility:hidden;
+    border-radius:32px;
+    background:
+      linear-gradient(160deg, #100c06 0%, #1a1408 50%, #0a0805 100%);
+    border:2px solid rgba(201,162,39,0.6);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .card .back .crest{
+    width:160px;height:160px;border:2px solid #c9a227;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:64px;color:#e8c46b;font-weight:900;letter-spacing:4px;
+    box-shadow:inset 0 0 30px rgba(201,162,39,0.2);
+  }
+
+  /* 侧边竖排小字（增加信息密度） */
+  .sidebar{
+    position:absolute;top:600px;font-size:22px;letter-spacing:10px;
+    color:rgba(232,196,107,0.45);writing-mode:vertical-rl;
+    opacity:0;animation:sideIn 1.0s ease-out 5.4s forwards;
+  }
+  .sidebar.l{left:60px}
+  .sidebar.r{right:60px}
+  @keyframes sideIn{to{opacity:1}}
+
+  /* 顶部数据 ticker（让信息密度 > 6） */
+  .ticker{
+    position:absolute;top:170px;left:60px;right:60px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'Inter',sans-serif;font-size:24px;color:rgba(255,255,255,0.55);
+    opacity:0;animation:tickIn 1.0s ease-out 0.6s forwards;
+  }
+  .ticker .pip{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .ticker .pip b{color:#e8c46b;font-size:34px;font-weight:700;letter-spacing:2px}
+  .ticker .pip i{font-style:normal;font-size:18px;letter-spacing:6px;color:rgba(255,255,255,0.45)}
+  .ticker .sep{width:1px;height:36px;background:rgba(201,162,39,0.3)}
+  @keyframes tickIn{to{opacity:1}}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="topline">真 实 博 主 拆 解</div>
+
+  <div class="ticker">
+    <div class="pip"><b>103万</b><i>粉丝</i></div>
+    <div class="sep"></div>
+    <div class="pip"><b>757.5万</b><i>获赞</i></div>
+    <div class="sep"></div>
+    <div class="pip"><b>1291</b><i>作品</i></div>
+    <div class="sep"></div>
+    <div class="pip"><b>14章</b><i>章节</i></div>
+  </div>
+
+  <div class="sidebar l">连 续 创 业 15 年 · 19 岁 起 步</div>
+  <div class="sidebar r">7 套 场 景 · 5 套 钩 子 · 6 类 母 题</div>
+
+  <div class="deck-wrap">
+    <div class="deck">
+
+      <!-- KPI 卡 1：粉丝 -->
+      <div class="card c1">
+        <div class="back"><div class="crest">C</div></div>
+        <span class="idx">01</span>
+        <div class="label">粉 丝</div>
+        <div class="value">103<span class="unit">万</span></div>
+        <div class="note">抖音 主 号 总 粉</div>
+      </div>
+
+      <!-- KPI 卡 2：获赞 -->
+      <div class="card c2">
+        <div class="back"><div class="crest">C</div></div>
+        <span class="idx">02</span>
+        <div class="label">获 赞</div>
+        <div class="value">757.5<span class="unit">万</span></div>
+        <div class="note">累 计 点 赞</div>
+      </div>
+
+      <!-- KPI 卡 3：作品 -->
+      <div class="card c3">
+        <div class="back"><div class="crest">C</div></div>
+        <span class="idx">03</span>
+        <div class="label">作 品</div>
+        <div class="value">1291</div>
+        <div class="note">同 一 套 打 法</div>
+      </div>
+
+      <!-- KPI 卡 4：企业 -->
+      <div class="card c4">
+        <div class="back"><div class="crest">C</div></div>
+        <span class="idx">04</span>
+        <div class="label">企 业 案 例</div>
+        <div class="value">230<span class="unit">家</span></div>
+        <div class="note">一 年 AI 化 服 务</div>
+      </div>
+
+      <!-- KPI 卡 5：公司 -->
+      <div class="card c5">
+        <div class="back"><div class="crest">C</div></div>
+        <span class="idx">05</span>
+        <div class="label">同 时 运 营</div>
+        <div class="value">4<span class="unit">家</span></div>
+        <div class="note">公 司 矩 阵</div>
+      </div>
+
+      <!-- KPI 卡 6：客单 13 万 -->
+      <div class="card c6">
+        <div class="back"><div class="crest">C</div></div>
+        <span class="idx">06</span>
+        <div class="label">中 隐 会 年 费</div>
+        <div class="value">13<span class="unit">万</span></div>
+        <div class="note">私 董 会 客 单</div>
+      </div>
+
+      <!-- KPI 卡 7：数字人 4 亿 -->
+      <div class="card c7">
+        <div class="back"><div class="crest">C</div></div>
+        <span class="idx">07</span>
+        <div class="label">数 字 人 卖 货</div>
+        <div class="value">4<span class="unit">亿</span></div>
+        <div class="note">九 域 合 生 一 年</div>
+      </div>
+
+      <!-- 名片：最上层 -->
+      <div class="card namecard cn breathing">
+        <div class="back"><div class="crest">C</div></div>
+        <div class="deco top"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="deco bot"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="name">陈厂长</div>
+        <div class="role">AI 时代 <span>老板 IP</span> 操盘手</div>
+        <div class="handle">@HuaicaideyuIP</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="subtitle">7 套 场 景  ·  四 重 身 份 合 一</div>
+  <div class="footer">微 域 生 光 · 真 实 博 主 拆 解</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!-- v04 同心圆雷达 · slide-cta · 视觉语言 · 时间轴
+  视觉语言：
+    - 中央"微域生光"金色大字 + 装饰光晕
+    - 外圈一组同心圆环作为"信号塔"装饰，CSS infinite expand 持续向外扩散波纹（雷达脉冲/信号塔意象）
+    - 副标"真实博主拆解"
+  动画总时长：5.5–7s（末态 ≥1.5s 定格）
+  动画时间轴：
+    t=0.0s    背景立刻可见
+    t=0.0–0.8s 5 圈底层同心圆环 stagger 绘制
+    t=0.2s 起 扩散波纹（3 层 expand-ring）持续 infinite 向外扩散
+    t=0.8s    中央光点脉冲启动 + 大字 scaleIn
+    t=1.4s    "微域生光"中文字样落定
+    t=1.8s    金色分隔线展开
+    t=2.2s    副标 fadeUp
+    t=3.0s    底部装饰圆点渐显
+    t=3.5–7.0s 末态定格：波纹持续扩散，主体静止
+-->
+<title>slide-cta — 微域生光</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #080808;
+    color: #ffffff;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 关键帧 */
+  @keyframes ringDraw {
+    0%   { stroke-dashoffset: 3500; opacity: 0; }
+    20%  { opacity: 1; }
+    100% { stroke-dashoffset: 0;    opacity: 1; }
+  }
+  @keyframes expandRing {
+    0%   { transform: translate(-50%, -50%) scale(0.25); opacity: 0; }
+    15%  { opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.6);  opacity: 0; }
+  }
+  @keyframes corePulse {
+    0%   { transform: translate(-50%, -50%) scale(1);    box-shadow: 0 0 24px #e8c46b, 0 0 60px rgba(232,196,107,0.7), 0 0 120px rgba(201,162,39,0.4); }
+    100% { transform: translate(-50%, -50%) scale(1.18); box-shadow: 0 0 36px #f4d97a, 0 0 80px rgba(232,196,107,0.9), 0 0 160px rgba(201,162,39,0.55); }
+  }
+  @keyframes scaleIn { from { opacity: 0; transform: scale(0.55); } to { opacity: 1; transform: scale(1); } }
+  @keyframes fadeUp  { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes lineGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  @keyframes arrowSlide {
+    0%,100% { transform: translateX(0); }
+    50%     { transform: translateX(8px); }
+  }
+
+  .stage {
+    position: relative;
+    width: 1080px; height: 1920px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(201,162,39,0.20) 0%, rgba(201,162,39,0.06) 30%, transparent 62%),
+      linear-gradient(160deg, #080808 0%, #0c0a04 50%, #080808 100%);
+    overflow: hidden;
+  }
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+    background-size: 120px 120px;
+  }
+
+  .top-glow {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    opacity: 0.75;
+  }
+  .bottom-glow {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    opacity: 0.75;
+  }
+
+  /* 底层 5 圈同心圆环（屏幕中央） */
+  .radar-base {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 1200px; height: 1200px;
+    z-index: 1;
+  }
+  .radar-base svg { width: 100%; height: 100%; overflow: visible; }
+  .ring {
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: 3500;
+    stroke-dashoffset: 3500;
+    filter: drop-shadow(0 0 6px rgba(232,196,107,0.5));
+    animation: ringDraw 0.8s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  .ring.r1 { stroke: rgba(232,196,107,0.85); stroke-width: 2.2; animation-delay: 0.0s; }
+  .ring.r2 { stroke: rgba(232,196,107,0.65); stroke-width: 1.8; animation-delay: 0.15s; }
+  .ring.r3 { stroke: rgba(232,196,107,0.48); stroke-width: 1.6; animation-delay: 0.3s; }
+  .ring.r4 { stroke: rgba(232,196,107,0.32); stroke-width: 1.4; animation-delay: 0.45s; }
+  .ring.r5 { stroke: rgba(212,175,55,0.22);  stroke-width: 1.2; stroke-dasharray: 6 8; animation-delay: 0.6s; }
+
+  /* 信号塔扩散波纹（3 层 infinite expand） */
+  .expand-ring {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    border: 2px solid rgba(232,196,107,0.55);
+    box-shadow: 0 0 24px rgba(232,196,107,0.35);
+    transform: translate(-50%, -50%) scale(0.25);
+    opacity: 0;
+    z-index: 2;
+    animation: expandRing 3.6s cubic-bezier(0.22,0.61,0.36,1) infinite;
+  }
+  .expand-ring.e1 { animation-delay: 0.2s; }
+  .expand-ring.e2 { animation-delay: 1.4s; }
+  .expand-ring.e3 { animation-delay: 2.6s; }
+
+  /* 中央内容区 */
+  .content {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 920px;
+    text-align: center;
+    z-index: 10;
+  }
+
+  /* 中央核心金点（在大字背后） */
+  .core-dot {
+    position: absolute;
+    left: 50%; top: 12px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #f4d97a;
+    transform: translate(-50%, -50%);
+    box-shadow:
+      0 0 24px #e8c46b,
+      0 0 60px rgba(232,196,107,0.7),
+      0 0 120px rgba(201,162,39,0.4);
+    animation: corePulse 1.6s ease-in-out 0.8s infinite alternate;
+  }
+
+  .brand-wordmark {
+    font-size: 168px;
+    font-weight: 800;
+    letter-spacing: 12px;
+    background: linear-gradient(180deg, #f4d97a 0%, #e8c46b 45%, #c9a227 75%, #9b7b1f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 50px rgba(232,196,107,0.35);
+    line-height: 1;
+    opacity: 0;
+    animation: scaleIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.8s forwards;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* 装饰细横线 */
+  .center-divider {
+    width: 180px; height: 1.5px;
+    background: linear-gradient(to right, transparent, #f0d060, #c9a227, #f0d060, transparent);
+    background-size: 200% 100%;
+    margin: 42px auto;
+    transform-origin: center;
+    transform: scaleX(0);
+    animation:
+      lineGrow 0.5s cubic-bezier(0.22,1,0.36,1) 1.8s forwards,
+      shimmer 2.6s 2.3s linear infinite;
+  }
+
+  .brand-subtitle {
+    font-size: 42px;
+    font-weight: 400;
+    letter-spacing: 14px;
+    color: rgba(255,255,255,0.78);
+    opacity: 0;
+    animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) 2.2s forwards;
+  }
+  .brand-subtitle b { color: #e8c46b; font-weight: 500; }
+
+  /* CTA 块 */
+  .cta-block {
+    margin-top: 80px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 14px;
+    opacity: 0;
+    animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 2.7s forwards;
+  }
+  .cta-row {
+    display: flex; align-items: center; gap: 14px;
+  }
+  .cta-label {
+    font-size: 32px; font-weight: 500;
+    color: rgba(255,255,255,0.72);
+    letter-spacing: 0.06em;
+  }
+  .cta-arrow {
+    font-size: 36px; color: #c9a227;
+    display: inline-block;
+    animation: arrowSlide 1.6s ease-in-out 3.5s infinite;
+  }
+
+  /* 底部装饰圆点 */
+  .dot-row {
+    position: absolute; bottom: 110px; left: 0; right: 0;
+    display: flex; justify-content: center; align-items: center; gap: 10px;
+    z-index: 5;
+    opacity: 0;
+    animation: fadeIn 0.5s ease 3.0s forwards;
+  }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.14);
+  }
+  .dot.active {
+    background: #c9a227;
+    box-shadow: 0 0 10px rgba(201,162,39,0.6);
+  }
+
+  .duration-debug {
+    position: absolute; bottom: 14px; right: 22px; z-index: 99;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 10px; color: rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="top-glow"></div>
+  <div class="grid-bg"></div>
+
+  <!-- 底层同心圆环 -->
+  <div class="radar-base">
+    <svg viewBox="0 0 1200 1200">
+      <circle class="ring r5" cx="600" cy="600" r="580"></circle>
+      <circle class="ring r4" cx="600" cy="600" r="460"></circle>
+      <circle class="ring r3" cx="600" cy="600" r="350"></circle>
+      <circle class="ring r2" cx="600" cy="600" r="240"></circle>
+      <circle class="ring r1" cx="600" cy="600" r="140"></circle>
+    </svg>
+  </div>
+
+  <!-- 信号塔扩散波纹 -->
+  <div class="expand-ring e1" aria-hidden="true"></div>
+  <div class="expand-ring e2" aria-hidden="true"></div>
+  <div class="expand-ring e3" aria-hidden="true"></div>
+
+  <!-- 中央内容 -->
+  <div class="content">
+    <div class="core-dot"></div>
+    <div class="brand-wordmark">微域生光</div>
+    <div class="center-divider" aria-hidden="true"></div>
+    <div class="brand-subtitle">真实<b>博主</b>拆解</div>
+    <div class="cta-block">
+      <div class="cta-row">
+        <span class="cta-label">更多博主拆解报告</span>
+        <span class="cta-arrow">&#8594;</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部装饰圆点（4 灰 1 金） -->
+  <div class="dot-row" aria-hidden="true">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="bottom-glow"></div>
+  <div class="duration-debug">8200ms</div>
+</div>
+</body>
+</html>

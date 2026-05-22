@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="zh-CN">
+<!--
+  cover-v07 — 编辑部巨字 Editorial Hero
+  设计意图：纽约客 / 杂志封面气质。用三个金色衬线巨字「陈厂长」撑满
+            屏幕 60% 高度形成主视觉锤；字形以 clip-path 切片 + opacity
+            缓入逐字登场。字面叠金色微噪点（多层 radial-gradient）。
+            底部以杂志目录排版编号 01-06 罗列六条核心数据，单色等宽
+            数字，左对齐，强调"被认真读"的深度感与层级化。
+  数据维度：粉丝 1,030,000 / 获赞 7,575,000 / 作品 1,291 / 企业 230 /
+            公司 4 / 客单 130,000（共 6 项 · 目录式 01-06）
+  动画时间轴：
+    t=0.0s   背景与顶部 ticker 立即可见，三字以 opacity:0 起始
+    t=0.4s   "陈" clip-path 切片入场（左 → 右）
+    t=1.1s   "厂" 切片入场
+    t=1.8s   "长" 切片入场，左上 / 右上小字同步淡入
+    t=2.6-4.8s 目录 01-06 依次 fadeUp（每行延迟 280ms）
+    t=4.8-7.0s 末态定格 2.2s（仅顶部 ticker 中的圆点保持脉动）
+-->
+<head>
+<meta charset="utf-8">
+<title>cover-v07</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#080808;font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif;color:#fff}
+  .stage{position:relative;width:1080px;height:1920px;
+    background:
+      radial-gradient(circle at 18% 22%, rgba(201,162,39,0.12) 0%, transparent 38%),
+      radial-gradient(circle at 82% 78%, rgba(180,100,20,0.10) 0%, transparent 42%),
+      radial-gradient(circle at 50% 50%, rgba(201,162,39,0.04) 0%, transparent 70%),
+      linear-gradient(180deg, #0a0a0a 0%, #080808 50%, #0a0908 100%);
+  }
+
+  /* 纸张纹理：多层径向叠加做微噪点 */
+  .noise{position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:0.6;
+    background:
+      radial-gradient(circle at 12% 18%, rgba(232,196,107,0.05) 0 1px, transparent 2px),
+      radial-gradient(circle at 28% 44%, rgba(232,196,107,0.04) 0 1px, transparent 2px),
+      radial-gradient(circle at 46% 12%, rgba(232,196,107,0.05) 0 1px, transparent 2px),
+      radial-gradient(circle at 62% 38%, rgba(232,196,107,0.04) 0 1px, transparent 2px),
+      radial-gradient(circle at 78% 62%, rgba(232,196,107,0.05) 0 1px, transparent 2px),
+      radial-gradient(circle at 92% 84%, rgba(232,196,107,0.04) 0 1px, transparent 2px),
+      radial-gradient(circle at 8% 72%, rgba(232,196,107,0.05) 0 1px, transparent 2px),
+      radial-gradient(circle at 22% 92%, rgba(232,196,107,0.04) 0 1px, transparent 2px),
+      radial-gradient(circle at 54% 84%, rgba(232,196,107,0.05) 0 1px, transparent 2px),
+      radial-gradient(circle at 70% 14%, rgba(232,196,107,0.04) 0 1px, transparent 2px);
+    background-size: 90px 90px, 70px 70px, 110px 110px, 80px 80px, 100px 100px, 60px 60px, 120px 120px, 90px 90px, 75px 75px, 95px 95px;
+  }
+
+  /* 顶部细金色 ticker */
+  .ticker{position:absolute;top:0;left:0;width:1080px;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;border-bottom:1px solid rgba(201,162,39,0.5);background:rgba(8,8,8,0.5);z-index:10;font-family:'Inter','SF Pro Display',system-ui,sans-serif;font-size:14px;letter-spacing:0.32em;color:rgba(232,196,107,0.85);text-transform:uppercase}
+  .ticker .left,.ticker .right{display:flex;align-items:center;gap:18px}
+  .ticker .pip{display:inline-block;width:8px;height:8px;background:#c9a227;border-radius:50%;animation:pip 1.6s ease-in-out infinite}
+  @keyframes pip{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.35;transform:scale(0.7)}}
+  .ticker .sep{width:24px;height:1px;background:rgba(232,196,107,0.5)}
+
+  /* 右上小字 */
+  .topRight{position:absolute;top:84px;right:48px;text-align:right;z-index:8;
+    font-size:18px;letter-spacing:0.32em;color:rgba(232,196,107,0.85);
+    opacity:0;animation:smallFade 0.8s ease-out 1.9s forwards}
+  .topRight .sm{display:block;font-size:13px;color:rgba(255,255,255,0.55);letter-spacing:0.4em;margin-top:6px}
+  @keyframes smallFade{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+
+  /* 巨字主视觉 */
+  .hero{position:absolute;top:170px;left:0;width:1080px;height:1150px;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:5}
+  .hero-row{display:flex;justify-content:center;align-items:flex-start;width:100%;height:1050px;position:relative}
+
+  .char{
+    font-family:'STSong','Songti SC','STZhongsong','SimSun','Source Han Serif SC',serif;
+    font-weight:900;
+    font-size:760px;
+    line-height:1;
+    color:#e8c46b;
+    letter-spacing:-0.04em;
+    text-shadow:
+      0 0 1px rgba(232,196,107,0.5),
+      0 0 24px rgba(201,162,39,0.18),
+      0 0 60px rgba(201,162,39,0.08);
+    position:absolute;
+    top:0;
+    background:linear-gradient(180deg, #f0d27a 0%, #e8c46b 35%, #c9a227 70%, #a88419 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    opacity:0;
+    clip-path:inset(0 100% 0 0);
+  }
+  .char.c1{left:-40px;animation:sliceIn 0.85s cubic-bezier(.25,.65,.2,1) 0.4s forwards}
+  .char.c2{left:330px;animation:sliceIn 0.85s cubic-bezier(.25,.65,.2,1) 1.1s forwards}
+  .char.c3{left:700px;animation:sliceIn 0.85s cubic-bezier(.25,.65,.2,1) 1.8s forwards}
+  @keyframes sliceIn{
+    0%{opacity:0;clip-path:inset(0 100% 0 0)}
+    40%{opacity:0.6}
+    100%{opacity:1;clip-path:inset(0 0 0 0)}
+  }
+
+  /* 巨字内部叠金噪点伪元素 */
+  .hero-overlay{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;
+    background:
+      radial-gradient(circle at 25% 30%, rgba(201,162,39,0.18) 0 2px, transparent 3px),
+      radial-gradient(circle at 65% 60%, rgba(232,196,107,0.15) 0 2px, transparent 3px),
+      radial-gradient(circle at 45% 80%, rgba(168,132,25,0.18) 0 2px, transparent 3px);
+    background-size: 18px 18px, 22px 22px, 26px 26px;
+    mix-blend-mode:multiply;
+    opacity:0.45;
+  }
+
+  /* 左下小字（在巨字左下方）*/
+  .bottomLeft{position:absolute;left:48px;top:1280px;z-index:8;
+    font-size:21px;letter-spacing:0.22em;color:rgba(255,255,255,0.92);
+    opacity:0;animation:smallFade 0.8s ease-out 2.1s forwards}
+  .bottomLeft .accent{color:#e8c46b}
+  .bottomLeft .em{font-family:'Inter',system-ui,sans-serif;letter-spacing:0.18em}
+
+  /* 横线分隔 */
+  .divider{position:absolute;left:48px;right:48px;top:1380px;height:1px;background:rgba(201,162,39,0.45);z-index:6;
+    transform-origin:left center;transform:scaleX(0);
+    animation:divIn 0.9s cubic-bezier(.2,.7,.2,1) 2.4s forwards}
+  @keyframes divIn{to{transform:scaleX(1)}}
+
+  /* 目录式数据脚注 */
+  .toc{position:absolute;left:48px;right:48px;top:1420px;z-index:7}
+  .toc .hd{display:flex;justify-content:space-between;font-family:'Inter',system-ui,sans-serif;font-size:13px;letter-spacing:0.32em;color:rgba(232,196,107,0.7);margin-bottom:24px;
+    opacity:0;animation:smallFade 0.6s ease-out 2.6s forwards}
+  .toc-list{display:flex;flex-direction:column;gap:14px}
+  .toc-row{display:grid;grid-template-columns:60px 1fr 280px;align-items:baseline;gap:24px;
+    border-bottom:1px solid rgba(201,162,39,0.18);padding-bottom:10px;
+    opacity:0;transform:translateY(10px);
+    animation:rowIn 0.6s cubic-bezier(.2,.7,.2,1) forwards}
+  .toc-row:nth-child(1){animation-delay:2.6s}
+  .toc-row:nth-child(2){animation-delay:2.88s}
+  .toc-row:nth-child(3){animation-delay:3.16s}
+  .toc-row:nth-child(4){animation-delay:3.44s}
+  .toc-row:nth-child(5){animation-delay:3.72s}
+  .toc-row:nth-child(6){animation-delay:4.0s}
+  @keyframes rowIn{to{opacity:1;transform:translateY(0)}}
+
+  .toc-row .no{font-family:'Inter',system-ui,monospace;font-size:22px;color:#c9a227;letter-spacing:0.1em}
+  .toc-row .lb{font-size:24px;color:rgba(255,255,255,0.92);letter-spacing:0.06em}
+  .toc-row .lb .dash{color:rgba(232,196,107,0.55);margin:0 12px;font-family:'Inter',system-ui,monospace}
+  .toc-row .val{font-family:'Inter','SF Pro Display',system-ui,sans-serif;font-size:26px;font-weight:700;color:#e8c46b;text-align:right;letter-spacing:0.04em;font-variant-numeric:tabular-nums}
+  .toc-row .val .u{color:rgba(255,255,255,0.55);font-size:18px;font-weight:400;margin-left:6px;letter-spacing:0.15em}
+
+  /* 底部脚标 */
+  .colophon{position:absolute;bottom:32px;left:48px;right:48px;display:flex;justify-content:space-between;align-items:center;font-family:'Inter',system-ui,sans-serif;font-size:13px;letter-spacing:0.32em;color:rgba(232,196,107,0.6);z-index:10;
+    opacity:0;animation:smallFade 0.8s ease-out 4.4s forwards}
+  .colophon .brand{color:rgba(232,196,107,0.85)}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="noise"></div>
+
+  <div class="ticker">
+    <div class="left"><span class="pip"></span><span>ISSUE #001</span><span class="sep"></span><span>BLOGGER BREAKDOWN</span></div>
+    <div class="right"><span>微域生光</span><span class="sep"></span><span>2026 · 05</span></div>
+  </div>
+
+  <div class="topRight">
+    AI 时代老板 IP 操盘手
+    <span class="sm">FOUR IDENTITIES · ONE OPERATOR</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-row">
+      <span class="char c1">陈</span>
+      <span class="char c2">厂</span>
+      <span class="char c3">长</span>
+      <div class="hero-overlay"></div>
+    </div>
+  </div>
+
+  <div class="bottomLeft">
+    <span class="accent">陈灏</span> · 抖音 <span class="em">@HuaicaideyuIP</span> · 粉丝 <span class="em">103 万</span>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="toc">
+    <div class="hd">
+      <span>— 数据目录 / INDEX —</span>
+      <span>06 ITEMS</span>
+    </div>
+
+    <div class="toc-list">
+      <div class="toc-row">
+        <div class="no">01</div>
+        <div class="lb">粉丝 <span class="dash">—</span> Followers</div>
+        <div class="val">1,030,000<span class="u">人</span></div>
+      </div>
+      <div class="toc-row">
+        <div class="no">02</div>
+        <div class="lb">获赞 <span class="dash">—</span> Likes</div>
+        <div class="val">7,575,000<span class="u">次</span></div>
+      </div>
+      <div class="toc-row">
+        <div class="no">03</div>
+        <div class="lb">作品 <span class="dash">—</span> Works</div>
+        <div class="val">1,291<span class="u">条</span></div>
+      </div>
+      <div class="toc-row">
+        <div class="no">04</div>
+        <div class="lb">企业 AI 化案例 <span class="dash">—</span> Cases</div>
+        <div class="val">230<span class="u">家</span></div>
+      </div>
+      <div class="toc-row">
+        <div class="no">05</div>
+        <div class="lb">同时运营公司 <span class="dash">—</span> Cos.</div>
+        <div class="val">4<span class="u">家</span></div>
+      </div>
+      <div class="toc-row">
+        <div class="no">06</div>
+        <div class="lb">中隐会年费 <span class="dash">—</span> Tier</div>
+        <div class="val">130,000<span class="u">元 / 年</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="colophon">
+    <span class="brand">微域生光 · 真实博主拆解</span>
+    <span>EDITORIAL / 陈厂长</span>
+  </div>
+
+</div>
+</body>
+</html>

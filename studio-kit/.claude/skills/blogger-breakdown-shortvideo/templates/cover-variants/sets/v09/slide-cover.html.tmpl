@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>slide-cover — {{title}}</title>
+<!-- v09 3D 卡片堆叠 · slide-cover · 顶层名片 + 7 张装饰 KPI 卡 perspective 翻牌堆叠 -->
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#080808;font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+
+  .stage{
+    position:relative;width:1080px;height:1920px;
+    background:
+      radial-gradient(ellipse 700px 500px at 50% 55%, rgba(201,162,39,0.18), transparent 70%),
+      radial-gradient(ellipse 900px 700px at 50% 90%, rgba(180,100,20,0.12), transparent 70%),
+      linear-gradient(180deg,#0a0a0a 0%,#080808 60%,#050505 100%);
+    overflow:hidden;
+  }
+
+  /* 顶部小字 */
+  .topline{
+    position:absolute;top:90px;left:0;right:0;text-align:center;
+    font-size:26px;letter-spacing:14px;color:rgba(232,196,107,0.78);
+    opacity:0;animation:topIn 0.8s ease-out 0.3s forwards;
+  }
+  .topline::before,.topline::after{content:"";display:inline-block;width:60px;height:1px;background:#c9a227;vertical-align:middle;margin:0 18px}
+  @keyframes topIn{to{opacity:1}}
+
+  /* 顶部 ticker 数据条 */
+  .ticker{
+    position:absolute;top:170px;left:60px;right:60px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'Inter','SF Pro Display',system-ui,sans-serif;color:rgba(255,255,255,0.55);
+    opacity:0;animation:tickIn 1.0s ease-out 0.6s forwards;
+  }
+  .ticker .pip{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .ticker .pip b{color:#e8c46b;font-size:34px;font-weight:700;letter-spacing:2px}
+  .ticker .pip i{font-style:normal;font-size:18px;letter-spacing:6px;color:rgba(255,255,255,0.45)}
+  .ticker .sep{width:1px;height:36px;background:rgba(201,162,39,0.3)}
+  @keyframes tickIn{to{opacity:1}}
+
+  /* 侧边竖排小字 */
+  .sidebar{
+    position:absolute;top:600px;font-size:22px;letter-spacing:10px;
+    color:rgba(232,196,107,0.45);writing-mode:vertical-rl;
+    opacity:0;animation:sideIn 1.0s ease-out 5.4s forwards;
+  }
+  .sidebar.l{left:60px}
+  .sidebar.r{right:60px}
+  @keyframes sideIn{to{opacity:1}}
+
+  /* 副标 */
+  .subtitle{
+    position:absolute;top:1660px;left:0;right:0;text-align:center;
+    font-size:32px;letter-spacing:8px;color:rgba(255,255,255,0.78);
+    opacity:0;animation:subIn 0.8s ease-out 5.0s forwards;
+  }
+  @keyframes subIn{to{opacity:1}}
+
+  /* 底部金线脚标 */
+  .footer{
+    position:absolute;bottom:90px;left:0;right:0;text-align:center;
+    font-size:24px;letter-spacing:10px;color:#c9a227;
+    opacity:0;animation:footIn 1.0s ease-out 5.2s forwards;
+  }
+  .footer::before,.footer::after{content:"";display:inline-block;width:80px;height:1px;background:linear-gradient(90deg,transparent,#c9a227,transparent);vertical-align:middle;margin:0 24px}
+  @keyframes footIn{to{opacity:1}}
+
+  /* 3D 舞台 */
+  .deck-wrap{
+    position:absolute;left:50%;top:50%;
+    transform:translate(-50%,-50%);
+    width:760px;height:1000px;
+    perspective:1800px;
+    perspective-origin:50% 40%;
+  }
+  .deck{
+    position:relative;width:100%;height:100%;
+    transform-style:preserve-3d;
+    transform:translateX(900px) translateY(500px) rotateZ(25deg);
+    animation:deckIn 1.5s cubic-bezier(.2,.7,.2,1) 0.2s forwards;
+  }
+  @keyframes deckIn{to{transform:translateX(0) translateY(0) rotateZ(0deg)}}
+
+  /* 卡片基类 */
+  .card{
+    position:absolute;left:50%;top:50%;
+    width:620px;height:820px;margin-left:-310px;margin-top:-410px;
+    border-radius:32px;
+    background:linear-gradient(160deg,#1a1408 0%,#221a0c 50%,#100c06 100%);
+    border:2px solid #c9a227;
+    box-shadow:
+      0 30px 60px rgba(0,0,0,0.6),
+      0 12px 24px rgba(0,0,0,0.5),
+      inset 0 0 0 1px rgba(232,196,107,0.18),
+      inset 0 80px 120px rgba(201,162,39,0.05);
+    transform-style:preserve-3d;
+    backface-visibility:hidden;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:60px;
+    will-change:transform,opacity;
+  }
+  .card::before{
+    content:"";position:absolute;inset:18px;border:1px solid rgba(232,196,107,0.4);border-radius:22px;pointer-events:none;
+  }
+  .card::after{
+    content:"";position:absolute;inset:14px;border-radius:24px;pointer-events:none;
+    background:
+      linear-gradient(135deg,#e8c46b 0%,transparent 8%,transparent 92%,#e8c46b 100%) 0 0/100% 100%,
+      linear-gradient(45deg,#e8c46b 0%,transparent 8%,transparent 92%,#e8c46b 100%) 0 0/100% 100%;
+    mix-blend-mode:overlay;opacity:0.25;
+  }
+
+  .card .label{font-size:34px;letter-spacing:10px;color:rgba(232,196,107,0.8);margin-bottom:60px}
+  .card .value{
+    font-family:'Inter','SF Pro Display',system-ui,'Microsoft YaHei',sans-serif;
+    font-size:170px;font-weight:900;line-height:1;
+    background:linear-gradient(180deg,#fff7d9 0%,#e8c46b 45%,#c9a227 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 4px 30px rgba(201,162,39,0.4);
+    letter-spacing:-4px;
+  }
+  .card .unit{font-size:54px;color:#e8c46b;margin-top:14px;letter-spacing:8px;font-weight:600}
+  .card .note{margin-top:80px;font-size:28px;letter-spacing:6px;color:rgba(255,255,255,0.55)}
+  .card .idx{
+    position:absolute;top:46px;right:60px;
+    font-family:'Inter',sans-serif;font-size:30px;font-weight:600;
+    color:#c9a227;letter-spacing:2px;opacity:0.7;
+  }
+  .card .idx::before{content:"NO.";font-size:18px;margin-right:6px;letter-spacing:4px;opacity:0.7}
+
+  /* 名片（最上面那张） */
+  .card.namecard{
+    background:
+      radial-gradient(ellipse 500px 500px at 50% 30%,rgba(201,162,39,0.25),transparent 70%),
+      linear-gradient(160deg,#1a1408 0%,#2a1f0c 50%,#100c06 100%);
+    border:3px solid #e8c46b;
+    box-shadow:
+      0 40px 80px rgba(0,0,0,0.7),
+      0 16px 36px rgba(0,0,0,0.6),
+      0 0 60px rgba(201,162,39,0.25),
+      inset 0 0 0 1px rgba(232,196,107,0.35);
+  }
+  .card.namecard .name{
+    font-size:150px;font-weight:900;letter-spacing:4px;
+    background:linear-gradient(180deg,#fff 0%,#fff7d9 40%,#e8c46b 75%,#c9a227 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 4px 40px rgba(201,162,39,0.5);
+    line-height:1;text-align:center;
+    word-break:break-all;
+    max-width:520px;
+  }
+  .card.namecard .role{
+    margin-top:46px;font-size:36px;letter-spacing:6px;color:rgba(255,255,255,0.92);
+    text-align:center;line-height:1.5;max-width:500px;
+  }
+  .card.namecard .role span{color:#e8c46b}
+  .card.namecard .handle{
+    margin-top:44px;
+    font-size:28px;letter-spacing:3px;color:#c9a227;
+    padding:14px 36px;border:1px solid rgba(201,162,39,0.5);border-radius:40px;
+    line-height:1.4;text-align:center;max-width:480px;
+  }
+  .card.namecard .deco{
+    position:absolute;left:0;right:0;display:flex;justify-content:center;gap:14px;
+  }
+  .card.namecard .deco.top{top:50px}
+  .card.namecard .deco.bot{bottom:60px}
+  .card.namecard .deco i{display:block;width:6px;height:6px;background:#c9a227;border-radius:50%;opacity:0.8}
+  .card.namecard .deco i:nth-child(2){width:24px;border-radius:3px}
+  .card.namecard .deco i:nth-child(4){width:24px;border-radius:3px}
+
+  /* 装饰 KPI 卡：背面起翻 → 正面停留 → 半露错位归位 */
+  .c1{transform:translateZ(7px) translateX(-14px) translateY(-10px) rotateX(-180deg);animation:flip1 6.5s ease-in-out 0s forwards}
+  .c2{transform:translateZ(14px) translateX(10px) translateY(-6px) rotateX(-180deg);animation:flip2 6.5s ease-in-out 0s forwards}
+  .c3{transform:translateZ(21px) translateX(-8px) translateY(-2px) rotateX(-180deg);animation:flip3 6.5s ease-in-out 0s forwards}
+  .c4{transform:translateZ(28px) translateX(12px) translateY(2px) rotateX(-180deg);animation:flip4 6.5s ease-in-out 0s forwards}
+  .c5{transform:translateZ(35px) translateX(-10px) translateY(6px) rotateX(-180deg);animation:flip5 6.5s ease-in-out 0s forwards}
+  .c6{transform:translateZ(42px) translateX(8px) translateY(10px) rotateX(-180deg);animation:flip6 6.5s ease-in-out 0s forwards}
+  .c7{transform:translateZ(49px) translateX(-12px) translateY(14px) rotateX(-180deg);animation:flip7 6.5s ease-in-out 0s forwards}
+  .cn{transform:translateZ(60px) translateX(0) translateY(18px) rotateX(-180deg);animation:flipName 6.5s ease-in-out 0s forwards}
+
+  @keyframes flip1{
+    0%,23%{transform:translateZ(7px) translateX(-14px) translateY(-10px) rotateX(-180deg)}
+    30%,40%{transform:translateZ(160px) translateX(0) translateY(-90px) rotateX(0deg)}
+    62%{transform:translateZ(7px) translateX(-14px) translateY(-10px) rotateX(0deg)}
+    100%{transform:translateZ(7px) translateX(-22px) translateY(-26px) rotateX(0deg)}
+  }
+  @keyframes flip2{
+    0%,30%{transform:translateZ(14px) translateX(10px) translateY(-6px) rotateX(-180deg)}
+    38%,48%{transform:translateZ(170px) translateX(0) translateY(-90px) rotateX(0deg)}
+    70%{transform:translateZ(14px) translateX(10px) translateY(-6px) rotateX(0deg)}
+    100%{transform:translateZ(14px) translateX(22px) translateY(-18px) rotateX(0deg)}
+  }
+  @keyframes flip3{
+    0%,38%{transform:translateZ(21px) translateX(-8px) translateY(-2px) rotateX(-180deg)}
+    46%,56%{transform:translateZ(180px) translateX(0) translateY(-90px) rotateX(0deg)}
+    76%{transform:translateZ(21px) translateX(-8px) translateY(-2px) rotateX(0deg)}
+    100%{transform:translateZ(21px) translateX(-26px) translateY(-10px) rotateX(0deg)}
+  }
+  @keyframes flip4{
+    0%,46%{transform:translateZ(28px) translateX(12px) translateY(2px) rotateX(-180deg)}
+    54%,64%{transform:translateZ(190px) translateX(0) translateY(-90px) rotateX(0deg)}
+    78%{transform:translateZ(28px) translateX(12px) translateY(2px) rotateX(0deg)}
+    100%{transform:translateZ(28px) translateX(26px) translateY(-2px) rotateX(0deg)}
+  }
+  @keyframes flip5{
+    0%,54%{transform:translateZ(35px) translateX(-10px) translateY(6px) rotateX(-180deg)}
+    62%,72%{transform:translateZ(200px) translateX(0) translateY(-90px) rotateX(0deg)}
+    82%{transform:translateZ(35px) translateX(-10px) translateY(6px) rotateX(0deg)}
+    100%{transform:translateZ(35px) translateX(-22px) translateY(6px) rotateX(0deg)}
+  }
+  @keyframes flip6{
+    0%,62%{transform:translateZ(42px) translateX(8px) translateY(10px) rotateX(-180deg)}
+    70%,80%{transform:translateZ(210px) translateX(0) translateY(-90px) rotateX(0deg)}
+    88%{transform:translateZ(42px) translateX(8px) translateY(10px) rotateX(0deg)}
+    100%{transform:translateZ(42px) translateX(22px) translateY(14px) rotateX(0deg)}
+  }
+  @keyframes flip7{
+    0%,70%{transform:translateZ(49px) translateX(-12px) translateY(14px) rotateX(-180deg)}
+    78%,88%{transform:translateZ(220px) translateX(0) translateY(-90px) rotateX(0deg)}
+    94%{transform:translateZ(49px) translateX(-12px) translateY(14px) rotateX(0deg)}
+    100%{transform:translateZ(49px) translateX(-18px) translateY(22px) rotateX(0deg)}
+  }
+  @keyframes flipName{
+    0%,78%{transform:translateZ(60px) translateX(0) translateY(18px) rotateX(-180deg)}
+    86%,96%{transform:translateZ(260px) translateX(0) translateY(-30px) rotateX(0deg) scale(1.04)}
+    100%{transform:translateZ(80px) translateX(0) translateY(0) rotateX(0deg) scale(1)}
+  }
+
+  .breathing{animation:breathe 3.6s ease-in-out 5.2s infinite;transform-origin:center}
+  @keyframes breathe{
+    0%,100%{filter:drop-shadow(0 0 0px rgba(201,162,39,0))}
+    50%{filter:drop-shadow(0 0 18px rgba(201,162,39,0.35))}
+  }
+
+  .card .back{
+    position:absolute;inset:0;
+    transform:rotateX(180deg);
+    backface-visibility:hidden;
+    border-radius:32px;
+    background:linear-gradient(160deg,#100c06 0%,#1a1408 50%,#0a0805 100%);
+    border:2px solid rgba(201,162,39,0.6);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .card .back .crest{
+    width:160px;height:160px;border:2px solid #c9a227;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:64px;color:#e8c46b;font-weight:900;letter-spacing:4px;
+    box-shadow:inset 0 0 30px rgba(201,162,39,0.2);
+  }
+
+  .duration-debug{
+    position:absolute;bottom:14px;right:22px;z-index:99;
+    font-family:Consolas,'Courier New',monospace;
+    font-size:10px;color:rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="topline">真 实 博 主 拆 解</div>
+
+  <div class="ticker">
+    <div class="pip"><b>103万</b><i>粉丝</i></div>
+    <div class="sep"></div>
+    <div class="pip"><b>757.5万</b><i>获赞</i></div>
+    <div class="sep"></div>
+    <div class="pip"><b>1291</b><i>作品</i></div>
+    <div class="sep"></div>
+    <div class="pip"><b>14章</b><i>章节</i></div>
+  </div>
+
+  <div class="sidebar l">连 续 创 业 · 真 实 数 据</div>
+  <div class="sidebar r">7 套 场 景 · 5 套 钩 子 · 6 类 母 题</div>
+
+  <div class="deck-wrap">
+    <div class="deck">
+
+      <div class="card c1">
+        <div class="back"><div class="crest">W</div></div>
+        <span class="idx">01</span>
+        <div class="label">粉 丝</div>
+        <div class="value">103<span class="unit">万</span></div>
+        <div class="note">抖 音 主 号 总 粉</div>
+      </div>
+
+      <div class="card c2">
+        <div class="back"><div class="crest">W</div></div>
+        <span class="idx">02</span>
+        <div class="label">获 赞</div>
+        <div class="value">757.5<span class="unit">万</span></div>
+        <div class="note">累 计 点 赞</div>
+      </div>
+
+      <div class="card c3">
+        <div class="back"><div class="crest">W</div></div>
+        <span class="idx">03</span>
+        <div class="label">作 品</div>
+        <div class="value">1291</div>
+        <div class="note">同 一 套 打 法</div>
+      </div>
+
+      <div class="card c4">
+        <div class="back"><div class="crest">W</div></div>
+        <span class="idx">04</span>
+        <div class="label">企 业 案 例</div>
+        <div class="value">230<span class="unit">家</span></div>
+        <div class="note">一 年 服 务 体 量</div>
+      </div>
+
+      <div class="card c5">
+        <div class="back"><div class="crest">W</div></div>
+        <span class="idx">05</span>
+        <div class="label">同 时 运 营</div>
+        <div class="value">4<span class="unit">家</span></div>
+        <div class="note">公 司 矩 阵</div>
+      </div>
+
+      <div class="card c6">
+        <div class="back"><div class="crest">W</div></div>
+        <span class="idx">06</span>
+        <div class="label">私 董 年 费</div>
+        <div class="value">13<span class="unit">万</span></div>
+        <div class="note">高 端 客 单</div>
+      </div>
+
+      <div class="card c7">
+        <div class="back"><div class="crest">W</div></div>
+        <span class="idx">07</span>
+        <div class="label">数 字 人 卖 货</div>
+        <div class="value">4<span class="unit">亿</span></div>
+        <div class="note">一 年 GMV</div>
+      </div>
+
+      <!-- 名片：顶层。title 是博主名，subtitle 是身份/Tagline，verdict 是核心结论 -->
+      <div class="card namecard cn breathing">
+        <div class="back"><div class="crest">W</div></div>
+        <div class="deco top"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="deco bot"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="name">{{title}}</div>
+        <div class="role">{{subtitle}}</div>
+        <div class="handle">{{verdict}}</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="subtitle">{{subtitle}}</div>
+  <div class="footer">微 域 生 光 · 真 实 博 主 拆 解</div>
+
+  <div class="duration-debug">{{DURATION_MS}}ms</div>
+</div>
+</body>
+</html>

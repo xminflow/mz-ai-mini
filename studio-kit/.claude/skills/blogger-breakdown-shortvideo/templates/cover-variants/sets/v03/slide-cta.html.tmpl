@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!--
+  v03 数据瀑布 · slide-cta
+  视觉语言：深底 + 金色脊柱 + 简化版数字坠落（4 个金粒子作为氛围）+ 中央"微域生光"金渐变大字 + 副标
+  版式：中央对称 — 顶部品牌副标 → 金粒子坠落 → 中央"微域生光" → 金色横线 → 副标 → 底部小字
+  动画时间轴：
+    t=0.0s   背景立即可见，顶部金光条 + 中央脊柱呼吸
+    t=0.2s   THANKS · 谢谢观看 顶部标签淡入
+    t=0.4–1.4s 4 个金粒子按 stagger 从屏顶弹性坠入预设位置（带金色拖尾），围绕主标题氛围
+    t=1.6s   中央"微域生光"金渐变大字弹性 scale-in
+    t=2.4s   金色横线从中央双向展开
+    t=2.8s   副标"真实博主拆解 · 真实数据 · 真实增长"淡入
+    t=3.4s   底部小字"更多博主拆解，关注 微域生光" + 底部金光条渐显
+    t=3.4–6.5s 全部元素定格，金色脊柱呼吸 idle，粒子末态保持
+-->
+<title>slide-cta · v03</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #080808;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background:
+      radial-gradient(ellipse 900px 900px at 50% 50%, rgba(201,162,39,0.16) 0%, transparent 60%),
+      radial-gradient(ellipse 600px 400px at 50% 8%, rgba(232,196,107,0.20) 0%, transparent 70%),
+      linear-gradient(180deg, #0a0a0a 0%, #080808 60%, #050505 100%);
+    overflow: hidden;
+  }
+
+  .top-glow {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, transparent 0%, #d4af37 20%, #e8c46b 50%, #d4af37 80%, transparent 100%);
+    box-shadow: 0 0 24px #c9a227, 0 0 48px rgba(201,162,39,0.4);
+  }
+
+  .spine {
+    position: absolute;
+    left: 50%; top: 80px;
+    width: 2px; height: 1760px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(212,175,55,0.0) 5%,
+      rgba(212,175,55,0.45) 50%,
+      rgba(212,175,55,0.0) 95%,
+      transparent 100%);
+    animation: spineBreath 3s ease-in-out infinite alternate;
+    z-index: 0;
+  }
+  @keyframes spineBreath {
+    0%   { opacity: 0.4; }
+    100% { opacity: 0.9; }
+  }
+
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(212,175,55,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,175,55,0.04) 1px, transparent 1px);
+    background-size: 120px 120px;
+    mask-image: radial-gradient(ellipse 700px 1100px at 50% 50%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 700px 1100px at 50% 50%, #000 30%, transparent 75%);
+    z-index: 0;
+  }
+
+  /* 中央呼吸光晕 */
+  .center-glow {
+    position: absolute;
+    width: 700px; height: 700px;
+    top: 50%; left: 50%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,162,39,0.18) 0%, rgba(201,162,39,0.06) 40%, transparent 65%);
+    transform: translate(-50%, -50%) scale(0.9);
+    animation: glowPulse 3.5s ease-in-out 1.8s infinite;
+    z-index: 0;
+  }
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.50; transform: translate(-50%, -50%) scale(1); }
+    50%      { opacity: 0.85; transform: translate(-50%, -50%) scale(1.08); }
+  }
+
+  /* 顶部品牌副标 */
+  .brand-top {
+    position: absolute;
+    top: 200px; left: 0; right: 0;
+    text-align: center;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 32px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: rgba(232,196,107,0.7);
+    font-weight: 400;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 0.2s forwards;
+    z-index: 3;
+  }
+  .brand-top::before, .brand-top::after {
+    content: '—';
+    margin: 0 22px;
+    color: rgba(232,196,107,0.4);
+  }
+
+  /* 4 个金粒子（数据瀑布氛围承载） */
+  .drop {
+    position: absolute;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #f4d97a 0%, #c9a227 60%, transparent 100%);
+    box-shadow: 0 0 18px #c9a227, 0 0 36px rgba(232,196,107,0.5);
+    opacity: 0;
+    transform: translateY(-600px);
+    animation: dropIn 1.0s cubic-bezier(0.34, 1.56, 0.4, 1) forwards;
+    z-index: 1;
+  }
+  .drop::before {
+    content: '';
+    position: absolute;
+    left: 50%; bottom: 100%;
+    transform: translateX(-50%);
+    width: 2px; height: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(232,196,107,0.7) 100%);
+    opacity: 0;
+    animation: tailFade 1s ease forwards;
+  }
+  @keyframes dropIn {
+    0%   { transform: translateY(-600px); opacity: 0; filter: blur(6px); }
+    70%  { filter: blur(0); opacity: 0.95; }
+    100% { transform: translateY(0); opacity: 0.85; filter: blur(0); }
+  }
+  @keyframes tailFade {
+    0%   { height: 0; opacity: 0; }
+    40%  { height: 380px; opacity: 0.85; }
+    100% { height: 0; opacity: 0; }
+  }
+  .d1 { top: 540px;  left: 190px;  animation-delay: 0.4s; }
+  .d1::before { animation-delay: 0.4s; }
+  .d2 { top: 560px;  right: 200px; animation-delay: 0.7s; }
+  .d2::before { animation-delay: 0.7s; }
+  .d3 { top: 1320px; left: 230px;  animation-delay: 1.0s; }
+  .d3::before { animation-delay: 1.0s; }
+  .d4 { top: 1300px; right: 220px; animation-delay: 1.3s; }
+  .d4::before { animation-delay: 1.3s; }
+
+  /* 中央内容 */
+  .content {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    z-index: 2;
+  }
+
+  /* 主标"微域生光"金渐变 */
+  .brand-wordmark {
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    font-size: 180px;
+    font-weight: 800;
+    letter-spacing: 16px;
+    line-height: 1;
+    background: linear-gradient(180deg, #f4d97a 0%, #e8c46b 40%, #c9a227 70%, #9b7b1f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 80px rgba(232,196,107,0.4);
+    opacity: 0;
+    transform: scale(0.55);
+    animation: scaleIn 0.8s cubic-bezier(0.34,1.56,0.64,1) 1.6s forwards;
+  }
+  @keyframes scaleIn {
+    0%   { opacity: 0; transform: scale(0.55); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  /* 金色双向横线 */
+  .center-line {
+    margin: 48px auto 0;
+    height: 2px;
+    width: 0;
+    background: linear-gradient(to right, transparent, #f0d060, #c9a227, #f0d060, transparent);
+    background-size: 300% 100%;
+    box-shadow: 0 0 18px rgba(240,208,96,0.45);
+    animation:
+      lineGrow 0.7s cubic-bezier(0.22,1,0.36,1) 2.4s forwards,
+      shimmer 2.6s linear 3.2s infinite;
+  }
+  @keyframes lineGrow {
+    0%   { width: 0; }
+    100% { width: 460px; }
+  }
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+  }
+
+  /* 副标 */
+  .brand-subtitle {
+    margin-top: 44px;
+    font-size: 40px; font-weight: 400;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.78);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: subUp 0.7s cubic-bezier(0.22,1,0.36,1) 2.8s forwards;
+  }
+  @keyframes subUp {
+    0%   { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .brand-subtitle .dot-sep {
+    color: #c9a227;
+    margin: 0 16px;
+    text-shadow: 0 0 10px rgba(201,162,39,0.6);
+  }
+
+  /* 底部小字 */
+  .footer-cta {
+    position: absolute;
+    bottom: 150px; left: 0; right: 0;
+    text-align: center;
+    font-size: 28px;
+    letter-spacing: 8px;
+    color: rgba(255,255,255,0.55);
+    opacity: 0;
+    animation: fadeIn 0.7s ease 3.4s forwards;
+    z-index: 3;
+  }
+  .footer-cta .b {
+    color: #e8c46b;
+    margin-left: 12px;
+    font-weight: 500;
+  }
+  .footer-cta .arrow {
+    margin: 0 14px;
+    color: #c9a227;
+    display: inline-block;
+    animation: arrowSlide 1.6s ease-in-out 4.0s infinite;
+  }
+  @keyframes arrowSlide {
+    0%, 100% { transform: translateX(0); }
+    50%       { transform: translateX(8px); }
+  }
+
+  .bottom-glow {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent 0%, #c9a227 30%, #c9a227 70%, transparent 100%);
+    opacity: 0;
+    animation: fadeIn 0.7s ease 3.4s forwards;
+  }
+
+  @keyframes fadeIn {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  /* 角落 L 形装饰 */
+  .corner {
+    position: absolute;
+    width: 28px; height: 28px;
+    border-color: #c9a227;
+    border-style: solid;
+    z-index: 3;
+    opacity: 0;
+    animation: fadeIn 0.5s ease 0.3s forwards;
+  }
+  .corner-tl { top: 70px;    left: 70px;    border-width: 2px 0 0 2px; }
+  .corner-tr { top: 70px;    right: 70px;   border-width: 2px 2px 0 0; }
+  .corner-bl { bottom: 70px; left: 70px;    border-width: 0 0 2px 2px; }
+  .corner-br { bottom: 70px; right: 70px;   border-width: 0 2px 2px 0; }
+
+  .duration-debug {
+    position: absolute; bottom: 14px; right: 22px; z-index: 99;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 10px; color: rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="top-glow"></div>
+  <div class="grid-bg"></div>
+  <div class="spine"></div>
+  <div class="center-glow"></div>
+
+  <div class="corner corner-tl" aria-hidden="true"></div>
+  <div class="corner corner-tr" aria-hidden="true"></div>
+  <div class="corner corner-bl" aria-hidden="true"></div>
+  <div class="corner corner-br" aria-hidden="true"></div>
+
+  <div class="brand-top">THANKS · 谢谢观看</div>
+
+  <!-- 4 个金粒子作为数据瀑布氛围 -->
+  <div class="drop d1"></div>
+  <div class="drop d2"></div>
+  <div class="drop d3"></div>
+  <div class="drop d4"></div>
+
+  <div class="content">
+    <div class="brand-wordmark">微域生光</div>
+    <div class="center-line" aria-hidden="true"></div>
+    <div class="brand-subtitle">
+      真实博主拆解<span class="dot-sep">·</span>真实数据<span class="dot-sep">·</span>真实增长
+    </div>
+  </div>
+
+  <div class="footer-cta">
+    更多博主拆解<span class="arrow">&#8594;</span>关注<span class="b">微域生光</span>
+  </div>
+
+  <div class="bottom-glow"></div>
+  <div class="duration-debug">{{DURATION_MS}}ms · slide-{{index}} · {{slide_type}}</div>
+</div>
+</body>
+</html>

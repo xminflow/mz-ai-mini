@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>slide-compare — 他怎么把这件事放大</title>
+<!-- v09 3D 卡片堆叠 · slide-compare · 左右两张金色卡 perspective 对峙 + 中央金色光弧扫过 -->
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#080808;font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+
+  .stage{
+    position:relative;width:1080px;height:1920px;
+    background:
+      radial-gradient(ellipse 700px 500px at 50% 55%, rgba(201,162,39,0.16), transparent 70%),
+      radial-gradient(ellipse 900px 700px at 50% 95%, rgba(180,100,20,0.10), transparent 70%),
+      linear-gradient(180deg,#0a0a0a 0%,#080808 60%,#050505 100%);
+    overflow:hidden;
+  }
+
+  /* 顶部 GROWTH 标签 */
+  .topline{
+    position:absolute;top:90px;left:0;right:0;text-align:center;
+    font-family:Consolas,'Courier New',monospace;
+    font-size:28px;letter-spacing:14px;color:rgba(232,196,107,0.75);
+    opacity:0;animation:topIn 0.5s ease 0.2s forwards;
+  }
+  .topline::before,.topline::after{content:"";display:inline-block;width:60px;height:1px;background:#c9a227;vertical-align:middle;margin:0 18px}
+  @keyframes topIn{to{opacity:1}}
+
+  /* 标题 */
+  .title{
+    position:absolute;top:200px;left:0;right:0;text-align:center;
+    font-size:62px;font-weight:900;line-height:1.2;letter-spacing:-0.01em;
+    color:#fff;padding:0 80px;
+    opacity:0;animation:titleIn 0.6s cubic-bezier(.2,.7,.2,1) 0.4s forwards;
+  }
+  .title::after{
+    content:"";display:block;width:140px;height:2px;margin:28px auto 0;
+    background:linear-gradient(90deg,transparent,#e8c46b,#c9a227,#e8c46b,transparent);
+  }
+  @keyframes titleIn{
+    0%{opacity:0;transform:translateY(30px)}
+    100%{opacity:1;transform:translateY(0)}
+  }
+
+  /* 底部脚标 */
+  .footer{
+    position:absolute;bottom:90px;left:0;right:0;text-align:center;
+    font-size:22px;letter-spacing:10px;color:#c9a227;
+    opacity:0;animation:footIn 0.8s ease 11.8s forwards;
+  }
+  .footer::before,.footer::after{content:"";display:inline-block;width:60px;height:1px;background:linear-gradient(90deg,transparent,#c9a227,transparent);vertical-align:middle;margin:0 24px}
+  @keyframes footIn{to{opacity:1}}
+
+  /* 3D 舞台 */
+  .deck-wrap{
+    position:absolute;left:0;right:0;top:520px;bottom:200px;
+    perspective:1800px;
+    perspective-origin:50% 50%;
+  }
+  .stage-3d{
+    position:relative;width:100%;height:100%;
+    transform-style:preserve-3d;
+  }
+
+  /* 卡片基类 */
+  .cmp-card{
+    position:absolute;top:50%;
+    width:440px;height:680px;margin-top:-340px;
+    border-radius:30px;
+    background:linear-gradient(160deg,#1a1408 0%,#221a0c 50%,#100c06 100%);
+    border:2px solid #c9a227;
+    box-shadow:
+      0 30px 60px rgba(0,0,0,0.6),
+      0 12px 24px rgba(0,0,0,0.5),
+      inset 0 0 0 1px rgba(232,196,107,0.18);
+    transform-style:preserve-3d;
+    backface-visibility:hidden;
+    padding:60px 44px;
+    display:flex;flex-direction:column;
+    will-change:transform,opacity;
+  }
+  .cmp-card::before{
+    content:"";position:absolute;inset:14px;border:1px solid rgba(232,196,107,0.38);border-radius:20px;pointer-events:none;
+  }
+  .cmp-card::after{
+    content:"";position:absolute;inset:10px;border-radius:22px;pointer-events:none;
+    background:
+      linear-gradient(135deg,#e8c46b 0%,transparent 8%,transparent 92%,#e8c46b 100%) 0 0/100% 100%,
+      linear-gradient(45deg,#e8c46b 0%,transparent 8%,transparent 92%,#e8c46b 100%) 0 0/100% 100%;
+    mix-blend-mode:overlay;opacity:0.28;
+  }
+
+  .cmp-card .label{
+    font-family:Consolas,'Courier New',monospace;
+    font-size:26px;letter-spacing:8px;color:rgba(232,196,107,0.85);
+    margin-bottom:24px;
+    padding-bottom:20px;
+    border-bottom:1px solid rgba(201,162,39,0.3);
+  }
+  .cmp-card .badge{
+    display:inline-block;
+    font-family:'Inter','SF Pro Display',system-ui,sans-serif;
+    font-size:18px;font-weight:700;letter-spacing:3px;
+    color:#1a1408;
+    background:linear-gradient(180deg,#e8c46b 0%,#c9a227 100%);
+    padding:4px 14px;border-radius:14px;margin-right:10px;
+  }
+  .cmp-card .text{
+    flex:1;
+    font-size:30px;font-weight:500;line-height:1.65;
+    color:rgba(255,255,255,0.92);
+    overflow:hidden;
+  }
+  .cmp-card .corner-num{
+    position:absolute;top:34px;right:48px;
+    font-family:'Inter',sans-serif;font-size:24px;font-weight:600;
+    color:#c9a227;letter-spacing:2px;opacity:0.75;
+  }
+  .cmp-card .corner-num::before{content:"NO.";font-size:14px;margin-right:4px;opacity:0.7;letter-spacing:3px}
+
+  /* 左卡：从屏外左侧飞入 + 朝右倾斜（对镜面感）；t≈0.6s 起飞，t≈2.0s 到位翻起 */
+  .cmp-card.before{
+    left:60px;
+    transform:translateX(-700px) rotateY(60deg) translateZ(-300px);
+    animation:flyLeft 1.4s cubic-bezier(.2,.7,.2,1) 0.6s forwards;
+  }
+  @keyframes flyLeft{
+    0%{opacity:0;transform:translateX(-700px) rotateY(60deg) translateZ(-300px)}
+    60%{opacity:1;transform:translateX(20px) rotateY(-8deg) translateZ(20px)}
+    100%{opacity:1;transform:translateX(0) rotateY(8deg) translateZ(0)}
+  }
+  /* 左卡内容翻起：t≈2.0s 起，body fade in */
+  .cmp-card.before .text-body{
+    opacity:0;
+    animation:bodyIn 0.5s ease 2.2s forwards;
+  }
+
+  /* 右卡：从屏外右侧飞入 + 朝左倾斜；起飞延迟到光弧之后 */
+  .cmp-card.after{
+    right:60px;
+    background:
+      radial-gradient(ellipse 400px 400px at 50% 30%,rgba(201,162,39,0.20),transparent 70%),
+      linear-gradient(160deg,#1a1408 0%,#2a1f0c 50%,#100c06 100%);
+    border:3px solid #e8c46b;
+    box-shadow:
+      0 40px 80px rgba(0,0,0,0.7),
+      0 16px 36px rgba(0,0,0,0.6),
+      0 0 60px rgba(201,162,39,0.28),
+      inset 0 0 0 1px rgba(232,196,107,0.35);
+    transform:translateX(700px) rotateY(-60deg) translateZ(-300px);
+    animation:flyRight 1.4s cubic-bezier(.2,.7,.2,1) 5.6s forwards;
+  }
+  @keyframes flyRight{
+    0%{opacity:0;transform:translateX(700px) rotateY(-60deg) translateZ(-300px)}
+    60%{opacity:1;transform:translateX(-20px) rotateY(8deg) translateZ(20px)}
+    100%{opacity:1;transform:translateX(0) rotateY(-8deg) translateZ(0)}
+  }
+  .cmp-card.after .text-body{
+    opacity:0;
+    animation:bodyIn 0.5s ease 7.2s forwards;
+  }
+  @keyframes bodyIn{to{opacity:1}}
+
+  /* 中央金色光弧：左 → 右扫过，t=4s-5.6s */
+  .arc{
+    position:absolute;left:50%;top:50%;
+    width:1200px;height:1200px;margin-left:-600px;margin-top:-600px;
+    border-radius:50%;
+    border:2px solid transparent;
+    border-top-color:#e8c46b;
+    border-right-color:rgba(232,196,107,0.6);
+    box-shadow:0 0 40px rgba(201,162,39,0.4),inset 0 0 60px rgba(201,162,39,0.15);
+    transform:rotate(-225deg);
+    opacity:0;
+    animation:arcSweep 1.6s cubic-bezier(.45,.05,.55,.95) 4.0s forwards;
+    pointer-events:none;
+  }
+  @keyframes arcSweep{
+    0%{opacity:0;transform:rotate(-225deg) scale(0.6)}
+    40%{opacity:1;transform:rotate(-135deg) scale(1)}
+    80%{opacity:1;transform:rotate(-45deg) scale(1.04)}
+    100%{opacity:0;transform:rotate(0deg) scale(1.1)}
+  }
+
+  /* 中央闪光点：跟随光弧 */
+  .arc-spark{
+    position:absolute;left:50%;top:50%;
+    width:24px;height:24px;margin-left:-12px;margin-top:-12px;
+    border-radius:50%;
+    background:radial-gradient(circle,#fff7d9 0%,#e8c46b 40%,transparent 70%);
+    box-shadow:0 0 30px #e8c46b,0 0 60px rgba(201,162,39,0.6);
+    opacity:0;
+    animation:sparkRun 1.6s ease-in-out 4.0s forwards;
+    pointer-events:none;
+  }
+  @keyframes sparkRun{
+    0%{opacity:0;transform:translateX(-380px) scale(0.6)}
+    20%{opacity:1;transform:translateX(-380px) scale(1)}
+    50%{opacity:1;transform:translateX(0) scale(1.4)}
+    80%{opacity:1;transform:translateX(380px) scale(1)}
+    100%{opacity:0;transform:translateX(380px) scale(0.6)}
+  }
+
+  /* 中央 VS 标签：在两卡都到位后显示 */
+  .vs-tag{
+    position:absolute;left:50%;top:50%;
+    transform:translate(-50%,-50%);
+    font-family:'Inter','SF Pro Display',system-ui,sans-serif;
+    font-size:64px;font-weight:900;letter-spacing:4px;
+    background:linear-gradient(180deg,#fff7d9 0%,#e8c46b 50%,#c9a227 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 0 30px rgba(201,162,39,0.5);
+    opacity:0;
+    animation:vsIn 0.6s cubic-bezier(.2,.7,.2,1) 8.2s forwards;
+  }
+  @keyframes vsIn{
+    0%{opacity:0;transform:translate(-50%,-50%) scale(0.3) rotateZ(-30deg)}
+    70%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotateZ(5deg)}
+    100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotateZ(0deg)}
+  }
+
+  .duration-debug{
+    position:absolute;bottom:14px;right:22px;z-index:99;
+    font-family:Consolas,'Courier New',monospace;
+    font-size:10px;color:rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="topline">G R O W T H   M O V E</div>
+
+  <div class="title">他怎么把这件事放大</div>
+
+  <div class="deck-wrap">
+    <div class="stage-3d">
+
+      <!-- 左卡：早期 / before -->
+      <div class="cmp-card before">
+        <span class="corner-num">01</span>
+        <div class="label">做对的事</div>
+        <div class="text text-body">
+          <span class="badge">RIGHT</span>早期就抓住了'反直觉强结论当开场'这件事，靠暗调茶台 + 顶部红黄双行字打开人
+        </div>
+      </div>
+
+      <!-- 金色光弧 + 闪光点 -->
+      <div class="arc"></div>
+      <div class="arc-spark"></div>
+
+      <!-- VS 标签 -->
+      <div class="vs-tag">VS</div>
+
+      <!-- 右卡：现在 / after -->
+      <div class="cmp-card after">
+        <span class="corner-num">02</span>
+        <div class="label">把它放大</div>
+        <div class="text text-body">
+          <span class="badge">SCALE</span>现在七套场景，从白衣修行到 AI 操盘到政经叙事，都焊在同一行红黄双标题上
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">微 域 生 光 · 真 实 博 主 拆 解</div>
+
+  <div class="duration-debug">18400ms</div>
+</div>
+</body>
+</html>

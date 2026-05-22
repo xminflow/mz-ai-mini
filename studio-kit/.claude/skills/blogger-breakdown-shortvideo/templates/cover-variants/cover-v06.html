@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="zh-CN">
+<!--
+  cover-v06 — 多窗口分屏 Window Tile
+  设计意图：6 格拼布式不对称网格控制台，每格独立 KPI + 独立微动效，
+            形成"多焦点频道墙"的拼贴感。1px 金线把屏幕切成 6 个不等
+            大小窗口，主标题占据最大格（约 50% 面积），其余 5 格分别
+            承载 5 项数据 KPI 与各自的微动画（进度条 / count-up / 脉冲
+            点 / 柱状图 / 阶梯）。强调"多频道并行"的信息密度。
+  数据维度：粉丝 103 万 / 获赞 757.5 万 / 作品 1291 / 企业 230 家 /
+            客单 13 万 / 客单阶梯 5 档（共 6 项）
+  动画时间轴：
+    t=0.0s   背景与 1px 分隔线立刻可见，6 格容器骨架就位
+    t=0.0-1.5s panel stagger 入场（每格延迟 150ms 的 fadeUp）
+    t=1.5-5.0s 各 panel 内微动效铺开：进度条到 78%、数字 count-up、
+              柱状图 stagger 升起、阶梯依次点亮
+    t=5.0-7.0s 末态定格 2.0s，脉冲点继续 infinite 循环
+-->
+<head>
+<meta charset="utf-8">
+<title>cover-v06</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#080808;font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif;color:#fff}
+  .stage{position:relative;width:1080px;height:1920px;background:
+    radial-gradient(ellipse at 30% 20%, rgba(201,162,39,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 85%, rgba(180,100,20,0.06) 0%, transparent 60%),
+    #080808;
+  }
+
+  /* 顶部细金条 */
+  .topbar{position:absolute;top:0;left:0;width:1080px;height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:1px solid rgba(201,162,39,0.35);background:rgba(8,8,8,0.6);z-index:10;font-family:'Inter','SF Pro Display',system-ui,'Microsoft YaHei',sans-serif;font-size:14px;letter-spacing:0.18em;color:rgba(232,196,107,0.9)}
+  .topbar .dot{display:inline-block;width:8px;height:8px;background:#c9a227;border-radius:50%;margin-right:10px;animation:blink 1.4s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.25}}
+
+  /* 6 格 grid: 用 absolute 不等大小拼布 */
+  .grid{position:absolute;top:46px;left:0;width:1080px;height:1874px}
+
+  .panel{position:absolute;background:rgba(14,14,14,0.6);border:1px solid rgba(201,162,39,0.45);overflow:hidden;opacity:0;transform:translateY(24px);animation:panelIn 0.7s cubic-bezier(.2,.7,.2,1) forwards}
+  @keyframes panelIn{to{opacity:1;transform:translateY(0)}}
+
+  .panel .label{position:absolute;top:18px;left:22px;font-size:18px;letter-spacing:0.22em;color:rgba(232,196,107,0.78);font-family:'Inter',system-ui,sans-serif}
+  .panel .tag{position:absolute;top:18px;right:22px;font-size:13px;letter-spacing:0.2em;color:rgba(255,255,255,0.4);font-family:'Inter',system-ui,sans-serif}
+
+  /* P1 主标题 大格（左上 50%+）*/
+  .p1{left:0;top:0;width:680px;height:980px;animation-delay:0ms;background:
+    linear-gradient(135deg, rgba(201,162,39,0.06) 0%, rgba(8,8,8,0) 60%),
+    rgba(14,14,14,0.7)
+  }
+  .p1 .title{position:absolute;left:60px;top:280px;font-size:172px;font-weight:900;line-height:1;color:#fff;letter-spacing:0.02em}
+  .p1 .title .gold{color:#e8c46b;text-shadow:0 0 30px rgba(201,162,39,0.35)}
+  .p1 .sub{position:absolute;left:64px;top:520px;font-size:32px;letter-spacing:0.18em;color:rgba(255,255,255,0.85);font-weight:300}
+  .p1 .id{position:absolute;left:64px;bottom:60px;font-family:'Inter',system-ui,monospace;font-size:24px;color:#c9a227;letter-spacing:0.15em}
+  .p1 .id::before{content:"";display:inline-block;width:36px;height:1px;background:#c9a227;vertical-align:middle;margin-right:14px}
+  .p1 .strap{position:absolute;left:64px;top:600px;font-size:20px;color:rgba(232,196,107,0.75);letter-spacing:0.25em}
+
+  /* P2 粉丝 + 进度条（右上）*/
+  .p2{left:680px;top:0;width:400px;height:490px;animation-delay:150ms}
+  .p2 .num{position:absolute;left:30px;top:130px;font-family:'Inter',system-ui,sans-serif;font-size:108px;font-weight:800;color:#fff;line-height:1}
+  .p2 .unit{font-size:38px;color:#c9a227;margin-left:6px}
+  .p2 .desc{position:absolute;left:30px;top:262px;font-size:16px;color:rgba(255,255,255,0.55);letter-spacing:0.2em}
+  .p2 .bar-wrap{position:absolute;left:30px;right:30px;bottom:80px;height:6px;background:rgba(255,255,255,0.08);border-radius:0}
+  .p2 .bar{position:absolute;left:0;top:0;height:100%;width:0;background:linear-gradient(90deg,#c9a227,#e8c46b);animation:barFill 2.2s cubic-bezier(.2,.7,.2,1) 1.0s forwards}
+  @keyframes barFill{to{width:78%}}
+  .p2 .bar-meta{position:absolute;left:30px;right:30px;bottom:54px;display:flex;justify-content:space-between;font-family:'Inter',system-ui,monospace;font-size:13px;color:rgba(232,196,107,0.7);letter-spacing:0.15em}
+
+  /* P3 获赞 + count-up（右中）*/
+  .p3{left:680px;top:490px;width:400px;height:490px;animation-delay:300ms}
+  .p3 .num{position:absolute;left:30px;top:140px;font-family:'Inter',system-ui,sans-serif;font-size:96px;font-weight:800;color:#e8c46b;line-height:1;letter-spacing:-0.02em}
+  .p3 .unit{font-size:34px;color:rgba(255,255,255,0.65);margin-left:6px}
+  .p3 .desc{position:absolute;left:30px;top:262px;font-size:16px;color:rgba(255,255,255,0.55);letter-spacing:0.2em}
+  .p3 .heartline{position:absolute;left:30px;right:30px;bottom:80px;height:1px;background:rgba(201,162,39,0.35)}
+  .p3 .pulse-line{position:absolute;left:30px;right:30px;bottom:60px;height:30px;display:flex;align-items:end;gap:6px}
+  .p3 .pulse-line span{flex:1;background:#c9a227;opacity:0.6;height:6px;animation:pulseBar 1.6s ease-in-out infinite}
+  .p3 .pulse-line span:nth-child(1){animation-delay:0s}
+  .p3 .pulse-line span:nth-child(2){animation-delay:0.15s}
+  .p3 .pulse-line span:nth-child(3){animation-delay:0.3s}
+  .p3 .pulse-line span:nth-child(4){animation-delay:0.45s}
+  .p3 .pulse-line span:nth-child(5){animation-delay:0.6s}
+  .p3 .pulse-line span:nth-child(6){animation-delay:0.75s}
+  .p3 .pulse-line span:nth-child(7){animation-delay:0.9s}
+  .p3 .pulse-line span:nth-child(8){animation-delay:1.05s}
+  @keyframes pulseBar{0%,100%{height:6px;opacity:0.4}50%{height:28px;opacity:1}}
+
+  /* P4 作品 + 脉冲圆点（左下偏中）*/
+  .p4{left:0;top:980px;width:400px;height:480px;animation-delay:450ms}
+  .p4 .num{position:absolute;left:30px;top:130px;font-family:'Inter',system-ui,sans-serif;font-size:128px;font-weight:800;color:#fff;line-height:1;letter-spacing:-0.04em}
+  .p4 .desc{position:absolute;left:30px;top:280px;font-size:16px;color:rgba(255,255,255,0.55);letter-spacing:0.2em}
+  .p4 .pulse{position:absolute;right:36px;top:48px;width:24px;height:24px}
+  .p4 .pulse::before,.p4 .pulse::after{content:"";position:absolute;inset:0;border-radius:50%;background:#c9a227}
+  .p4 .pulse::after{animation:pulseRing 1.8s ease-out infinite}
+  @keyframes pulseRing{0%{transform:scale(1);opacity:0.8}100%{transform:scale(3.6);opacity:0}}
+  .p4 .strip{position:absolute;left:30px;right:30px;bottom:60px;display:grid;grid-template-columns:repeat(12,1fr);gap:6px}
+  .p4 .strip span{height:18px;background:rgba(201,162,39,0.25);border-left:1px solid rgba(232,196,107,0.45)}
+  .p4 .strip span:nth-child(odd){background:rgba(201,162,39,0.5)}
+
+  /* P5 企业 + 柱状图（中下）*/
+  .p5{left:400px;top:980px;width:400px;height:480px;animation-delay:600ms;background:rgba(201,162,39,0.06)}
+  .p5 .num{position:absolute;left:30px;top:130px;font-family:'Inter',system-ui,sans-serif;font-size:108px;font-weight:800;color:#e8c46b;line-height:1}
+  .p5 .unit{font-size:38px;color:rgba(255,255,255,0.7);margin-left:6px}
+  .p5 .desc{position:absolute;left:30px;top:262px;font-size:16px;color:rgba(255,255,255,0.55);letter-spacing:0.2em}
+  .p5 .bars{position:absolute;left:30px;right:30px;bottom:50px;height:110px;display:flex;align-items:end;gap:14px}
+  .p5 .bars b{flex:1;background:linear-gradient(180deg,#e8c46b,#c9a227);height:0;animation:barRise 0.9s cubic-bezier(.2,.7,.2,1) forwards}
+  .p5 .bars b:nth-child(1){--h:35%;animation-delay:1.3s}
+  .p5 .bars b:nth-child(2){--h:55%;animation-delay:1.45s}
+  .p5 .bars b:nth-child(3){--h:72%;animation-delay:1.6s}
+  .p5 .bars b:nth-child(4){--h:88%;animation-delay:1.75s}
+  .p5 .bars b:nth-child(5){--h:100%;animation-delay:1.9s}
+  @keyframes barRise{to{height:var(--h)}}
+
+  /* P6 客单 + 5 档阶梯（右下）*/
+  .p6{left:800px;top:980px;width:280px;height:480px;animation-delay:750ms}
+  .p6 .label{font-size:15px}
+  .p6 .num{position:absolute;left:24px;top:120px;font-family:'Inter',system-ui,sans-serif;font-size:96px;font-weight:800;color:#fff;line-height:1}
+  .p6 .unit{font-size:30px;color:#c9a227;margin-left:4px}
+  .p6 .desc{position:absolute;left:24px;top:236px;font-size:14px;color:rgba(255,255,255,0.55);letter-spacing:0.18em}
+  .p6 .stairs{position:absolute;left:24px;right:24px;bottom:50px;height:130px;display:flex;align-items:end;gap:4px}
+  .p6 .stairs i{flex:1;background:rgba(201,162,39,0.2);border:1px solid rgba(201,162,39,0.5);border-bottom:none;opacity:0.25;animation:stairOn 0.5s ease-out forwards}
+  .p6 .stairs i:nth-child(1){height:18%;animation-delay:2.2s}
+  .p6 .stairs i:nth-child(2){height:36%;animation-delay:2.45s}
+  .p6 .stairs i:nth-child(3){height:58%;animation-delay:2.7s}
+  .p6 .stairs i:nth-child(4){height:80%;animation-delay:2.95s}
+  .p6 .stairs i:nth-child(5){height:100%;animation-delay:3.2s;background:rgba(232,196,107,0.7)}
+  @keyframes stairOn{to{opacity:1;background:rgba(232,196,107,0.55)}}
+  .p6 .stairs i:nth-child(5){animation-name:stairOnTop}
+  @keyframes stairOnTop{to{opacity:1;background:#e8c46b;box-shadow:0 0 18px rgba(232,196,107,0.55)}}
+
+  /* 全局 1px 金线分隔（用 panel border 已实现，这里加 cross 装饰）*/
+  .crosshair{position:absolute;width:14px;height:14px;border:1px solid #c9a227;background:#080808;z-index:5}
+  .ch1{left:673px;top:39px}
+  .ch2{left:673px;top:483px}
+  .ch3{left:673px;top:973px}
+  .ch4{left:393px;top:973px}
+  .ch5{left:793px;top:973px}
+
+  /* 底部脚标 */
+  .footer{position:absolute;left:0;bottom:0;width:1080px;height:0;display:flex;justify-content:space-between;align-items:center;padding:0 36px;font-family:'Inter',system-ui,sans-serif;font-size:13px;color:rgba(232,196,107,0.6);letter-spacing:0.2em;z-index:10}
+
+  /* count-up via animation-delay reveal trick: 三段切换 */
+  .countup{position:relative;display:inline-block}
+  .countup span{position:absolute;left:0;top:0;opacity:0}
+  .countup span.show{opacity:1}
+  .countup span:nth-child(1){animation:cuFade 0.6s ease-out 1.0s forwards}
+  .countup span:nth-child(2){animation:cuFade 0.6s ease-out 1.6s forwards}
+  .countup span:nth-child(3){animation:cuFade 0.6s ease-out 2.2s forwards}
+  @keyframes cuFade{0%{opacity:0}30%{opacity:1}70%{opacity:1}100%{opacity:0}}
+  .countup span:nth-child(3){animation-name:cuFadeStay}
+  @keyframes cuFadeStay{from{opacity:0}to{opacity:1}}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="topbar">
+    <div><span class="dot"></span>CH.01 — BLOGGER BREAKDOWN · LIVE</div>
+    <div>陈厂长 · ISSUE 001 · 2026·05</div>
+  </div>
+
+  <div class="grid">
+
+    <!-- P1 主标题 -->
+    <div class="panel p1">
+      <div class="label">// MAIN</div>
+      <div class="tag">@HuaicaideyuIP</div>
+      <div class="title">陈<span class="gold">厂</span>长</div>
+      <div class="strap">CHEN · CHANG · ZHANG</div>
+      <div class="sub">AI 时代老板 IP 操盘手</div>
+      <div class="id">抖音号 @HuaicaideyuIP</div>
+    </div>
+
+    <!-- P2 粉丝 + 进度条 -->
+    <div class="panel p2">
+      <div class="label">// FANS</div>
+      <div class="tag">01</div>
+      <div class="num">103<span class="unit">万</span></div>
+      <div class="desc">粉丝总数</div>
+      <div class="bar-wrap"><div class="bar"></div></div>
+      <div class="bar-meta"><span>0</span><span>抖音头部 · 78%</span><span>TOP</span></div>
+    </div>
+
+    <!-- P3 获赞 + count-up -->
+    <div class="panel p3">
+      <div class="label">// LIKES</div>
+      <div class="tag">02</div>
+      <div class="num">
+        <span class="countup">
+          <span>2.1<span class="unit">万</span></span>
+          <span>312<span class="unit">万</span></span>
+          <span>757.5<span class="unit">万</span></span>
+        </span>
+      </div>
+      <div class="desc">累计获赞</div>
+      <div class="heartline"></div>
+      <div class="pulse-line">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- P4 作品 + 脉冲点 -->
+    <div class="panel p4">
+      <div class="label">// WORKS</div>
+      <div class="pulse"></div>
+      <div class="num">1291</div>
+      <div class="desc">作品总数 · 同一套打法</div>
+      <div class="strip">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <!-- P5 企业 + 柱状图 -->
+    <div class="panel p5">
+      <div class="label">// CASES</div>
+      <div class="tag">04</div>
+      <div class="num">230<span class="unit">家</span></div>
+      <div class="desc">企业 AI 化案例 · 过去一年</div>
+      <div class="bars"><b></b><b></b><b></b><b></b><b></b></div>
+    </div>
+
+    <!-- P6 客单 + 5 档阶梯 -->
+    <div class="panel p6">
+      <div class="label">// TIER</div>
+      <div class="num">13<span class="unit">万</span></div>
+      <div class="desc">中隐会年费</div>
+      <div class="stairs"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+
+    <!-- 十字接合点装饰 -->
+    <div class="crosshair ch1"></div>
+    <div class="crosshair ch2"></div>
+    <div class="crosshair ch3"></div>
+    <div class="crosshair ch4"></div>
+    <div class="crosshair ch5"></div>
+
+  </div>
+
+  <div class="footer">
+    <div>微域生光 · 真实博主拆解</div>
+    <div>06 OF 14 · CONSOLE</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>slide-compare</title>
+<!-- v10 数据粒子云 · slide-compare · 上半稀疏粒子（早期）+ 下半密集粒子（现在被放大），中间金光扫过分隔 -->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#080808;font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+
+  .stage{
+    position:relative;width:1080px;height:1920px;
+    background:linear-gradient(180deg,#070707 0%,#0a0a0a 50%,#050505 100%);
+    overflow:hidden;
+  }
+
+  /* 上半 / 下半背景光晕 */
+  .half-top-bg{
+    position:absolute;top:0;left:0;right:0;height:50%;
+    background:radial-gradient(ellipse 700px 500px at 50% 60%, rgba(120,80,200,0.08), transparent 70%);
+  }
+  .half-bot-bg{
+    position:absolute;bottom:0;left:0;right:0;height:50%;
+    background:radial-gradient(ellipse 800px 600px at 50% 40%, rgba(201,162,39,0.16), transparent 65%),
+               radial-gradient(ellipse 600px 400px at 50% 80%, rgba(180,100,20,0.10), transparent 70%);
+  }
+
+  .frame-corner{position:absolute;width:24px;height:24px;border:2px solid #c9a227;z-index:5}
+  .fc-tl{top:48px;left:48px;border-right:none;border-bottom:none}
+  .fc-tr{top:48px;right:48px;border-left:none;border-bottom:none}
+  .fc-bl{bottom:48px;left:48px;border-right:none;border-top:none}
+  .fc-br{bottom:48px;right:48px;border-left:none;border-top:none}
+
+  /* 粒子层 */
+  .cloud{position:absolute;inset:0;z-index:1}
+
+  .p{
+    position:absolute;
+    font-family:'Inter','SF Pro Display','Microsoft YaHei',sans-serif;
+    font-weight:700;
+    color:#e8c46b;
+    white-space:nowrap;
+    text-shadow:0 0 12px rgba(201,162,39,0.4);
+    opacity:0;
+    will-change:transform,opacity;
+  }
+  .p.amber{color:rgba(232,180,90,0.85);text-shadow:0 0 14px rgba(180,100,20,0.5)}
+  .p.dim{color:rgba(201,162,39,0.45);font-weight:500;text-shadow:none}
+  .p.huge{font-weight:900}
+  .p.cjk{font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif}
+
+  @keyframes fanIn{
+    0%{transform:translate3d(var(--ox,0),var(--oy,0),-200px) scale(0.4);opacity:0}
+    100%{transform:translate3d(0,0,0) scale(1);opacity:var(--op,0.7)}
+  }
+  @keyframes float{
+    0%,100%{transform:translate3d(0,0,0) scale(1)}
+    50%{transform:translate3d(var(--dx,8px),var(--dy,-10px),0) scale(1.02)}
+  }
+  .p{
+    animation:
+      fanIn 1.4s cubic-bezier(.2,.7,.2,1) var(--d,0s) both,
+      float var(--fd,8s) ease-in-out calc(1.4s + var(--d,0s)) infinite;
+  }
+
+  /* 中间金光扫过的分隔线 */
+  .divider-band{
+    position:absolute;top:50%;left:0;right:0;
+    height:3px;transform:translateY(-50%);
+    background:linear-gradient(to right,transparent,#e8c46b 30%,#fff7d9 50%,#e8c46b 70%,transparent);
+    box-shadow:0 0 30px rgba(232,196,107,0.6),0 0 60px rgba(201,162,39,0.3);
+    transform-origin:left;
+    transform:translateY(-50%) scaleX(0);
+    animation:bandIn 0.9s cubic-bezier(.2,.7,.2,1) 1.0s forwards;
+    z-index:8;
+  }
+  @keyframes bandIn{to{transform:translateY(-50%) scaleX(1)}}
+
+  /* 一道金光扫过分隔线 */
+  .divider-sweep{
+    position:absolute;top:50%;left:0;
+    width:200px;height:60px;transform:translateY(-50%) translateX(-200px);
+    background:radial-gradient(ellipse 200px 30px at 50% 50%, rgba(255,247,217,0.95), rgba(232,196,107,0.4) 40%, transparent 70%);
+    z-index:9;opacity:0;
+    animation:sweep 1.6s ease-out 1.9s both, sweepRepeat 4s ease-in-out 4.0s infinite;
+  }
+  @keyframes sweep{
+    0%{opacity:0;transform:translateY(-50%) translateX(-200px)}
+    15%{opacity:1}
+    85%{opacity:1}
+    100%{opacity:0;transform:translateY(-50%) translateX(1100px)}
+  }
+  @keyframes sweepRepeat{
+    0%{opacity:0;transform:translateY(-50%) translateX(-200px)}
+    20%{opacity:1}
+    100%{opacity:0;transform:translateY(-50%) translateX(1100px)}
+  }
+
+  /* 主内容 */
+  .root{position:relative;width:1080px;height:1920px;z-index:10;padding:130px 76px 110px;display:flex;flex-direction:column}
+
+  .section-tag{
+    font-family:Consolas,'Courier New',monospace;
+    font-size:28px;letter-spacing:10px;color:rgba(201,162,39,0.72);
+    opacity:0;animation:tagIn 0.5s ease 0.2s forwards;text-align:center;
+  }
+  .section-tag::before,.section-tag::after{content:"";display:inline-block;width:40px;height:1px;background:#c9a227;vertical-align:middle;margin:0 14px}
+  @keyframes tagIn{to{opacity:1}}
+
+  .slide-title{
+    margin-top:30px;
+    font-size:54px;font-weight:900;line-height:1.18;letter-spacing:1px;text-align:center;
+    background:linear-gradient(180deg,#fff 0%,#fff7d9 50%,#e8c46b 100%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 30px rgba(201,162,39,0.4);
+    opacity:0;animation:tagIn 0.8s ease 0.5s forwards;
+  }
+
+  /* compare-wrapper */
+  .compare-wrapper{
+    flex:1;display:flex;flex-direction:column;justify-content:space-between;
+    margin-top:50px;gap:40px;
+  }
+
+  .compare-card{
+    flex:1;display:flex;flex-direction:column;justify-content:center;
+    padding:46px 50px;border-radius:18px;
+    backdrop-filter:blur(8px);
+    position:relative;overflow:hidden;
+  }
+  .compare-card-before{
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.14);
+    opacity:0;animation:beforeIn 0.8s cubic-bezier(.2,.7,.2,1) 1.6s forwards;
+  }
+  .compare-card-after{
+    background:rgba(201,162,39,0.08);
+    border:1px solid rgba(201,162,39,0.42);
+    box-shadow:0 0 40px rgba(201,162,39,0.18);
+    opacity:0;animation:afterIn 0.9s cubic-bezier(.2,.7,.2,1) 2.5s forwards;
+    position:relative;
+  }
+  .compare-card-after::before{
+    content:'';position:absolute;left:0;top:24px;bottom:24px;width:4px;
+    border-radius:0 3px 3px 0;
+    background:linear-gradient(to bottom,#fff7d9,#e8c46b,#c9a227);
+  }
+  @keyframes beforeIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes afterIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+  .card-label{
+    font-family:Consolas,'Courier New',monospace;
+    font-size:30px;letter-spacing:10px;
+    margin-bottom:18px;
+  }
+  .card-label-before{color:rgba(255,255,255,0.5)}
+  .card-label-after{color:#e8c46b}
+
+  .card-text{font-size:38px;font-weight:500;line-height:1.6;letter-spacing:1px}
+  .card-text-before{color:rgba(255,255,255,0.7)}
+  .card-text-after{color:rgba(255,255,255,0.96);font-weight:600}
+
+  .brand-footer{
+    margin-top:30px;text-align:center;
+    font-family:Consolas,'Courier New',monospace;
+    font-size:22px;letter-spacing:12px;color:rgba(201,162,39,0.6);
+    opacity:0;animation:tagIn 0.6s ease 3.4s forwards;
+  }
+
+  .duration-debug{position:absolute;bottom:14px;right:22px;z-index:99;font-family:Consolas,'Courier New',monospace;font-size:10px;color:rgba(255,255,255,0.12)}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="half-top-bg"></div>
+  <div class="half-bot-bg"></div>
+
+  <div class="frame-corner fc-tl"></div>
+  <div class="frame-corner fc-tr"></div>
+  <div class="frame-corner fc-bl"></div>
+  <div class="frame-corner fc-br"></div>
+
+  <!-- 粒子云 -->
+  <div class="cloud">
+    <!-- 上半（稀疏 ~ 12 个，dim 暗色） -->
+    <span class="p dim" style="left:80px;top:180px;font-size:24px;--ox:-200px;--oy:-100px;--op:0.3;--d:0.1s;--fd:11s;--dx:6px;--dy:-6px;filter:blur(1.5px)">数据</span>
+    <span class="p dim cjk" style="left:940px;top:200px;font-size:22px;--ox:200px;--oy:-100px;--op:0.28;--d:0.15s;--fd:12s;--dx:-6px;--dy:8px;filter:blur(1.6px)">早期</span>
+    <span class="p dim" style="left:120px;top:380px;font-size:24px;--ox:-220px;--oy:-40px;--op:0.3;--d:0.2s;--fd:11s;--dx:6px;--dy:8px;filter:blur(1.5px)">1999</span>
+    <span class="p dim" style="left:900px;top:420px;font-size:22px;--ox:220px;--oy:-40px;--op:0.28;--d:0.22s;--fd:12s;--dx:-6px;--dy:-8px;filter:blur(1.6px)">2980</span>
+    <span class="p dim" style="left:200px;top:580px;font-size:22px;--ox:-180px;--oy:0;--op:0.28;--d:0.25s;--fd:11s;--dx:4px;--dy:6px;filter:blur(1.7px)">15年</span>
+    <span class="p dim cjk" style="left:840px;top:620px;font-size:22px;--ox:180px;--oy:0;--op:0.28;--d:0.28s;--fd:11s;--dx:-4px;--dy:-6px;filter:blur(1.7px)">19岁</span>
+    <span class="p dim" style="left:80px;top:780px;font-size:20px;--ox:-280px;--oy:40px;--op:0.25;--d:0.3s;--fd:12s;--dx:4px;--dy:4px;filter:blur(1.8px)">+</span>
+    <span class="p dim" style="left:960px;top:820px;font-size:20px;--ox:280px;--oy:40px;--op:0.25;--d:0.32s;--fd:12s;--dx:-4px;--dy:-4px;filter:blur(1.8px)">·</span>
+    <span class="p dim" style="left:340px;top:240px;font-size:18px;--ox:-100px;--oy:-120px;--op:0.22;--d:0.34s;--fd:12s;--dx:4px;--dy:-4px;filter:blur(2px)">·</span>
+    <span class="p dim" style="left:700px;top:260px;font-size:18px;--ox:120px;--oy:-120px;--op:0.22;--d:0.36s;--fd:12s;--dx:-4px;--dy:4px;filter:blur(2px)">+</span>
+
+    <!-- 下半（密集 ~ 30 个，含 amber + huge，"信息量被放大"） -->
+    <span class="p amber" style="left:60px;top:1080px;font-size:46px;--ox:-280px;--oy:60px;--op:0.78;--d:0.4s;--fd:8s;--dx:10px;--dy:-8px">103万</span>
+    <span class="p amber" style="left:880px;top:1100px;font-size:48px;--ox:280px;--oy:60px;--op:0.78;--d:0.42s;--fd:8.5s;--dx:-10px;--dy:10px">230家</span>
+    <span class="p amber cjk" style="left:120px;top:1240px;font-size:42px;--ox:-260px;--oy:120px;--op:0.72;--d:0.45s;--fd:9s;--dx:8px;--dy:8px;filter:blur(0.5px)">数字人</span>
+    <span class="p amber cjk" style="left:820px;top:1260px;font-size:42px;--ox:260px;--oy:120px;--op:0.72;--d:0.48s;--fd:8.5s;--dx:-8px;--dy:-8px;filter:blur(0.5px)">7套场景</span>
+    <span class="p amber" style="left:80px;top:1420px;font-size:44px;--ox:-280px;--oy:200px;--op:0.75;--d:0.5s;--fd:8s;--dx:10px;--dy:8px">4亿</span>
+    <span class="p amber" style="left:880px;top:1440px;font-size:44px;--ox:280px;--oy:200px;--op:0.75;--d:0.52s;--fd:8.5s;--dx:-10px;--dy:-10px">13万</span>
+    <span class="p huge" style="left:140px;top:1580px;font-size:62px;--ox:-220px;--oy:280px;--op:0.92;--d:0.55s;--fd:7.5s;--dx:10px;--dy:-8px">757万</span>
+    <span class="p huge" style="left:780px;top:1600px;font-size:60px;--ox:220px;--oy:280px;--op:0.92;--d:0.58s;--fd:7.5s;--dx:-12px;--dy:8px">1291</span>
+    <span class="p huge cjk" style="left:160px;top:1750px;font-size:50px;--ox:-180px;--oy:340px;--op:0.85;--d:0.6s;--fd:8s;--dx:10px;--dy:10px">5档</span>
+    <span class="p huge cjk" style="left:780px;top:1760px;font-size:50px;--ox:180px;--oy:340px;--op:0.85;--d:0.62s;--fd:8s;--dx:-10px;--dy:-8px">5钩子</span>
+
+    <span class="p amber" style="left:340px;top:1140px;font-size:36px;--ox:-100px;--oy:80px;--op:0.65;--d:0.65s;--fd:9s;--dx:6px;--dy:8px;filter:blur(0.6px)">29800</span>
+    <span class="p amber" style="left:680px;top:1160px;font-size:36px;--ox:120px;--oy:80px;--op:0.65;--d:0.68s;--fd:9s;--dx:-6px;--dy:-8px;filter:blur(0.6px)">170</span>
+    <span class="p amber cjk" style="left:380px;top:1320px;font-size:34px;--ox:-80px;--oy:160px;--op:0.6;--d:0.7s;--fd:9.5s;--dx:6px;--dy:-6px;filter:blur(0.6px)">老板IP</span>
+    <span class="p amber cjk" style="left:660px;top:1340px;font-size:34px;--ox:100px;--oy:160px;--op:0.6;--d:0.72s;--fd:9.5s;--dx:-6px;--dy:6px;filter:blur(0.6px)">操盘手</span>
+    <span class="p amber" style="left:320px;top:1500px;font-size:36px;--ox:-100px;--oy:240px;--op:0.65;--d:0.74s;--fd:9s;--dx:8px;--dy:8px;filter:blur(0.6px)">2亿+</span>
+    <span class="p amber" style="left:700px;top:1520px;font-size:36px;--ox:140px;--oy:240px;--op:0.65;--d:0.76s;--fd:9s;--dx:-8px;--dy:-8px;filter:blur(0.6px)">15万</span>
+    <span class="p amber cjk" style="left:380px;top:1680px;font-size:32px;--ox:-80px;--oy:320px;--op:0.55;--d:0.78s;--fd:9s;--dx:6px;--dy:-8px;filter:blur(0.7px)">六类</span>
+    <span class="p amber cjk" style="left:680px;top:1700px;font-size:32px;--ox:100px;--oy:320px;--op:0.55;--d:0.8s;--fd:9s;--dx:-6px;--dy:8px;filter:blur(0.7px)">14章</span>
+
+    <span class="p dim" style="left:60px;top:1820px;font-size:22px;--ox:-280px;--oy:280px;--op:0.4;--d:0.85s;--fd:10s;--dx:6px;--dy:-4px;filter:blur(1px)">31条</span>
+    <span class="p dim" style="left:960px;top:1840px;font-size:22px;--ox:280px;--oy:280px;--op:0.4;--d:0.88s;--fd:10s;--dx:-6px;--dy:4px;filter:blur(1px)">7 IP</span>
+    <span class="p dim cjk" style="left:80px;top:1880px;font-size:18px;--ox:-260px;--oy:320px;--op:0.32;--d:0.9s;--fd:11s;--dx:4px;--dy:-4px;filter:blur(1.5px)">微域</span>
+    <span class="p dim cjk" style="left:940px;top:1880px;font-size:18px;--ox:260px;--oy:320px;--op:0.32;--d:0.92s;--fd:11s;--dx:-4px;--dy:4px;filter:blur(1.5px)">生光</span>
+  </div>
+
+  <!-- 分隔线 + 金光扫过 -->
+  <div class="divider-band"></div>
+  <div class="divider-sweep"></div>
+
+  <div class="root">
+    <div class="section-tag">成 长 动 作 · GROWTH MOVE</div>
+    <div class="slide-title">{{title}}</div>
+
+    <div class="compare-wrapper">
+      <div class="compare-card compare-card-before">
+        <div class="card-label card-label-before">做 对 的 事 · RIGHT MOVE</div>
+        <div class="card-text card-text-before">{{compare_before}}</div>
+      </div>
+
+      <div class="compare-card compare-card-after">
+        <div class="card-label card-label-after">把 它 放 大 · SCALE UP</div>
+        <div class="card-text card-text-after">{{compare_after}}</div>
+      </div>
+    </div>
+
+    <div class="brand-footer">微 域 生 光</div>
+  </div>
+
+  <div class="duration-debug">{{DURATION_MS}}ms · {{slide_type}} · #{{index}}</div>
+</div>
+</body>
+</html>

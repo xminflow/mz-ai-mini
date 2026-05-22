@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!--
+  cover-v03 — 数据瀑布 Cascading Digits
+  设计意图：数字从屏幕顶部依次坠落到画面预设网格位置，伴金色拖尾与轻微模糊残影，模拟物理感弹性落地；
+            最终所有数字定格成一片信息瀑布——右上大数字、左下小数字、中央人物主标题；
+            气质强戏剧化，强调"信息从天而降"的视觉冲击与商业密度。
+  数据维度：粉丝 103万 / 获赞 757.5万 / 作品 1291 / 企业 230家 / 数字人卖货 4亿 / 客单 13万 / 起步年龄 19岁 / 连续创业 15年 / 中央人物
+  动画时间轴：
+    t=0.0s   深色背景立刻可见，金色细脊柱浮现
+    t=0.2s   第 1 个数字（103万）从顶部坠入，伴金色拖尾
+    t=0.4–2.4s 数字按 stagger 依次坠落到不同高度的预设格点
+    t=2.6s   主标题陈厂长 + 副标 从底部上浮
+    t=3.4s   微域生光脚标渐显
+    t=4.0–7.0s 全部元素定格，金色脊柱呼吸 idle（末态定格 3s 满足录屏）
+-->
+<title>陈厂长 cover v03</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #080808;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    color: #fff;
+  }
+
+  .stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background:
+      radial-gradient(ellipse 800px 1100px at 50% 55%, rgba(201,162,39,0.10) 0%, transparent 65%),
+      radial-gradient(ellipse 600px 400px at 50% 8%, rgba(232,196,107,0.20) 0%, transparent 70%),
+      linear-gradient(180deg, #0a0a0a 0%, #080808 60%, #050505 100%);
+    overflow: hidden;
+  }
+
+  /* 顶部金光条 */
+  .top-glow {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, transparent 0%, #d4af37 20%, #e8c46b 50%, #d4af37 80%, transparent 100%);
+    box-shadow: 0 0 24px #c9a227, 0 0 48px rgba(201,162,39,0.4);
+  }
+
+  /* 背景金色脊柱（中线） */
+  .spine {
+    position: absolute;
+    left: 50%;
+    top: 80px;
+    width: 2px;
+    height: 1760px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(212,175,55,0.0) 5%,
+      rgba(212,175,55,0.35) 50%,
+      rgba(212,175,55,0.0) 95%,
+      transparent 100%);
+    animation: spineBreath 3s ease-in-out infinite alternate;
+  }
+  @keyframes spineBreath {
+    0%   { opacity: 0.4; }
+    100% { opacity: 0.85; }
+  }
+
+  /* 背景细网格 */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(212,175,55,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,175,55,0.04) 1px, transparent 1px);
+    background-size: 120px 120px;
+    mask-image: radial-gradient(ellipse 700px 1100px at 50% 55%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 700px 1100px at 50% 55%, #000 30%, transparent 75%);
+  }
+
+  /* 顶部品牌标 */
+  .brand-top {
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 22px;
+    letter-spacing: 8px;
+    color: rgba(232,196,107,0.7);
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.2s forwards;
+  }
+  .brand-top .dot {
+    color: #c9a227;
+    margin: 0 6px;
+  }
+
+  /* 坠落数字基本盒子 */
+  .drop {
+    position: absolute;
+    opacity: 0;
+    will-change: transform, opacity, filter;
+    transform: translateY(-400px);
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.4, 1); /* 弹性 */
+  }
+
+  .drop .num {
+    display: block;
+    font-family: 'Inter', 'SF Pro Display', system-ui, 'Microsoft YaHei', sans-serif;
+    color: #e8c46b;
+    text-shadow:
+      0 0 14px rgba(232,196,107,0.55),
+      0 0 32px rgba(201,162,39,0.35);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .drop .lab {
+    display: block;
+    margin-top: 8px;
+    font-size: 18px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 300;
+  }
+  .drop .unit {
+    font-size: 0.45em;
+    color: rgba(232,196,107,0.85);
+    margin-left: 4px;
+    font-weight: 500;
+  }
+
+  /* 拖尾（用伪元素绘制） */
+  .drop::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(232,196,107,0.0) 0%, rgba(232,196,107,0.7) 100%);
+    opacity: 0;
+    animation: tailFade 1s ease forwards;
+  }
+  @keyframes tailFade {
+    0%   { height: 0;   opacity: 0; }
+    40%  { height: 380px; opacity: 0.9; }
+    100% { height: 0;   opacity: 0; }
+  }
+
+  /* 每个数字独立定位 + 独立动画延迟 */
+  .d1 { top: 250px; left: 80px;  width: 320px; text-align: left; animation: drop1 1.2s ease 0.2s forwards; }
+  .d1::before { animation-delay: 0.2s; }
+  .d1 .num { font-size: 130px; }
+
+  .d2 { top: 230px; right: 70px; width: 340px; text-align: right; animation: drop2 1.2s ease 0.5s forwards; }
+  .d2::before { animation-delay: 0.5s; }
+  .d2 .num { font-size: 110px; }
+
+  .d3 { top: 460px; left: 120px; width: 240px; text-align: left; animation: drop3 1.0s ease 0.8s forwards; }
+  .d3::before { animation-delay: 0.8s; }
+  .d3 .num { font-size: 76px; }
+
+  .d4 { top: 470px; right: 110px; width: 280px; text-align: right; animation: drop4 1.0s ease 1.1s forwards; }
+  .d4::before { animation-delay: 1.1s; }
+  .d4 .num { font-size: 78px; }
+
+  .d5 { top: 1280px; left: 60px;  width: 380px; text-align: left; animation: drop5 1.1s ease 1.4s forwards; }
+  .d5::before { animation-delay: 1.4s; }
+  .d5 .num { font-size: 140px; }
+
+  .d6 { top: 1300px; right: 70px; width: 320px; text-align: right; animation: drop6 1.0s ease 1.7s forwards; }
+  .d6::before { animation-delay: 1.7s; }
+  .d6 .num { font-size: 96px; }
+
+  .d7 { top: 1520px; left: 100px; width: 240px; text-align: left; animation: drop7 0.9s ease 2.0s forwards; }
+  .d7::before { animation-delay: 2.0s; }
+  .d7 .num { font-size: 60px; }
+
+  .d8 { top: 1530px; right: 120px; width: 260px; text-align: right; animation: drop8 0.9s ease 2.2s forwards; }
+  .d8::before { animation-delay: 2.2s; }
+  .d8 .num { font-size: 58px; }
+
+  @keyframes drop1 { 0%{ transform: translateY(-600px); opacity: 0; filter: blur(8px);} 70%{filter: blur(0);} 100%{ transform: translateY(0); opacity: 1; filter: blur(0);} }
+  @keyframes drop2 { 0%{ transform: translateY(-600px); opacity: 0; filter: blur(8px);} 70%{filter: blur(0);} 100%{ transform: translateY(0); opacity: 1; filter: blur(0);} }
+  @keyframes drop3 { 0%{ transform: translateY(-700px); opacity: 0; filter: blur(6px);} 70%{filter: blur(0);} 100%{ transform: translateY(0); opacity: 1; filter: blur(0);} }
+  @keyframes drop4 { 0%{ transform: translateY(-700px); opacity: 0; filter: blur(6px);} 70%{filter: blur(0);} 100%{ transform: translateY(0); opacity: 1; filter: blur(0);} }
+  @keyframes drop5 { 0%{ transform: translateY(-1500px); opacity: 0; filter: blur(10px);} 70%{filter: blur(0);} 100%{ transform: translateY(0); opacity: 1; filter: blur(0);} }
+  @keyframes drop6 { 0%{ transform: translateY(-1500px); opacity: 0; filter: blur(8px);} 70%{filter: blur(0);} 100%{ transform: translateY(0); opacity: 1; filter: blur(0);} }
+  @keyframes drop7 { 0%{ transform: translateY(-1700px); opacity: 0; filter: blur(6px);} 70%{filter: blur(0);} 100%{ transform: translateY(0); opacity: 1; filter: blur(0);} }
+  @keyframes drop8 { 0%{ transform: translateY(-1700px); opacity: 0; filter: blur(6px);} 70%{filter: blur(0);} 100%{ transform: translateY(0); opacity: 1; filter: blur(0);} }
+
+  /* 中央主标题区 */
+  .center {
+    position: absolute;
+    left: 0; right: 0;
+    top: 760px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: centerIn 1.0s cubic-bezier(0.2,0.8,0.3,1) 2.6s forwards;
+  }
+  @keyframes centerIn {
+    0%   { opacity: 0; transform: translateY(50px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .center .name {
+    font-size: 200px;
+    font-weight: 800;
+    letter-spacing: 8px;
+    background: linear-gradient(180deg, #f4d97a 0%, #e8c46b 40%, #c9a227 70%, #9b7b1f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 60px rgba(232,196,107,0.3);
+    line-height: 1;
+  }
+  .center .sub-line {
+    margin: 28px auto 0;
+    width: 320px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+  }
+  .center .sub {
+    margin-top: 30px;
+    font-size: 38px;
+    letter-spacing: 14px;
+    color: rgba(255,255,255,0.88);
+    font-weight: 300;
+  }
+  .center .sub b {
+    color: #e8c46b;
+    font-weight: 500;
+  }
+  .center .tags {
+    margin-top: 36px;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 0 100px;
+  }
+  .center .tag {
+    padding: 8px 22px;
+    border: 1px solid rgba(201,162,39,0.45);
+    border-radius: 4px;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: rgba(232,196,107,0.92);
+    background: rgba(201,162,39,0.06);
+  }
+
+  /* 底部脚标 */
+  .footer {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 70px;
+    text-align: center;
+    font-size: 22px;
+    letter-spacing: 10px;
+    color: rgba(255,255,255,0.5);
+    opacity: 0;
+    animation: fadeIn 1.0s ease 3.4s forwards;
+  }
+  .footer .b {
+    color: #e8c46b;
+    margin-right: 14px;
+  }
+
+  /* 底部金光条 */
+  .bottom-glow {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent 0%, #c9a227 30%, #c9a227 70%, transparent 100%);
+    opacity: 0.7;
+  }
+
+  @keyframes fadeIn {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  /* 一个细微的右上 / 左下注脚 */
+  .corner {
+    position: absolute;
+    font-size: 16px;
+    letter-spacing: 6px;
+    color: rgba(232,196,107,0.55);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 3.6s forwards;
+  }
+  .corner.tl { top: 130px; left: 70px; }
+  .corner.tr { top: 130px; right: 70px; }
+  .corner.bl { bottom: 130px; left: 70px; }
+  .corner.br { bottom: 130px; right: 70px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="top-glow"></div>
+  <div class="grid-bg"></div>
+  <div class="spine"></div>
+
+  <div class="brand-top">真实博主拆解<span class="dot">·</span>14 章全景报告</div>
+
+  <div class="corner tl">FANS</div>
+  <div class="corner tr">LIKES</div>
+  <div class="corner bl">SINCE 19</div>
+  <div class="corner br">15 YRS</div>
+
+  <!-- 8 个坠落数字 -->
+  <div class="drop d1">
+    <span class="num">103<span class="unit">万</span></span>
+    <span class="lab">粉  丝</span>
+  </div>
+  <div class="drop d2">
+    <span class="num">757.5<span class="unit">万</span></span>
+    <span class="lab">获  赞</span>
+  </div>
+  <div class="drop d3">
+    <span class="num">1291</span>
+    <span class="lab">作  品</span>
+  </div>
+  <div class="drop d4">
+    <span class="num">230<span class="unit">家</span></span>
+    <span class="lab">企业 AI 化</span>
+  </div>
+  <div class="drop d5">
+    <span class="num">4<span class="unit">亿</span></span>
+    <span class="lab">数字人卖货</span>
+  </div>
+  <div class="drop d6">
+    <span class="num">13<span class="unit">万</span></span>
+    <span class="lab">中隐会年费</span>
+  </div>
+  <div class="drop d7">
+    <span class="num">19<span class="unit">岁</span></span>
+    <span class="lab">起步</span>
+  </div>
+  <div class="drop d8">
+    <span class="num">15<span class="unit">年</span></span>
+    <span class="lab">连续创业</span>
+  </div>
+
+  <!-- 中央主标题 -->
+  <div class="center">
+    <div class="name">陈厂长</div>
+    <div class="sub-line"></div>
+    <div class="sub">AI 时代<b>老板 IP</b> 操盘手</div>
+    <div class="tags">
+      <div class="tag">白衣禅修</div>
+      <div class="tag">AI 操盘</div>
+      <div class="tag">四重身份</div>
+    </div>
+  </div>
+
+  <!-- 底部脚标 -->
+  <div class="footer"><span class="b">微域生光</span>真实博主拆解</div>
+  <div class="bottom-glow"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- v06 多窗口分屏 · slide-bullets · 顶部 title panel + 4 条要点各占独立 panel，nth-child 区分微动效（进度条/脉冲/柱状/阶梯）-->
+<head>
+  <meta charset="UTF-8">
+  <title>slide-bullets</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1080px; height: 1920px; overflow: hidden;
+      background: #080808; color: #fff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .stage {
+      position: relative; width: 1080px; height: 1920px;
+      background:
+        radial-gradient(ellipse at 30% 15%, rgba(201,162,39,0.08) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 85%, rgba(180,100,20,0.06) 0%, transparent 60%),
+        #080808;
+    }
+
+    /* 顶部 ticker */
+    .topbar {
+      position: absolute; top: 0; left: 0;
+      width: 1080px; height: 46px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      border-bottom: 1px solid rgba(201,162,39,0.35);
+      background: rgba(8,8,8,0.6);
+      z-index: 10;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 14px; letter-spacing: 0.18em;
+      color: rgba(232,196,107,0.9);
+    }
+    .topbar .dot {
+      display: inline-block; width: 8px; height: 8px;
+      background: #c9a227; border-radius: 50%;
+      margin-right: 10px; animation: blink 1.4s infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    .grid {
+      position: absolute; top: 46px; left: 0;
+      width: 1080px; height: 1874px;
+      padding: 24px;
+    }
+
+    /* 顶部 title panel（占 20% 左右） */
+    .title-panel {
+      position: relative;
+      width: 100%; height: 280px;
+      background:
+        linear-gradient(135deg, rgba(201,162,39,0.08) 0%, rgba(8,8,8,0) 60%),
+        rgba(14,14,14,0.7);
+      border: 1px solid rgba(201,162,39,0.45);
+      padding: 36px 40px;
+      opacity: 0; transform: translateY(20px);
+      animation: panelIn 0.55s cubic-bezier(.2,.7,.2,1) 0ms forwards;
+      overflow: hidden;
+    }
+    @keyframes panelIn { to { opacity: 1; transform: translateY(0); } }
+
+    .title-panel .label {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 20px; letter-spacing: 0.28em;
+      color: rgba(232,196,107,0.78);
+      margin-bottom: 18px;
+    }
+    .title-panel .slide-title {
+      font-size: 62px; font-weight: 900;
+      line-height: 1.15; letter-spacing: -0.01em;
+      color: #fff;
+    }
+    .title-panel .tag {
+      position: absolute; top: 36px; right: 40px;
+      font-family: 'Inter', system-ui, monospace;
+      font-size: 16px; letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.4);
+    }
+    .title-panel .deco-line {
+      position: absolute; left: 40px; right: 40px; bottom: 24px;
+      height: 1px;
+      background: linear-gradient(to right, rgba(201,162,39,0.7), transparent);
+    }
+
+    /* bullets 拼贴 grid */
+    .bullets-list {
+      list-style: none;
+      width: 100%;
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 1fr;
+      gap: 18px;
+      counter-reset: bullet-counter;
+      height: calc(1874px - 48px - 280px - 18px - 70px);
+    }
+
+    /* 通用 li panel */
+    .bullets-list .stagger-item {
+      position: relative;
+      background: rgba(14,14,14,0.65);
+      border: 1px solid rgba(201,162,39,0.40);
+      padding: 80px 36px 70px;
+      overflow: hidden;
+      font-size: 32px; font-weight: 500;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.92);
+      opacity: 0; transform: translateY(20px);
+      animation: panelIn 0.55s cubic-bezier(.2,.7,.2,1) both;
+    }
+
+    /* panel label */
+    .bullets-list .stagger-item::before {
+      counter-increment: bullet-counter;
+      content: "// 0" counter(bullet-counter);
+      position: absolute; top: 28px; left: 32px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 18px; letter-spacing: 0.26em;
+      color: rgba(232,196,107,0.78);
+    }
+    .bullets-list .stagger-item::after {
+      content: "POINT";
+      position: absolute; top: 28px; right: 32px;
+      font-family: 'Inter', system-ui, monospace;
+      font-size: 13px; letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* stagger 入场延迟 */
+    .bullets-list .stagger-item:nth-child(1) { animation-delay: 0.30s; }
+    .bullets-list .stagger-item:nth-child(2) { animation-delay: 0.50s; }
+    .bullets-list .stagger-item:nth-child(3) { animation-delay: 0.70s; }
+    .bullets-list .stagger-item:nth-child(4) { animation-delay: 0.90s; }
+    .bullets-list .stagger-item:nth-child(5) { animation-delay: 1.10s; }
+    .bullets-list .stagger-item:nth-child(6) { animation-delay: 1.30s; }
+
+    /* === 各 panel 独立微动效 === */
+
+    /* 第 1 个：进度条 */
+    .bullets-list .stagger-item:nth-child(1) {
+      background:
+        linear-gradient(135deg, rgba(201,162,39,0.06) 0%, rgba(8,8,8,0) 60%),
+        rgba(14,14,14,0.7);
+    }
+    .bullets-list .stagger-item:nth-child(1)::before { content: "// 01"; }
+    .bullets-list .stagger-item:nth-child(1) .ic1 {
+      position: absolute; left: 32px; right: 32px; bottom: 30px;
+      height: 5px; background: rgba(255,255,255,0.08);
+    }
+    .bullets-list .stagger-item:nth-child(1) .ic1 i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, #c9a227, #e8c46b);
+      animation: barFill 1.6s cubic-bezier(.2,.7,.2,1) 1.3s forwards;
+    }
+    @keyframes barFill { to { width: 78%; } }
+
+    /* 第 2 个：脉冲圆点 */
+    .bullets-list .stagger-item:nth-child(2)::before { content: "// 02"; }
+    .bullets-list .stagger-item:nth-child(2) .ic2 {
+      position: absolute; right: 36px; bottom: 36px;
+      width: 18px; height: 18px;
+    }
+    .bullets-list .stagger-item:nth-child(2) .ic2::before,
+    .bullets-list .stagger-item:nth-child(2) .ic2::after {
+      content: ""; position: absolute; inset: 0;
+      border-radius: 50%; background: #c9a227;
+    }
+    .bullets-list .stagger-item:nth-child(2) .ic2::after {
+      animation: pulseRing 1.8s ease-out infinite;
+    }
+    @keyframes pulseRing { 0%{transform:scale(1);opacity:0.8} 100%{transform:scale(3.6);opacity:0} }
+    .bullets-list .stagger-item:nth-child(2) .ic2-line {
+      position: absolute; left: 32px; right: 80px; bottom: 42px;
+      height: 1px; background: linear-gradient(to right, rgba(201,162,39,0.5), transparent);
+    }
+
+    /* 第 3 个：柱状图 */
+    .bullets-list .stagger-item:nth-child(3) {
+      background:
+        linear-gradient(135deg, rgba(201,162,39,0.05) 0%, rgba(8,8,8,0) 60%),
+        rgba(14,14,14,0.7);
+    }
+    .bullets-list .stagger-item:nth-child(3)::before { content: "// 03"; }
+    .bullets-list .stagger-item:nth-child(3) .ic3 {
+      position: absolute; left: 32px; right: 32px; bottom: 24px;
+      height: 56px; display: flex; align-items: end; gap: 8px;
+    }
+    .bullets-list .stagger-item:nth-child(3) .ic3 b {
+      flex: 1; background: linear-gradient(180deg, #e8c46b, #c9a227);
+      height: 0; animation: barRise 0.9s cubic-bezier(.2,.7,.2,1) forwards;
+    }
+    .bullets-list .stagger-item:nth-child(3) .ic3 b:nth-child(1){--h:30%;animation-delay:1.5s}
+    .bullets-list .stagger-item:nth-child(3) .ic3 b:nth-child(2){--h:55%;animation-delay:1.65s}
+    .bullets-list .stagger-item:nth-child(3) .ic3 b:nth-child(3){--h:72%;animation-delay:1.80s}
+    .bullets-list .stagger-item:nth-child(3) .ic3 b:nth-child(4){--h:90%;animation-delay:1.95s}
+    .bullets-list .stagger-item:nth-child(3) .ic3 b:nth-child(5){--h:100%;animation-delay:2.10s}
+    @keyframes barRise { to { height: var(--h); } }
+
+    /* 第 4 个：阶梯 */
+    .bullets-list .stagger-item:nth-child(4)::before { content: "// 04"; }
+    .bullets-list .stagger-item:nth-child(4) .ic4 {
+      position: absolute; left: 32px; right: 32px; bottom: 24px;
+      height: 56px; display: flex; align-items: end; gap: 5px;
+    }
+    .bullets-list .stagger-item:nth-child(4) .ic4 i {
+      flex: 1;
+      background: rgba(201,162,39,0.2);
+      border: 1px solid rgba(201,162,39,0.5);
+      border-bottom: none;
+      opacity: 0.25;
+      animation: stairOn 0.5s ease-out forwards;
+    }
+    .bullets-list .stagger-item:nth-child(4) .ic4 i:nth-child(1){height:20%;animation-delay:1.7s}
+    .bullets-list .stagger-item:nth-child(4) .ic4 i:nth-child(2){height:42%;animation-delay:1.95s}
+    .bullets-list .stagger-item:nth-child(4) .ic4 i:nth-child(3){height:62%;animation-delay:2.20s}
+    .bullets-list .stagger-item:nth-child(4) .ic4 i:nth-child(4){height:82%;animation-delay:2.45s}
+    .bullets-list .stagger-item:nth-child(4) .ic4 i:nth-child(5){height:100%;animation-delay:2.70s;animation-name:stairOnTop}
+    @keyframes stairOn { to { opacity: 1; background: rgba(232,196,107,0.55); } }
+    @keyframes stairOnTop { to { opacity: 1; background: #e8c46b; box-shadow: 0 0 18px rgba(232,196,107,0.55); } }
+
+    /* 第 5 个：strip 跑马 */
+    .bullets-list .stagger-item:nth-child(5)::before { content: "// 05"; }
+    .bullets-list .stagger-item:nth-child(5) .ic5 {
+      position: absolute; left: 32px; right: 32px; bottom: 24px;
+      display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px;
+    }
+    .bullets-list .stagger-item:nth-child(5) .ic5 span {
+      height: 16px; background: rgba(201,162,39,0.25);
+      border-left: 1px solid rgba(232,196,107,0.45);
+    }
+    .bullets-list .stagger-item:nth-child(5) .ic5 span:nth-child(odd) { background: rgba(201,162,39,0.5); }
+
+    /* 第 6 个：复合 */
+    .bullets-list .stagger-item:nth-child(6)::before { content: "// 06"; }
+    .bullets-list .stagger-item:nth-child(6) .ic1 {
+      position: absolute; left: 32px; right: 32px; bottom: 30px;
+      height: 5px; background: rgba(255,255,255,0.08);
+    }
+    .bullets-list .stagger-item:nth-child(6) .ic1 i {
+      display: block; height: 100%; width: 0;
+      background: linear-gradient(90deg, #c9a227, #e8c46b);
+      animation: barFill 1.6s cubic-bezier(.2,.7,.2,1) 1.6s forwards;
+    }
+
+    /* 末态定格区辅助：所有 panel 末态完成后停 1.5s+ 由 DURATION_MS 控制录屏 */
+
+    /* 十字接合 */
+    .crosshair {
+      position: absolute; width: 12px; height: 12px;
+      border: 1px solid #c9a227; background: #080808; z-index: 5;
+    }
+
+    .duration-debug {
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
+    }
+
+    /* 底部品牌脚标 panel */
+    .footer-panel {
+      position: absolute; left: 24px; right: 24px; bottom: 24px;
+      height: 46px;
+      border: 1px solid rgba(201,162,39,0.30);
+      background: rgba(14,14,14,0.6);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 13px; color: rgba(232,196,107,0.7);
+      letter-spacing: 0.22em;
+      opacity: 0;
+      animation: panelIn 0.45s ease 1.5s forwards;
+    }
+  </style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="topbar">
+    <div><span class="dot"></span>BULLETS · KEY POINTS · LIVE</div>
+    <div>No.{{index}} / 14</div>
+  </div>
+
+  <div class="grid">
+
+    <!-- 顶部 title panel -->
+    <div class="title-panel">
+      <div class="label">// KEY POINTS</div>
+      <div class="tag">CH.{{index}}</div>
+      <div class="slide-title">{{title}}</div>
+      <div class="deco-line" aria-hidden="true"></div>
+    </div>
+
+    <!--
+      {{bullets_html}} 注入格式：<li class="stagger-item">内容</li>
+      不含外层 <ul>；外层由本模板提供。
+      每个 li 额外拼接的微动效装饰 DOM 在 li 内由 Python 渲染时统一不注入，
+      这里通过 CSS ::before/::after + 子元素选择器渲染装饰条；
+      为保证微动效落地，模板提供 .ic-bar / .ic-pulse / .ic-bars / .ic-stairs / .ic-strip 共享类。
+    -->
+    <ul class="bullets-list">
+      {{bullets_html}}
+    </ul>
+
+    <!-- 底部品牌 panel -->
+    <div class="footer-panel">
+      <div>微域生光 · 真实博主拆解</div>
+      <div>POINTS · {{slide_type}}</div>
+    </div>
+
+  </div>
+
+  <div class="duration-debug">{{DURATION_MS}}ms</div>
+</div>
+
+<script>
+  // 给每个 .stagger-item 注入对应微动效装饰 DOM（不破坏 {{bullets_html}} 原始结构）
+  (function(){
+    var items = document.querySelectorAll('.bullets-list .stagger-item');
+    items.forEach(function(li, idx){
+      var i = idx + 1;
+      var deco = document.createElement('div');
+      if (i === 1 || i === 6) {
+        deco.className = 'ic1';
+        deco.innerHTML = '<i></i>';
+      } else if (i === 2) {
+        var line = document.createElement('div');
+        line.className = 'ic2-line';
+        li.appendChild(line);
+        deco.className = 'ic2';
+      } else if (i === 3) {
+        deco.className = 'ic3';
+        deco.innerHTML = '<b></b><b></b><b></b><b></b><b></b>';
+      } else if (i === 4) {
+        deco.className = 'ic4';
+        deco.innerHTML = '<i></i><i></i><i></i><i></i><i></i>';
+      } else if (i === 5) {
+        deco.className = 'ic5';
+        deco.innerHTML = '<span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>';
+      }
+      li.appendChild(deco);
+    });
+  })();
+</script>
+</body>
+</html>

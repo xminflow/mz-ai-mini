@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>slide-cta — 微域生光</title>
+<!-- v10 数据粒子云 · slide-cta · 整屏粒子云缓慢漂浮，中央"微域生光"四个金色大字从粒子中凝聚 → 描金 → 填实色 -->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#080808;font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+
+  .stage{
+    position:relative;width:1080px;height:1920px;
+    background:
+      radial-gradient(ellipse 900px 800px at 50% 50%, rgba(201,162,39,0.18), transparent 65%),
+      radial-gradient(ellipse 600px 600px at 20% 20%, rgba(180,100,20,0.10), transparent 65%),
+      radial-gradient(ellipse 500px 500px at 80% 80%, rgba(201,162,39,0.10), transparent 65%),
+      linear-gradient(160deg,#080808 0%,#0c0a04 50%,#080808 100%);
+    overflow:hidden;
+  }
+
+  .frame-corner{position:absolute;width:24px;height:24px;border:2px solid #c9a227;z-index:5}
+  .fc-tl{top:48px;left:48px;border-right:none;border-bottom:none}
+  .fc-tr{top:48px;right:48px;border-left:none;border-bottom:none}
+  .fc-bl{bottom:48px;left:48px;border-right:none;border-top:none}
+  .fc-br{bottom:48px;right:48px;border-left:none;border-top:none}
+
+  /* 粒子层（整屏） */
+  .cloud{position:absolute;inset:0;z-index:1}
+
+  .p{
+    position:absolute;
+    font-family:'Inter','SF Pro Display','Microsoft YaHei',sans-serif;
+    font-weight:700;
+    color:#e8c46b;
+    white-space:nowrap;
+    text-shadow:0 0 12px rgba(201,162,39,0.4);
+    opacity:0;
+    will-change:transform,opacity;
+  }
+  .p.amber{color:rgba(232,180,90,0.78);text-shadow:0 0 14px rgba(180,100,20,0.5)}
+  .p.dim{color:rgba(201,162,39,0.5);font-weight:500;text-shadow:none}
+  .p.huge{font-weight:900}
+  .p.cjk{font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif}
+
+  @keyframes fanIn{
+    0%{transform:translate3d(var(--ox,0),var(--oy,0),-200px) scale(0.4);opacity:0}
+    100%{transform:translate3d(0,0,0) scale(1);opacity:var(--op,0.7)}
+  }
+  @keyframes float{
+    0%,100%{transform:translate3d(0,0,0) scale(1)}
+    50%{transform:translate3d(var(--dx,8px),var(--dy,-10px),0) scale(1.02)}
+  }
+  .p{
+    animation:
+      fanIn 1.2s cubic-bezier(.2,.7,.2,1) var(--d,0s) both,
+      float var(--fd,7s) ease-in-out calc(1.2s + var(--d,0s)) infinite;
+  }
+
+  /* 中央光环（呼吸） */
+  .halo{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:900px;height:900px;border-radius:50%;
+    background:radial-gradient(circle, rgba(201,162,39,0.18) 0%, rgba(201,162,39,0.05) 40%, transparent 65%);
+    z-index:2;opacity:0;
+    animation:haloIn 1.0s ease-out 0.8s forwards, haloPulse 3.5s ease-in-out 2.0s infinite;
+  }
+  @keyframes haloIn{to{opacity:1}}
+  @keyframes haloPulse{
+    0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.85}
+    50%{transform:translate(-50%,-50%) scale(1.08);opacity:1}
+  }
+
+  /* 中央"微域生光"四个字 — 凝聚 → 描金 → 填实色 */
+  .brand-wrap{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    text-align:center;z-index:10;
+  }
+  .brand-name{
+    display:flex;justify-content:center;gap:32px;
+  }
+  .brand-name .ch{
+    font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif;
+    font-size:220px;font-weight:900;line-height:1;letter-spacing:0;
+    color:transparent;
+    -webkit-text-stroke:2px #e8c46b;
+    text-shadow:0 0 40px rgba(201,162,39,0.6);
+    opacity:0;
+    transform:scale(1.6);
+    filter:blur(20px);
+    animation:chCondense 1.2s cubic-bezier(.2,.7,.2,1) var(--d,1.4s) forwards;
+  }
+  @keyframes chCondense{
+    0%{opacity:0;transform:scale(1.6);filter:blur(20px);-webkit-text-stroke:0px #e8c46b;text-shadow:none}
+    60%{opacity:1;transform:scale(0.96);filter:blur(0);-webkit-text-stroke:2px #e8c46b;text-shadow:0 0 40px rgba(201,162,39,0.7)}
+    100%{opacity:1;transform:scale(1);filter:blur(0);-webkit-text-stroke:2px #e8c46b;text-shadow:0 0 32px rgba(201,162,39,0.6)}
+  }
+  .brand-name .ch.c1{--d:1.4s}
+  .brand-name .ch.c2{--d:1.65s}
+  .brand-name .ch.c3{--d:1.9s}
+  .brand-name .ch.c4{--d:2.15s}
+
+  /* 描金后填实色 — 实色金渐变层叠加上去 */
+  .brand-name .ch::after{
+    content:attr(data-ch);
+    position:absolute;left:0;top:0;width:100%;height:100%;
+    background:linear-gradient(180deg,#fff 0%,#fff7d9 35%,#e8c46b 70%,#c9a227 100%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    -webkit-text-stroke:0;
+    opacity:0;
+    animation:chFill 0.8s ease-out calc(var(--d,1.4s) + 1.0s) forwards;
+  }
+  .brand-name .ch{position:relative}
+  @keyframes chFill{to{opacity:1}}
+
+  /* 装饰横线 */
+  .center-divider{
+    margin-top:60px;
+    width:300px;height:2px;
+    background:linear-gradient(to right,transparent,#fff7d9,#e8c46b,#c9a227,#e8c46b,#fff7d9,transparent);
+    background-size:200% 100%;
+    transform-origin:center;transform:scaleX(0);
+    margin-left:auto;margin-right:auto;
+    animation:lineGrow 0.7s cubic-bezier(.2,.7,.2,1) 3.5s forwards, shimmer 2.6s 4.2s linear infinite;
+  }
+  @keyframes lineGrow{to{transform:scaleX(1)}}
+  @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+
+  /* 副标 */
+  .brand-subtitle{
+    margin-top:54px;
+    font-size:54px;font-weight:500;letter-spacing:16px;
+    color:rgba(255,255,255,0.92);text-align:center;
+    opacity:0;animation:subIn 0.8s ease-out 4.0s forwards;
+  }
+  .brand-subtitle .dot{color:#e8c46b;margin:0 14px}
+  @keyframes subIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+  /* 底部品牌脚标 */
+  .brand-footer{
+    position:absolute;bottom:120px;left:0;right:0;
+    text-align:center;
+    font-family:Consolas,'Courier New',monospace;
+    font-size:24px;letter-spacing:12px;color:rgba(201,162,39,0.65);
+    opacity:0;animation:subIn 0.6s ease 4.5s forwards;
+  }
+  .brand-footer::before,.brand-footer::after{content:"";display:inline-block;width:40px;height:1px;background:#c9a227;vertical-align:middle;margin:0 14px}
+
+  .duration-debug{position:absolute;bottom:14px;right:22px;z-index:99;font-family:Consolas,'Courier New',monospace;font-size:10px;color:rgba(255,255,255,0.12)}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="frame-corner fc-tl"></div>
+  <div class="frame-corner fc-tr"></div>
+  <div class="frame-corner fc-bl"></div>
+  <div class="frame-corner fc-br"></div>
+
+  <!-- 中央光环 -->
+  <div class="halo"></div>
+
+  <!-- 粒子云（中等密度 ~ 50 个，整屏漂浮） -->
+  <div class="cloud">
+    <!-- 远景 -->
+    <span class="p dim" style="left:60px;top:240px;font-size:32px;--ox:-300px;--oy:-200px;--op:0.42;--d:0.05s;--fd:9s;--dx:10px;--dy:-8px;filter:blur(1.2px)">103万</span>
+    <span class="p dim" style="left:880px;top:280px;font-size:30px;--ox:300px;--oy:-180px;--op:0.4;--d:0.1s;--fd:10s;--dx:-12px;--dy:6px;filter:blur(1.4px)">1291</span>
+    <span class="p dim cjk" style="left:150px;top:1700px;font-size:28px;--ox:-200px;--oy:200px;--op:0.4;--d:0.12s;--fd:11s;--dx:8px;--dy:-10px;filter:blur(1.5px)">真实</span>
+    <span class="p dim" style="left:780px;top:1720px;font-size:30px;--ox:200px;--oy:300px;--op:0.42;--d:0.15s;--fd:9.5s;--dx:-6px;--dy:8px;filter:blur(1.3px)">757万</span>
+    <span class="p dim cjk" style="left:80px;top:620px;font-size:26px;--ox:-280px;--oy:0;--op:0.4;--d:0.18s;--fd:10s;--dx:14px;--dy:6px;filter:blur(1.6px)">数据</span>
+    <span class="p dim" style="left:920px;top:680px;font-size:28px;--ox:260px;--oy:0;--op:0.4;--d:0.2s;--fd:9.5s;--dx:-10px;--dy:-8px;filter:blur(1.4px)">230</span>
+    <span class="p dim cjk" style="left:140px;top:1340px;font-size:26px;--ox:-260px;--oy:120px;--op:0.4;--d:0.22s;--fd:10.5s;--dx:8px;--dy:10px;filter:blur(1.5px)">增长</span>
+    <span class="p dim" style="left:900px;top:1380px;font-size:28px;--ox:260px;--oy:160px;--op:0.4;--d:0.25s;--fd:9s;--dx:-12px;--dy:-6px;filter:blur(1.4px)">4亿</span>
+    <span class="p dim" style="left:200px;top:380px;font-size:24px;--ox:-180px;--oy:-160px;--op:0.38;--d:0.28s;--fd:11s;--dx:6px;--dy:8px;filter:blur(1.6px)">15年</span>
+    <span class="p dim cjk" style="left:820px;top:420px;font-size:24px;--ox:220px;--oy:-150px;--op:0.4;--d:0.3s;--fd:10s;--dx:-8px;--dy:10px;filter:blur(1.5px)">操盘</span>
+    <span class="p dim" style="left:80px;top:980px;font-size:28px;--ox:-300px;--oy:80px;--op:0.45;--d:0.32s;--fd:9.5s;--dx:10px;--dy:-6px;filter:blur(1.3px)">19岁</span>
+    <span class="p dim" style="left:920px;top:1020px;font-size:26px;--ox:280px;--oy:80px;--op:0.42;--d:0.35s;--fd:10s;--dx:-8px;--dy:8px;filter:blur(1.4px)">2亿+</span>
+
+    <!-- 中景 -->
+    <span class="p amber" style="left:120px;top:480px;font-size:46px;--ox:-260px;--oy:-100px;--op:0.68;--d:0.4s;--fd:8s;--dx:14px;--dy:-10px;filter:blur(0.5px)">230家</span>
+    <span class="p amber" style="left:760px;top:520px;font-size:44px;--ox:240px;--oy:-120px;--op:0.68;--d:0.42s;--fd:8.5s;--dx:-10px;--dy:12px;filter:blur(0.5px)">4亿</span>
+    <span class="p amber cjk" style="left:60px;top:1180px;font-size:40px;--ox:-280px;--oy:60px;--op:0.65;--d:0.45s;--fd:9s;--dx:10px;--dy:8px;filter:blur(0.6px)">7套</span>
+    <span class="p amber cjk" style="left:760px;top:1240px;font-size:42px;--ox:260px;--oy:80px;--op:0.65;--d:0.48s;--fd:8.5s;--dx:-12px;--dy:-8px;filter:blur(0.5px)">数字人</span>
+    <span class="p amber" style="left:200px;top:840px;font-size:44px;--ox:-200px;--oy:-40px;--op:0.68;--d:0.5s;--fd:9s;--dx:10px;--dy:12px;filter:blur(0.5px)">13万</span>
+    <span class="p amber" style="left:780px;top:880px;font-size:42px;--ox:240px;--oy:-40px;--op:0.68;--d:0.52s;--fd:9.5s;--dx:-8px;--dy:-10px;filter:blur(0.6px)">1291</span>
+    <span class="p amber cjk" style="left:160px;top:1500px;font-size:38px;--ox:-220px;--oy:160px;--op:0.62;--d:0.55s;--fd:9s;--dx:12px;--dy:8px;filter:blur(0.5px)">真实</span>
+    <span class="p amber" style="left:740px;top:1560px;font-size:42px;--ox:240px;--oy:200px;--op:0.65;--d:0.58s;--fd:8.5s;--dx:-12px;--dy:-10px;filter:blur(0.5px)">103万</span>
+    <span class="p amber cjk" style="left:280px;top:300px;font-size:36px;--ox:-100px;--oy:-180px;--op:0.6;--d:0.6s;--fd:9s;--dx:8px;--dy:10px;filter:blur(0.6px)">AI时代</span>
+    <span class="p amber cjk" style="left:680px;top:340px;font-size:36px;--ox:120px;--oy:-180px;--op:0.6;--d:0.62s;--fd:9.5s;--dx:-10px;--dy:-8px;filter:blur(0.6px)">操盘手</span>
+    <span class="p amber cjk" style="left:340px;top:1660px;font-size:34px;--ox:-100px;--oy:220px;--op:0.58;--d:0.65s;--fd:9s;--dx:10px;--dy:-8px;filter:blur(0.6px)">老板IP</span>
+    <span class="p amber cjk" style="left:680px;top:1680px;font-size:36px;--ox:140px;--oy:220px;--op:0.6;--d:0.68s;--fd:8.5s;--dx:-8px;--dy:12px;filter:blur(0.5px)">连续创业</span>
+
+    <!-- 散点 -->
+    <span class="p dim" style="left:480px;top:200px;font-size:18px;--ox:0;--oy:-220px;--op:0.32;--d:0.7s;--fd:11s;--dx:6px;--dy:4px;filter:blur(2px)">+</span>
+    <span class="p dim" style="left:560px;top:1740px;font-size:18px;--ox:0;--oy:240px;--op:0.3;--d:0.72s;--fd:11s;--dx:-4px;--dy:-6px;filter:blur(2px)">·</span>
+    <span class="p dim" style="left:380px;top:1750px;font-size:20px;--ox:-60px;--oy:240px;--op:0.3;--d:0.74s;--fd:10s;--dx:6px;--dy:4px;filter:blur(2px)">+</span>
+    <span class="p dim" style="left:680px;top:1730px;font-size:20px;--ox:80px;--oy:240px;--op:0.3;--d:0.76s;--fd:10.5s;--dx:-6px;--dy:-4px;filter:blur(2px)">·</span>
+    <span class="p dim" style="left:60px;top:520px;font-size:22px;--ox:-280px;--oy:-80px;--op:0.32;--d:0.78s;--fd:11s;--dx:6px;--dy:-8px;filter:blur(2px)">7</span>
+    <span class="p dim" style="left:980px;top:560px;font-size:22px;--ox:280px;--oy:-80px;--op:0.32;--d:0.8s;--fd:10s;--dx:-6px;--dy:8px;filter:blur(2px)">5</span>
+    <span class="p dim" style="left:80px;top:1480px;font-size:22px;--ox:-260px;--oy:160px;--op:0.36;--d:0.82s;--fd:11s;--dx:8px;--dy:6px;filter:blur(1.8px)">6类</span>
+    <span class="p dim" style="left:960px;top:1500px;font-size:22px;--ox:280px;--oy:200px;--op:0.36;--d:0.84s;--fd:10.5s;--dx:-8px;--dy:-6px;filter:blur(1.8px)">31条</span>
+    <span class="p dim" style="left:240px;top:160px;font-size:20px;--ox:-100px;--oy:-220px;--op:0.36;--d:0.86s;--fd:10s;--dx:6px;--dy:8px;filter:blur(1.8px)">14章</span>
+    <span class="p dim" style="left:760px;top:160px;font-size:20px;--ox:120px;--oy:-220px;--op:0.36;--d:0.88s;--fd:10.5s;--dx:-6px;--dy:-8px;filter:blur(1.8px)">7 IP</span>
+
+    <!-- 补密 -->
+    <span class="p amber cjk" style="left:380px;top:1080px;font-size:30px;--ox:-80px;--oy:60px;--op:0.52;--d:0.9s;--fd:8s;--dx:6px;--dy:8px;filter:blur(0.8px)">数字人</span>
+    <span class="p amber cjk" style="left:620px;top:1060px;font-size:30px;--ox:100px;--oy:60px;--op:0.52;--d:0.92s;--fd:8.5s;--dx:-6px;--dy:-8px;filter:blur(0.8px)">企业</span>
+    <span class="p amber" style="left:160px;top:780px;font-size:32px;--ox:-260px;--oy:-60px;--op:0.55;--d:0.94s;--fd:8s;--dx:8px;--dy:-10px;filter:blur(0.7px)">1999</span>
+    <span class="p amber" style="left:840px;top:820px;font-size:32px;--ox:260px;--oy:-60px;--op:0.55;--d:0.96s;--fd:8.5s;--dx:-10px;--dy:8px;filter:blur(0.7px)">29800</span>
+  </div>
+
+  <!-- 中央"微域生光" -->
+  <div class="brand-wrap">
+    <div class="brand-name">
+      <span class="ch c1" data-ch="微">微</span>
+      <span class="ch c2" data-ch="域">域</span>
+      <span class="ch c3" data-ch="生">生</span>
+      <span class="ch c4" data-ch="光">光</span>
+    </div>
+    <div class="center-divider"></div>
+    <div class="brand-subtitle">真<span class="dot">·</span>实<span class="dot">·</span>博<span class="dot">·</span>主<span class="dot">·</span>拆<span class="dot">·</span>解</div>
+  </div>
+
+  <div class="brand-footer">真 实 数 据  ·  真 实 增 长</div>
+
+  <div class="duration-debug">{{DURATION_MS}}ms · {{slide_type}} · #{{index}}</div>
+</div>
+</body>
+</html>

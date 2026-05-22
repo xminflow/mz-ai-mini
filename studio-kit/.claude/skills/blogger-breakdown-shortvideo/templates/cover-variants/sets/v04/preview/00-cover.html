@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!-- v04 同心圆雷达 · slide-cover · 视觉语言 · 时间轴
+  视觉语言：5 圈金色同心圆环 + 雷达扇形旋转扫描 + 中央金色光点核心
+  动画时间轴：
+    t=0.0s   深色背景立刻可见，中心金光点出现并脉冲
+    t=0.0–1.0s 5 圈圆环 stagger 绘制完成 (stroke-dashoffset 0→1)
+    t=0.5s 起 雷达扇形光持续旋转（4s/圈, infinite）
+    t=1.2–1.8s subtitle 上方刻度条 fadeIn
+    t=1.8s   中央 title 主标题 scale-in 落定
+    t=2.2s   金色分隔线展开
+    t=2.5s   subtitle 浮现
+    t=3.0s   verdict 卡片浮现
+    t=4.2s   底部品牌脚标渐显
+    t=4.5–7.0s 末态定格：扇形光持续旋转，所有文字静止可读
+-->
+<title>slide-cover — 陈厂长</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #080808;
+    color: #ffffff;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 关键帧 */
+  @keyframes ringDraw {
+    0%   { stroke-dashoffset: 3500; opacity: 0; }
+    20%  { opacity: 1; }
+    100% { stroke-dashoffset: 0;    opacity: 1; }
+  }
+  @keyframes sweepFade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes sweepRotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to   { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  @keyframes corePulse {
+    0%   { transform: scale(1);    box-shadow: 0 0 18px #e8c46b, 0 0 40px rgba(232,196,107,0.7), 0 0 80px rgba(201,162,39,0.4); }
+    100% { transform: scale(1.25); box-shadow: 0 0 28px #f4d97a, 0 0 60px rgba(232,196,107,0.9), 0 0 120px rgba(201,162,39,0.6); }
+  }
+  @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes fadeUp  { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes scaleIn { from { opacity: 0; transform: scale(0.86); } to { opacity: 1; transform: scale(1); } }
+  @keyframes lineGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+  .stage {
+    position: relative;
+    width: 1080px; height: 1920px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(201,162,39,0.18) 0%, rgba(201,162,39,0.05) 30%, transparent 60%),
+      linear-gradient(180deg, #0a0a0a 0%, #080808 50%, #050505 100%);
+    overflow: hidden;
+  }
+
+  /* 背景同心圆刻度 */
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 50% 50%, rgba(212,175,55,0.06) 1px, transparent 1.5px),
+      linear-gradient(rgba(212,175,55,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,175,55,0.025) 1px, transparent 1px);
+    background-size: 60px 60px, 60px 60px, 60px 60px;
+  }
+
+  /* 顶部品牌标 */
+  .brand-top {
+    position: absolute;
+    top: 90px; left: 0; right: 0;
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 12px;
+    color: rgba(232,196,107,0.75);
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.2s forwards;
+  }
+  .brand-top b { color: #e8c46b; font-weight: 500; }
+
+  /* 顶部刻度条 */
+  .top-tick {
+    position: absolute;
+    top: 145px;
+    left: 50%; transform: translateX(-50%);
+    width: 600px; height: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.4s forwards;
+  }
+  .top-tick i { display: block; width: 1px; height: 14px; background: rgba(232,196,107,0.4); }
+  .top-tick i.long { height: 20px; background: rgba(232,196,107,0.8); }
+
+  /* 雷达主区（中心点位于屏幕几何中心稍上） */
+  .radar {
+    position: absolute;
+    left: 50%;
+    top: 880px;
+    transform: translate(-50%, -50%);
+    width: 1100px; height: 1100px;
+  }
+  .radar svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    overflow: visible;
+  }
+
+  /* 圆环 */
+  .ring {
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: 3500;
+    stroke-dashoffset: 3500;
+    filter: drop-shadow(0 0 6px rgba(232,196,107,0.5));
+    animation: ringDraw 1.0s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  .ring.r1 { stroke: rgba(232,196,107,0.95); stroke-width: 2.5; animation-delay: 0.0s; }
+  .ring.r2 { stroke: rgba(232,196,107,0.78); stroke-width: 2;   animation-delay: 0.15s; }
+  .ring.r3 { stroke: rgba(232,196,107,0.62); stroke-width: 2;   animation-delay: 0.30s; }
+  .ring.r4 { stroke: rgba(232,196,107,0.46); stroke-width: 1.8; animation-delay: 0.45s; }
+  .ring.r5 { stroke: rgba(212,175,55,0.30);  stroke-width: 1.5; stroke-dasharray: 6 8; animation-delay: 0.60s; }
+
+  .crosshair {
+    stroke: rgba(232,196,107,0.18);
+    stroke-width: 1;
+    stroke-dasharray: 4 6;
+  }
+
+  /* 扫描扇形 */
+  .sweep {
+    position: absolute;
+    left: 50%; top: 880px;
+    width: 1100px; height: 1100px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      rgba(232,196,107,0.55) 0deg,
+      rgba(232,196,107,0.28) 18deg,
+      rgba(232,196,107,0.10) 40deg,
+      rgba(232,196,107,0.0) 80deg,
+      rgba(232,196,107,0.0) 360deg
+    );
+    mask-image: radial-gradient(circle, transparent 80px, #000 90px, #000 540px, transparent 545px);
+    -webkit-mask-image: radial-gradient(circle, transparent 80px, #000 90px, #000 540px, transparent 545px);
+    opacity: 0;
+    animation:
+      sweepFade 0.6s ease 0.5s forwards,
+      sweepRotate 4s linear 0.5s infinite;
+  }
+
+  /* 中央光点 + 主标题 */
+  .center-core {
+    position: absolute;
+    left: 50%; top: 880px;
+    transform: translate(-50%, -50%);
+    width: 920px;
+    text-align: center;
+    z-index: 10;
+  }
+  .core-dot {
+    width: 18px; height: 18px;
+    margin: 0 auto 28px;
+    border-radius: 50%;
+    background: #f4d97a;
+    box-shadow:
+      0 0 18px #e8c46b,
+      0 0 40px rgba(232,196,107,0.7),
+      0 0 80px rgba(201,162,39,0.4);
+    animation: corePulse 1.6s ease-in-out infinite alternate;
+  }
+  .title {
+    font-size: 168px;
+    font-weight: 800;
+    letter-spacing: 4px;
+    background: linear-gradient(180deg, #f4d97a 0%, #e8c46b 45%, #c9a227 75%, #9b7b1f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 50px rgba(232,196,107,0.35);
+    line-height: 1;
+    opacity: 0;
+    animation: scaleIn 0.7s cubic-bezier(0.2,0.8,0.3,1) 1.8s forwards;
+    word-break: break-all;
+  }
+  .title-line {
+    margin: 24px auto 0;
+    width: 260px; height: 1px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    transform-origin: center;
+    transform: scaleX(0);
+    animation: lineGrow 0.5s cubic-bezier(0.2,0.8,0.3,1) 2.2s forwards;
+  }
+  .subtitle {
+    margin-top: 24px;
+    font-size: 36px;
+    letter-spacing: 8px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.7s ease 2.5s forwards;
+  }
+
+  /* Verdict 卡片：贴在雷达外环下方 */
+  .verdict-card {
+    position: absolute;
+    left: 76px; right: 76px;
+    bottom: 360px;
+    background: linear-gradient(135deg, rgba(20,16,8,0.92), rgba(10,8,4,0.88));
+    border: 1px solid rgba(201,162,39,0.45);
+    border-radius: 14px;
+    padding: 32px 40px 32px 48px;
+    box-shadow:
+      0 0 0 1px rgba(201,162,39,0.15),
+      0 12px 40px rgba(0,0,0,0.6),
+      inset 0 0 20px rgba(232,196,107,0.06);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transform: translateY(28px);
+    animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 3.0s forwards;
+    z-index: 11;
+  }
+  .verdict-card::before {
+    content: '';
+    position: absolute; left: 0; top: 20px; bottom: 20px;
+    width: 4px; border-radius: 0 2px 2px 0;
+    background: linear-gradient(to bottom, #f0d060, #c9a227, rgba(201,162,39,0.3));
+  }
+  .verdict-label {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 28px;
+    color: rgba(232,196,107,0.85);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .verdict-text {
+    font-size: 44px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.96);
+    line-height: 1.5;
+  }
+
+  /* 底部脚标 */
+  .footer {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 110px;
+    text-align: center;
+    font-size: 22px;
+    letter-spacing: 10px;
+    color: rgba(255,255,255,0.5);
+    opacity: 0;
+    animation: fadeIn 1.0s ease 4.2s forwards;
+  }
+  .footer .b { color: #e8c46b; margin-right: 14px; }
+
+  .top-glow {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    opacity: 0.75;
+  }
+  .bottom-glow {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    opacity: 0.75;
+  }
+
+  .axis-label {
+    position: absolute;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: rgba(232,196,107,0.45);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 1.4s forwards;
+  }
+  .axis-label.n { top: 340px; left: 50%; transform: translateX(-50%); }
+  .axis-label.s { top: 1410px; left: 50%; transform: translateX(-50%); }
+
+  .duration-debug {
+    position: absolute; bottom: 14px; right: 22px; z-index: 99;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 10px; color: rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="top-glow"></div>
+  <div class="grid-bg"></div>
+
+  <div class="brand-top">真实博主拆解 <b>·</b> 14 章全景报告</div>
+  <div class="top-tick">
+    <i></i><i></i><i></i><i class="long"></i><i></i><i></i><i></i><i class="long"></i><i></i><i></i><i></i><i class="long"></i><i></i><i></i><i></i>
+  </div>
+
+  <!-- 雷达圆环 -->
+  <div class="radar">
+    <svg viewBox="0 0 1100 1100">
+      <circle class="ring r5" cx="550" cy="550" r="525"></circle>
+      <circle class="ring r4" cx="550" cy="550" r="430"></circle>
+      <circle class="ring r3" cx="550" cy="550" r="330"></circle>
+      <circle class="ring r2" cx="550" cy="550" r="230"></circle>
+      <circle class="ring r1" cx="550" cy="550" r="130"></circle>
+      <line class="crosshair" x1="20"  y1="550" x2="1080" y2="550"></line>
+      <line class="crosshair" x1="550" y1="20"  x2="550"  y2="1080"></line>
+      <line class="crosshair" x1="170" y1="170" x2="930" y2="930"></line>
+      <line class="crosshair" x1="930" y1="170" x2="170" y2="930"></line>
+    </svg>
+  </div>
+
+  <!-- 扫描扇形 -->
+  <div class="sweep"></div>
+
+  <div class="axis-label n">N · 000°</div>
+  <div class="axis-label s">S · 180°</div>
+
+  <!-- 中央主标题 -->
+  <div class="center-core">
+    <div class="core-dot"></div>
+    <div class="title">陈厂长</div>
+    <div class="title-line"></div>
+    <div class="subtitle">AI 时代老板 IP 操盘手</div>
+  </div>
+
+  <!-- Verdict 卡片 -->
+  <div class="verdict-card">
+    <div class="verdict-label">核心结论 · VERDICT</div>
+    <div class="verdict-text">靠四重身份合一立人设，用同一套视觉锤焊住七套场景。</div>
+  </div>
+
+  <div class="footer"><span class="b">微域生光</span>真实博主拆解</div>
+  <div class="bottom-glow"></div>
+
+  <div class="duration-debug">10200ms</div>
+</div>
+</body>
+</html>

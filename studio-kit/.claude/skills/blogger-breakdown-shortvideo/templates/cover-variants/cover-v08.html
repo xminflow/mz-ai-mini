@@ -1,0 +1,368 @@
+<!--
+  cover-v08 — 金线绘制入场 Wireframe Draw-in
+  设计意图：仿工程图纸/蓝图气质，所有视觉元素都用金色细线条"一笔一笔画出"再填色。中央先绘外框，框内绘出"陈厂长"字形描边再金色填入，随后从字形向四周辐射出 8 根引线，每根引线末端是一个数据节点。强调"被精密绘制出来"的过程感，与 v05 的线性时间叙事形成发散结构对比。
+  数据维度：粉丝 103万 / 获赞 757.5万 / 作品 1291 / 企业 230家 / 公司 4家 / 中隐会 13万 / 数字人卖货 4亿 / 创业 15年（共 8 个数据节点）
+  动画时间轴：t=0 背景与排版底色立即可见，所有线条 dashoffset=length 不可见；t=0.2–1.5s 外框八角线绘出；t=1.0–2.6s 主标"陈厂长"字形描边绘出 + 金色 fill 渐入；t=2.4–4.6s 8 条辐射引线 stagger 绘出，节点圆圈与数字 fadeUp；t=4.6–5.4s 副标 + 抖音号 + 脚标淡入，全图微脉冲；t=5.4–7.0s 末态定格（线条已绘完 + 字形已填色 + 数据节点稳定 + 极慢呼吸光晕）
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>陈厂长 · 蓝图绘制</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #080808;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    color: #fff;
+  }
+  .stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background:
+      radial-gradient(circle at 50% 45%, rgba(201,162,39,0.10) 0%, transparent 55%),
+      #080808;
+    overflow: hidden;
+  }
+  /* 蓝图细网格 */
+  .blueprint {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,162,39,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,162,39,0.05) 1px, transparent 1px);
+    background-size: 54px 54px;
+    opacity: 0.6;
+  }
+  .blueprint::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(rgba(201,162,39,0.02) 1px, transparent 1px) 0 0 / 270px 270px,
+      linear-gradient(90deg, rgba(201,162,39,0.02) 1px, transparent 1px) 0 0 / 270px 270px;
+  }
+  /* 顶角标 */
+  .corner {
+    position: absolute;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 18px;
+    letter-spacing: 4px;
+    color: rgba(232,196,107,0.6);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 4.6s forwards;
+  }
+  .corner.tl { top: 50px; left: 60px; }
+  .corner.tr { top: 50px; right: 60px; }
+  .corner.bl { bottom: 50px; left: 60px; }
+  .corner.br { bottom: 50px; right: 60px; }
+
+  /* 中央 SVG 绘制层（外框 + 字形 + 辐射线 + 节点圈） */
+  .draw {
+    position: absolute;
+    inset: 0;
+    width: 1080px;
+    height: 1920px;
+  }
+  .draw .line {
+    fill: none;
+    stroke: #c9a227;
+    stroke-width: 2;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 4px rgba(201,162,39,0.45));
+  }
+  .draw .line.thin {
+    stroke-width: 1.5;
+    opacity: 0.85;
+  }
+  .draw .frame {
+    stroke-dasharray: 2400;
+    stroke-dashoffset: 2400;
+    animation: draw 1.3s ease-out 0.2s forwards;
+  }
+  .draw .frame-corner {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+    animation: draw 0.5s ease-out 1.3s forwards;
+  }
+  /* 8 条辐射引线 */
+  .ray {
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    animation: draw 0.65s ease-out forwards;
+  }
+  .ray.r1 { animation-delay: 2.4s; }
+  .ray.r2 { animation-delay: 2.55s; }
+  .ray.r3 { animation-delay: 2.70s; }
+  .ray.r4 { animation-delay: 2.85s; }
+  .ray.r5 { animation-delay: 3.00s; }
+  .ray.r6 { animation-delay: 3.15s; }
+  .ray.r7 { animation-delay: 3.30s; }
+  .ray.r8 { animation-delay: 3.45s; }
+
+  .nodeCircle {
+    fill: #0a0a0a;
+    stroke: #c9a227;
+    stroke-width: 2;
+    opacity: 0;
+    transform-origin: center;
+    transform-box: fill-box;
+    animation: popIn 0.4s ease-out forwards;
+  }
+  .nc1 { animation-delay: 2.9s; }
+  .nc2 { animation-delay: 3.05s; }
+  .nc3 { animation-delay: 3.2s; }
+  .nc4 { animation-delay: 3.35s; }
+  .nc5 { animation-delay: 3.5s; }
+  .nc6 { animation-delay: 3.65s; }
+  .nc7 { animation-delay: 3.8s; }
+  .nc8 { animation-delay: 3.95s; }
+
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes popIn { to { opacity: 1; } }
+
+  /* 中央字形——分两层：描边 stroke 先绘，然后 fill 渐入 */
+  .hero {
+    position: absolute;
+    top: 760px;
+    left: 0;
+    width: 1080px;
+    text-align: center;
+    pointer-events: none;
+  }
+  .hero svg { width: 1080px; height: 280px; overflow: visible; }
+  .glyph-stroke {
+    fill: transparent;
+    stroke: #c9a227;
+    stroke-width: 2;
+    stroke-dasharray: 1800;
+    stroke-dashoffset: 1800;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    font-weight: 800;
+    font-size: 240px;
+    letter-spacing: 10px;
+    animation: draw 1.6s ease-out 1.0s forwards;
+    filter: drop-shadow(0 0 8px rgba(201,162,39,0.5));
+  }
+  .glyph-fill {
+    fill: #e8c46b;
+    stroke: none;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    font-weight: 800;
+    font-size: 240px;
+    letter-spacing: 10px;
+    opacity: 0;
+    animation: fadeIn 0.9s ease 2.2s forwards, glyphGlow 3.0s ease-in-out 5.4s infinite;
+  }
+  @keyframes glyphGlow {
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(201,162,39,0.45)); }
+    50%      { filter: drop-shadow(0 0 24px rgba(232,196,107,0.85)); }
+  }
+
+  /* 副标与抖音号 */
+  .sub {
+    position: absolute;
+    top: 1080px;
+    left: 0;
+    width: 1080px;
+    text-align: center;
+    font-size: 38px;
+    letter-spacing: 8px;
+    color: rgba(255,255,255,0.92);
+    opacity: 0;
+    transform: translateY(8px);
+    animation: subIn 0.9s ease 4.6s forwards;
+  }
+  @keyframes subIn { to { opacity: 1; transform: translateY(0); } }
+  .sub .accent { color: #e8c46b; }
+  .douyin {
+    position: absolute;
+    top: 1150px;
+    left: 0;
+    width: 1080px;
+    text-align: center;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 24px;
+    letter-spacing: 3px;
+    color: rgba(232,196,107,0.85);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 4.9s forwards;
+  }
+  .douyin .at { color: #c9a227; margin-right: 4px; }
+
+  /* 8 个数据节点 HTML 标签（位置与 SVG nodeCircle 对齐） */
+  .data {
+    position: absolute;
+    width: 220px;
+    text-align: center;
+    color: #fff;
+    opacity: 0;
+    transform: translateY(6px);
+    animation: subIn 0.5s ease forwards;
+  }
+  .data .v {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: #e8c46b;
+    line-height: 1;
+  }
+  .data .v .u { font-size: 20px; color: rgba(232,196,107,0.85); margin-left: 4px; }
+  .data .k {
+    margin-top: 8px;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.78);
+  }
+
+  /* 8 个数据点坐标（与 SVG node 中心对齐，节点圆 r=14） */
+  .d1 { top:  300px; left:  60px; animation-delay: 3.0s; }
+  .d2 { top:  300px; left: 800px; animation-delay: 3.15s; }
+  .d3 { top:  580px; left:  20px; animation-delay: 3.3s; }
+  .d4 { top:  580px; left: 840px; animation-delay: 3.45s; }
+  .d5 { top: 1400px; left:  20px; animation-delay: 3.6s; }
+  .d6 { top: 1400px; left: 840px; animation-delay: 3.75s; }
+  .d7 { top: 1660px; left:  60px; animation-delay: 3.9s; }
+  .d8 { top: 1660px; left: 800px; animation-delay: 4.05s; }
+
+  .footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 90px;
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 8px;
+    color: rgba(232,196,107,0.55);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 5.0s forwards;
+  }
+
+  /* 整图微脉冲 */
+  .pulse-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 50%, rgba(232,196,107,0.18) 0%, transparent 45%);
+    opacity: 0;
+    animation: pulseOnce 1.4s ease-out 4.4s;
+  }
+  @keyframes pulseOnce {
+    0%   { opacity: 0; }
+    40%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="blueprint"></div>
+
+  <div class="corner tl">DWG · CCZ-001</div>
+  <div class="corner tr">SCALE 1:1</div>
+  <div class="corner bl">SHEET 01 / 14</div>
+  <div class="corner br">REV · 2026.05</div>
+
+  <!-- 主绘制层：外框 + 辐射引线 + 节点圈 -->
+  <svg class="draw" viewBox="0 0 1080 1920" preserveAspectRatio="none">
+    <!-- 外框（八角剪切矩形） -->
+    <path class="line frame" d="
+      M 100 700
+      L 980 700
+      L 980 1240
+      L 100 1240
+      Z
+    "/>
+    <!-- 四角装饰小线 -->
+    <path class="line frame-corner" d="M 60 700 L 100 700 M 100 660 L 100 700"/>
+    <path class="line frame-corner" d="M 980 660 L 980 700 M 980 700 L 1020 700"/>
+    <path class="line frame-corner" d="M 60 1240 L 100 1240 M 100 1240 L 100 1280"/>
+    <path class="line frame-corner" d="M 980 1240 L 1020 1240 M 980 1240 L 980 1280"/>
+
+    <!-- 8 条辐射引线（从外框边缘指向 8 个外部节点） -->
+    <!-- 左上 d1: 节点中心 (170, 360) -->
+    <path class="line thin ray r1" d="M 200 700 L 170 510 L 170 360"/>
+    <!-- 右上 d2: 节点中心 (910, 360) -->
+    <path class="line thin ray r2" d="M 880 700 L 910 510 L 910 360"/>
+    <!-- 左中 d3: 节点中心 (130, 640) -->
+    <path class="line thin ray r3" d="M 100 880 L 130 760 L 130 640"/>
+    <!-- 右中 d4: 节点中心 (950, 640) -->
+    <path class="line thin ray r4" d="M 980 880 L 950 760 L 950 640"/>
+    <!-- 左下 d5: 节点中心 (130, 1460) -->
+    <path class="line thin ray r5" d="M 100 1240 L 130 1380 L 130 1460"/>
+    <!-- 右下 d6: 节点中心 (950, 1460) -->
+    <path class="line thin ray r6" d="M 980 1240 L 950 1380 L 950 1460"/>
+    <!-- 左底 d7: 节点中心 (170, 1720) -->
+    <path class="line thin ray r7" d="M 200 1240 L 170 1560 L 170 1720"/>
+    <!-- 右底 d8: 节点中心 (910, 1720) -->
+    <path class="line thin ray r8" d="M 880 1240 L 910 1560 L 910 1720"/>
+
+    <!-- 节点圆 -->
+    <circle class="nodeCircle nc1" cx="170" cy="360"  r="14"/>
+    <circle class="nodeCircle nc2" cx="910" cy="360"  r="14"/>
+    <circle class="nodeCircle nc3" cx="130" cy="640"  r="14"/>
+    <circle class="nodeCircle nc4" cx="950" cy="640"  r="14"/>
+    <circle class="nodeCircle nc5" cx="130" cy="1460" r="14"/>
+    <circle class="nodeCircle nc6" cx="950" cy="1460" r="14"/>
+    <circle class="nodeCircle nc7" cx="170" cy="1720" r="14"/>
+    <circle class="nodeCircle nc8" cx="910" cy="1720" r="14"/>
+  </svg>
+
+  <!-- 主标题：字形描边 + 金色 fill -->
+  <div class="hero">
+    <svg viewBox="0 0 1080 280" preserveAspectRatio="xMidYMid meet">
+      <!-- 描边层 -->
+      <text class="glyph-stroke" x="540" y="215" text-anchor="middle">陈厂长</text>
+      <!-- 填色层 -->
+      <text class="glyph-fill"   x="540" y="215" text-anchor="middle">陈厂长</text>
+    </svg>
+  </div>
+
+  <div class="sub">AI 时代 <span class="accent">老板 IP</span> 操盘手</div>
+  <div class="douyin"><span class="at">@</span>HuaicaideyuIP · 抖音</div>
+
+  <!-- 8 个数据节点 -->
+  <div class="data d1">
+    <div class="v">103<span class="u">万</span></div>
+    <div class="k">粉丝</div>
+  </div>
+  <div class="data d2">
+    <div class="v">757.5<span class="u">万</span></div>
+    <div class="k">获赞</div>
+  </div>
+  <div class="data d3">
+    <div class="v">1291</div>
+    <div class="k">作品</div>
+  </div>
+  <div class="data d4">
+    <div class="v">230<span class="u">家</span></div>
+    <div class="k">企业 AI 化</div>
+  </div>
+  <div class="data d5">
+    <div class="v">4<span class="u">家</span></div>
+    <div class="k">公司</div>
+  </div>
+  <div class="data d6">
+    <div class="v">13<span class="u">万</span></div>
+    <div class="k">中隐会年费</div>
+  </div>
+  <div class="data d7">
+    <div class="v">4<span class="u">亿</span></div>
+    <div class="k">数字人卖货</div>
+  </div>
+  <div class="data d8">
+    <div class="v">15<span class="u">年</span></div>
+    <div class="k">连续创业</div>
+  </div>
+
+  <div class="pulse-layer"></div>
+  <div class="footer">微 域 生 光 · 真 实 博 主 拆 解</div>
+</div>
+</body>
+</html>

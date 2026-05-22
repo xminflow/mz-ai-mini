@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!--
+  v03 数据瀑布 · slide-compare
+  视觉语言：深底 + 金色脊柱 + 上下两块对比卡片，先 before 从屏顶坠落，金色光线横扫"转折提示"，再 after 坠落
+  版式：顶部标签 + 金色渐变标题 + 上方 before 卡片（灰冷调）+ 中央金色横扫光线 + 下方 after 卡片（金色调）
+  动画时间轴：
+    t=0.0s   背景立即可见，顶部金光条 + 中央脊柱呼吸
+    t=0.2s   GROWTH MOVE 顶部标签淡入
+    t=0.5s   {{title}} 金色标题从底部上浮，金线下划
+    t=1.5s   before 卡片从屏顶弹性坠入（带模糊→清晰、长拖尾）
+    t=3.4s   中央金色光线扫过（左→右），暗示"放大"转折
+    t=4.4s   after 卡片从屏顶弹性坠入（带模糊→清晰、长拖尾），下方右侧出现金色光晕
+    t=6.0s   底部"微域生光"脚标渐显
+    t=6.0–16s 全部元素定格，金色脊柱呼吸 idle
+-->
+<title>slide-compare · v03</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #080808;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background:
+      radial-gradient(ellipse 800px 1100px at 50% 50%, rgba(201,162,39,0.10) 0%, transparent 65%),
+      radial-gradient(ellipse 600px 400px at 50% 8%, rgba(232,196,107,0.20) 0%, transparent 70%),
+      linear-gradient(180deg, #0a0a0a 0%, #080808 60%, #050505 100%);
+    overflow: hidden;
+    padding: 88px 76px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top-glow {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, transparent 0%, #d4af37 20%, #e8c46b 50%, #d4af37 80%, transparent 100%);
+    box-shadow: 0 0 24px #c9a227, 0 0 48px rgba(201,162,39,0.4);
+  }
+
+  .spine {
+    position: absolute;
+    left: 50%; top: 80px;
+    width: 2px; height: 1760px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(212,175,55,0.0) 5%,
+      rgba(212,175,55,0.28) 50%,
+      rgba(212,175,55,0.0) 95%,
+      transparent 100%);
+    animation: spineBreath 3s ease-in-out infinite alternate;
+    z-index: 0;
+  }
+  @keyframes spineBreath {
+    0%   { opacity: 0.3; }
+    100% { opacity: 0.75; }
+  }
+
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(212,175,55,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,175,55,0.04) 1px, transparent 1px);
+    background-size: 120px 120px;
+    mask-image: radial-gradient(ellipse 800px 1300px at 50% 50%, #000 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 800px 1300px at 50% 50%, #000 30%, transparent 80%);
+    z-index: 0;
+  }
+
+  /* 顶部 section 标签 */
+  .section-tag {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: rgba(232,196,107,0.6);
+    opacity: 0;
+    animation: fadeIn 0.5s ease 0.2s forwards;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* 标题 */
+  .slide-title {
+    margin-top: 28px;
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    background: linear-gradient(180deg, #f4d97a 0%, #e8c46b 40%, #c9a227 70%, #9b7b1f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 40px rgba(232,196,107,0.2);
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: slideUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.5s forwards;
+  }
+  @keyframes slideUp {
+    0%   { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 金线分隔 */
+  .divider {
+    height: 2px;
+    background: linear-gradient(to right, #f0d060, #c9a227, rgba(201,162,39,0.12));
+    background-size: 200% 100%;
+    border-radius: 1px;
+    margin: 30px 0 40px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    position: relative;
+    z-index: 2;
+    animation:
+      lineGrow 0.6s cubic-bezier(0.22,1,0.36,1) 0.9s forwards,
+      shimmer 3s linear 1.6s infinite;
+  }
+  @keyframes lineGrow {
+    0%   { transform: scaleX(0); }
+    100% { transform: scaleX(1); }
+  }
+  @keyframes shimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+  }
+
+  /* 对比容器 */
+  .compare-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* before 卡片：从屏顶坠落 */
+  .compare-card-before {
+    flex: 1;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 16px;
+    padding: 40px 48px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(-900px);
+    filter: blur(8px);
+    animation: cardDrop 1.1s cubic-bezier(0.34, 1.56, 0.4, 1) 1.5s forwards;
+    will-change: transform, opacity, filter;
+  }
+  @keyframes cardDrop {
+    0%   { transform: translateY(-900px); opacity: 0; filter: blur(8px); }
+    70%  { filter: blur(0); }
+    100% { transform: translateY(0); opacity: 1; filter: blur(0); }
+  }
+
+  /* before 卡片左侧灰白竖线 */
+  .compare-card-before::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 20px; bottom: 20px;
+    width: 4px;
+    border-radius: 0 2px 2px 0;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0.15));
+  }
+
+  /* 中间转折分隔区 + 金色横扫光线 */
+  .compare-divider-zone {
+    height: 88px;
+    margin: 18px 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .sweep-line {
+    position: absolute;
+    top: 50%;
+    left: -100%;
+    width: 100%;
+    height: 4px;
+    transform: translateY(-50%);
+    background: linear-gradient(90deg, transparent 0%, rgba(232,196,107,0.0) 10%, #f4d97a 50%, rgba(232,196,107,0.0) 90%, transparent 100%);
+    box-shadow: 0 0 32px #c9a227, 0 0 64px rgba(232,196,107,0.5);
+    animation: sweep 1.0s cubic-bezier(0.22,1,0.36,1) 3.4s forwards;
+  }
+  @keyframes sweep {
+    0%   { left: -100%; opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
+  }
+  .arrow-icon {
+    position: relative;
+    z-index: 2;
+    font-size: 44px;
+    color: #e8c46b;
+    text-shadow: 0 0 18px rgba(232,196,107,0.6);
+    opacity: 0;
+    animation:
+      fadeIn 0.5s ease 4.0s forwards,
+      arrowBounce 1.8s ease-in-out 5.0s infinite;
+  }
+  @keyframes arrowBounce {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(8px); }
+  }
+
+  /* after 卡片：从屏顶坠落（在 sweep 之后） */
+  .compare-card-after {
+    flex: 1;
+    background: rgba(201,162,39,0.08);
+    border: 1px solid rgba(201,162,39,0.45);
+    border-radius: 16px;
+    padding: 40px 48px 40px 56px;
+    position: relative;
+    opacity: 0;
+    transform: translateY(-900px);
+    filter: blur(8px);
+    animation: cardDrop 1.1s cubic-bezier(0.34, 1.56, 0.4, 1) 4.4s forwards;
+    will-change: transform, opacity, filter;
+    box-shadow: 0 0 48px rgba(201,162,39,0.12);
+  }
+  /* after 卡片左侧金竖线 */
+  .compare-card-after::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 20px; bottom: 20px;
+    width: 4px;
+    border-radius: 0 2px 2px 0;
+    background: linear-gradient(to bottom, #f0d060, #c9a227, rgba(201,162,39,0.3));
+    box-shadow: 0 0 12px rgba(232,196,107,0.5);
+  }
+
+  /* 卡片标签 */
+  .card-label {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .card-label-before { color: rgba(255,255,255,0.45); }
+  .card-label-after  {
+    color: #e8c46b;
+    text-shadow: 0 0 14px rgba(232,196,107,0.4);
+  }
+
+  /* 卡片正文 */
+  .card-text {
+    font-size: 38px;
+    font-weight: 400;
+    line-height: 1.7;
+  }
+  .card-text-before { color: rgba(255,255,255,0.72); }
+  .card-text-after  { color: rgba(255,255,255,0.96); }
+
+  /* 底部品牌 */
+  .brand-footer {
+    display: flex; align-items: center; gap: 18px;
+    margin-top: 40px;
+    opacity: 0;
+    animation: fadeIn 0.6s ease 6.0s forwards;
+    position: relative;
+    z-index: 2;
+  }
+  .brand-w {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 46px; font-weight: 700;
+    color: #c9a227; line-height: 1;
+    text-shadow: 0 0 20px rgba(201,162,39,0.45);
+  }
+  .brand-name {
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    font-size: 28px; font-weight: 400;
+    letter-spacing: 10px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .bottom-glow {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, #c9a227 30%, #c9a227 70%, transparent 100%);
+    opacity: 0;
+    animation: fadeIn 0.7s ease 6.0s forwards;
+  }
+
+  @keyframes fadeIn {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .duration-debug {
+    position: absolute; bottom: 14px; right: 22px; z-index: 99;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 10px; color: rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="top-glow"></div>
+  <div class="grid-bg"></div>
+  <div class="spine"></div>
+
+  <div class="section-tag">成长动作 · GROWTH MOVE</div>
+  <div class="slide-title">{{title}}</div>
+  <div class="divider" aria-hidden="true"></div>
+
+  <div class="compare-wrapper">
+    <div class="compare-card-before">
+      <div class="card-label card-label-before">做对的事 · RIGHT MOVE</div>
+      <div class="card-text card-text-before">{{compare_before}}</div>
+    </div>
+
+    <div class="compare-divider-zone" aria-hidden="true">
+      <div class="sweep-line"></div>
+      <span class="arrow-icon">&#11015;</span>
+    </div>
+
+    <div class="compare-card-after">
+      <div class="card-label card-label-after">把它放大 · SCALE UP</div>
+      <div class="card-text card-text-after">{{compare_after}}</div>
+    </div>
+  </div>
+
+  <div class="brand-footer">
+    <span class="brand-w">W</span>
+    <span class="brand-name">微域生光</span>
+  </div>
+
+  <div class="bottom-glow"></div>
+  <div class="duration-debug">{{DURATION_MS}}ms · slide-{{index}} · {{slide_type}}</div>
+</div>
+</body>
+</html>

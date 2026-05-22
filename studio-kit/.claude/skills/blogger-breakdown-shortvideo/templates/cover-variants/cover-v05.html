@@ -1,0 +1,411 @@
+<!--
+  cover-v05 — 垂直时间脊柱 Spine Timeline
+  设计意图：左侧 1/4 一条金色垂直脊柱线作为时间轴，8 个节点按时序串起陈厂长 15 年创业弧线；右侧 3/4 是主标题区。视觉气质偏编年史/履历卡，强叙事感、强线性结构，让观众一眼读懂"这个人怎么走到今天"。脊柱线 stroke-dashoffset 自上而下绘制，节点逐个亮起 stagger，事件文字随节点 fadeUp，主标题区在脊柱画完后整体浮现。
+  数据维度：19岁起步 / 2亿+融资 / 400-500人团队 / 4家公司 / 13万年费 / 230家企业 / 4亿卖货 / 103万粉丝 + 1291作品 + 757.5万获赞（右侧主标题底部条带）
+  动画时间轴：t=0 背景与排版底色立即可见；t=0–1.5s 脊柱线自顶向下绘出；t=1.0–4.2s 8 个节点逐个亮起 + 事件文字 fadeUp（stagger 0.35s）；t=4.0–5.2s 主标题区"陈厂长"标题与副标+抖音号 fadeUp，底部数据条带浮现；t=5.2–7.0s 末态定格（脊柱整体发光呼吸 + 全部信息静止）
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>陈厂长 · 时间脊柱</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #080808;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    color: #fff;
+  }
+  .stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background:
+      radial-gradient(ellipse at 70% 30%, rgba(201,162,39,0.10) 0%, transparent 55%),
+      radial-gradient(ellipse at 20% 80%, rgba(180,100,20,0.08) 0%, transparent 60%),
+      #0a0a0a;
+    overflow: hidden;
+  }
+  /* 背景细网格 */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.5;
+  }
+  /* 顶部小标 */
+  .top-tag {
+    position: absolute;
+    top: 60px;
+    left: 80px;
+    font-size: 22px;
+    letter-spacing: 6px;
+    color: rgba(232,196,107,0.75);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.2s forwards;
+  }
+  .top-tag::before {
+    content: "";
+    display: inline-block;
+    width: 36px;
+    height: 1px;
+    background: #c9a227;
+    vertical-align: middle;
+    margin-right: 14px;
+  }
+  .top-meta {
+    position: absolute;
+    top: 60px;
+    right: 80px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.45);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.2s forwards;
+  }
+  /* 脊柱线 SVG */
+  .spine-svg {
+    position: absolute;
+    left: 200px;
+    top: 180px;
+    width: 80px;
+    height: 1500px;
+    overflow: visible;
+  }
+  .spine-line {
+    stroke: #c9a227;
+    stroke-width: 3;
+    fill: none;
+    stroke-dasharray: 1500;
+    stroke-dashoffset: 1500;
+    animation: drawLine 1.5s ease-out 0.4s forwards, spineGlow 2.4s ease-in-out 5.2s infinite;
+    filter: drop-shadow(0 0 6px rgba(201,162,39,0.55));
+  }
+  @keyframes drawLine {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes spineGlow {
+    0%, 100% { filter: drop-shadow(0 0 6px rgba(201,162,39,0.55)); }
+    50%      { filter: drop-shadow(0 0 14px rgba(232,196,107,0.85)); }
+  }
+  /* 时间节点 */
+  .nodes {
+    position: absolute;
+    left: 0;
+    top: 180px;
+    width: 1080px;
+    height: 1500px;
+  }
+  .node {
+    position: absolute;
+    left: 200px;
+    width: 800px;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: nodeIn 0.55s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  @keyframes nodeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .node .dot {
+    position: absolute;
+    left: -10px;
+    top: 6px;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #c9a227;
+    background: #0a0a0a;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(201,162,39,0.0);
+    animation: dotPulse 2.2s ease-in-out infinite;
+  }
+  .node.diamond .dot {
+    border-radius: 0;
+    transform: rotate(45deg);
+    top: 8px;
+  }
+  .node .dot::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    background: #e8c46b;
+    border-radius: inherit;
+  }
+  @keyframes dotPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,162,39,0.55); }
+    50%      { box-shadow: 0 0 0 10px rgba(201,162,39,0); }
+  }
+  .node .body {
+    margin-left: 50px;
+  }
+  .node .year {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    color: #c9a227;
+    margin-bottom: 4px;
+  }
+  .node .title {
+    font-size: 30px;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.25;
+  }
+  .node .meta {
+    margin-top: 4px;
+    font-size: 20px;
+    color: rgba(255,255,255,0.62);
+    letter-spacing: 1px;
+  }
+  .node .num {
+    color: #e8c46b;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+  }
+
+  /* 节点定位（从 180 起算的 top 偏移） */
+  .n1 { top:  20px; animation-delay: 1.0s; }
+  .n2 { top: 195px; animation-delay: 1.3s; }
+  .n3 { top: 370px; animation-delay: 1.6s; }
+  .n4 { top: 545px; animation-delay: 1.9s; }
+  .n5 { top: 720px; animation-delay: 2.2s; }
+  .n6 { top: 895px; animation-delay: 2.5s; }
+  .n7 { top:1070px; animation-delay: 2.8s; }
+  .n8 { top:1245px; animation-delay: 3.1s; }
+
+  /* 节点 dot 单独延迟亮起 */
+  .n1 .dot { animation-delay: 1.0s; }
+  .n2 .dot { animation-delay: 1.3s; }
+  .n3 .dot { animation-delay: 1.6s; }
+  .n4 .dot { animation-delay: 1.9s; }
+  .n5 .dot { animation-delay: 2.2s; }
+  .n6 .dot { animation-delay: 2.5s; }
+  .n7 .dot { animation-delay: 2.8s; }
+  .n8 .dot { animation-delay: 3.1s; }
+
+  /* 右侧主标题区 */
+  .hero {
+    position: absolute;
+    left: 340px;
+    top: 760px;
+    width: 700px;
+    opacity: 0;
+    animation: fadeIn 0.9s ease 4.0s forwards;
+  }
+  .hero .kicker {
+    font-size: 26px;
+    letter-spacing: 10px;
+    color: #c9a227;
+    margin-bottom: 18px;
+  }
+  .hero .main {
+    font-size: 180px;
+    line-height: 0.95;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 6px;
+    text-shadow:
+      0 0 22px rgba(232,196,107,0.35),
+      0 0 60px rgba(201,162,39,0.18);
+    background: linear-gradient(180deg, #fff 0%, #e8c46b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero .sub {
+    margin-top: 22px;
+    font-size: 36px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.92);
+    letter-spacing: 4px;
+  }
+  .hero .douyin {
+    margin-top: 16px;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 24px;
+    color: rgba(232,196,107,0.85);
+    letter-spacing: 2px;
+  }
+  .hero .douyin .at { color: #c9a227; margin-right: 6px; }
+
+  /* 底部数据条带 */
+  .strip {
+    position: absolute;
+    left: 80px;
+    bottom: 110px;
+    right: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px 36px;
+    border: 1px solid rgba(201,162,39,0.45);
+    border-radius: 4px;
+    background: rgba(201,162,39,0.04);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 4.6s forwards;
+  }
+  .strip::before, .strip::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #c9a227;
+  }
+  .strip::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+  .strip::after  { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+  .strip .item { text-align: center; flex: 1; }
+  .strip .item .v {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 38px;
+    font-weight: 700;
+    color: #e8c46b;
+    line-height: 1;
+  }
+  .strip .item .v .u { font-size: 22px; color: rgba(232,196,107,0.85); margin-left: 4px; }
+  .strip .item .k {
+    margin-top: 8px;
+    font-size: 18px;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 3px;
+  }
+  .strip .sep {
+    width: 1px;
+    height: 44px;
+    background: rgba(201,162,39,0.35);
+    flex: 0 0 1px;
+  }
+
+  /* 底部脚标 */
+  .footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 40px;
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 8px;
+    color: rgba(232,196,107,0.55);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 5.0s forwards;
+  }
+
+  @keyframes fadeIn { to { opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="grid-bg"></div>
+
+  <div class="top-tag">CHEN · CHANGZHANG · TIMELINE</div>
+  <div class="top-meta">15 YRS / 4 CO. / 1 IP</div>
+
+  <!-- 脊柱线 -->
+  <svg class="spine-svg" viewBox="0 0 80 1500" preserveAspectRatio="none">
+    <line class="spine-line" x1="40" y1="0" x2="40" y2="1500"/>
+  </svg>
+
+  <!-- 8 个时间节点 -->
+  <div class="nodes">
+    <div class="node n1">
+      <span class="dot"></span>
+      <div class="body">
+        <div class="year">2010 · 19 岁</div>
+        <div class="title">第一次创业起步</div>
+        <div class="meta">连续创业 <span class="num">15</span> 年的原点</div>
+      </div>
+    </div>
+
+    <div class="node n2">
+      <span class="dot"></span>
+      <div class="body">
+        <div class="year">25 岁前后</div>
+        <div class="title">游戏研发累计融资 <span class="num">2亿+</span></div>
+        <div class="meta">早期 toC 创业巅峰</div>
+      </div>
+    </div>
+
+    <div class="node n3 diamond">
+      <span class="dot"></span>
+      <div class="body">
+        <div class="year">巅峰期</div>
+        <div class="title">管理团队 <span class="num">400–500</span> 人</div>
+        <div class="meta">从研发负责人到大盘操盘手</div>
+      </div>
+    </div>
+
+    <div class="node n4 diamond">
+      <span class="dot"></span>
+      <div class="body">
+        <div class="year">2023</div>
+        <div class="title">飞机上"接受一无所有"</div>
+        <div class="meta">归零 · 转身做老板 IP</div>
+      </div>
+    </div>
+
+    <div class="node n5">
+      <span class="dot"></span>
+      <div class="body">
+        <div class="year">现在</div>
+        <div class="title"><span class="num">4</span> 家公司 / 中隐会年费 <span class="num">13万</span></div>
+        <div class="meta">客单阶梯 1999 / 2980 / 29800 / 13万 / 15万</div>
+      </div>
+    </div>
+
+    <div class="node n6">
+      <span class="dot"></span>
+      <div class="body">
+        <div class="year">过去一年</div>
+        <div class="title"><span class="num">230</span> 家企业 AI 化案例</div>
+        <div class="meta">不是程序员，却帮老板用 AI 赚到钱</div>
+      </div>
+    </div>
+
+    <div class="node n7">
+      <span class="dot"></span>
+      <div class="body">
+        <div class="year">九域合生 · 数字人工厂</div>
+        <div class="title">一年卖货 <span class="num">4亿</span></div>
+        <div class="meta">签约 <span class="num">7</span> 个 IP / 合计年变现 1000万+</div>
+      </div>
+    </div>
+
+    <div class="node n8 diamond">
+      <span class="dot"></span>
+      <div class="body">
+        <div class="year">今天</div>
+        <div class="title">粉丝 <span class="num">103万</span> · 作品 <span class="num">1291</span></div>
+        <div class="meta">获赞 757.5 万 · 抖音头部商业顾问</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右侧主标题 -->
+  <div class="hero">
+    <div class="kicker">CHEN CHANGZHANG</div>
+    <div class="main">陈厂长</div>
+    <div class="sub">AI 时代老板 IP 操盘手</div>
+    <div class="douyin"><span class="at">@</span>HuaicaideyuIP · 抖音</div>
+  </div>
+
+  <!-- 底部数据条带 -->
+  <div class="strip">
+    <div class="item"><div class="v">103<span class="u">万</span></div><div class="k">粉丝</div></div>
+    <div class="sep"></div>
+    <div class="item"><div class="v">1291</div><div class="k">作品</div></div>
+    <div class="sep"></div>
+    <div class="item"><div class="v">757.5<span class="u">万</span></div><div class="k">获赞</div></div>
+    <div class="sep"></div>
+    <div class="item"><div class="v">230<span class="u">家</span></div><div class="k">AI 案例</div></div>
+  </div>
+
+  <div class="footer">微 域 生 光 · 真 实 博 主 拆 解</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!-- v05 时间脊柱 · slide-cta · 中央垂直脊柱从屏顶到屏底，4 个金色节点依次点亮 4 个关键词 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>slide-cta — 微域生光</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1080px; height: 1920px; overflow: hidden;
+      background: #080808; color: #fff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── 关键帧 ── */
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes drawLine { to { stroke-dashoffset: 0; } }
+    @keyframes spineGlow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(201,162,39,0.55)); }
+      50%      { filter: drop-shadow(0 0 22px rgba(232,196,107,0.95)); }
+    }
+    @keyframes dotPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201,162,39,0.55); }
+      50%      { box-shadow: 0 0 0 16px rgba(201,162,39,0); }
+    }
+    @keyframes nodeIn {
+      0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+      60%  { opacity: 1; transform: translate(-50%, -50%) scale(1.18); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1.00); }
+    }
+    @keyframes labelIn {
+      from { opacity: 0; transform: translate(0, 8px); }
+      to   { opacity: 1; transform: translate(0, 0); }
+    }
+    @keyframes shimmer {
+      from { background-position: 200% 0; }
+      to   { background-position: -200% 0; }
+    }
+
+    /* ── 舞台 ── */
+    .stage {
+      position: relative; width: 1080px; height: 1920px;
+      background:
+        radial-gradient(ellipse 800px 700px at 50% 46%, rgba(201,162,39,0.12) 0%, transparent 62%),
+        radial-gradient(ellipse 500px 500px at 18% 22%, rgba(180,100,20,0.10) 0%, transparent 68%),
+        radial-gradient(ellipse 420px 420px at 82% 72%, rgba(201,162,39,0.09) 0%, transparent 68%),
+        linear-gradient(160deg, #080808 0%, #0c0a04 50%, #080808 100%);
+      overflow: hidden;
+    }
+    .grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+      background-size: 100px 100px;
+      opacity: 0.55;
+    }
+
+    /* ── 角落 L 形装饰 ── */
+    .corner {
+      position: absolute;
+      width: 28px; height: 28px;
+      border-color: #c9a227; border-style: solid;
+      z-index: 3;
+    }
+    .corner-tl { top: 60px;    left: 60px;    border-width: 2px 0 0 2px; }
+    .corner-tr { top: 60px;    right: 60px;   border-width: 2px 2px 0 0; }
+    .corner-bl { bottom: 60px; left: 60px;    border-width: 0 0 2px 2px; }
+    .corner-br { bottom: 60px; right: 60px;   border-width: 0 2px 2px 0; }
+
+    /* ── 顶部小标签 ── */
+    .top-tag {
+      position: absolute;
+      top: 130px; left: 0; right: 0;
+      text-align: center;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 28px;
+      letter-spacing: 0.5em;
+      color: rgba(232,196,107,0.75);
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeIn 0.5s ease 0.1s forwards;
+    }
+
+    /* ── 中央垂直脊柱：从屏顶 220 到屏底 220 ── */
+    .spine-c {
+      position: absolute;
+      top: 220px; bottom: 220px;
+      left: 50%; transform: translateX(-50%);
+      width: 80px;
+      z-index: 1;
+    }
+    .spine-c svg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      overflow: visible;
+    }
+    .spine-line-c {
+      stroke: #c9a227; stroke-width: 3; fill: none;
+      stroke-dasharray: 1480; stroke-dashoffset: 1480;
+      animation: drawLine 1.4s ease-out 0.3s forwards,
+                 spineGlow 2.4s ease-in-out 4s infinite;
+      filter: drop-shadow(0 0 8px rgba(201,162,39,0.55));
+    }
+
+    /* 节点容器 */
+    .nodes-c {
+      position: absolute;
+      top: 220px; bottom: 220px;
+      left: 0; right: 0;
+    }
+
+    /* 单个节点：圆 + 左右标签 */
+    .cta-node {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      text-align: center;
+    }
+    .cta-node .ring-out {
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 100px; height: 100px;
+      border: 1px solid rgba(201,162,39,0.18);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      animation: fadeIn 0.6s ease both;
+    }
+    .cta-node .ring-mid {
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 64px; height: 64px;
+      border: 1px dashed rgba(232,196,107,0.45);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      animation: fadeIn 0.6s ease both;
+    }
+    .cta-node .dot-c {
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #e8c46b 0%, #c9a227 60%, #8a6b15 100%);
+      border: 3px solid #f0d060;
+      box-shadow:
+        0 0 18px rgba(232,196,107,0.75),
+        0 0 42px rgba(201,162,39,0.45);
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.3);
+      animation: nodeIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both,
+                 dotPulse 2.0s ease-in-out infinite;
+    }
+    .cta-node .keyword {
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 64px; font-weight: 800;
+      letter-spacing: 0.10em;
+      color: #ffffff;
+      text-shadow:
+        0 0 20px rgba(232,196,107,0.55),
+        0 0 50px rgba(201,162,39,0.30);
+      opacity: 0;
+      animation: labelIn 0.5s cubic-bezier(0.22,1,0.36,1) both;
+      white-space: nowrap;
+    }
+    /* 奇数节点：关键词在左 */
+    .cta-node.left .keyword { left: auto; right: calc(50% + 90px); transform: translateY(-50%); text-align: right; }
+    /* 偶数节点：关键词在右 */
+    .cta-node.right .keyword { left: calc(50% + 90px); right: auto; transform: translateY(-50%); text-align: left; }
+
+    /* 连接线（从节点引到关键词文字） */
+    .cta-node .pin {
+      position: absolute;
+      top: 50%; height: 1px;
+      background: linear-gradient(to right, rgba(201,162,39,0.7), rgba(201,162,39,0.1));
+      transform: translateY(-50%);
+      opacity: 0;
+      animation: fadeIn 0.4s ease both;
+    }
+    .cta-node.left  .pin { right: calc(50% + 22px); width: 60px; background: linear-gradient(to left, rgba(201,162,39,0.7), rgba(201,162,39,0.1)); }
+    .cta-node.right .pin { left:  calc(50% + 22px); width: 60px; }
+
+    /* 4 个节点纵向均匀分布 + stagger */
+    .c-n1 { top: 10%;  }
+    .c-n2 { top: 36%;  }
+    .c-n3 { top: 62%;  }
+    .c-n4 { top: 88%;  }
+
+    .c-n1 .ring-out { animation-delay: 1.40s; }
+    .c-n2 .ring-out { animation-delay: 1.90s; }
+    .c-n3 .ring-out { animation-delay: 2.40s; }
+    .c-n4 .ring-out { animation-delay: 2.90s; }
+
+    .c-n1 .ring-mid { animation-delay: 1.55s; }
+    .c-n2 .ring-mid { animation-delay: 2.05s; }
+    .c-n3 .ring-mid { animation-delay: 2.55s; }
+    .c-n4 .ring-mid { animation-delay: 3.05s; }
+
+    .c-n1 .dot-c { animation-delay: 1.60s, 3.5s; }
+    .c-n2 .dot-c { animation-delay: 2.10s, 3.5s; }
+    .c-n3 .dot-c { animation-delay: 2.60s, 3.5s; }
+    .c-n4 .dot-c { animation-delay: 3.10s, 3.5s; }
+
+    .c-n1 .pin { animation-delay: 1.70s; }
+    .c-n2 .pin { animation-delay: 2.20s; }
+    .c-n3 .pin { animation-delay: 2.70s; }
+    .c-n4 .pin { animation-delay: 3.20s; }
+
+    .c-n1 .keyword { animation-delay: 1.85s; }
+    .c-n2 .keyword { animation-delay: 2.35s; }
+    .c-n3 .keyword { animation-delay: 2.85s; }
+    .c-n4 .keyword { animation-delay: 3.35s; }
+
+    /* ── 底部中央装饰横线 + 标签 ── */
+    .center-divider {
+      position: absolute;
+      bottom: 130px; left: 50%;
+      transform: translateX(-50%);
+      width: 220px; height: 2px;
+      background: linear-gradient(to right, transparent, #f0d060, #c9a227, #f0d060, transparent);
+      background-size: 200% 100%;
+      opacity: 0;
+      animation: fadeIn 0.5s ease 3.9s forwards,
+                 shimmer 2.5s linear 4.4s infinite;
+    }
+    .footer-tag {
+      position: absolute;
+      bottom: 90px; left: 0; right: 0;
+      text-align: center;
+      font-size: 22px;
+      letter-spacing: 10px;
+      color: rgba(232,196,107,0.65);
+      opacity: 0;
+      animation: fadeIn 0.5s ease 4.1s forwards;
+    }
+
+    .duration-debug {
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="grid-bg"></div>
+
+    <!-- 角落装饰 -->
+    <div class="corner corner-tl" aria-hidden="true"></div>
+    <div class="corner corner-tr" aria-hidden="true"></div>
+    <div class="corner corner-bl" aria-hidden="true"></div>
+    <div class="corner corner-br" aria-hidden="true"></div>
+
+    <div class="top-tag">SPINE · KEYWORDS</div>
+
+    <!-- 中央垂直脊柱主线 -->
+    <div class="spine-c">
+      <svg viewBox="0 0 80 1480" preserveAspectRatio="none">
+        <line class="spine-line-c" x1="40" y1="0" x2="40" y2="1480"/>
+      </svg>
+    </div>
+
+    <!-- 4 个金色节点 + 关键词（左右交替） -->
+    <div class="nodes-c">
+      <div class="cta-node c-n1 right">
+        <span class="ring-out"></span>
+        <span class="ring-mid"></span>
+        <span class="dot-c"></span>
+        <span class="pin"></span>
+        <span class="keyword">微域生光</span>
+      </div>
+      <div class="cta-node c-n2 left">
+        <span class="ring-out"></span>
+        <span class="ring-mid"></span>
+        <span class="dot-c"></span>
+        <span class="pin"></span>
+        <span class="keyword">真实博主</span>
+      </div>
+      <div class="cta-node c-n3 right">
+        <span class="ring-out"></span>
+        <span class="ring-mid"></span>
+        <span class="dot-c"></span>
+        <span class="pin"></span>
+        <span class="keyword">真实数据</span>
+      </div>
+      <div class="cta-node c-n4 left">
+        <span class="ring-out"></span>
+        <span class="ring-mid"></span>
+        <span class="dot-c"></span>
+        <span class="pin"></span>
+        <span class="keyword">真实增长</span>
+      </div>
+    </div>
+
+    <div class="center-divider" aria-hidden="true"></div>
+    <div class="footer-tag">微 域 生 光 · 真 实 博 主 拆 解</div>
+
+    <div class="duration-debug">{{DURATION_MS}}ms</div>
+  </div>
+</body>
+</html>

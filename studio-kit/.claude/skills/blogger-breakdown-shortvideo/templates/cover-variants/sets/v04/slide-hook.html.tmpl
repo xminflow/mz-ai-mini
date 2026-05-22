@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!-- v04 同心圆雷达 · slide-hook · 视觉语言 · 时间轴
+  视觉语言：中央一个核心数字被 3 圈同心圆环包围；扇形扫描旋转一圈点亮中心数字；
+            副标在最外环下方；HOOK 标签贴在最外环顶部
+  动画总时长：3.5–5.0s（首帧背景立刻可见，末态 ≥1.5s 定格）
+  动画时间轴：
+    t=0.0s    深色背景立刻可见
+    t=0.0–0.6s 3 圈圆环 stagger 绘制
+    t=0.3s 起 扇形雷达光持续旋转（3s/圈, infinite）
+    t=0.4s    HOOK 标签 fadeIn
+    t=0.7s    核心大数字 punchIn 落定（带光晕脉冲）
+    t=1.2s    金色下划线展开 + shimmer
+    t=1.5s    副标浮现
+    t=2.0s    底部品牌渐显
+    t=2.5–5.0s 末态定格：扇形持续旋转，数字静止可读
+-->
+<title>slide-hook</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #080808;
+    color: #ffffff;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 关键帧 */
+  @keyframes ringDraw {
+    0%   { stroke-dashoffset: 2600; opacity: 0; }
+    20%  { opacity: 1; }
+    100% { stroke-dashoffset: 0;    opacity: 1; }
+  }
+  @keyframes sweepFade  { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes sweepRotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to   { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  @keyframes punchIn {
+    0%   { opacity: 0; transform: scale(1.42); filter: brightness(2.0); }
+    55%  { opacity: 1; transform: scale(0.98); filter: brightness(1.15); }
+    100% { opacity: 1; transform: scale(1.00); filter: brightness(1.0); }
+  }
+  @keyframes hookGlow {
+    0%,100% { text-shadow: 0 0 36px rgba(240,208,96,0.45), 0 0 96px rgba(240,208,96,0.18); }
+    50%     { text-shadow: 0 0 60px rgba(240,208,96,0.75), 0 0 140px rgba(240,208,96,0.32); }
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes lineGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  @keyframes corePulse {
+    0%   { transform: translate(-50%, -50%) scale(1);    box-shadow: 0 0 18px #e8c46b, 0 0 40px rgba(232,196,107,0.7), 0 0 80px rgba(201,162,39,0.4); }
+    100% { transform: translate(-50%, -50%) scale(1.25); box-shadow: 0 0 28px #f4d97a, 0 0 60px rgba(232,196,107,0.9), 0 0 120px rgba(201,162,39,0.6); }
+  }
+
+  .stage {
+    position: relative;
+    width: 1080px; height: 1920px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(201,162,39,0.20) 0%, rgba(201,162,39,0.05) 30%, transparent 60%),
+      linear-gradient(180deg, #0a0a0a 0%, #080808 50%, #050505 100%);
+    overflow: hidden;
+  }
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 50% 50%, rgba(212,175,55,0.06) 1px, transparent 1.5px),
+      linear-gradient(rgba(212,175,55,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,175,55,0.025) 1px, transparent 1px);
+    background-size: 60px 60px, 60px 60px, 60px 60px;
+  }
+
+  .top-glow {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    opacity: 0.75;
+  }
+  .bottom-glow {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    opacity: 0.75;
+  }
+
+  /* HOOK 标签 */
+  .hook-tag {
+    position: absolute; top: 240px; left: 0; right: 0;
+    text-align: center;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 36px; font-weight: 400;
+    color: rgba(240,208,96,0.85);
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.5s ease 0.4s forwards;
+    z-index: 10;
+  }
+  .hook-tag::before, .hook-tag::after {
+    content: '—'; margin: 0 22px;
+    color: rgba(240,208,96,0.45);
+  }
+
+  /* 雷达环（屏幕中央偏上） */
+  .radar {
+    position: absolute;
+    left: 50%; top: 960px;
+    transform: translate(-50%, -50%);
+    width: 980px; height: 980px;
+  }
+  .radar svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    overflow: visible;
+  }
+  .ring {
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: 2600;
+    stroke-dashoffset: 2600;
+    filter: drop-shadow(0 0 6px rgba(232,196,107,0.5));
+    animation: ringDraw 0.8s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  .ring.r1 { stroke: rgba(232,196,107,0.95); stroke-width: 2.5; animation-delay: 0.0s; }
+  .ring.r2 { stroke: rgba(232,196,107,0.7);  stroke-width: 2;   animation-delay: 0.18s; }
+  .ring.r3 { stroke: rgba(212,175,55,0.42);  stroke-width: 1.6; stroke-dasharray: 6 8; animation-delay: 0.36s; }
+  .crosshair {
+    stroke: rgba(232,196,107,0.16);
+    stroke-width: 1;
+    stroke-dasharray: 4 6;
+  }
+
+  /* 扫描扇形 */
+  .sweep {
+    position: absolute;
+    left: 50%; top: 960px;
+    width: 980px; height: 980px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      rgba(232,196,107,0.62) 0deg,
+      rgba(232,196,107,0.30) 18deg,
+      rgba(232,196,107,0.12) 40deg,
+      rgba(232,196,107,0.0)  80deg,
+      rgba(232,196,107,0.0) 360deg
+    );
+    mask-image: radial-gradient(circle, transparent 90px, #000 100px, #000 480px, transparent 488px);
+    -webkit-mask-image: radial-gradient(circle, transparent 90px, #000 100px, #000 480px, transparent 488px);
+    opacity: 0;
+    animation:
+      sweepFade 0.5s ease 0.3s forwards,
+      sweepRotate 3s linear 0.3s infinite;
+  }
+
+  /* 中央核心区 */
+  .center {
+    position: absolute;
+    left: 50%; top: 960px;
+    transform: translate(-50%, -50%);
+    width: 880px;
+    text-align: center;
+    z-index: 10;
+  }
+  /* 中央小金光点 */
+  .core-glow {
+    position: absolute;
+    left: 50%; top: -130px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: #f4d97a;
+    transform: translate(-50%, -50%);
+    animation: corePulse 1.4s ease-in-out infinite alternate;
+  }
+
+  .hook-big {
+    font-size: 220px;
+    font-weight: 900;
+    line-height: 0.96;
+    letter-spacing: -0.03em;
+    color: #f0d060;
+    max-width: 880px;
+    margin: 0 auto;
+    text-shadow:
+      0 0 36px rgba(240,208,96,0.45),
+      0 0 96px rgba(240,208,96,0.18);
+    opacity: 0;
+    animation:
+      punchIn 0.5s cubic-bezier(0.22,1,0.36,1) 0.7s both,
+      hookGlow 2.6s ease-in-out 1.5s infinite;
+    position: relative;
+    z-index: 2;
+  }
+  .hook-big.is-text { font-size: 156px; color: #ffffff; }
+
+  .hook-underline {
+    margin: 36px auto 0;
+    height: 6px;
+    width: 280px;
+    border-radius: 3px;
+    background: linear-gradient(to right, transparent, #f0d060, #c9a227, #f0d060, transparent);
+    background-size: 300% 100%;
+    box-shadow: 0 0 24px rgba(240,208,96,0.45);
+    transform-origin: center;
+    transform: scaleX(0);
+    animation:
+      lineGrow 0.5s cubic-bezier(0.22,1,0.36,1) 1.2s forwards,
+      shimmer 2.6s linear 1.7s infinite;
+  }
+
+  .hook-sub {
+    margin-top: 32px;
+    font-size: 46px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.86);
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+    max-width: 880px;
+    margin-left: auto; margin-right: auto;
+    opacity: 0;
+    animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 1.5s forwards;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* 底部品牌 */
+  .brand-footer {
+    position: absolute;
+    bottom: 130px; left: 0; right: 0;
+    display: flex; justify-content: center; align-items: center;
+    gap: 18px;
+    opacity: 0;
+    animation: fadeUp 0.5s ease 2.0s forwards;
+  }
+  .brand-w {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 46px; font-weight: 700;
+    color: #c9a227; line-height: 1;
+    text-shadow: 0 0 20px rgba(201,162,39,0.45);
+  }
+  .brand-name {
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    font-size: 30px; font-weight: 400;
+    letter-spacing: 0.32em; color: rgba(255,255,255,0.55);
+  }
+
+  .duration-debug {
+    position: absolute; bottom: 14px; right: 22px; z-index: 99;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 10px; color: rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="top-glow"></div>
+  <div class="grid-bg"></div>
+
+  <div class="hook-tag">HOOK</div>
+
+  <!-- 雷达圆环 -->
+  <div class="radar">
+    <svg viewBox="0 0 1000 1000">
+      <circle class="ring r3" cx="500" cy="500" r="480"></circle>
+      <circle class="ring r2" cx="500" cy="500" r="360"></circle>
+      <circle class="ring r1" cx="500" cy="500" r="220"></circle>
+      <line class="crosshair" x1="20"  y1="500" x2="980" y2="500"></line>
+      <line class="crosshair" x1="500" y1="20"  x2="500" y2="980"></line>
+    </svg>
+  </div>
+
+  <!-- 扫描扇形 -->
+  <div class="sweep"></div>
+
+  <!-- 中央核心 -->
+  <div class="center">
+    <div class="core-glow"></div>
+    <div class="hook-big" id="hookBig">{{hook_big_text}}</div>
+    <div class="hook-underline" aria-hidden="true"></div>
+    <div class="hook-sub">{{hook_sub_text}}</div>
+  </div>
+
+  <!-- 底部品牌 -->
+  <div class="brand-footer">
+    <span class="brand-w">W</span>
+    <span class="brand-name">微域生光</span>
+  </div>
+
+  <div class="bottom-glow"></div>
+  <div class="duration-debug">{{DURATION_MS}}ms</div>
+</div>
+
+<script>
+  // 若 hook_big_text 不含数字 / 货币符号 / % / × / 倍 / 万 / 亿，视作纯文字，缩小字号
+  (function(){
+    var el = document.getElementById('hookBig');
+    if (!el) return;
+    var t = (el.textContent || '').trim();
+    if (!/[0-9¥$%×倍万亿]/.test(t)) {
+      el.classList.add('is-text');
+    }
+  })();
+</script>
+</body>
+</html>

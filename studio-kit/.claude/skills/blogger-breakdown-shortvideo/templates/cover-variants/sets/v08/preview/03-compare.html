@@ -1,0 +1,343 @@
+<!-- v08 金线绘制 · slide-compare · 上下分区 → before 线框描出 → 中央箭头金线一笔画出 → after 复杂线框描出 → 文字依次填入 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>slide-compare · 他怎么把这件事放大</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: #080808;
+      color: #ffffff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .stage {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(120,80,200,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 70% 75%, rgba(201,162,39,0.12) 0%, transparent 50%),
+        #080808;
+      overflow: hidden;
+    }
+
+    /* 蓝图细网格 */
+    .blueprint {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.5;
+    }
+
+    /* 顶部标 */
+    .section-tag {
+      position: absolute;
+      top: 88px; left: 76px;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 28px;
+      letter-spacing: 0.45em;
+      color: rgba(232,196,107,0.85);
+      opacity: 0;
+      animation: fadeIn 0.5s ease 0.2s forwards;
+    }
+    .section-tag::before {
+      content: "▢";
+      margin-right: 14px;
+      color: rgba(232,196,107,0.5);
+    }
+
+    /* 标题 */
+    .title-wrap {
+      position: absolute;
+      top: 160px;
+      left: 0;
+      width: 1080px;
+      padding: 0 76px;
+    }
+    .title-wrap svg {
+      width: 100%;
+      height: 180px;
+      overflow: visible;
+    }
+    .title-stroke {
+      fill: transparent;
+      stroke: #c9a227;
+      stroke-width: 2;
+      stroke-dasharray: 1800;
+      stroke-dashoffset: 1800;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-weight: 900;
+      font-size: 70px;
+      letter-spacing: -0.01em;
+      animation: draw 1.4s ease-out 0.4s forwards;
+      filter: drop-shadow(0 0 6px rgba(201,162,39,0.5));
+    }
+    .title-fill {
+      fill: #ffffff;
+      stroke: none;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-weight: 900;
+      font-size: 70px;
+      letter-spacing: -0.01em;
+      opacity: 0;
+      animation: fadeIn 0.7s ease 1.4s forwards;
+    }
+
+    /* 标题底金线 */
+    .title-underline {
+      position: absolute;
+      left: 76px;
+      top: 300px;
+      width: 360px;
+      height: 3px;
+      background: linear-gradient(to right, #f0d060, #c9a227, transparent);
+      transform: scaleX(0);
+      transform-origin: left center;
+      animation: lineGrow 0.7s ease-out 1.9s forwards;
+      box-shadow: 0 0 12px rgba(201,162,39,0.55);
+    }
+
+    /* 主绘制层：before 简单线框 / 箭头 / after 复杂线框 */
+    .draw {
+      position: absolute;
+      top: 360px;
+      left: 0;
+      width: 1080px;
+      height: 1400px;
+    }
+    .draw .line {
+      fill: none;
+      stroke: #c9a227;
+      stroke-width: 2;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 4px rgba(201,162,39,0.45));
+    }
+    /* before 框（灰调） */
+    .before-frame {
+      stroke: rgba(255,255,255,0.45) !important;
+      stroke-dasharray: 2400;
+      stroke-dashoffset: 2400;
+      animation: draw 1.5s ease-out 2.3s forwards;
+      filter: drop-shadow(0 0 3px rgba(255,255,255,0.2));
+    }
+    /* 箭头一笔画出 */
+    .arrow-line {
+      stroke-dasharray: 360;
+      stroke-dashoffset: 360;
+      animation: draw 0.9s ease-out 4.0s forwards;
+    }
+    .arrow-head {
+      stroke-dasharray: 80;
+      stroke-dashoffset: 80;
+      animation: draw 0.4s ease-out 4.8s forwards;
+    }
+    /* after 复杂框 */
+    .after-frame-main {
+      stroke-dasharray: 2400;
+      stroke-dashoffset: 2400;
+      animation: draw 1.5s ease-out 5.3s forwards;
+    }
+    .after-frame-inner {
+      stroke: rgba(232,196,107,0.5) !important;
+      stroke-width: 1.5 !important;
+      stroke-dasharray: 2000;
+      stroke-dashoffset: 2000;
+      animation: draw 1.2s ease-out 6.0s forwards;
+    }
+    .after-corner {
+      stroke-dasharray: 80;
+      stroke-dashoffset: 80;
+      animation: draw 0.4s ease-out forwards;
+    }
+    .after-corner.c1 { animation-delay: 6.8s; }
+    .after-corner.c2 { animation-delay: 6.9s; }
+    .after-corner.c3 { animation-delay: 7.0s; }
+    .after-corner.c4 { animation-delay: 7.1s; }
+
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes lineGrow { to { transform: scaleX(1); } }
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* before 内容（在简单线框内） */
+    .before-card {
+      position: absolute;
+      top: 420px;
+      left: 110px;
+      right: 110px;
+      height: 360px;
+      padding: 40px 50px;
+    }
+    .card-label {
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 26px;
+      letter-spacing: 6px;
+      margin-bottom: 18px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 3.7s forwards;
+    }
+    .before-card .card-label { color: rgba(255,255,255,0.45); }
+    .before-card .card-text {
+      font-size: 34px;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.78);
+      opacity: 0;
+      animation: fadeUp 0.6s ease 3.9s forwards;
+    }
+
+    /* 中央箭头标签 */
+    .arrow-label {
+      position: absolute;
+      top: 880px;
+      left: 0; right: 0;
+      text-align: center;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 24px;
+      letter-spacing: 6px;
+      color: rgba(232,196,107,0.85);
+      opacity: 0;
+      animation: fadeIn 0.5s ease 4.6s forwards;
+    }
+
+    /* after 内容（在复杂线框内） */
+    .after-card {
+      position: absolute;
+      top: 1060px;
+      left: 90px;
+      right: 90px;
+      height: 460px;
+      padding: 50px 60px;
+    }
+    .after-card .card-label {
+      color: #e8c46b;
+      animation: fadeUp 0.6s ease 6.5s forwards;
+    }
+    .after-card .card-text {
+      font-size: 36px;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.95);
+      font-weight: 500;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 6.8s forwards;
+    }
+
+    /* 底部品牌 */
+    .brand-footer {
+      position: absolute;
+      bottom: 70px;
+      left: 0; right: 0;
+      text-align: center;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 22px;
+      letter-spacing: 8px;
+      color: rgba(232,196,107,0.55);
+      opacity: 0;
+      animation: fadeIn 0.6s ease 7.5s forwards;
+    }
+
+    .duration-debug {
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+<div class="stage">
+  <div class="blueprint"></div>
+
+  <div class="section-tag">GROWTH MOVE · 成 长 动 作</div>
+
+  <!-- 标题 -->
+  <div class="title-wrap">
+    <svg viewBox="0 0 928 180" preserveAspectRatio="xMinYMid meet">
+      <text class="title-stroke" x="0" y="105" text-anchor="start">他怎么把这件事放大</text>
+      <text class="title-fill"   x="0" y="105" text-anchor="start">他怎么把这件事放大</text>
+    </svg>
+  </div>
+  <div class="title-underline" aria-hidden="true"></div>
+
+  <!-- 主绘制层：before 框 + 箭头 + after 框 -->
+  <svg class="draw" viewBox="0 0 1080 1400" preserveAspectRatio="none">
+    <!-- before 简单矩形 -->
+    <path class="line before-frame" d="
+      M 50 60
+      L 980 60
+      L 980 420
+      L 50 420
+      Z
+    "/>
+
+    <!-- 中央粗箭头一笔画出（=>） -->
+    <path class="line arrow-line" d="
+      M 540 460
+      L 540 580
+      L 480 580
+      L 540 660
+      L 600 580
+      L 540 580
+    "/>
+    <!-- 箭头尖部强化 -->
+    <path class="line arrow-head" d="
+      M 480 580
+      L 540 660
+      L 600 580
+    "/>
+
+    <!-- after 复杂双层线框 -->
+    <path class="line after-frame-main" d="
+      M 30 700
+      L 1050 700
+      L 1050 1160
+      L 30 1160
+      Z
+    "/>
+    <path class="line after-frame-inner" d="
+      M 60 730
+      L 1020 730
+      L 1020 1130
+      L 60 1130
+      Z
+    "/>
+    <!-- 四角小装饰 -->
+    <path class="line after-corner c1" d="M 0 700 L 30 700 M 30 700 L 30 670"/>
+    <path class="line after-corner c2" d="M 1050 670 L 1050 700 M 1050 700 L 1080 700"/>
+    <path class="line after-corner c3" d="M 0 1160 L 30 1160 M 30 1160 L 30 1190"/>
+    <path class="line after-corner c4" d="M 1050 1160 L 1080 1160 M 1050 1160 L 1050 1190"/>
+  </svg>
+
+  <!-- before 文字 -->
+  <div class="before-card">
+    <div class="card-label">RIGHT MOVE · 做 对 的 事</div>
+    <div class="card-text">早期就抓住了'反直觉强结论当开场'这件事，靠暗调茶台 + 顶部红黄双行字打开人</div>
+  </div>
+
+  <!-- 箭头说明 -->
+  <div class="arrow-label">放 大 · SCALE UP</div>
+
+  <!-- after 文字 -->
+  <div class="after-card">
+    <div class="card-label">SCALE UP · 把 它 放 大</div>
+    <div class="card-text">现在七套场景，从白衣修行到 AI 操盘到政经叙事，都焊在同一行红黄双标题上</div>
+  </div>
+
+  <div class="brand-footer">微 域 生 光 · 真 实 博 主 拆 解</div>
+
+  <div class="duration-debug">18400ms · compare · #3</div>
+</div>
+</body>
+</html>

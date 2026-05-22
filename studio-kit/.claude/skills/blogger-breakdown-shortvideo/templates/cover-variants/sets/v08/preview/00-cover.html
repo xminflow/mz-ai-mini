@@ -1,0 +1,357 @@
+<!-- v08 金线绘制 · slide-cover · 蓝图绘制入场，外框→字形描边→金色填色→辐射节点引线 stagger -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>slide-cover · 陈厂长</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: #080808;
+      color: #ffffff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .stage {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(201,162,39,0.10) 0%, transparent 55%),
+        #080808;
+      overflow: hidden;
+    }
+
+    /* 蓝图细网格 */
+    .blueprint {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.05) 1px, transparent 1px);
+      background-size: 54px 54px;
+      opacity: 0.6;
+    }
+    .blueprint::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(201,162,39,0.02) 1px, transparent 1px) 0 0 / 270px 270px,
+        linear-gradient(90deg, rgba(201,162,39,0.02) 1px, transparent 1px) 0 0 / 270px 270px;
+    }
+
+    /* 四角图纸标签 */
+    .corner {
+      position: absolute;
+      font-family: 'Inter', Consolas, system-ui, sans-serif;
+      font-size: 18px;
+      letter-spacing: 4px;
+      color: rgba(232,196,107,0.6);
+      opacity: 0;
+      animation: fadeIn 0.8s ease 4.6s forwards;
+    }
+    .corner.tl { top: 50px; left: 60px; }
+    .corner.tr { top: 50px; right: 60px; }
+    .corner.bl { bottom: 50px; left: 60px; }
+    .corner.br { bottom: 50px; right: 60px; }
+
+    /* 主绘制层 */
+    .draw {
+      position: absolute;
+      inset: 0;
+      width: 1080px;
+      height: 1920px;
+    }
+    .draw .line {
+      fill: none;
+      stroke: #c9a227;
+      stroke-width: 2;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 4px rgba(201,162,39,0.45));
+    }
+    .draw .line.thin {
+      stroke-width: 1.5;
+      opacity: 0.85;
+    }
+    .draw .frame {
+      stroke-dasharray: 2400;
+      stroke-dashoffset: 2400;
+      animation: draw 1.3s ease-out 0.2s forwards;
+    }
+    .draw .frame-corner {
+      stroke-dasharray: 60;
+      stroke-dashoffset: 60;
+      animation: draw 0.5s ease-out 1.3s forwards;
+    }
+    /* 8 条辐射引线 */
+    .ray {
+      stroke-dasharray: 600;
+      stroke-dashoffset: 600;
+      animation: draw 0.65s ease-out forwards;
+    }
+    .ray.r1 { animation-delay: 2.4s; }
+    .ray.r2 { animation-delay: 2.55s; }
+    .ray.r3 { animation-delay: 2.70s; }
+    .ray.r4 { animation-delay: 2.85s; }
+    .ray.r5 { animation-delay: 3.00s; }
+    .ray.r6 { animation-delay: 3.15s; }
+    .ray.r7 { animation-delay: 3.30s; }
+    .ray.r8 { animation-delay: 3.45s; }
+
+    .nodeCircle {
+      fill: #0a0a0a;
+      stroke: #c9a227;
+      stroke-width: 2;
+      opacity: 0;
+      transform-origin: center;
+      transform-box: fill-box;
+      animation: popIn 0.4s ease-out forwards;
+    }
+    .nc1 { animation-delay: 2.9s; }
+    .nc2 { animation-delay: 3.05s; }
+    .nc3 { animation-delay: 3.2s; }
+    .nc4 { animation-delay: 3.35s; }
+    .nc5 { animation-delay: 3.5s; }
+    .nc6 { animation-delay: 3.65s; }
+    .nc7 { animation-delay: 3.8s; }
+    .nc8 { animation-delay: 3.95s; }
+
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes popIn { to { opacity: 1; } }
+
+    /* 主标题：字形描边 + 金色 fill */
+    .hero {
+      position: absolute;
+      top: 760px;
+      left: 0;
+      width: 1080px;
+      text-align: center;
+      pointer-events: none;
+    }
+    .hero svg { width: 1080px; height: 280px; overflow: visible; }
+    .glyph-stroke {
+      fill: transparent;
+      stroke: #c9a227;
+      stroke-width: 2;
+      stroke-dasharray: 1800;
+      stroke-dashoffset: 1800;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-weight: 800;
+      font-size: 220px;
+      letter-spacing: 8px;
+      animation: draw 1.6s ease-out 1.0s forwards;
+      filter: drop-shadow(0 0 8px rgba(201,162,39,0.5));
+    }
+    .glyph-fill {
+      fill: #e8c46b;
+      stroke: none;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-weight: 800;
+      font-size: 220px;
+      letter-spacing: 8px;
+      opacity: 0;
+      animation: fadeIn 0.9s ease 2.2s forwards, glyphGlow 3.0s ease-in-out 5.4s infinite;
+    }
+    @keyframes glyphGlow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(201,162,39,0.45)); }
+      50%      { filter: drop-shadow(0 0 24px rgba(232,196,107,0.85)); }
+    }
+
+    /* 副标 */
+    .sub {
+      position: absolute;
+      top: 1080px;
+      left: 0;
+      width: 1080px;
+      text-align: center;
+      font-size: 38px;
+      letter-spacing: 6px;
+      color: rgba(255,255,255,0.92);
+      opacity: 0;
+      transform: translateY(8px);
+      animation: subIn 0.9s ease 4.6s forwards;
+    }
+    @keyframes subIn { to { opacity: 1; transform: translateY(0); } }
+
+    /* Verdict 脚注卡片 */
+    .verdict {
+      position: absolute;
+      top: 1170px;
+      left: 90px;
+      right: 90px;
+      padding: 26px 36px;
+      border: 1px solid rgba(201,162,39,0.45);
+      border-radius: 10px;
+      background: rgba(201,162,39,0.05);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      animation: fadeIn 0.9s ease 4.9s forwards;
+    }
+    .verdict-label {
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 22px;
+      letter-spacing: 6px;
+      color: rgba(232,196,107,0.75);
+      margin-bottom: 12px;
+    }
+    .verdict-text {
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.92);
+    }
+
+    /* 4 个数据/标注节点（与 SVG node 圆对齐） */
+    .data {
+      position: absolute;
+      width: 220px;
+      text-align: center;
+      color: #fff;
+      opacity: 0;
+      transform: translateY(6px);
+      animation: subIn 0.5s ease forwards;
+    }
+    .data .k {
+      font-size: 18px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.78);
+    }
+    .data .v {
+      font-family: 'Inter', Consolas, system-ui, sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: #e8c46b;
+      line-height: 1.1;
+      margin-top: 6px;
+    }
+    .d1 { top:  300px; left:  60px; animation-delay: 3.0s; }
+    .d2 { top:  300px; left: 800px; animation-delay: 3.15s; }
+    .d3 { top:  580px; left:  20px; animation-delay: 3.3s; }
+    .d4 { top:  580px; left: 840px; animation-delay: 3.45s; }
+    .d5 { top: 1400px; left:  20px; animation-delay: 3.6s; }
+    .d6 { top: 1400px; left: 840px; animation-delay: 3.75s; }
+    .d7 { top: 1660px; left:  60px; animation-delay: 3.9s; }
+    .d8 { top: 1660px; left: 800px; animation-delay: 4.05s; }
+
+    .footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 90px;
+      text-align: center;
+      font-size: 18px;
+      letter-spacing: 8px;
+      color: rgba(232,196,107,0.55);
+      opacity: 0;
+      animation: fadeIn 0.8s ease 5.0s forwards;
+    }
+
+    /* 整图微脉冲 */
+    .pulse-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 50%, rgba(232,196,107,0.18) 0%, transparent 45%);
+      opacity: 0;
+      animation: pulseOnce 1.4s ease-out 4.4s;
+    }
+    @keyframes pulseOnce {
+      0%   { opacity: 0; }
+      40%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    .duration-debug {
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+<div class="stage">
+  <div class="blueprint"></div>
+
+  <div class="corner tl">DWG · 001</div>
+  <div class="corner tr">SCALE 1:1</div>
+  <div class="corner bl">SHEET 01 / 14</div>
+  <div class="corner br">REV · 2026</div>
+
+  <!-- 主绘制层：外框 + 辐射引线 + 节点圈 -->
+  <svg class="draw" viewBox="0 0 1080 1920" preserveAspectRatio="none">
+    <!-- 外框 -->
+    <path class="line frame" d="
+      M 100 700
+      L 980 700
+      L 980 1240
+      L 100 1240
+      Z
+    "/>
+    <!-- 四角装饰小线 -->
+    <path class="line frame-corner" d="M 60 700 L 100 700 M 100 660 L 100 700"/>
+    <path class="line frame-corner" d="M 980 660 L 980 700 M 980 700 L 1020 700"/>
+    <path class="line frame-corner" d="M 60 1240 L 100 1240 M 100 1240 L 100 1280"/>
+    <path class="line frame-corner" d="M 980 1240 L 1020 1240 M 980 1240 L 980 1280"/>
+
+    <!-- 8 条辐射引线 -->
+    <path class="line thin ray r1" d="M 200 700 L 170 510 L 170 360"/>
+    <path class="line thin ray r2" d="M 880 700 L 910 510 L 910 360"/>
+    <path class="line thin ray r3" d="M 100 880 L 130 760 L 130 640"/>
+    <path class="line thin ray r4" d="M 980 880 L 950 760 L 950 640"/>
+    <path class="line thin ray r5" d="M 100 1240 L 130 1380 L 130 1460"/>
+    <path class="line thin ray r6" d="M 980 1240 L 950 1380 L 950 1460"/>
+    <path class="line thin ray r7" d="M 200 1240 L 170 1560 L 170 1720"/>
+    <path class="line thin ray r8" d="M 880 1240 L 910 1560 L 910 1720"/>
+
+    <!-- 节点圆 -->
+    <circle class="nodeCircle nc1" cx="170" cy="360"  r="14"/>
+    <circle class="nodeCircle nc2" cx="910" cy="360"  r="14"/>
+    <circle class="nodeCircle nc3" cx="130" cy="640"  r="14"/>
+    <circle class="nodeCircle nc4" cx="950" cy="640"  r="14"/>
+    <circle class="nodeCircle nc5" cx="130" cy="1460" r="14"/>
+    <circle class="nodeCircle nc6" cx="950" cy="1460" r="14"/>
+    <circle class="nodeCircle nc7" cx="170" cy="1720" r="14"/>
+    <circle class="nodeCircle nc8" cx="910" cy="1720" r="14"/>
+  </svg>
+
+  <!-- 主标题：字形描边 + 金色 fill -->
+  <div class="hero">
+    <svg viewBox="0 0 1080 280" preserveAspectRatio="xMidYMid meet">
+      <text class="glyph-stroke" x="540" y="215" text-anchor="middle">陈厂长</text>
+      <text class="glyph-fill"   x="540" y="215" text-anchor="middle">陈厂长</text>
+    </svg>
+  </div>
+
+  <div class="sub">AI 时代老板 IP 操盘手</div>
+
+  <!-- Verdict 脚注 -->
+  <div class="verdict">
+    <div class="verdict-label">VERDICT · 核 心 结 论</div>
+    <div class="verdict-text">靠四重身份合一立人设，用同一套视觉锤焊住七套场景。</div>
+  </div>
+
+  <!-- 8 个标注节点（占位：节点编号 + 字段，由 extra 描述视频走向） -->
+  <div class="data d1"><div class="k">节点 · 01</div><div class="v">入场</div></div>
+  <div class="data d2"><div class="k">节点 · 02</div><div class="v">人设</div></div>
+  <div class="data d3"><div class="k">节点 · 03</div><div class="v">流量</div></div>
+  <div class="data d4"><div class="k">节点 · 04</div><div class="v">钩子</div></div>
+  <div class="data d5"><div class="k">节点 · 05</div><div class="v">转化</div></div>
+  <div class="data d6"><div class="k">节点 · 06</div><div class="v">客单</div></div>
+  <div class="data d7"><div class="k">节点 · 07</div><div class="v">放大</div></div>
+  <div class="data d8"><div class="k">节点 · 08</div><div class="v">复盘</div></div>
+
+  <div class="pulse-layer"></div>
+  <div class="footer">微 域 生 光 · 真 实 博 主 拆 解</div>
+
+  <div class="duration-debug">10200ms · cover · #0</div>
+</div>
+</body>
+</html>

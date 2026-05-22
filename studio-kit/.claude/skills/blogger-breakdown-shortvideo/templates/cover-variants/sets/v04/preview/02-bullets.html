@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!-- v04 同心圆雷达 · slide-bullets · 视觉语言 · 时间轴
+  视觉语言：
+    - 顶部小字 他干对了三件事
+    - 中央核心金色光点（屏幕几何中心）+ 4 圈大同心圆环作为屏幕级雷达骨架背景
+    - 雷达扇形持续旋转扫描
+    - 每条 bullet 是"环上的雷达标签卡"，左侧有一段金色引线从中心伸出
+    - bullets 沿垂直方向排布，stagger 出现配合扫描方向
+  动画总时长：13–18s（末态 ≥1.5s 定格）
+  动画时间轴：
+    t=0.0s    背景立刻可见，core-dot 出现并脉冲
+    t=0.0–1.0s 4 圈雷达环 stagger 绘制
+    t=0.5s 起 扇形雷达光持续旋转（4s/圈, infinite）
+    t=1.0s    顶部 SECTION 标签 fadeIn
+    t=1.2s    标题 slideRight 落定
+    t=1.7s    金色分隔线展开
+    t=2.0s    bullets stagger 入场（第 1 条 2.0s，间隔 1.0s）
+    t=2.0–8.0s 6 条 bullets 依次出现，每条都有引线伸出 + 卡片浮现
+    t=8.5s    底部品牌渐显
+    t=9.5–18.0s 末态定格：扫描持续旋转，bullets 静止可读
+-->
+<title>slide-bullets</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #080808;
+    color: #ffffff;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 关键帧 */
+  @keyframes ringDraw {
+    0%   { stroke-dashoffset: 4200; opacity: 0; }
+    20%  { opacity: 1; }
+    100% { stroke-dashoffset: 0;    opacity: 1; }
+  }
+  @keyframes sweepFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes sweepRotate {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to   { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  @keyframes corePulse {
+    0%   { transform: translate(-50%, -50%) scale(1);    box-shadow: 0 0 18px #e8c46b, 0 0 40px rgba(232,196,107,0.7), 0 0 80px rgba(201,162,39,0.4); }
+    100% { transform: translate(-50%, -50%) scale(1.25); box-shadow: 0 0 28px #f4d97a, 0 0 60px rgba(232,196,107,0.9), 0 0 120px rgba(201,162,39,0.6); }
+  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideRight { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes lineGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  /* bullet 入场 + 引线伸出（每条 li 内部 ::before 元素被同时驱动） */
+  @keyframes bulletIn {
+    0%   { opacity: 0; transform: translateX(-32px); }
+    60%  { opacity: 1; }
+    100% { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes leadGrow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+
+  .stage {
+    position: relative;
+    width: 1080px; height: 1920px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(201,162,39,0.16) 0%, rgba(201,162,39,0.04) 32%, transparent 62%),
+      linear-gradient(180deg, #0a0a0a 0%, #080808 50%, #050505 100%);
+    overflow: hidden;
+  }
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 50% 50%, rgba(212,175,55,0.06) 1px, transparent 1.5px),
+      linear-gradient(rgba(212,175,55,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,175,55,0.02) 1px, transparent 1px);
+    background-size: 70px 70px, 70px 70px, 70px 70px;
+  }
+
+  .top-glow {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    opacity: 0.75;
+  }
+  .bottom-glow {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    opacity: 0.75;
+  }
+
+  /* 雷达骨架背景（屏幕中央） */
+  .radar-bg {
+    position: absolute;
+    left: 50%; top: 960px;
+    transform: translate(-50%, -50%);
+    width: 1400px; height: 1400px;
+    z-index: 0;
+    opacity: 0.55;
+  }
+  .radar-bg svg { width: 100%; height: 100%; overflow: visible; }
+  .ring {
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: 4200;
+    stroke-dashoffset: 4200;
+    filter: drop-shadow(0 0 6px rgba(232,196,107,0.4));
+    animation: ringDraw 1.0s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  .ring.r1 { stroke: rgba(232,196,107,0.50); stroke-width: 1.8; animation-delay: 0.0s; }
+  .ring.r2 { stroke: rgba(232,196,107,0.36); stroke-width: 1.6; animation-delay: 0.25s; }
+  .ring.r3 { stroke: rgba(232,196,107,0.24); stroke-width: 1.4; animation-delay: 0.5s; }
+  .ring.r4 { stroke: rgba(212,175,55,0.18);  stroke-width: 1.2; stroke-dasharray: 6 8; animation-delay: 0.75s; }
+  .crosshair {
+    stroke: rgba(232,196,107,0.10);
+    stroke-width: 1;
+    stroke-dasharray: 4 6;
+  }
+
+  /* 扫描扇形 */
+  .sweep {
+    position: absolute;
+    left: 50%; top: 960px;
+    width: 1400px; height: 1400px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      rgba(232,196,107,0.30) 0deg,
+      rgba(232,196,107,0.14) 18deg,
+      rgba(232,196,107,0.05) 40deg,
+      rgba(232,196,107,0.0)  80deg,
+      rgba(232,196,107,0.0) 360deg
+    );
+    mask-image: radial-gradient(circle, transparent 60px, #000 70px, #000 690px, transparent 698px);
+    -webkit-mask-image: radial-gradient(circle, transparent 60px, #000 70px, #000 690px, transparent 698px);
+    opacity: 0;
+    z-index: 1;
+    animation:
+      sweepFade 0.6s ease 0.5s forwards,
+      sweepRotate 4s linear 0.5s infinite;
+  }
+
+  /* 中央核心金光点（屏幕中心） */
+  .center-core {
+    position: absolute;
+    left: 50%; top: 960px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: #f4d97a;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    animation: corePulse 1.6s ease-in-out infinite alternate;
+  }
+
+  /* 整体布局 */
+  .root {
+    width: 1080px; height: 1920px;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+    padding: 100px 64px 100px;
+    z-index: 2;
+  }
+
+  /* 顶部 SECTION 标签 */
+  .section-tag {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 30px; font-weight: 400;
+    letter-spacing: 0.4em; text-transform: uppercase;
+    color: rgba(232,196,107,0.85);
+    position: relative; z-index: 2;
+    opacity: 0;
+    animation: fadeIn 0.5s ease 1.0s forwards;
+  }
+  .section-tag::before {
+    content: '◎ ';
+    color: #e8c46b;
+    margin-right: 6px;
+  }
+
+  /* 标题 */
+  .title-block {
+    margin-top: 22px;
+    padding-left: 22px;
+    border-left: 4px solid #c9a227;
+    position: relative; z-index: 2;
+    opacity: 0;
+    transform: translateX(-28px);
+    animation: slideRight 0.55s cubic-bezier(0.22,1,0.36,1) 1.2s forwards;
+  }
+  .slide-title {
+    font-size: 54px; font-weight: 900;
+    line-height: 1.15; letter-spacing: -0.01em;
+    color: #ffffff;
+  }
+
+  .divider {
+    height: 2px;
+    background: linear-gradient(to right, #f0d060, #c9a227, rgba(201,162,39,0.12));
+    background-size: 200% 100%;
+    border-radius: 1px;
+    margin: 32px 0 40px;
+    transform-origin: left center;
+    transform: scaleX(0);
+    position: relative; z-index: 2;
+    animation:
+      lineGrow 0.5s cubic-bezier(0.22,1,0.36,1) 1.7s forwards,
+      shimmer 3s 2.2s linear infinite;
+  }
+
+  /* Bullets 列表 */
+  .bullets-list {
+    list-style: none;
+    display: flex; flex-direction: column;
+    gap: 22px;
+    flex: 1;
+    position: relative; z-index: 2;
+  }
+
+  .bullets-list .stagger-item {
+    position: relative;
+    margin-left: 88px; /* 给左边引线留位置 */
+    padding: 22px 28px 22px 32px;
+    background: linear-gradient(135deg, rgba(20,16,8,0.86), rgba(10,8,4,0.78));
+    border: 1px solid rgba(201,162,39,0.42);
+    border-radius: 12px;
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.92);
+    box-shadow:
+      0 0 0 1px rgba(201,162,39,0.10),
+      0 8px 28px rgba(0,0,0,0.55),
+      inset 0 0 18px rgba(232,196,107,0.05);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    animation: bulletIn 0.55s cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  /* 引线 + 端点（从卡片左边向左伸出，象征"从雷达环上挂出来"） */
+  .bullets-list .stagger-item::before {
+    content: '';
+    position: absolute;
+    left: -78px; top: 50%;
+    width: 70px; height: 2px;
+    background: linear-gradient(to right, transparent, rgba(232,196,107,0.85));
+    transform: translateY(-50%) scaleX(0);
+    transform-origin: right center;
+    box-shadow: 0 0 8px rgba(232,196,107,0.45);
+    animation: leadGrow 0.45s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  .bullets-list .stagger-item::after {
+    content: '';
+    position: absolute;
+    left: -8px; top: 50%;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #f4d97a;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px #e8c46b, 0 0 22px rgba(232,196,107,0.7);
+    opacity: 0;
+    animation: fadeIn 0.4s ease both;
+  }
+
+  /* stagger 延迟：每条 1.0s 间隔（13s 容量内） */
+  .bullets-list .stagger-item:nth-child(1) { animation-delay: 2.0s; }
+  .bullets-list .stagger-item:nth-child(1)::before { animation-delay: 2.0s; }
+  .bullets-list .stagger-item:nth-child(1)::after  { animation-delay: 2.45s; }
+
+  .bullets-list .stagger-item:nth-child(2) { animation-delay: 3.0s; }
+  .bullets-list .stagger-item:nth-child(2)::before { animation-delay: 3.0s; }
+  .bullets-list .stagger-item:nth-child(2)::after  { animation-delay: 3.45s; }
+
+  .bullets-list .stagger-item:nth-child(3) { animation-delay: 4.0s; }
+  .bullets-list .stagger-item:nth-child(3)::before { animation-delay: 4.0s; }
+  .bullets-list .stagger-item:nth-child(3)::after  { animation-delay: 4.45s; }
+
+  .bullets-list .stagger-item:nth-child(4) { animation-delay: 5.0s; }
+  .bullets-list .stagger-item:nth-child(4)::before { animation-delay: 5.0s; }
+  .bullets-list .stagger-item:nth-child(4)::after  { animation-delay: 5.45s; }
+
+  .bullets-list .stagger-item:nth-child(5) { animation-delay: 6.0s; }
+  .bullets-list .stagger-item:nth-child(5)::before { animation-delay: 6.0s; }
+  .bullets-list .stagger-item:nth-child(5)::after  { animation-delay: 6.45s; }
+
+  .bullets-list .stagger-item:nth-child(6) { animation-delay: 7.0s; }
+  .bullets-list .stagger-item:nth-child(6)::before { animation-delay: 7.0s; }
+  .bullets-list .stagger-item:nth-child(6)::after  { animation-delay: 7.45s; }
+
+  /* 底部品牌 */
+  .brand-footer {
+    display: flex; align-items: center; gap: 18px;
+    margin-top: 36px;
+    position: relative; z-index: 2;
+    opacity: 0;
+    animation: fadeIn 0.5s ease 8.5s forwards;
+  }
+  .brand-w {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 46px; font-weight: 700;
+    color: #c9a227; line-height: 1;
+    text-shadow: 0 0 20px rgba(201,162,39,0.45);
+  }
+  .brand-name {
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    font-size: 30px; font-weight: 400;
+    letter-spacing: 0.32em; color: rgba(255,255,255,0.55);
+  }
+
+  .duration-debug {
+    position: absolute; bottom: 14px; right: 22px; z-index: 99;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 10px; color: rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="top-glow"></div>
+  <div class="grid-bg"></div>
+
+  <!-- 雷达骨架 -->
+  <div class="radar-bg">
+    <svg viewBox="0 0 1400 1400">
+      <circle class="ring r4" cx="700" cy="700" r="680"></circle>
+      <circle class="ring r3" cx="700" cy="700" r="540"></circle>
+      <circle class="ring r2" cx="700" cy="700" r="380"></circle>
+      <circle class="ring r1" cx="700" cy="700" r="220"></circle>
+      <line class="crosshair" x1="20" y1="700" x2="1380" y2="700"></line>
+      <line class="crosshair" x1="700" y1="20" x2="700" y2="1380"></line>
+    </svg>
+  </div>
+  <div class="sweep"></div>
+  <div class="center-core"></div>
+
+  <div class="root">
+    <div class="section-tag">要点 · KEY POINTS</div>
+
+    <div class="title-block">
+      <div class="slide-title">他干对了三件事</div>
+    </div>
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <!--
+      <li class="stagger-item">顶部红黄双行大字 = 视觉锤</li><li class="stagger-item">'X 必须得 Y' = 文字钉</li><li class="stagger-item">聊观点脚本 = 唯一骨架</li> 注入格式：<li class="stagger-item">内容</li>
+      不含外层 <ul>，由下方 <ul> 提供容器
+    -->
+    <ul class="bullets-list">
+      <li class="stagger-item">顶部红黄双行大字 = 视觉锤</li><li class="stagger-item">'X 必须得 Y' = 文字钉</li><li class="stagger-item">聊观点脚本 = 唯一骨架</li>
+    </ul>
+
+    <div class="brand-footer">
+      <span class="brand-w">W</span>
+      <span class="brand-name">微域生光</span>
+    </div>
+  </div>
+
+  <div class="bottom-glow"></div>
+  <div class="duration-debug">21600ms</div>
+</div>
+</body>
+</html>

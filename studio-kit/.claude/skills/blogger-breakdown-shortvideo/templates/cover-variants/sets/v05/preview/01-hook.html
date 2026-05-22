@@ -1,0 +1,250 @@
+<!-- v05 时间脊柱 · slide-hook · 水平金色脊柱 + 中央 1 个核心节点点亮（瞬间冲击） -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>slide-hook</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1080px; height: 1920px; overflow: hidden;
+      background: #080808; color: #fff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── 关键帧 ── */
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes drawLineX { to { stroke-dashoffset: 0; } }
+    @keyframes spineGlowX {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(201,162,39,0.55)); }
+      50%      { filter: drop-shadow(0 0 18px rgba(232,196,107,0.90)); }
+    }
+    @keyframes nodePop {
+      0%   { opacity: 0; transform: translate(-50%,-50%) scale(0.4); }
+      55%  { opacity: 1; transform: translate(-50%,-50%) scale(1.18); }
+      100% { opacity: 1; transform: translate(-50%,-50%) scale(1.00); }
+    }
+    @keyframes nodePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201,162,39,0.55); }
+      50%      { box-shadow: 0 0 0 24px rgba(201,162,39,0); }
+    }
+    @keyframes punchIn {
+      0%   { opacity: 0; transform: scale(1.35); filter: brightness(1.8); }
+      55%  { opacity: 1; transform: scale(0.98); filter: brightness(1.1); }
+      100% { opacity: 1; transform: scale(1.00); filter: brightness(1.0); }
+    }
+
+    /* ── 背景 ── */
+    .stage {
+      position: relative; width: 1080px; height: 1920px;
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(201,162,39,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 80%, rgba(180,100,20,0.08) 0%, transparent 60%),
+        #0a0a0a;
+      overflow: hidden;
+    }
+    .grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.5;
+    }
+    .vignette {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.55) 92%);
+    }
+
+    /* ── 顶部 HOOK 标签 ── */
+    .hook-tag {
+      position: absolute; top: 220px; left: 0; right: 0;
+      text-align: center;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 32px; font-weight: 400;
+      color: rgba(240,208,96,0.85);
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeIn 0.4s ease 0.05s forwards;
+    }
+    .hook-tag::before, .hook-tag::after {
+      content: '—'; margin: 0 22px;
+      color: rgba(240,208,96,0.45);
+    }
+
+    /* ── 水平脊柱：屏幕中央一根金线 ── */
+    .spine-x {
+      position: absolute;
+      top: 50%; left: 60px; right: 60px;
+      height: 80px;
+      transform: translateY(-50%);
+    }
+    .spine-x svg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      overflow: visible;
+    }
+    .spine-line-x {
+      stroke: #c9a227; stroke-width: 3; fill: none;
+      stroke-dasharray: 960; stroke-dashoffset: 960;
+      animation: drawLineX 0.9s ease-out 0.15s forwards,
+                 spineGlowX 2.4s ease-in-out 1.4s infinite;
+      filter: drop-shadow(0 0 8px rgba(201,162,39,0.65));
+    }
+
+    /* 端点小三角（脊柱两端的装饰节点） */
+    .end-cap {
+      position: absolute; top: 50%;
+      width: 10px; height: 10px;
+      background: #c9a227;
+      transform: translateY(-50%) rotate(45deg);
+      opacity: 0;
+      animation: fadeIn 0.4s ease 1.0s forwards;
+    }
+    .end-cap.l { left: -5px; }
+    .end-cap.r { right: -5px; }
+
+    /* 中央核心节点：金色脉冲圆 */
+    .core-node {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #e8c46b 0%, #c9a227 60%, #8a6b15 100%);
+      border: 3px solid #f0d060;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      box-shadow: 0 0 30px rgba(232,196,107,0.7), 0 0 60px rgba(201,162,39,0.4);
+      animation: nodePop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.85s forwards,
+                 nodePulse 1.6s ease-in-out 1.4s infinite;
+    }
+    .core-node::before {
+      content: ""; position: absolute; inset: -22px;
+      border: 1px dashed rgba(232,196,107,0.45);
+      border-radius: 50%;
+    }
+    .core-node::after {
+      content: ""; position: absolute; inset: -50px;
+      border: 1px solid rgba(201,162,39,0.18);
+      border-radius: 50%;
+    }
+
+    /* ── 中央大字（在节点上方） ── */
+    .hook-big-wrap {
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      transform: translateY(calc(-50% - 240px));
+      text-align: center;
+      z-index: 3;
+    }
+    .hook-big {
+      font-size: 200px; font-weight: 900;
+      line-height: 0.96; letter-spacing: -0.03em;
+      color: #f0d060;
+      max-width: 920px;
+      margin: 0 auto;
+      text-shadow:
+        0 0 36px rgba(240,208,96,0.45),
+        0 0 96px rgba(240,208,96,0.18);
+      animation: punchIn 0.5s cubic-bezier(0.22,1,0.36,1) 1.0s both;
+    }
+    .hook-big.is-text { font-size: 140px; color: #ffffff; }
+
+    /* ── 副标（在脊柱下方） ── */
+    .hook-sub-wrap {
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      transform: translateY(calc(-50% + 180px));
+      text-align: center;
+      z-index: 3;
+    }
+    .hook-sub {
+      font-size: 50px; font-weight: 500;
+      color: rgba(255,255,255,0.86);
+      letter-spacing: 0.02em;
+      line-height: 1.42;
+      max-width: 880px;
+      margin: 0 auto;
+      animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 1.35s both;
+    }
+
+    /* ── 底部品牌（极简） ── */
+    .brand-footer {
+      position: absolute;
+      bottom: 130px; left: 0; right: 0;
+      display: flex; justify-content: center; align-items: center;
+      gap: 18px;
+      opacity: 0;
+      animation: fadeIn 0.45s ease 1.7s forwards;
+    }
+    .brand-w {
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 46px; font-weight: 700;
+      color: #c9a227; line-height: 1;
+      text-shadow: 0 0 20px rgba(201,162,39,0.45);
+    }
+    .brand-name {
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 32px; font-weight: 400;
+      letter-spacing: 0.52em; color: rgba(255,255,255,0.42);
+      text-transform: uppercase;
+    }
+
+    .duration-debug {
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="grid-bg"></div>
+    <div class="vignette"></div>
+
+    <div class="hook-tag">HOOK</div>
+
+    <!-- 中央大字 -->
+    <div class="hook-big-wrap">
+      <div class="hook-big" id="hookBig">230家</div>
+    </div>
+
+    <!-- 水平脊柱 + 中央核心节点 -->
+    <div class="spine-x">
+      <svg viewBox="0 0 960 80" preserveAspectRatio="none">
+        <line class="spine-line-x" x1="0" y1="40" x2="960" y2="40"/>
+      </svg>
+      <span class="end-cap l"></span>
+      <span class="end-cap r"></span>
+      <div class="core-node"></div>
+    </div>
+
+    <!-- 副标 -->
+    <div class="hook-sub-wrap">
+      <div class="hook-sub">他靠 AI 改造的企业数量。</div>
+    </div>
+
+    <div class="brand-footer">
+      <span class="brand-w">W</span>
+      <span class="brand-name">微域生光</span>
+    </div>
+
+    <div class="duration-debug">4500ms</div>
+  </div>
+
+  <script>
+    // 若 hook_big_text 不含数字/货币符号/%/×/倍/万/亿，视作纯文字，缩小字号
+    (function(){
+      var el = document.getElementById('hookBig');
+      if (!el) return;
+      var t = (el.textContent || '').trim();
+      if (!/[0-9¥$%×倍万亿]/.test(t)) {
+        el.classList.add('is-text');
+      }
+    })();
+  </script>
+</body>
+</html>

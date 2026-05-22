@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>slide-hook</title>
+<!-- v09 3D 卡片堆叠 · slide-hook · 单张超大金色卡片从屏外飞入 + rotateX 翻转一周稳定 -->
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#080808;font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+
+  .stage{
+    position:relative;width:1080px;height:1920px;
+    background:
+      radial-gradient(ellipse 700px 500px at 50% 50%, rgba(201,162,39,0.16), transparent 70%),
+      radial-gradient(ellipse 900px 600px at 50% 90%, rgba(180,100,20,0.10), transparent 70%),
+      linear-gradient(180deg,#0a0a0a 0%,#080808 60%,#050505 100%);
+    overflow:hidden;
+  }
+
+  /* 顶部 HOOK 标签 */
+  .hook-tag{
+    position:absolute;top:160px;left:0;right:0;text-align:center;
+    font-family:Consolas,'Courier New',monospace;
+    font-size:32px;letter-spacing:14px;color:rgba(232,196,107,0.78);
+    opacity:0;animation:tagIn 0.5s ease-out 0.2s forwards;
+  }
+  .hook-tag::before,.hook-tag::after{
+    content:"";display:inline-block;width:60px;height:1px;
+    background:#c9a227;vertical-align:middle;margin:0 18px;
+  }
+  @keyframes tagIn{to{opacity:1}}
+
+  /* 底部脚标 */
+  .footer{
+    position:absolute;bottom:120px;left:0;right:0;text-align:center;
+    font-size:24px;letter-spacing:10px;color:#c9a227;
+    opacity:0;animation:footIn 0.7s ease-out 2.6s forwards;
+  }
+  .footer::before,.footer::after{
+    content:"";display:inline-block;width:60px;height:1px;
+    background:linear-gradient(90deg,transparent,#c9a227,transparent);
+    vertical-align:middle;margin:0 24px;
+  }
+  @keyframes footIn{to{opacity:1}}
+
+  /* 背景斜光线 */
+  .beam{
+    position:absolute;width:2px;border-radius:2px;
+    background:linear-gradient(to bottom,transparent,rgba(201,162,39,0.08),transparent);
+    transform-origin:top center;
+    opacity:0;animation:beamIn 1.0s ease 0.4s forwards;
+  }
+  .beam.b1{height:1500px;left:200px;top:0;transform:rotate(18deg)}
+  .beam.b2{height:1300px;right:200px;top:120px;transform:rotate(-15deg)}
+  @keyframes beamIn{to{opacity:0.5}}
+
+  /* 3D 舞台 */
+  .deck-wrap{
+    position:absolute;left:50%;top:50%;
+    transform:translate(-50%,-50%);
+    width:760px;height:1000px;
+    perspective:1800px;
+    perspective-origin:50% 40%;
+  }
+  .deck{
+    position:relative;width:100%;height:100%;
+    transform-style:preserve-3d;
+  }
+
+  /* 主卡：从屏外飞入 + rotateX 翻一周 */
+  .hook-card{
+    position:absolute;left:50%;top:50%;
+    width:700px;height:880px;margin-left:-350px;margin-top:-440px;
+    border-radius:36px;
+    background:
+      radial-gradient(ellipse 500px 500px at 50% 30%,rgba(201,162,39,0.28),transparent 70%),
+      linear-gradient(160deg,#1a1408 0%,#2a1f0c 50%,#100c06 100%);
+    border:3px solid #e8c46b;
+    box-shadow:
+      0 40px 80px rgba(0,0,0,0.7),
+      0 16px 36px rgba(0,0,0,0.6),
+      0 0 80px rgba(201,162,39,0.30),
+      inset 0 0 0 1px rgba(232,196,107,0.40);
+    transform-style:preserve-3d;
+    backface-visibility:hidden;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:80px 60px;
+    transform:translateY(-1400px) translateX(-200px) rotateZ(-30deg) rotateX(-360deg) scale(0.5);
+    animation:cardFlyIn 1.4s cubic-bezier(.2,.7,.2,1) 0.4s forwards,cardBreathe 3.6s ease-in-out 2.6s infinite;
+    will-change:transform;
+  }
+  /* 卡片内描金细框 */
+  .hook-card::before{
+    content:"";position:absolute;inset:18px;border:1px solid rgba(232,196,107,0.45);border-radius:24px;pointer-events:none;
+  }
+  /* 卡片四角金角 */
+  .hook-card::after{
+    content:"";position:absolute;inset:14px;border-radius:26px;pointer-events:none;
+    background:
+      linear-gradient(135deg,#e8c46b 0%,transparent 8%,transparent 92%,#e8c46b 100%) 0 0/100% 100%,
+      linear-gradient(45deg,#e8c46b 0%,transparent 8%,transparent 92%,#e8c46b 100%) 0 0/100% 100%;
+    mix-blend-mode:overlay;opacity:0.30;
+  }
+
+  @keyframes cardFlyIn{
+    0%{transform:translateY(-1400px) translateX(-200px) rotateZ(-30deg) rotateX(-360deg) scale(0.5)}
+    60%{transform:translateY(40px) translateX(0) rotateZ(4deg) rotateX(20deg) scale(1.04)}
+    80%{transform:translateY(-10px) translateX(0) rotateZ(-2deg) rotateX(-6deg) scale(1.0)}
+    100%{transform:translateY(0) translateX(0) rotateZ(0deg) rotateX(0deg) scale(1)}
+  }
+  @keyframes cardBreathe{
+    0%,100%{filter:drop-shadow(0 0 0 rgba(201,162,39,0))}
+    50%{filter:drop-shadow(0 0 22px rgba(201,162,39,0.40))}
+  }
+
+  /* 卡内角标 */
+  .card-corner{
+    position:absolute;display:flex;align-items:center;gap:8px;
+    font-family:Consolas,'Courier New',monospace;
+    font-size:22px;letter-spacing:4px;color:rgba(232,196,107,0.85);
+  }
+  .card-corner.tl{top:50px;left:60px}
+  .card-corner.tr{top:50px;right:60px}
+  .card-corner i{display:block;width:8px;height:8px;background:#c9a227;border-radius:50%;box-shadow:0 0 10px #c9a227}
+
+  /* 大数字：hook_big_text */
+  .hook-big{
+    font-family:'Inter','SF Pro Display',system-ui,'Microsoft YaHei',sans-serif;
+    font-size:230px;font-weight:900;line-height:0.95;
+    background:linear-gradient(180deg,#fff7d9 0%,#e8c46b 45%,#c9a227 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-shadow:0 4px 40px rgba(201,162,39,0.45);
+    letter-spacing:-6px;text-align:center;
+    max-width:560px;word-break:break-all;
+    opacity:0;animation:hookIn 0.6s cubic-bezier(.2,.7,.2,1) 1.5s forwards;
+  }
+  /* 纯文字时缩小 */
+  .hook-big.is-text{
+    font-family:'Microsoft YaHei','PingFang SC',sans-serif;
+    font-size:140px;letter-spacing:-2px;
+    background:linear-gradient(180deg,#fff 0%,#fff7d9 45%,#e8c46b 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  @keyframes hookIn{
+    0%{opacity:0;transform:scale(1.3) translateZ(0)}
+    100%{opacity:1;transform:scale(1) translateZ(0)}
+  }
+
+  /* 卡内分隔金线 */
+  .card-divider{
+    width:120px;height:2px;margin:50px auto 0;
+    background:linear-gradient(90deg,transparent,#e8c46b,#c9a227,#e8c46b,transparent);
+    opacity:0;animation:dvIn 0.5s ease 1.9s forwards;
+  }
+  @keyframes dvIn{to{opacity:1}}
+
+  /* 卡片下方的 hook_sub_text */
+  .hook-sub{
+    position:absolute;left:0;right:0;
+    bottom:340px;
+    text-align:center;
+    font-size:46px;font-weight:600;line-height:1.45;letter-spacing:0.04em;
+    color:rgba(255,255,255,0.92);
+    padding:0 80px;
+    opacity:0;
+    animation:subUp 0.6s cubic-bezier(.2,.7,.2,1) 2.1s forwards;
+    z-index:5;
+  }
+  @keyframes subUp{
+    0%{opacity:0;transform:translateY(30px)}
+    100%{opacity:1;transform:translateY(0)}
+  }
+
+  /* 背面 */
+  .hook-card .back{
+    position:absolute;inset:0;
+    transform:rotateX(180deg);
+    backface-visibility:hidden;
+    border-radius:36px;
+    background:linear-gradient(160deg,#100c06 0%,#1a1408 50%,#0a0805 100%);
+    border:3px solid rgba(201,162,39,0.6);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .hook-card .back .crest{
+    width:160px;height:160px;border:2px solid #c9a227;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:64px;color:#e8c46b;font-weight:900;
+    box-shadow:inset 0 0 30px rgba(201,162,39,0.25);
+  }
+
+  .duration-debug{
+    position:absolute;bottom:14px;right:22px;z-index:99;
+    font-family:Consolas,'Courier New',monospace;
+    font-size:10px;color:rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="hook-tag">H O O K</div>
+
+  <div class="beam b1"></div>
+  <div class="beam b2"></div>
+
+  <div class="deck-wrap">
+    <div class="deck">
+      <div class="hook-card" id="hookCard">
+        <div class="back"><div class="crest">W</div></div>
+        <div class="card-corner tl"><i></i><span>HOOK</span></div>
+        <div class="card-corner tr"><span>NO.01</span><i></i></div>
+        <div class="hook-big" id="hookBig">{{hook_big_text}}</div>
+        <div class="card-divider"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hook-sub">{{hook_sub_text}}</div>
+
+  <div class="footer">微 域 生 光 · 真 实 博 主 拆 解</div>
+
+  <div class="duration-debug">{{DURATION_MS}}ms</div>
+</div>
+
+<script>
+  (function(){
+    var el=document.getElementById('hookBig');
+    if(!el) return;
+    var t=(el.textContent||'').trim();
+    if(!/[0-9¥$%×倍万亿]/.test(t)){
+      el.classList.add('is-text');
+    }
+  })();
+</script>
+</body>
+</html>

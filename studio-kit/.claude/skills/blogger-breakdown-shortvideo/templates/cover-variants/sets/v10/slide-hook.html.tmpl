@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>slide-hook</title>
+<!-- v10 数据粒子云 · slide-hook · 粒子向中心收拢凝聚出超大数字，定格后副标浮现 -->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#080808;font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+
+  .stage{
+    position:relative;width:1080px;height:1920px;
+    background:
+      radial-gradient(ellipse 700px 700px at 50% 50%, rgba(201,162,39,0.14), transparent 65%),
+      radial-gradient(ellipse 1200px 900px at 50% 100%, rgba(180,100,20,0.10), transparent 70%),
+      linear-gradient(180deg,#070707 0%,#0a0a0a 50%,#050505 100%);
+    overflow:hidden;
+  }
+
+  /* 角落金线 */
+  .frame-corner{position:absolute;width:24px;height:24px;border:2px solid #c9a227}
+  .fc-tl{top:48px;left:48px;border-right:none;border-bottom:none}
+  .fc-tr{top:48px;right:48px;border-left:none;border-bottom:none}
+  .fc-bl{bottom:48px;left:48px;border-right:none;border-top:none}
+  .fc-br{bottom:48px;right:48px;border-left:none;border-top:none}
+
+  .hook-tag{
+    position:absolute;top:160px;left:0;right:0;text-align:center;
+    font-family:Consolas,'Courier New',monospace;
+    font-size:32px;letter-spacing:14px;color:rgba(232,196,107,0.8);
+    opacity:0;animation:tagIn 0.5s ease 0.2s forwards;
+  }
+  .hook-tag::before,.hook-tag::after{content:"";display:inline-block;width:50px;height:1px;background:#c9a227;vertical-align:middle;margin:0 18px}
+  @keyframes tagIn{to{opacity:1}}
+
+  /* 粒子层（密度减半 ~ 40 个，先在外圈漂浮，1.0s 后向中心收拢） */
+  .cloud{position:absolute;inset:0}
+
+  .p{
+    position:absolute;
+    font-family:'Inter','SF Pro Display','Microsoft YaHei',sans-serif;
+    font-weight:700;
+    color:#e8c46b;
+    white-space:nowrap;
+    text-shadow:0 0 12px rgba(201,162,39,0.4);
+    opacity:0;
+    will-change:transform,opacity;
+  }
+  .p.amber{color:rgba(232,180,90,0.85);text-shadow:0 0 14px rgba(180,100,20,0.5)}
+  .p.dim{color:rgba(201,162,39,0.55);font-weight:500;text-shadow:none}
+  .p.cjk{font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif}
+
+  /* 粒子先 fanIn 出现 → 收拢到中心 → 在中心淡出，配合中央大字凝聚 */
+  @keyframes converge{
+    0%{transform:translate3d(var(--ox,0),var(--oy,0),-200px) scale(0.4);opacity:0}
+    20%{opacity:var(--op,0.8);transform:translate3d(0,0,0) scale(1)}
+    55%{opacity:var(--op,0.8);transform:translate3d(0,0,0) scale(1)}
+    80%{opacity:0.9;transform:translate3d(calc(var(--cx,0) * 1px),calc(var(--cy,0) * 1px),0) scale(0.7)}
+    100%{opacity:0;transform:translate3d(calc(var(--cx,0) * 1px),calc(var(--cy,0) * 1px),0) scale(0.4)}
+  }
+  /* 末态：剩余远景粒子继续轻漂浮 */
+  @keyframes float{
+    0%,100%{transform:translate3d(0,0,0) scale(1)}
+    50%{transform:translate3d(var(--dx,8px),var(--dy,-10px),0) scale(1.02)}
+  }
+  .p.converge{animation:converge 2.4s cubic-bezier(.4,.0,.2,1) var(--d,0s) both}
+  .p.ambient{
+    animation:
+      converge 1.2s cubic-bezier(.2,.7,.2,1) var(--d,0s) both,
+      float var(--fd,7s) ease-in-out calc(1.2s + var(--d,0s)) infinite;
+  }
+  /* ambient 粒子用一个 fanIn-like 入场，不收拢 */
+  .p.ambient{animation-name:fanIn,float}
+  @keyframes fanIn{
+    0%{transform:translate3d(var(--ox,0),var(--oy,0),-200px) scale(0.4);opacity:0}
+    100%{transform:translate3d(0,0,0) scale(1);opacity:var(--op,0.7)}
+  }
+
+  /* 中央大字（hook_big_text） */
+  .hook-big-wrap{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    text-align:center;z-index:50;
+  }
+  .hook-big{
+    font-size:280px;font-weight:900;line-height:0.95;letter-spacing:-2px;
+    background:linear-gradient(180deg,#fff 0%,#fff7d9 35%,#e8c46b 72%,#c9a227 100%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    -webkit-text-stroke:1.5px rgba(232,196,107,0.5);
+    text-shadow:0 0 60px rgba(201,162,39,0.55);
+    opacity:0;
+    animation:bigIn 1.6s cubic-bezier(.2,.7,.2,1) 1.6s forwards;
+  }
+  @keyframes bigIn{
+    0%{opacity:0;transform:scale(2.0);filter:blur(40px)}
+    50%{opacity:1;transform:scale(1.05);filter:blur(0)}
+    100%{opacity:1;transform:scale(1);filter:blur(0)}
+  }
+  .hook-big.is-text{font-size:160px;letter-spacing:8px}
+
+  /* 副标 */
+  .hook-sub{
+    margin-top:60px;
+    font-size:46px;font-weight:500;letter-spacing:6px;
+    color:rgba(255,255,255,0.92);
+    text-align:center;max-width:920px;
+    opacity:0;
+    animation:subIn 0.8s ease-out 3.0s forwards;
+  }
+  @keyframes subIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+  /* 中央光环 */
+  .hook-halo{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:900px;height:900px;border-radius:50%;
+    background:radial-gradient(circle, rgba(201,162,39,0.18) 0%, rgba(201,162,39,0.06) 35%, transparent 65%);
+    opacity:0;
+    animation:haloIn 1.2s ease-out 1.4s forwards;
+    z-index:1;
+  }
+  @keyframes haloIn{0%{opacity:0;transform:translate(-50%,-50%) scale(0.4)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+
+  .brand-footer{
+    position:absolute;bottom:110px;left:0;right:0;
+    text-align:center;font-family:Consolas,'Courier New',monospace;
+    font-size:24px;letter-spacing:12px;color:rgba(201,162,39,0.65);
+    opacity:0;animation:subIn 0.6s ease 3.4s forwards;
+  }
+
+  .duration-debug{position:absolute;bottom:14px;right:22px;z-index:99;font-family:Consolas,'Courier New',monospace;font-size:10px;color:rgba(255,255,255,0.12)}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="frame-corner fc-tl"></div>
+  <div class="frame-corner fc-tr"></div>
+  <div class="frame-corner fc-bl"></div>
+  <div class="frame-corner fc-br"></div>
+
+  <div class="hook-tag">HOOK</div>
+
+  <!-- 中央光环 -->
+  <div class="hook-halo"></div>
+
+  <!-- 粒子云：converge 类型向中心收拢凝聚 -->
+  <div class="cloud">
+    <!-- converge 粒子：从四面八方出现 → 向中心(540,960)收拢 -->
+    <span class="p amber converge" style="left:120px;top:300px;font-size:42px;--ox:-300px;--oy:-200px;--op:0.7;--cx:420;--cy:660;--d:0.1s">103万</span>
+    <span class="p amber converge" style="left:880px;top:340px;font-size:40px;--ox:300px;--oy:-180px;--op:0.7;--cx:-340;--cy:620;--d:0.15s">230</span>
+    <span class="p amber cjk converge" style="left:80px;top:600px;font-size:38px;--ox:-280px;--oy:0;--op:0.7;--cx:460;--cy:360;--d:0.2s">真实</span>
+    <span class="p amber converge" style="left:920px;top:680px;font-size:42px;--ox:280px;--oy:0;--op:0.7;--cx:-380;--cy:280;--d:0.25s">4亿</span>
+    <span class="p amber cjk converge" style="left:160px;top:1200px;font-size:40px;--ox:-260px;--oy:80px;--op:0.7;--cx:380;--cy:-240;--d:0.3s">7套</span>
+    <span class="p amber converge" style="left:840px;top:1240px;font-size:42px;--ox:260px;--oy:80px;--op:0.7;--cx:-300;--cy:-280;--d:0.32s">13万</span>
+    <span class="p amber cjk converge" style="left:120px;top:1500px;font-size:38px;--ox:-280px;--oy:200px;--op:0.7;--cx:420;--cy:-540;--d:0.35s">数据</span>
+    <span class="p amber converge" style="left:880px;top:1540px;font-size:40px;--ox:280px;--oy:200px;--op:0.7;--cx:-340;--cy:-580;--d:0.38s">1291</span>
+    <span class="p huge converge" style="left:240px;top:480px;font-size:56px;--ox:-180px;--oy:-100px;--op:0.85;--cx:300;--cy:480;--d:0.4s;font-weight:900">757.5万</span>
+    <span class="p huge converge" style="left:680px;top:520px;font-size:54px;--ox:180px;--oy:-100px;--op:0.85;--cx:-140;--cy:440;--d:0.42s;font-weight:900">230家</span>
+    <span class="p huge converge" style="left:200px;top:1380px;font-size:54px;--ox:-200px;--oy:160px;--op:0.85;--cx:340;--cy:-420;--d:0.45s;font-weight:900">15年</span>
+    <span class="p huge converge" style="left:700px;top:1400px;font-size:56px;--ox:200px;--oy:160px;--op:0.85;--cx:-160;--cy:-440;--d:0.48s;font-weight:900">4亿</span>
+    <span class="p amber cjk converge" style="left:320px;top:280px;font-size:34px;--ox:-100px;--oy:-200px;--op:0.6;--cx:220;--cy:680;--d:0.5s">AI时代</span>
+    <span class="p amber cjk converge" style="left:640px;top:300px;font-size:34px;--ox:100px;--oy:-200px;--op:0.6;--cx:-100;--cy:660;--d:0.52s">操盘手</span>
+    <span class="p amber cjk converge" style="left:300px;top:1620px;font-size:34px;--ox:-100px;--oy:240px;--op:0.6;--cx:240;--cy:-660;--d:0.55s">数字人</span>
+    <span class="p amber cjk converge" style="left:660px;top:1640px;font-size:34px;--ox:120px;--oy:240px;--op:0.6;--cx:-120;--cy:-680;--d:0.58s">老板IP</span>
+    <span class="p dim converge" style="left:60px;top:900px;font-size:32px;--ox:-300px;--oy:-60px;--op:0.5;--cx:480;--cy:60;--d:0.6s;filter:blur(0.8px)">19岁</span>
+    <span class="p dim converge" style="left:960px;top:940px;font-size:30px;--ox:300px;--oy:-20px;--op:0.5;--cx:-420;--cy:20;--d:0.62s;filter:blur(0.8px)">2亿+</span>
+    <span class="p dim cjk converge" style="left:100px;top:1080px;font-size:28px;--ox:-280px;--oy:100px;--op:0.45;--cx:440;--cy:-120;--d:0.65s;filter:blur(1px)">五档</span>
+    <span class="p dim converge" style="left:920px;top:1100px;font-size:28px;--ox:280px;--oy:120px;--op:0.45;--cx:-380;--cy:-140;--d:0.68s;filter:blur(1px)">170</span>
+
+    <!-- ambient 粒子：远景，不收拢，保持末态漂浮 -->
+    <span class="p dim ambient cjk" style="left:60px;top:180px;font-size:24px;--ox:-200px;--oy:-100px;--op:0.35;--d:0.2s;--fd:9s;--dx:8px;--dy:-6px;filter:blur(1.5px)">真实数据</span>
+    <span class="p dim ambient" style="left:920px;top:200px;font-size:22px;--ox:200px;--oy:-100px;--op:0.32;--d:0.25s;--fd:10s;--dx:-8px;--dy:6px;filter:blur(1.5px)">31条</span>
+    <span class="p dim ambient cjk" style="left:80px;top:1760px;font-size:24px;--ox:-200px;--oy:120px;--op:0.35;--d:0.3s;--fd:9s;--dx:6px;--dy:8px;filter:blur(1.5px)">微域生光</span>
+    <span class="p dim ambient" style="left:900px;top:1780px;font-size:22px;--ox:200px;--oy:120px;--op:0.32;--d:0.35s;--fd:10s;--dx:-6px;--dy:-8px;filter:blur(1.5px)">14章</span>
+    <span class="p dim ambient" style="left:200px;top:240px;font-size:18px;--ox:-100px;--oy:-100px;--op:0.3;--d:0.4s;--fd:11s;--dx:4px;--dy:6px;filter:blur(2px)">·</span>
+    <span class="p dim ambient" style="left:760px;top:260px;font-size:18px;--ox:100px;--oy:-100px;--op:0.3;--d:0.42s;--fd:11s;--dx:-4px;--dy:-6px;filter:blur(2px)">+</span>
+    <span class="p dim ambient" style="left:240px;top:1720px;font-size:18px;--ox:-80px;--oy:120px;--op:0.28;--d:0.45s;--fd:11s;--dx:6px;--dy:-4px;filter:blur(2px)">·</span>
+    <span class="p dim ambient" style="left:740px;top:1740px;font-size:18px;--ox:80px;--oy:120px;--op:0.28;--d:0.48s;--fd:11s;--dx:-6px;--dy:4px;filter:blur(2px)">+</span>
+  </div>
+
+  <!-- 中央大字 -->
+  <div class="hook-big-wrap">
+    <div class="hook-big" id="hookBig">{{hook_big_text}}</div>
+    <div class="hook-sub">{{hook_sub_text}}</div>
+  </div>
+
+  <div class="brand-footer">微 域 生 光  ·  真 实 数 据</div>
+
+  <div class="duration-debug">{{DURATION_MS}}ms · {{slide_type}} · #{{index}}</div>
+</div>
+
+<script>
+  // 纯文字时缩字
+  (function(){
+    var el=document.getElementById('hookBig');
+    if(!el)return;
+    var t=(el.textContent||'').trim();
+    if(!/[0-9¥$%×倍万亿]/.test(t))el.classList.add('is-text');
+  })();
+</script>
+</body>
+</html>

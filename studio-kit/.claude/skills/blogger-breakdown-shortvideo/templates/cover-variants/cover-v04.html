@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!--
+  cover-v04 — 同心圆雷达 Radar Rings
+  设计意图：屏幕中央 5 圈同心金色圆环，由小到大依次绘制（SVG stroke-dasharray 路径动画）；
+            一道金色扇形雷达光绕中心持续旋转扫描；8 个 KPI 标签卡按角度挂在不同环上，被扫到时点亮辉光；
+            正中央叠加陈厂长主标题，最外环下方为副标题。气质监控/侦察雷达感、科技密度高、信息围绕中心人物呈放射状展开。
+  数据维度：粉丝 103万 / 获赞 757.5万 / 作品 1291 / 企业 230家 / 数字人卖货 4亿 / 中隐会 13万 / 面屋猪一 170家 / 签约 IP 7个
+  动画时间轴：
+    t=0.0s   深色背景立刻可见，中心金点出现
+    t=0.0–1.6s 5 圈圆环 stagger 绘制完成
+    t=1.6–2.4s 8 张 KPI 标签卡 stagger 浮现 + 连接线伸出
+    t=0.5s 起 雷达扇形光持续旋转（4s/圈）
+    t=2.4s   中央陈厂长 + 副标题落定
+    t=3.6s   微域生光脚标渐显
+    t=4.0–7.0s 末态：扇形光持续旋转、所有 KPI 静止可读（末态 ≥3s 满足录屏）
+-->
+<title>陈厂长 cover v04</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #080808;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    color: #fff;
+  }
+
+  .stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(201,162,39,0.18) 0%, rgba(201,162,39,0.05) 30%, transparent 60%),
+      linear-gradient(180deg, #0a0a0a 0%, #080808 50%, #050505 100%);
+    overflow: hidden;
+  }
+
+  /* 背景同心圆刻度（淡） */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 50% 50%, rgba(212,175,55,0.06) 1px, transparent 1.5px),
+      linear-gradient(rgba(212,175,55,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,175,55,0.025) 1px, transparent 1px);
+    background-size: 60px 60px, 60px 60px, 60px 60px;
+  }
+
+  /* 顶部品牌标 */
+  .brand-top {
+    position: absolute;
+    top: 90px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 12px;
+    color: rgba(232,196,107,0.75);
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.2s forwards;
+  }
+  .brand-top b { color: #e8c46b; font-weight: 500; }
+
+  /* 顶部刻度条 */
+  .top-tick {
+    position: absolute;
+    top: 145px;
+    left: 50%; transform: translateX(-50%);
+    width: 600px; height: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    animation: fadeIn 1s ease 0.4s forwards;
+  }
+  .top-tick i {
+    display: block;
+    width: 1px; height: 14px;
+    background: rgba(232,196,107,0.4);
+  }
+  .top-tick i.long { height: 20px; background: rgba(232,196,107,0.8); }
+
+  /* 雷达主区 */
+  .radar {
+    position: absolute;
+    left: 50%;
+    top: 960px;
+    transform: translate(-50%, -50%);
+    width: 1100px;
+    height: 1100px;
+  }
+
+  .radar svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* 圆环动画 */
+  .ring {
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: 3500;
+    stroke-dashoffset: 3500;
+    filter: drop-shadow(0 0 6px rgba(232,196,107,0.5));
+    animation: ringDraw 1.0s cubic-bezier(0.4,0,0.2,1) forwards;
+  }
+  .ring.r1 { stroke: rgba(232,196,107,0.95); stroke-width: 2.5; animation-delay: 0.0s; }
+  .ring.r2 { stroke: rgba(232,196,107,0.78); stroke-width: 2;   animation-delay: 0.2s; }
+  .ring.r3 { stroke: rgba(232,196,107,0.62); stroke-width: 2;   animation-delay: 0.4s; }
+  .ring.r4 { stroke: rgba(232,196,107,0.46); stroke-width: 1.8; animation-delay: 0.6s; }
+  .ring.r5 { stroke: rgba(212,175,55,0.30);  stroke-width: 1.5; stroke-dasharray: 6 8; animation-delay: 0.8s; }
+
+  @keyframes ringDraw {
+    0%   { stroke-dashoffset: 3500; opacity: 0; }
+    20%  { opacity: 1; }
+    100% { stroke-dashoffset: 0; opacity: 1; }
+  }
+
+  /* 十字准星线 */
+  .crosshair {
+    stroke: rgba(232,196,107,0.18);
+    stroke-width: 1;
+    stroke-dasharray: 4 6;
+  }
+
+  /* 雷达扫描扇形 */
+  .sweep {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 1100px; height: 1100px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      rgba(232,196,107,0.55) 0deg,
+      rgba(232,196,107,0.28) 18deg,
+      rgba(232,196,107,0.10) 40deg,
+      rgba(232,196,107,0.0) 80deg,
+      rgba(232,196,107,0.0) 360deg
+    );
+    mask-image: radial-gradient(circle, transparent 80px, #000 90px, #000 540px, transparent 545px);
+    -webkit-mask-image: radial-gradient(circle, transparent 80px, #000 90px, #000 540px, transparent 545px);
+    opacity: 0;
+    animation:
+      sweepFade 0.6s ease 0.5s forwards,
+      sweepRotate 4s linear 0.5s infinite;
+  }
+  @keyframes sweepFade {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  @keyframes sweepRotate {
+    0%   { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  /* 中心光点 + 主标题区 */
+  .center-core {
+    position: absolute;
+    left: 50%; top: 960px;
+    transform: translate(-50%, -50%);
+    width: 460px;
+    text-align: center;
+    z-index: 10;
+  }
+  .core-dot {
+    width: 18px; height: 18px;
+    margin: 0 auto 22px;
+    border-radius: 50%;
+    background: #f4d97a;
+    box-shadow:
+      0 0 18px #e8c46b,
+      0 0 40px rgba(232,196,107,0.7),
+      0 0 80px rgba(201,162,39,0.4);
+    animation: corePulse 1.6s ease-in-out infinite alternate;
+  }
+  @keyframes corePulse {
+    0%   { transform: scale(1);   box-shadow: 0 0 18px #e8c46b, 0 0 40px rgba(232,196,107,0.7), 0 0 80px rgba(201,162,39,0.4); }
+    100% { transform: scale(1.25); box-shadow: 0 0 28px #f4d97a, 0 0 60px rgba(232,196,107,0.9), 0 0 120px rgba(201,162,39,0.6); }
+  }
+
+  .name {
+    font-size: 180px;
+    font-weight: 800;
+    letter-spacing: 6px;
+    background: linear-gradient(180deg, #f4d97a 0%, #e8c46b 45%, #c9a227 75%, #9b7b1f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 50px rgba(232,196,107,0.35);
+    line-height: 1;
+    opacity: 0;
+    transform: scale(0.9);
+    animation: nameIn 0.9s cubic-bezier(0.2,0.8,0.3,1) 2.4s forwards;
+  }
+  @keyframes nameIn {
+    0%   { opacity: 0; transform: scale(0.85); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  .name-line {
+    margin: 20px auto 0;
+    width: 240px; height: 1px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    opacity: 0;
+    animation: fadeIn 0.6s ease 2.8s forwards;
+  }
+  .sub {
+    margin-top: 22px;
+    font-size: 30px;
+    letter-spacing: 10px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeIn 0.7s ease 2.9s forwards;
+  }
+  .sub b { color: #e8c46b; font-weight: 500; }
+
+  /* KPI 标签 */
+  .kpi {
+    position: absolute;
+    width: 280px;
+    opacity: 0;
+    animation: kpiIn 0.7s cubic-bezier(0.2,0.8,0.3,1) forwards;
+    z-index: 8;
+  }
+  @keyframes kpiIn {
+    0%   { opacity: 0; transform: translate(0, 12px); }
+    100% { opacity: 1; transform: translate(0, 0); }
+  }
+  .kpi .card {
+    background: linear-gradient(135deg, rgba(20,16,8,0.92), rgba(10,8,4,0.88));
+    border: 1px solid rgba(201,162,39,0.45);
+    border-radius: 8px;
+    padding: 14px 20px;
+    box-shadow:
+      0 0 0 1px rgba(201,162,39,0.15),
+      0 8px 30px rgba(0,0,0,0.6),
+      inset 0 0 20px rgba(232,196,107,0.06);
+    backdrop-filter: blur(2px);
+  }
+  .kpi .v {
+    font-family: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+    font-size: 56px;
+    font-weight: 700;
+    color: #e8c46b;
+    line-height: 1;
+    text-shadow: 0 0 14px rgba(232,196,107,0.5);
+    letter-spacing: -0.02em;
+  }
+  .kpi .v .u {
+    font-size: 28px;
+    margin-left: 4px;
+    color: rgba(232,196,107,0.85);
+  }
+  .kpi .k {
+    margin-top: 8px;
+    font-size: 18px;
+    letter-spacing: 4px;
+    color: rgba(255,255,255,0.62);
+    font-weight: 300;
+  }
+  .kpi .tag {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 2px 8px;
+    border: 1px solid rgba(201,162,39,0.4);
+    color: rgba(232,196,107,0.85);
+    border-radius: 3px;
+  }
+
+  /* 连接小点（贴在卡片靠雷达一侧） */
+  .kpi .dot {
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #e8c46b;
+    box-shadow: 0 0 10px #e8c46b, 0 0 20px rgba(232,196,107,0.6);
+  }
+
+  /* 8 个 KPI 位置 + 延迟 */
+  .k1 { top: 460px;  left: 70px;  animation-delay: 1.8s; }
+  .k1 .dot { right: -16px; top: 32px; }
+  .k2 { top: 460px;  right: 70px; animation-delay: 1.9s; text-align: right; }
+  .k2 .dot { left: -16px; top: 32px; }
+  .k3 { top: 760px;  left: 30px;  animation-delay: 2.0s; }
+  .k3 .dot { right: -16px; top: 32px; }
+  .k4 { top: 760px;  right: 30px; animation-delay: 2.1s; text-align: right; }
+  .k4 .dot { left: -16px; top: 32px; }
+  .k5 { top: 1100px; left: 30px;  animation-delay: 2.2s; }
+  .k5 .dot { right: -16px; top: 32px; }
+  .k6 { top: 1100px; right: 30px; animation-delay: 2.3s; text-align: right; }
+  .k6 .dot { left: -16px; top: 32px; }
+  .k7 { top: 1380px; left: 90px;  animation-delay: 2.4s; }
+  .k7 .dot { right: -16px; top: 32px; }
+  .k8 { top: 1380px; right: 90px; animation-delay: 2.5s; text-align: right; }
+  .k8 .dot { left: -16px; top: 32px; }
+
+  /* 副标 + 底部脚标 */
+  .footer-sub {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 220px;
+    text-align: center;
+    font-size: 34px;
+    letter-spacing: 14px;
+    color: rgba(255,255,255,0.88);
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeIn 0.9s ease 3.0s forwards;
+  }
+  .footer-sub b { color: #e8c46b; font-weight: 500; }
+
+  .footer {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 90px;
+    text-align: center;
+    font-size: 22px;
+    letter-spacing: 10px;
+    color: rgba(255,255,255,0.5);
+    opacity: 0;
+    animation: fadeIn 1.0s ease 3.6s forwards;
+  }
+  .footer .b {
+    color: #e8c46b;
+    margin-right: 14px;
+  }
+
+  /* 上下金光条 */
+  .top-glow {
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    opacity: 0.75;
+  }
+  .bottom-glow {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    opacity: 0.75;
+  }
+
+  @keyframes fadeIn { 0%{opacity:0;} 100%{opacity:1;} }
+
+  /* 雷达坐标角标 */
+  .axis-label {
+    position: absolute;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: rgba(232,196,107,0.45);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 1.6s forwards;
+  }
+  .axis-label.n { top: 420px; left: 50%; transform: translateX(-50%); }
+  .axis-label.s { bottom: 320px; left: 50%; transform: translateX(-50%); }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="top-glow"></div>
+  <div class="grid-bg"></div>
+
+  <div class="brand-top">真实博主拆解 <b>·</b> 14 章全景报告</div>
+  <div class="top-tick">
+    <i></i><i></i><i></i><i class="long"></i><i></i><i></i><i></i><i class="long"></i><i></i><i></i><i></i><i class="long"></i><i></i><i></i><i></i>
+  </div>
+
+  <!-- 雷达 -->
+  <div class="radar">
+    <svg viewBox="0 0 1100 1100">
+      <!-- 圆环 -->
+      <circle class="ring r5" cx="550" cy="550" r="525"></circle>
+      <circle class="ring r4" cx="550" cy="550" r="430"></circle>
+      <circle class="ring r3" cx="550" cy="550" r="330"></circle>
+      <circle class="ring r2" cx="550" cy="550" r="230"></circle>
+      <circle class="ring r1" cx="550" cy="550" r="130"></circle>
+      <!-- 十字准星 -->
+      <line class="crosshair" x1="20"  y1="550" x2="1080" y2="550"></line>
+      <line class="crosshair" x1="550" y1="20"  x2="550"  y2="1080"></line>
+      <!-- 斜向准星 -->
+      <line class="crosshair" x1="170" y1="170" x2="930" y2="930"></line>
+      <line class="crosshair" x1="930" y1="170" x2="170" y2="930"></line>
+    </svg>
+  </div>
+
+  <!-- 扫描扇形 -->
+  <div class="sweep" style="top:960px;"></div>
+
+  <div class="axis-label n">N · 000°</div>
+  <div class="axis-label s">S · 180°</div>
+
+  <!-- 中央主标题 -->
+  <div class="center-core">
+    <div class="core-dot"></div>
+    <div class="name">陈厂长</div>
+    <div class="name-line"></div>
+    <div class="sub"><b>AI</b> 操盘手</div>
+  </div>
+
+  <!-- 8 个 KPI 卡 -->
+  <div class="kpi k1">
+    <div class="card">
+      <div class="v">103<span class="u">万</span></div>
+      <div class="k">FANS · 粉丝</div>
+    </div>
+    <span class="dot"></span>
+  </div>
+  <div class="kpi k2">
+    <div class="card">
+      <div class="v">757.5<span class="u">万</span></div>
+      <div class="k">LIKES · 获赞</div>
+    </div>
+    <span class="dot"></span>
+  </div>
+  <div class="kpi k3">
+    <div class="card">
+      <div class="v">1291</div>
+      <div class="k">WORKS · 作品</div>
+    </div>
+    <span class="dot"></span>
+  </div>
+  <div class="kpi k4">
+    <div class="card">
+      <div class="v">230<span class="u">家</span></div>
+      <div class="k">AI 化企业</div>
+    </div>
+    <span class="dot"></span>
+  </div>
+  <div class="kpi k5">
+    <div class="card">
+      <div class="v">4<span class="u">亿</span></div>
+      <div class="k">数字人卖货</div>
+    </div>
+    <span class="dot"></span>
+  </div>
+  <div class="kpi k6">
+    <div class="card">
+      <div class="v">13<span class="u">万</span></div>
+      <div class="k">中隐会年费</div>
+    </div>
+    <span class="dot"></span>
+  </div>
+  <div class="kpi k7">
+    <div class="card">
+      <div class="v">170<span class="u">家</span></div>
+      <div class="k">面屋猪一门店</div>
+    </div>
+    <span class="dot"></span>
+  </div>
+  <div class="kpi k8">
+    <div class="card">
+      <div class="v">7<span class="u">个</span></div>
+      <div class="k">签约 IP</div>
+    </div>
+    <span class="dot"></span>
+  </div>
+
+  <div class="footer-sub">AI 时代 <b>老板 IP</b> 操盘手</div>
+  <div class="footer"><span class="b">微域生光</span>真实博主拆解</div>
+  <div class="bottom-glow"></div>
+</div>
+</body>
+</html>

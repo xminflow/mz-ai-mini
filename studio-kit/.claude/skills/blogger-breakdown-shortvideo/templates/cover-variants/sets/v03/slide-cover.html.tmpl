@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!--
+  v03 数据瀑布 · slide-cover
+  视觉语言：深底（#080808）+ 金色脊柱（中线 #d4af37）+ 弹性数字坠落 + 末态定格
+  动画时间轴：
+    t=0.0s   背景立即可见，顶部金光条 + 中央脊柱呼吸
+    t=0.2s   品牌副标"博主拆解 · 14 章全景报告"淡入
+    t=0.4–2.2s 6 个装饰金粒子（圆形数据点）按 stagger 从屏顶坠入预设格点，伴金色拖尾
+    t=2.6s   {{title}} 主标题（金色渐变）从底部上浮 + 金光下划线划开
+    t=3.6s   {{subtitle}} 副标淡入（带左金竖线）
+    t=4.4s   {{verdict}} 一句话答卷卡片浮起（带金边 + 金竖线）
+    t=5.4s   底部"微域生光"脚标 + 金光底条渐显
+    t=5.4–7.0s 全部元素定格，金色脊柱呼吸 idle
+-->
+<title>slide-cover · v03</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #080808;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    background:
+      radial-gradient(ellipse 800px 1100px at 50% 55%, rgba(201,162,39,0.10) 0%, transparent 65%),
+      radial-gradient(ellipse 600px 400px at 50% 8%, rgba(232,196,107,0.20) 0%, transparent 70%),
+      linear-gradient(180deg, #0a0a0a 0%, #080808 60%, #050505 100%);
+    overflow: hidden;
+  }
+
+  /* 顶部金光条 */
+  .top-glow {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, transparent 0%, #d4af37 20%, #e8c46b 50%, #d4af37 80%, transparent 100%);
+    box-shadow: 0 0 24px #c9a227, 0 0 48px rgba(201,162,39,0.4);
+  }
+
+  /* 背景金色脊柱 */
+  .spine {
+    position: absolute;
+    left: 50%;
+    top: 80px;
+    width: 2px;
+    height: 1760px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg,
+      transparent 0%,
+      rgba(212,175,55,0.0) 5%,
+      rgba(212,175,55,0.35) 50%,
+      rgba(212,175,55,0.0) 95%,
+      transparent 100%);
+    animation: spineBreath 3s ease-in-out infinite alternate;
+  }
+  @keyframes spineBreath {
+    0%   { opacity: 0.4; }
+    100% { opacity: 0.85; }
+  }
+
+  /* 背景细网格 */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(212,175,55,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,175,55,0.04) 1px, transparent 1px);
+    background-size: 120px 120px;
+    mask-image: radial-gradient(ellipse 700px 1100px at 50% 55%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 700px 1100px at 50% 55%, #000 30%, transparent 75%);
+  }
+
+  /* 顶部品牌副标 */
+  .brand-top {
+    position: absolute;
+    top: 110px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 26px;
+    letter-spacing: 10px;
+    color: rgba(232,196,107,0.78);
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.2s forwards;
+    z-index: 3;
+  }
+  .brand-top .dot {
+    color: #c9a227;
+    margin: 0 10px;
+  }
+
+  /* 角落坐标注脚 */
+  .corner {
+    position: absolute;
+    font-size: 18px;
+    letter-spacing: 6px;
+    color: rgba(232,196,107,0.55);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.3s forwards;
+    z-index: 3;
+  }
+  .corner.tl { top: 170px; left: 80px; }
+  .corner.tr { top: 170px; right: 80px; }
+  .corner.bl { bottom: 170px; left: 80px; }
+  .corner.br { bottom: 170px; right: 80px; }
+
+  /* 坠落的金色装饰数据点（6 个，环绕主标题区） */
+  .drop {
+    position: absolute;
+    opacity: 0;
+    will-change: transform, opacity, filter;
+    transform: translateY(-600px);
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.4, 1);
+    z-index: 1;
+  }
+  .drop .ring {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #f4d97a 0%, #c9a227 60%, transparent 100%);
+    box-shadow: 0 0 18px #c9a227, 0 0 36px rgba(232,196,107,0.45);
+  }
+  .drop::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(232,196,107,0.7) 100%);
+    opacity: 0;
+    animation: tailFade 1s ease forwards;
+  }
+  @keyframes tailFade {
+    0%   { height: 0;   opacity: 0; }
+    40%  { height: 380px; opacity: 0.9; }
+    100% { height: 0;   opacity: 0; }
+  }
+  @keyframes dropIn {
+    0%   { transform: translateY(-700px); opacity: 0; filter: blur(8px); }
+    70%  { filter: blur(0); }
+    100% { transform: translateY(0); opacity: 1; filter: blur(0); }
+  }
+  .d1 { top: 320px;  left: 130px;  animation: dropIn 1.0s ease 0.4s forwards; }
+  .d1::before { animation-delay: 0.4s; }
+  .d2 { top: 380px;  right: 140px; animation: dropIn 1.0s ease 0.7s forwards; }
+  .d2::before { animation-delay: 0.7s; }
+  .d3 { top: 540px;  left: 220px;  animation: dropIn 1.0s ease 1.0s forwards; }
+  .d3::before { animation-delay: 1.0s; }
+  .d4 { top: 580px;  right: 240px; animation: dropIn 1.0s ease 1.3s forwards; }
+  .d4::before { animation-delay: 1.3s; }
+  .d5 { top: 1480px; left: 180px;  animation: dropIn 1.0s ease 1.6s forwards; }
+  .d5::before { animation-delay: 1.6s; }
+  .d6 { top: 1520px; right: 200px; animation: dropIn 1.0s ease 1.9s forwards; }
+  .d6::before { animation-delay: 1.9s; }
+
+  /* 中央主标题区 */
+  .center {
+    position: absolute;
+    left: 0; right: 0;
+    top: 760px;
+    text-align: center;
+    z-index: 2;
+  }
+
+  .blogger-name {
+    font-size: 180px;
+    font-weight: 800;
+    letter-spacing: 8px;
+    background: linear-gradient(180deg, #f4d97a 0%, #e8c46b 40%, #c9a227 70%, #9b7b1f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 60px rgba(232,196,107,0.3);
+    line-height: 1;
+    opacity: 0;
+    transform: translateY(50px);
+    animation: centerIn 1.0s cubic-bezier(0.2,0.8,0.3,1) 2.6s forwards;
+    word-break: break-all;
+  }
+  @keyframes centerIn {
+    0%   { opacity: 0; transform: translateY(50px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  .gold-line {
+    margin: 28px auto 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #c9a227, transparent);
+    animation: lineGrow 0.6s ease 3.0s forwards;
+  }
+  @keyframes lineGrow {
+    0%   { width: 0; }
+    100% { width: 360px; }
+  }
+
+  .subtitle {
+    margin-top: 30px;
+    font-size: 38px;
+    letter-spacing: 12px;
+    color: rgba(255,255,255,0.88);
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 3.6s forwards;
+    padding: 0 80px;
+  }
+  @keyframes fadeUp {
+    0%   { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Verdict 一句话答卷卡片 */
+  .verdict-card {
+    position: absolute;
+    left: 76px; right: 76px;
+    top: 1240px;
+    background: rgba(255,255,255,0.04);
+    border: 2px solid rgba(201,162,39,0.32);
+    border-radius: 16px;
+    padding: 36px 44px 36px 56px;
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 4.4s forwards;
+    z-index: 2;
+  }
+  .verdict-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 20px; bottom: 20px;
+    width: 4px;
+    border-radius: 0 2px 2px 0;
+    background: linear-gradient(to bottom, #f0d060, #c9a227, rgba(201,162,39,0.3));
+  }
+  .verdict-label {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 26px;
+    color: rgba(201,162,39,0.7);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .verdict-text {
+    font-size: 42px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.96);
+    line-height: 1.5;
+  }
+
+  /* 底部脚标 */
+  .footer {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: 90px;
+    text-align: center;
+    font-size: 22px;
+    letter-spacing: 10px;
+    color: rgba(255,255,255,0.5);
+    opacity: 0;
+    animation: fadeIn 1.0s ease 5.4s forwards;
+    z-index: 3;
+  }
+  .footer .b {
+    color: #e8c46b;
+    margin-right: 14px;
+  }
+
+  .bottom-glow {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent 0%, #c9a227 30%, #c9a227 70%, transparent 100%);
+    opacity: 0;
+    animation: fadeIn 0.8s ease 5.4s forwards;
+  }
+
+  @keyframes fadeIn {
+    0%   { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  .duration-debug {
+    position: absolute; bottom: 14px; right: 22px; z-index: 99;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 10px; color: rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="top-glow"></div>
+  <div class="grid-bg"></div>
+  <div class="spine"></div>
+
+  <div class="brand-top">真实博主拆解<span class="dot">·</span>14 章全景报告</div>
+
+  <div class="corner tl">FANS</div>
+  <div class="corner tr">LIKES</div>
+  <div class="corner bl">SCALE</div>
+  <div class="corner br">GROWTH</div>
+
+  <!-- 6 个装饰金粒子（数据瀑布的氛围承载） -->
+  <div class="drop d1"><span class="ring"></span></div>
+  <div class="drop d2"><span class="ring"></span></div>
+  <div class="drop d3"><span class="ring"></span></div>
+  <div class="drop d4"><span class="ring"></span></div>
+  <div class="drop d5"><span class="ring"></span></div>
+  <div class="drop d6"><span class="ring"></span></div>
+
+  <!-- 中央主标题 -->
+  <div class="center">
+    <div class="blogger-name">{{title}}</div>
+    <div class="gold-line"></div>
+    <div class="subtitle">{{subtitle}}</div>
+  </div>
+
+  <!-- Verdict 卡片 -->
+  <div class="verdict-card">
+    <div class="verdict-label">核心结论 · VERDICT</div>
+    <div class="verdict-text">{{verdict}}</div>
+  </div>
+
+  <!-- 底部脚标 -->
+  <div class="footer"><span class="b">微域生光</span>真实博主拆解</div>
+  <div class="bottom-glow"></div>
+
+  <div class="duration-debug">{{DURATION_MS}}ms · slide-{{index}} · {{slide_type}}</div>
+</div>
+</body>
+</html>

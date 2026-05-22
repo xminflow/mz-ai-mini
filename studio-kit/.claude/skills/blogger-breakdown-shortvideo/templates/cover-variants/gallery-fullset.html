@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Fullset Gallery · 7 套全套化模板 · 陈厂长</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #d4af37;
+      --gold-soft: rgba(201,162,39,0.5);
+      --bg: #060606;
+    }
+    html, body {
+      background: var(--bg);
+      color: #fff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(6,6,6,0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(201,162,39,0.18);
+      padding: 12px 16px 12px;
+      padding-top: calc(12px + env(safe-area-inset-top, 0px));
+    }
+    .topbar h1 {
+      font-size: 15px;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+      font-weight: 600;
+    }
+    .topbar .sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.55);
+      margin-top: 2px;
+      letter-spacing: 0.04em;
+    }
+    .tabs {
+      margin-top: 10px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .tab {
+      background: transparent;
+      color: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 999px;
+      font-family: inherit;
+      letter-spacing: 0.04em;
+      transition: all 0.2s;
+    }
+    .tab:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+    .tab.active {
+      background: rgba(201,162,39,0.15);
+      color: var(--gold);
+      border-color: var(--gold-soft);
+    }
+    .tab .id { font-weight: 700; margin-right: 4px; }
+
+    .reload-btn {
+      background: rgba(201,162,39,0.12);
+      color: var(--gold);
+      border: 1px solid var(--gold-soft);
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      border-radius: 999px;
+      font-family: inherit;
+      letter-spacing: 0.04em;
+      margin-top: 10px;
+    }
+
+    .content {
+      padding: 18px 12px 60px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+
+    @media (min-width: 720px) {
+      .row {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+      }
+    }
+
+    .card {
+      background: #0b0b0b;
+      border: 1px solid rgba(201,162,39,0.22);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.55);
+    }
+
+    .frame-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      overflow: hidden;
+      background: #080808;
+    }
+    .frame-wrap iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1080px;
+      height: 1920px;
+      border: 0;
+      transform-origin: top left;
+      pointer-events: none;
+    }
+    .frame-wrap .placeholder {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.28);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+
+    .meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px 4px;
+    }
+    .meta .stage {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+    .meta .name {
+      color: rgba(255,255,255,0.62);
+      font-size: 11px;
+    }
+    .actions-row {
+      display: flex;
+      gap: 6px;
+      padding: 0 10px 10px;
+    }
+    .actions-row a, .actions-row button {
+      flex: 1;
+      text-align: center;
+      background: rgba(201,162,39,0.08);
+      color: var(--gold);
+      border: 1px solid var(--gold-soft);
+      padding: 5px 6px;
+      font-size: 10px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-family: inherit;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+    }
+
+    .variant-banner {
+      display: none;
+    }
+    @media (min-width: 720px) {
+      .variant-banner {
+        display: block;
+        padding: 0 4px 14px;
+        color: rgba(255,255,255,0.42);
+        font-size: 12px;
+        letter-spacing: 0.04em;
+      }
+      .variant-banner .name {
+        color: var(--gold);
+        font-weight: 700;
+        margin-right: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>Fullset Gallery · 7 套 × 5 slide_type 模板 · 陈厂长</h1>
+    <div class="sub">点 tab 切换套 · 每套 5 张按 cover→hook→bullets→compare→cta 顺序 · 离开自动卸载动画</div>
+    <div class="tabs" id="tabs"></div>
+    <button class="reload-btn" id="reloadAll">↻ 重播当前套</button>
+  </div>
+
+  <div class="content">
+    <div class="variant-banner" id="banner"></div>
+    <div class="row" id="row"></div>
+  </div>
+
+  <script>
+    const variants = [
+      { id: 'v03', name: '数据瀑布', desc: '数字从屏顶坠落 + 金色拖尾' },
+      { id: 'v04', name: '同心圆雷达', desc: 'SVG 圆环 + 扇形扫描点亮' },
+      { id: 'v05', name: '时间脊柱', desc: '垂直/水平脊柱 + 节点 stagger' },
+      { id: 'v06', name: '多窗口分屏', desc: '不对称 panel + 微动效' },
+      { id: 'v08', name: '金线绘制', desc: 'SVG 描边一笔画 + 填色' },
+      { id: 'v09', name: '3D 卡片堆叠', desc: 'perspective 翻牌 + 错位堆叠' },
+      { id: 'v10', name: '数据粒子云', desc: '粒子三层景深 + 关键文字凝聚' },
+    ];
+
+    const stages = [
+      { file: '00-cover.html',   stage: 'cover',    name: '人设全景' },
+      { file: '01-hook.html',    stage: 'hook',     name: '黄金 3 秒' },
+      { file: '02-bullets.html', stage: 'bullets',  name: '核心动作' },
+      { file: '03-compare.html', stage: 'compare',  name: '做对→放大' },
+      { file: '04-cta.html',     stage: 'cta',      name: '收尾' },
+    ];
+
+    const tabsEl = document.getElementById('tabs');
+    const rowEl = document.getElementById('row');
+    const bannerEl = document.getElementById('banner');
+
+    variants.forEach((v, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'tab' + (i === 0 ? ' active' : '');
+      btn.dataset.id = v.id;
+      btn.innerHTML = `<span class="id">${v.id}</span><span>${v.name}</span>`;
+      btn.addEventListener('click', () => switchTo(v.id));
+      tabsEl.appendChild(btn);
+    });
+
+    let current = variants[0].id;
+
+    function renderRow(vid) {
+      const v = variants.find(x => x.id === vid);
+      bannerEl.innerHTML = `<span class="name">${v.id} · ${v.name}</span><span>${v.desc}</span>`;
+
+      rowEl.innerHTML = '';
+      stages.forEach(s => {
+        const file = `sets/${vid}/preview/${s.file}`;
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="frame-wrap" data-src="${file}">
+            <div class="placeholder">·  loading  ·</div>
+          </div>
+          <div class="meta">
+            <span class="stage">${s.stage}</span>
+            <span class="name">${s.name}</span>
+          </div>
+          <div class="actions-row">
+            <button data-reload="${file}">↻</button>
+            <a href="${file}" target="_blank">1:1 →</a>
+          </div>`;
+        rowEl.appendChild(card);
+      });
+
+      // 立即挂载所有 iframe 并 fit scale
+      rowEl.querySelectorAll('.frame-wrap').forEach(mountIframe);
+    }
+
+    function fitScale(wrap) {
+      const iframe = wrap.querySelector('iframe');
+      if (!iframe) return;
+      const w = wrap.clientWidth;
+      iframe.style.transform = `scale(${(w / 1080).toFixed(4)})`;
+    }
+
+    function mountIframe(wrap) {
+      if (wrap.querySelector('iframe')) return;
+      const src = wrap.dataset.src;
+      const iframe = document.createElement('iframe');
+      iframe.src = src;
+      iframe.setAttribute('scrolling', 'no');
+      wrap.appendChild(iframe);
+      const ph = wrap.querySelector('.placeholder');
+      ph && ph.remove();
+      requestAnimationFrame(() => fitScale(wrap));
+    }
+
+    function switchTo(vid) {
+      if (vid === current) return;
+      current = vid;
+      tabsEl.querySelectorAll('.tab').forEach(b => {
+        b.classList.toggle('active', b.dataset.id === vid);
+      });
+      // 卸载旧 row 的 iframe，渲染新的
+      renderRow(vid);
+    }
+
+    document.getElementById('reloadAll').addEventListener('click', () => {
+      rowEl.querySelectorAll('.frame-wrap iframe').forEach(f => f.src = f.src);
+    });
+
+    rowEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-reload]');
+      if (!btn) return;
+      const wrap = btn.closest('.card').querySelector('.frame-wrap');
+      const iframe = wrap?.querySelector('iframe');
+      if (iframe) iframe.src = iframe.src;
+    });
+
+    window.addEventListener('resize', () => {
+      rowEl.querySelectorAll('.frame-wrap').forEach(fitScale);
+    });
+
+    // 初始渲染
+    renderRow(current);
+  </script>
+</body>
+</html>

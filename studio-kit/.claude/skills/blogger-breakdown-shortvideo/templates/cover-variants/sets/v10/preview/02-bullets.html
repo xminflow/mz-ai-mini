@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>slide-bullets</title>
+<!-- v10 数据粒子云 · slide-bullets · 低密度粒子漂浮背景，title 从粒子中浮现，每条 li stagger 出现时金光涟漪扫过 -->
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1080px;height:1920px;overflow:hidden;background:#080808;font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+
+  .stage{
+    position:relative;width:1080px;height:1920px;
+    background:
+      radial-gradient(ellipse 600px 500px at 50% 30%, rgba(201,162,39,0.10), transparent 70%),
+      radial-gradient(ellipse 1200px 900px at 50% 100%, rgba(180,100,20,0.10), transparent 70%),
+      linear-gradient(180deg,#070707 0%,#0a0a0a 50%,#050505 100%);
+    overflow:hidden;
+  }
+
+  .frame-corner{position:absolute;width:24px;height:24px;border:2px solid #c9a227;z-index:5}
+  .fc-tl{top:48px;left:48px;border-right:none;border-bottom:none}
+  .fc-tr{top:48px;right:48px;border-left:none;border-bottom:none}
+  .fc-bl{bottom:48px;left:48px;border-right:none;border-top:none}
+  .fc-br{bottom:48px;right:48px;border-left:none;border-top:none}
+
+  /* 粒子层（低密度 ~ 35 个） */
+  .cloud{position:absolute;inset:0;z-index:1}
+
+  .p{
+    position:absolute;
+    font-family:'Inter','SF Pro Display','Microsoft YaHei',sans-serif;
+    font-weight:700;
+    color:#e8c46b;
+    white-space:nowrap;
+    text-shadow:0 0 12px rgba(201,162,39,0.35);
+    opacity:0;
+    will-change:transform,opacity;
+  }
+  .p.amber{color:rgba(232,180,90,0.7);text-shadow:0 0 12px rgba(180,100,20,0.4)}
+  .p.dim{color:rgba(201,162,39,0.42);font-weight:500;text-shadow:none}
+  .p.cjk{font-family:'Microsoft YaHei','PingFang SC',SimHei,sans-serif}
+
+  @keyframes fanIn{
+    0%{transform:translate3d(var(--ox,0),var(--oy,0),-200px) scale(0.4);opacity:0}
+    100%{transform:translate3d(0,0,0) scale(1);opacity:var(--op,0.6)}
+  }
+  @keyframes float{
+    0%,100%{transform:translate3d(0,0,0) scale(1)}
+    50%{transform:translate3d(var(--dx,8px),var(--dy,-10px),0) scale(1.02)}
+  }
+  .p{
+    animation:
+      fanIn 1.4s cubic-bezier(.2,.7,.2,1) var(--d,0s) both,
+      float var(--fd,8s) ease-in-out calc(1.4s + var(--d,0s)) infinite;
+  }
+
+  /* 主内容 */
+  .root{position:relative;width:1080px;height:1920px;z-index:10;padding:140px 76px 110px;display:flex;flex-direction:column}
+
+  .section-tag{
+    font-family:Consolas,'Courier New',monospace;
+    font-size:30px;letter-spacing:12px;color:rgba(201,162,39,0.78);
+    opacity:0;animation:tagIn 0.5s ease 0.2s forwards;
+  }
+  .section-tag::before,.section-tag::after{content:"";display:inline-block;width:36px;height:1px;background:#c9a227;vertical-align:middle;margin:0 14px}
+  @keyframes tagIn{to{opacity:1}}
+
+  /* 标题 — 从粒子中浮现：金渐变 + 描金边 */
+  .title-block{
+    margin-top:36px;padding-left:24px;border-left:4px solid #c9a227;position:relative;
+    opacity:0;animation:titleIn 1.0s cubic-bezier(.2,.7,.2,1) 0.6s forwards;
+  }
+  @keyframes titleIn{
+    0%{opacity:0;transform:translateY(20px);filter:blur(12px)}
+    100%{opacity:1;transform:translateY(0);filter:blur(0)}
+  }
+  .slide-title{
+    font-size:62px;font-weight:900;line-height:1.18;letter-spacing:0;
+    background:linear-gradient(180deg,#fff 0%,#fff7d9 50%,#e8c46b 100%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 30px rgba(201,162,39,0.4);
+  }
+
+  .divider{
+    height:2px;
+    background:linear-gradient(to right,#f0d060,#c9a227,rgba(201,162,39,0.12));
+    background-size:200% 100%;
+    border-radius:1px;
+    margin:40px 0 36px;
+    transform-origin:left center;transform:scaleX(0);
+    animation:lineGrow 0.6s cubic-bezier(.2,.7,.2,1) 1.3s forwards, shimmer 3s 2s linear infinite;
+  }
+  @keyframes lineGrow{to{transform:scaleX(1)}}
+  @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+
+  /* Bullets 列表 */
+  .bullets-list{
+    list-style:none;display:flex;flex-direction:column;gap:24px;flex:1;counter-reset:bullet-counter;
+  }
+
+  .bullets-list .stagger-item{
+    position:relative;
+    display:flex;align-items:flex-start;gap:22px;
+    padding:30px 36px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(201,162,39,0.22);
+    border-radius:14px;
+    font-size:38px;font-weight:400;line-height:1.6;
+    color:rgba(255,255,255,0.92);
+    backdrop-filter:blur(6px);
+    opacity:0;
+    overflow:hidden;
+    animation:liIn 0.7s cubic-bezier(.2,.7,.2,1) both;
+  }
+  @keyframes liIn{
+    0%{opacity:0;transform:translateX(-30px) scale(0.96);filter:blur(8px)}
+    60%{opacity:1;transform:translateX(0) scale(1);filter:blur(0)}
+    100%{opacity:1;transform:translateX(0) scale(1);filter:blur(0)}
+  }
+
+  /* 序号 */
+  .bullets-list .stagger-item::before{
+    counter-increment:bullet-counter;
+    content:counter(bullet-counter);
+    flex-shrink:0;width:42px;height:42px;min-width:42px;
+    border-radius:50%;
+    background:rgba(201,162,39,0.12);
+    border:1.5px solid rgba(201,162,39,0.55);
+    display:flex;align-items:center;justify-content:center;
+    font-family:Consolas,'Courier New',monospace;
+    font-size:30px;font-weight:700;color:#e8c46b;
+    margin-top:6px;
+  }
+
+  /* 金光涟漪扫过 — 通过 ::after 一道斜光从左到右扫一次 */
+  .bullets-list .stagger-item::after{
+    content:"";position:absolute;top:0;bottom:0;left:-30%;width:30%;
+    background:linear-gradient(120deg,transparent 0%,rgba(232,196,107,0.18) 50%,transparent 100%);
+    transform:skewX(-20deg);
+    pointer-events:none;
+    animation:wipe 1.2s ease-out both;
+    opacity:0;
+  }
+  @keyframes wipe{
+    0%{left:-30%;opacity:0}
+    20%{opacity:1}
+    100%{left:130%;opacity:0}
+  }
+
+  /* stagger 延迟 — li 入场 + 涟漪同步 */
+  .bullets-list .stagger-item:nth-child(1){animation-delay:1.8s}
+  .bullets-list .stagger-item:nth-child(1)::after{animation-delay:1.9s}
+  .bullets-list .stagger-item:nth-child(2){animation-delay:3.4s}
+  .bullets-list .stagger-item:nth-child(2)::after{animation-delay:3.5s}
+  .bullets-list .stagger-item:nth-child(3){animation-delay:5.0s}
+  .bullets-list .stagger-item:nth-child(3)::after{animation-delay:5.1s}
+  .bullets-list .stagger-item:nth-child(4){animation-delay:6.6s}
+  .bullets-list .stagger-item:nth-child(4)::after{animation-delay:6.7s}
+  .bullets-list .stagger-item:nth-child(5){animation-delay:8.2s}
+  .bullets-list .stagger-item:nth-child(5)::after{animation-delay:8.3s}
+  .bullets-list .stagger-item:nth-child(6){animation-delay:9.8s}
+  .bullets-list .stagger-item:nth-child(6)::after{animation-delay:9.9s}
+
+  /* 底部品牌 */
+  .brand-footer{
+    margin-top:40px;display:flex;align-items:center;justify-content:center;gap:18px;
+    font-family:Consolas,'Courier New',monospace;
+    font-size:22px;letter-spacing:12px;color:rgba(201,162,39,0.6);
+    opacity:0;animation:tagIn 0.6s ease 11.5s forwards;
+  }
+
+  .duration-debug{position:absolute;bottom:14px;right:22px;z-index:99;font-family:Consolas,'Courier New',monospace;font-size:10px;color:rgba(255,255,255,0.12)}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="frame-corner fc-tl"></div>
+  <div class="frame-corner fc-tr"></div>
+  <div class="frame-corner fc-bl"></div>
+  <div class="frame-corner fc-br"></div>
+
+  <!-- 低密度粒子云背景 -->
+  <div class="cloud">
+    <span class="p dim" style="left:80px;top:200px;font-size:28px;--ox:-200px;--oy:-100px;--op:0.4;--d:0.1s;--fd:10s;--dx:8px;--dy:-6px;filter:blur(1.2px)">103万</span>
+    <span class="p dim cjk" style="left:920px;top:240px;font-size:26px;--ox:200px;--oy:-100px;--op:0.38;--d:0.15s;--fd:11s;--dx:-6px;--dy:8px;filter:blur(1.3px)">真实</span>
+    <span class="p dim" style="left:60px;top:1600px;font-size:28px;--ox:-220px;--oy:120px;--op:0.4;--d:0.2s;--fd:10s;--dx:6px;--dy:-8px;filter:blur(1.2px)">230</span>
+    <span class="p dim cjk" style="left:920px;top:1640px;font-size:26px;--ox:220px;--oy:120px;--op:0.38;--d:0.22s;--fd:11s;--dx:-8px;--dy:6px;filter:blur(1.3px)">数据</span>
+    <span class="p dim" style="left:100px;top:520px;font-size:24px;--ox:-260px;--oy:-40px;--op:0.32;--d:0.25s;--fd:11s;--dx:6px;--dy:8px;filter:blur(1.4px)">757万</span>
+    <span class="p dim" style="left:940px;top:560px;font-size:24px;--ox:240px;--oy:-40px;--op:0.32;--d:0.28s;--fd:11s;--dx:-6px;--dy:-8px;filter:blur(1.4px)">4亿</span>
+    <span class="p dim" style="left:80px;top:1000px;font-size:24px;--ox:-260px;--oy:40px;--op:0.32;--d:0.3s;--fd:10s;--dx:8px;--dy:-6px;filter:blur(1.4px)">13万</span>
+    <span class="p dim" style="left:940px;top:1040px;font-size:24px;--ox:240px;--oy:40px;--op:0.32;--d:0.32s;--fd:10s;--dx:-8px;--dy:6px;filter:blur(1.4px)">1291</span>
+    <span class="p dim" style="left:60px;top:1300px;font-size:26px;--ox:-260px;--oy:80px;--op:0.35;--d:0.34s;--fd:11s;--dx:6px;--dy:8px;filter:blur(1.3px)">15年</span>
+    <span class="p dim cjk" style="left:960px;top:1320px;font-size:26px;--ox:260px;--oy:80px;--op:0.35;--d:0.36s;--fd:11s;--dx:-6px;--dy:-8px;filter:blur(1.3px)">操盘</span>
+
+    <span class="p amber" style="left:50px;top:760px;font-size:32px;--ox:-300px;--oy:-20px;--op:0.45;--d:0.4s;--fd:9s;--dx:8px;--dy:10px;filter:blur(0.8px)">230家</span>
+    <span class="p amber cjk" style="left:960px;top:800px;font-size:30px;--ox:280px;--oy:-20px;--op:0.45;--d:0.42s;--fd:9s;--dx:-8px;--dy:-10px;filter:blur(0.8px)">数字人</span>
+    <span class="p amber" style="left:80px;top:1140px;font-size:30px;--ox:-260px;--oy:80px;--op:0.45;--d:0.44s;--fd:9.5s;--dx:6px;--dy:-8px;filter:blur(0.8px)">5档</span>
+    <span class="p amber" style="left:940px;top:1180px;font-size:32px;--ox:260px;--oy:80px;--op:0.45;--d:0.46s;--fd:9s;--dx:-6px;--dy:8px;filter:blur(0.8px)">19岁</span>
+    <span class="p amber cjk" style="left:80px;top:1480px;font-size:30px;--ox:-280px;--oy:120px;--op:0.45;--d:0.48s;--fd:9.5s;--dx:6px;--dy:8px;filter:blur(0.8px)">7套场景</span>
+    <span class="p amber" style="left:940px;top:1500px;font-size:30px;--ox:280px;--oy:120px;--op:0.45;--d:0.5s;--fd:9s;--dx:-8px;--dy:-6px;filter:blur(0.8px)">170</span>
+
+    <!-- 散点 -->
+    <span class="p dim" style="left:520px;top:80px;font-size:16px;--ox:0;--oy:-160px;--op:0.28;--d:0.55s;--fd:11s;--dx:4px;--dy:-4px;filter:blur(2px)">·</span>
+    <span class="p dim" style="left:540px;top:1840px;font-size:16px;--ox:0;--oy:160px;--op:0.28;--d:0.6s;--fd:11s;--dx:-4px;--dy:4px;filter:blur(2px)">+</span>
+    <span class="p dim" style="left:200px;top:120px;font-size:18px;--ox:-100px;--oy:-160px;--op:0.3;--d:0.62s;--fd:11s;--dx:6px;--dy:-4px;filter:blur(2px)">+</span>
+    <span class="p dim" style="left:840px;top:140px;font-size:18px;--ox:100px;--oy:-160px;--op:0.3;--d:0.65s;--fd:11s;--dx:-6px;--dy:4px;filter:blur(2px)">·</span>
+    <span class="p dim" style="left:200px;top:1800px;font-size:18px;--ox:-100px;--oy:160px;--op:0.3;--d:0.68s;--fd:11s;--dx:6px;--dy:-4px;filter:blur(2px)">·</span>
+    <span class="p dim" style="left:840px;top:1800px;font-size:18px;--ox:100px;--oy:160px;--op:0.3;--d:0.7s;--fd:11s;--dx:-6px;--dy:4px;filter:blur(2px)">+</span>
+    <span class="p dim cjk" style="left:480px;top:120px;font-size:16px;--ox:0;--oy:-180px;--op:0.26;--d:0.72s;--fd:11s;--dx:4px;--dy:4px;filter:blur(2.2px)">微</span>
+    <span class="p dim cjk" style="left:600px;top:120px;font-size:16px;--ox:60px;--oy:-180px;--op:0.26;--d:0.74s;--fd:11s;--dx:-4px;--dy:-4px;filter:blur(2.2px)">域</span>
+    <span class="p dim cjk" style="left:480px;top:1800px;font-size:16px;--ox:-40px;--oy:160px;--op:0.26;--d:0.76s;--fd:11s;--dx:4px;--dy:4px;filter:blur(2.2px)">生</span>
+    <span class="p dim cjk" style="left:600px;top:1800px;font-size:16px;--ox:60px;--oy:160px;--op:0.26;--d:0.78s;--fd:11s;--dx:-4px;--dy:-4px;filter:blur(2.2px)">光</span>
+  </div>
+
+  <div class="root">
+    <div class="section-tag">要 点 · KEY POINTS</div>
+
+    <div class="title-block">
+      <div class="slide-title">他干对了三件事</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- <li class="stagger-item">顶部红黄双行大字 = 视觉锤</li><li class="stagger-item">'X 必须得 Y' = 文字钉</li><li class="stagger-item">聊观点脚本 = 唯一骨架</li> 注入：<li class="stagger-item">内容</li> -->
+    <ul class="bullets-list">
+      <li class="stagger-item">顶部红黄双行大字 = 视觉锤</li><li class="stagger-item">'X 必须得 Y' = 文字钉</li><li class="stagger-item">聊观点脚本 = 唯一骨架</li>
+    </ul>
+
+    <div class="brand-footer">微 域 生 光</div>
+  </div>
+
+  <div class="duration-debug">21600ms · bullets · #2</div>
+</div>
+</body>
+</html>

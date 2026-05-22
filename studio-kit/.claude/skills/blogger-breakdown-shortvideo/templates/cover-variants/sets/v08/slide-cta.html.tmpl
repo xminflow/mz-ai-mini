@@ -1,0 +1,326 @@
+<!-- v08 金线绘制 · slide-cta · 中央"微域生光"字形一笔一笔描出 → 填金色实色 → 副标"真实博主拆解"描出 → 底部金线脊柱左到右画出 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>slide-cta · 微域生光</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: #080808;
+      color: #ffffff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .stage {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(201,162,39,0.14) 0%, transparent 55%),
+        #080808;
+      overflow: hidden;
+    }
+
+    /* 蓝图细网格 */
+    .blueprint {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.55;
+    }
+
+    /* 四角图纸标签 */
+    .corner {
+      position: absolute;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 18px;
+      letter-spacing: 4px;
+      color: rgba(232,196,107,0.55);
+      opacity: 0;
+      animation: fadeIn 0.6s ease 4.0s forwards;
+    }
+    .corner.tl { top: 60px; left: 76px; }
+    .corner.tr { top: 60px; right: 76px; }
+    .corner.bl { bottom: 60px; left: 76px; }
+    .corner.br { bottom: 60px; right: 76px; }
+
+    /* 四角 L 形装饰金线（一笔画出） */
+    .frame-svg {
+      position: absolute;
+      inset: 0;
+      width: 1080px;
+      height: 1920px;
+    }
+    .frame-svg .line {
+      fill: none;
+      stroke: #c9a227;
+      stroke-width: 2;
+      stroke-linecap: round;
+      filter: drop-shadow(0 0 4px rgba(201,162,39,0.55));
+    }
+    .frame-svg .ltr {
+      stroke-dasharray: 200;
+      stroke-dashoffset: 200;
+      animation: draw 0.7s ease-out forwards;
+    }
+    .frame-svg .ltr.a { animation-delay: 0.3s; }
+    .frame-svg .ltr.b { animation-delay: 0.45s; }
+    .frame-svg .ltr.c { animation-delay: 0.6s; }
+    .frame-svg .ltr.d { animation-delay: 0.75s; }
+
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes glowPulse {
+      0%, 100% { filter: drop-shadow(0 0 12px rgba(232,196,107,0.55)); }
+      50%      { filter: drop-shadow(0 0 32px rgba(232,196,107,0.95)); }
+    }
+    @keyframes lineGrow {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* 中央"微域生光"字形 */
+    .main-wrap {
+      position: absolute;
+      top: 700px;
+      left: 0;
+      width: 1080px;
+      text-align: center;
+      pointer-events: none;
+    }
+    .main-wrap svg {
+      width: 1080px;
+      height: 320px;
+      overflow: visible;
+    }
+    .main-stroke {
+      fill: transparent;
+      stroke: #c9a227;
+      stroke-width: 2.5;
+      stroke-dasharray: 2400;
+      stroke-dashoffset: 2400;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-weight: 900;
+      font-size: 180px;
+      letter-spacing: 12px;
+      animation: draw 2.0s ease-out 1.0s forwards;
+      filter: drop-shadow(0 0 10px rgba(201,162,39,0.55));
+    }
+    .main-fill {
+      fill: #e8c46b;
+      stroke: none;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-weight: 900;
+      font-size: 180px;
+      letter-spacing: 12px;
+      opacity: 0;
+      animation: fadeIn 0.9s ease 2.6s forwards, glowPulse 2.8s ease-in-out 3.5s infinite;
+    }
+
+    /* 副标"真实博主拆解" */
+    .sub-wrap {
+      position: absolute;
+      top: 1040px;
+      left: 0;
+      width: 1080px;
+      text-align: center;
+      pointer-events: none;
+    }
+    .sub-wrap svg {
+      width: 1080px;
+      height: 100px;
+      overflow: visible;
+    }
+    .sub-stroke {
+      fill: transparent;
+      stroke: rgba(255,255,255,0.85);
+      stroke-width: 1.4;
+      stroke-dasharray: 1600;
+      stroke-dashoffset: 1600;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-weight: 500;
+      font-size: 52px;
+      letter-spacing: 10px;
+      animation: draw 1.6s ease-out 3.0s forwards;
+    }
+    .sub-fill {
+      fill: rgba(255,255,255,0.92);
+      stroke: none;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-weight: 500;
+      font-size: 52px;
+      letter-spacing: 10px;
+      opacity: 0;
+      animation: fadeIn 0.8s ease 4.2s forwards;
+    }
+
+    /* 中央装饰：分隔点 */
+    .mid-dot {
+      position: absolute;
+      top: 1180px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #c9a227;
+      box-shadow: 0 0 14px rgba(201,162,39,0.8);
+      opacity: 0;
+      animation: fadeIn 0.5s ease 4.6s forwards;
+    }
+
+    /* 底部金线脊柱（从左到右一笔画出） */
+    .spine-wrap {
+      position: absolute;
+      bottom: 240px;
+      left: 0; right: 0;
+      display: flex;
+      justify-content: center;
+    }
+    .spine {
+      width: 880px;
+      height: 2.5px;
+      background: linear-gradient(to right, transparent, #c9a227 18%, #f0d060 50%, #c9a227 82%, transparent);
+      transform: scaleX(0);
+      transform-origin: left center;
+      animation: lineGrow 1.2s ease-out 4.0s forwards;
+      box-shadow: 0 0 16px rgba(201,162,39,0.55);
+    }
+    /* 脊柱两端节点 */
+    .spine-node {
+      position: absolute;
+      bottom: 234px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #0a0a0a;
+      border: 2px solid #c9a227;
+      box-shadow: 0 0 12px rgba(201,162,39,0.7);
+      opacity: 0;
+      animation: fadeIn 0.4s ease forwards;
+    }
+    .spine-node.left  { left: 100px;  animation-delay: 5.0s; }
+    .spine-node.right { right: 100px; animation-delay: 5.2s; }
+
+    /* CTA 提示 */
+    .cta-row {
+      position: absolute;
+      bottom: 140px;
+      left: 0; right: 0;
+      text-align: center;
+      font-size: 30px;
+      letter-spacing: 6px;
+      color: rgba(232,196,107,0.85);
+      opacity: 0;
+      animation: fadeUp 0.7s ease 5.2s forwards;
+    }
+    .cta-row .arrow {
+      display: inline-block;
+      margin-left: 12px;
+      color: #f0d060;
+    }
+
+    /* 顶部 hook 标 */
+    .top-tag {
+      position: absolute;
+      top: 280px;
+      left: 0; right: 0;
+      text-align: center;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 28px;
+      letter-spacing: 0.5em;
+      color: rgba(232,196,107,0.7);
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.5s forwards;
+    }
+    .top-tag::before, .top-tag::after {
+      content: "—";
+      margin: 0 18px;
+      color: rgba(232,196,107,0.4);
+    }
+
+    /* 末态金色光晕呼吸 */
+    .pulse-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 45%, rgba(232,196,107,0.14) 0%, transparent 50%);
+      opacity: 0;
+      animation: pulseOnce 1.6s ease-out 4.6s;
+    }
+    @keyframes pulseOnce {
+      0%   { opacity: 0; }
+      40%  { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .duration-debug {
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+<div class="stage">
+  <div class="blueprint"></div>
+
+  <!-- 四角金线 L 形（一笔一笔画出） -->
+  <svg class="frame-svg" viewBox="0 0 1080 1920" preserveAspectRatio="none">
+    <path class="line ltr a" d="M 60 130 L 60 60 L 160 60"/>
+    <path class="line ltr b" d="M 920 60 L 1020 60 L 1020 130"/>
+    <path class="line ltr c" d="M 60 1790 L 60 1860 L 160 1860"/>
+    <path class="line ltr d" d="M 920 1860 L 1020 1860 L 1020 1790"/>
+  </svg>
+
+  <div class="corner tl">CTA · 001</div>
+  <div class="corner tr">END · 14/14</div>
+  <div class="corner bl">SCALE 1:1</div>
+  <div class="corner br">REV · 2026</div>
+
+  <div class="top-tag">END · 结 束</div>
+
+  <!-- 主"微域生光"字形 -->
+  <div class="main-wrap">
+    <svg viewBox="0 0 1080 320" preserveAspectRatio="xMidYMid meet">
+      <text class="main-stroke" x="540" y="220" text-anchor="middle">微域生光</text>
+      <text class="main-fill"   x="540" y="220" text-anchor="middle">微域生光</text>
+    </svg>
+  </div>
+
+  <!-- 副标"真实博主拆解" -->
+  <div class="sub-wrap">
+    <svg viewBox="0 0 1080 100" preserveAspectRatio="xMidYMid meet">
+      <text class="sub-stroke" x="540" y="70" text-anchor="middle">真实博主拆解</text>
+      <text class="sub-fill"   x="540" y="70" text-anchor="middle">真实博主拆解</text>
+    </svg>
+  </div>
+
+  <div class="mid-dot" aria-hidden="true"></div>
+
+  <!-- 底部金线脊柱 -->
+  <div class="spine-wrap"><div class="spine"></div></div>
+  <div class="spine-node left"  aria-hidden="true"></div>
+  <div class="spine-node right" aria-hidden="true"></div>
+
+  <!-- CTA -->
+  <div class="cta-row">关 注 主 页 · 看 完 整 14 章 报 告<span class="arrow">→</span></div>
+
+  <div class="pulse-layer"></div>
+
+  <div class="duration-debug">{{DURATION_MS}}ms · {{slide_type}} · #{{index}}</div>
+</div>
+</body>
+</html>

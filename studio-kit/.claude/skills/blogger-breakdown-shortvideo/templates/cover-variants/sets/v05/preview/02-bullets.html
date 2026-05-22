@@ -1,0 +1,267 @@
+<!-- v05 时间脊柱 · slide-bullets · 左侧垂直脊柱 + 每条 bullet 是脊柱节点右侧标签，stagger 点亮 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>slide-bullets</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1080px; height: 1920px; overflow: hidden;
+      background: #080808; color: #fff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── 关键帧 ── */
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes drawLine { to { stroke-dashoffset: 0; } }
+    @keyframes spineGlow {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(201,162,39,0.55)); }
+      50%      { filter: drop-shadow(0 0 16px rgba(232,196,107,0.85)); }
+    }
+    @keyframes dotPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201,162,39,0.55); }
+      50%      { box-shadow: 0 0 0 12px rgba(201,162,39,0); }
+    }
+    @keyframes shimmer {
+      from { background-position: 200% 0; }
+      to   { background-position: -200% 0; }
+    }
+    @keyframes lineGrow {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* ── 舞台 ── */
+    .stage {
+      position: relative; width: 1080px; height: 1920px;
+      background:
+        radial-gradient(ellipse at 70% 30%, rgba(201,162,39,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 80%, rgba(180,100,20,0.08) 0%, transparent 60%),
+        #0a0a0a;
+      overflow: hidden;
+    }
+    .grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: 0.45;
+    }
+
+    /* ── 顶部标签 + 主标题 ── */
+    .top-tag {
+      position: absolute; top: 90px; left: 90px;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 28px; letter-spacing: 0.42em;
+      color: #c9a227;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeIn 0.5s ease 0.05s forwards;
+    }
+    .top-tag::before {
+      content: ""; display: inline-block;
+      width: 36px; height: 1px; background: #c9a227;
+      vertical-align: middle; margin-right: 14px;
+    }
+
+    .title-block {
+      position: absolute;
+      top: 150px; left: 90px; right: 90px;
+      padding-left: 28px;
+      border-left: 4px solid #c9a227;
+      opacity: 0;
+      animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 0.18s forwards;
+    }
+    .slide-title {
+      font-size: 60px; font-weight: 900;
+      line-height: 1.18; letter-spacing: -0.01em;
+      color: #ffffff;
+    }
+    .title-underline {
+      margin-top: 28px;
+      height: 3px; width: 100%;
+      background: linear-gradient(to right, #f0d060, #c9a227, rgba(201,162,39,0.12));
+      background-size: 200% 100%;
+      border-radius: 2px;
+      transform-origin: left center;
+      animation: lineGrow 0.5s cubic-bezier(0.22,1,0.36,1) 0.40s both,
+                 shimmer  3s 1.0s linear infinite;
+    }
+
+    /* ── 脊柱区：左侧垂直脊柱 + 节点列表 ── */
+    .spine-area {
+      position: absolute;
+      left: 0; right: 0;
+      top: 430px; bottom: 220px;
+    }
+
+    /* 脊柱主线 SVG */
+    .spine-svg {
+      position: absolute;
+      left: 130px; top: 30px;
+      width: 80px; bottom: 30px;
+      overflow: visible;
+    }
+    .spine-svg svg {
+      width: 100%; height: 100%; overflow: visible;
+    }
+    .spine-line {
+      stroke: #c9a227; stroke-width: 3; fill: none;
+      stroke-dasharray: 1180; stroke-dashoffset: 1180;
+      animation: drawLine 1.2s ease-out 0.5s forwards,
+                 spineGlow 2.6s ease-in-out 8s infinite;
+      filter: drop-shadow(0 0 6px rgba(201,162,39,0.55));
+    }
+
+    /* bullets 列表：使用 ::before 作为脊柱上的节点 */
+    .bullets-list {
+      position: absolute; inset: 0;
+      list-style: none;
+      display: flex; flex-direction: column;
+      justify-content: space-around;
+      padding: 30px 90px 30px 200px;
+    }
+    .bullets-list .stagger-item {
+      position: relative;
+      padding: 22px 30px 22px 60px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,162,39,0.22);
+      border-radius: 12px;
+      font-size: 34px; font-weight: 400;
+      line-height: 1.50;
+      color: rgba(255,255,255,0.90);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      transform: translateX(-24px);
+      animation: bulletIn 0.55s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    @keyframes bulletIn {
+      to { opacity: 1; transform: translateX(0); }
+    }
+    /* 节点圆点：脊柱上的金色节点 */
+    .bullets-list .stagger-item::before {
+      content: "";
+      position: absolute;
+      left: -78px; top: 50%;
+      width: 22px; height: 22px;
+      transform: translateY(-50%);
+      border: 2px solid #c9a227;
+      background: #0a0a0a;
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(201,162,39,0.0);
+      animation: dotIn 0.4s ease both,
+                 dotPulse 2.2s ease-in-out infinite;
+    }
+    @keyframes dotIn {
+      from { transform: translateY(-50%) scale(0.2); opacity: 0; }
+      to   { transform: translateY(-50%) scale(1.0); opacity: 1; }
+    }
+    /* 节点内部金色实心圆 */
+    .bullets-list .stagger-item::after {
+      content: "";
+      position: absolute;
+      left: -70px; top: 50%;
+      width: 6px; height: 6px;
+      transform: translateY(-50%);
+      background: #e8c46b;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(232,196,107,0.8);
+      opacity: 0;
+      animation: fadeIn 0.3s ease both;
+    }
+
+    /* stagger 时序：脊柱先画 0.5-1.7s，然后节点逐个亮起 1.8s 起 stagger 0.7s */
+    .bullets-list .stagger-item:nth-child(1) { animation-delay: 1.80s; }
+    .bullets-list .stagger-item:nth-child(2) { animation-delay: 2.50s; }
+    .bullets-list .stagger-item:nth-child(3) { animation-delay: 3.20s; }
+    .bullets-list .stagger-item:nth-child(4) { animation-delay: 3.90s; }
+    .bullets-list .stagger-item:nth-child(5) { animation-delay: 4.60s; }
+    .bullets-list .stagger-item:nth-child(6) { animation-delay: 5.30s; }
+    .bullets-list .stagger-item:nth-child(7) { animation-delay: 6.00s; }
+
+    .bullets-list .stagger-item:nth-child(1)::before { animation-delay: 1.80s, 4.0s; }
+    .bullets-list .stagger-item:nth-child(2)::before { animation-delay: 2.50s, 4.0s; }
+    .bullets-list .stagger-item:nth-child(3)::before { animation-delay: 3.20s, 4.0s; }
+    .bullets-list .stagger-item:nth-child(4)::before { animation-delay: 3.90s, 4.0s; }
+    .bullets-list .stagger-item:nth-child(5)::before { animation-delay: 4.60s, 5.0s; }
+    .bullets-list .stagger-item:nth-child(6)::before { animation-delay: 5.30s, 5.5s; }
+    .bullets-list .stagger-item:nth-child(7)::before { animation-delay: 6.00s, 6.5s; }
+
+    .bullets-list .stagger-item:nth-child(1)::after { animation-delay: 2.00s; }
+    .bullets-list .stagger-item:nth-child(2)::after { animation-delay: 2.70s; }
+    .bullets-list .stagger-item:nth-child(3)::after { animation-delay: 3.40s; }
+    .bullets-list .stagger-item:nth-child(4)::after { animation-delay: 4.10s; }
+    .bullets-list .stagger-item:nth-child(5)::after { animation-delay: 4.80s; }
+    .bullets-list .stagger-item:nth-child(6)::after { animation-delay: 5.50s; }
+    .bullets-list .stagger-item:nth-child(7)::after { animation-delay: 6.20s; }
+
+    /* ── 底部品牌 ── */
+    .brand-footer {
+      position: absolute;
+      bottom: 80px; left: 90px;
+      display: flex; align-items: center; gap: 18px;
+      opacity: 0;
+      animation: fadeIn 0.5s ease 7.0s forwards;
+    }
+    .brand-w {
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 46px; font-weight: 700;
+      color: #c9a227; line-height: 1;
+      text-shadow: 0 0 20px rgba(201,162,39,0.45);
+    }
+    .brand-name {
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 32px; font-weight: 400;
+      letter-spacing: 0.52em; color: rgba(255,255,255,0.42);
+      text-transform: uppercase;
+    }
+
+    .duration-debug {
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="grid-bg"></div>
+
+    <div class="top-tag">KEY POINTS · 要 点</div>
+
+    <div class="title-block">
+      <div class="slide-title">他干对了三件事</div>
+      <div class="title-underline" aria-hidden="true"></div>
+    </div>
+
+    <!-- 脊柱区 -->
+    <div class="spine-area">
+      <!-- 垂直脊柱主线 -->
+      <div class="spine-svg">
+        <svg viewBox="0 0 80 1180" preserveAspectRatio="none">
+          <line class="spine-line" x1="40" y1="0" x2="40" y2="1180"/>
+        </svg>
+      </div>
+
+      <!--
+        <li class="stagger-item">顶部红黄双行大字 = 视觉锤</li><li class="stagger-item">'X 必须得 Y' = 文字钉</li><li class="stagger-item">聊观点脚本 = 唯一骨架</li> 注入格式：<li class="stagger-item">内容</li>
+        每条 li 是脊柱上一个节点的右侧标签，stagger 自上而下点亮
+      -->
+      <ul class="bullets-list">
+        <li class="stagger-item">顶部红黄双行大字 = 视觉锤</li><li class="stagger-item">'X 必须得 Y' = 文字钉</li><li class="stagger-item">聊观点脚本 = 唯一骨架</li>
+      </ul>
+    </div>
+
+    <div class="brand-footer">
+      <span class="brand-w">W</span>
+      <span class="brand-name">微域生光</span>
+    </div>
+
+    <div class="duration-debug">21600ms</div>
+  </div>
+</body>
+</html>

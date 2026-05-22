@@ -1,0 +1,316 @@
+<!-- v08 金线绘制 · slide-bullets · 标题字形描边 → 每条 li 先有金线从左画入到 li 位置 → 文字 fadeUp → li 底部金色下划线描出 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>slide-bullets · 他干对了三件事</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: #080808;
+      color: #ffffff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .stage {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      background:
+        radial-gradient(circle at 70% 30%, rgba(201,162,39,0.10) 0%, transparent 55%),
+        #080808;
+      overflow: hidden;
+    }
+
+    /* 蓝图细网格 */
+    .blueprint {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.55;
+    }
+
+    /* 顶部标 */
+    .section-tag {
+      position: absolute;
+      top: 90px; left: 76px;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 28px;
+      letter-spacing: 0.45em;
+      color: rgba(232,196,107,0.85);
+      opacity: 0;
+      animation: fadeIn 0.5s ease 0.2s forwards;
+    }
+    .section-tag::before {
+      content: "▢";
+      margin-right: 14px;
+      color: rgba(232,196,107,0.5);
+    }
+
+    /* 标题（线描勾出） */
+    .title-wrap {
+      position: absolute;
+      top: 170px;
+      left: 0;
+      width: 1080px;
+      padding: 0 76px;
+    }
+    .title-wrap svg {
+      width: 100%;
+      height: 200px;
+      overflow: visible;
+    }
+    .title-stroke {
+      fill: transparent;
+      stroke: #c9a227;
+      stroke-width: 2;
+      stroke-dasharray: 2000;
+      stroke-dashoffset: 2000;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-weight: 900;
+      font-size: 84px;
+      letter-spacing: -0.01em;
+      animation: draw 1.4s ease-out 0.4s forwards;
+      filter: drop-shadow(0 0 6px rgba(201,162,39,0.5));
+    }
+    .title-fill {
+      fill: #ffffff;
+      stroke: none;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      font-weight: 900;
+      font-size: 84px;
+      letter-spacing: -0.01em;
+      opacity: 0;
+      animation: fadeIn 0.7s ease 1.5s forwards;
+    }
+    /* 标题底部金线 */
+    .title-underline {
+      position: absolute;
+      left: 76px;
+      top: 320px;
+      width: 360px;
+      height: 3px;
+      background: linear-gradient(to right, #f0d060, #c9a227, transparent);
+      transform: scaleX(0);
+      transform-origin: left center;
+      animation: lineGrow 0.7s ease-out 2.0s forwards;
+      box-shadow: 0 0 12px rgba(201,162,39,0.55);
+    }
+
+    /* 主体绘制层（左侧主脊柱 + 每条引线） */
+    .draw {
+      position: absolute;
+      top: 380px;
+      left: 0;
+      width: 1080px;
+      height: 1340px;
+    }
+    .draw .spine {
+      fill: none;
+      stroke: #c9a227;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-dasharray: 1300;
+      stroke-dashoffset: 1300;
+      animation: draw 1.4s ease-out 2.3s forwards;
+      filter: drop-shadow(0 0 4px rgba(201,162,39,0.5));
+    }
+
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes lineGrow { to { transform: scaleX(1); } }
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes drawIn {
+      from { width: 0; }
+      to   { width: var(--draw-w, 100px); }
+    }
+    @keyframes underlineGrow {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* Bullets 列表 */
+    .bullets-list {
+      list-style: none;
+      position: absolute;
+      top: 480px;
+      left: 76px;
+      right: 76px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .bullets-list .stagger-item {
+      position: relative;
+      padding: 24px 32px 24px 152px;
+      font-size: 38px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(201,162,39,0.20);
+      border-radius: 10px;
+      opacity: 0;
+      animation: fadeUp 0.55s ease forwards;
+    }
+
+    /* 从屏幕左侧画入到 li 的金线（伪元素） */
+    .bullets-list .stagger-item::before {
+      content: "";
+      --draw-w: 110px;
+      position: absolute;
+      left: 24px;
+      top: 50%;
+      height: 2px;
+      width: 0;
+      background: linear-gradient(to right, transparent, #f0d060 30%, #c9a227);
+      transform: translateY(-50%);
+      box-shadow: 0 0 8px rgba(201,162,39,0.6);
+      animation: drawIn 0.5s ease-out forwards;
+    }
+
+    /* 序号节点圆（在金线尾端） */
+    .bullets-list .stagger-item .num {
+      position: absolute;
+      left: 110px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #0a0a0a;
+      border: 1.5px solid #c9a227;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 22px;
+      font-weight: 700;
+      color: #e8c46b;
+      box-shadow: 0 0 10px rgba(201,162,39,0.45);
+    }
+
+    /* li 底部描出金色下划线（伪元素 ::after，从左到右描出） */
+    .bullets-list .stagger-item::after {
+      content: "";
+      position: absolute;
+      left: 152px;
+      right: 32px;
+      bottom: 14px;
+      height: 1.5px;
+      background: linear-gradient(to right, #c9a227, #f0d060, transparent);
+      transform: scaleX(0);
+      transform-origin: left center;
+      animation: underlineGrow 0.6s ease-out forwards;
+      box-shadow: 0 0 6px rgba(201,162,39,0.45);
+    }
+
+    /* stagger 时间表：base 3.2s，每条 +3s */
+    .bullets-list .stagger-item:nth-child(1) { animation-delay: 3.2s; }
+    .bullets-list .stagger-item:nth-child(1)::before { animation-delay: 3.0s; }
+    .bullets-list .stagger-item:nth-child(1)::after  { animation-delay: 3.8s; }
+
+    .bullets-list .stagger-item:nth-child(2) { animation-delay: 6.2s; }
+    .bullets-list .stagger-item:nth-child(2)::before { animation-delay: 6.0s; }
+    .bullets-list .stagger-item:nth-child(2)::after  { animation-delay: 6.8s; }
+
+    .bullets-list .stagger-item:nth-child(3) { animation-delay: 9.2s; }
+    .bullets-list .stagger-item:nth-child(3)::before { animation-delay: 9.0s; }
+    .bullets-list .stagger-item:nth-child(3)::after  { animation-delay: 9.8s; }
+
+    .bullets-list .stagger-item:nth-child(4) { animation-delay: 12.2s; }
+    .bullets-list .stagger-item:nth-child(4)::before { animation-delay: 12.0s; }
+    .bullets-list .stagger-item:nth-child(4)::after  { animation-delay: 12.8s; }
+
+    .bullets-list .stagger-item:nth-child(5) { animation-delay: 15.2s; }
+    .bullets-list .stagger-item:nth-child(5)::before { animation-delay: 15.0s; }
+    .bullets-list .stagger-item:nth-child(5)::after  { animation-delay: 15.8s; }
+
+    .bullets-list .stagger-item:nth-child(6) { animation-delay: 17.2s; }
+    .bullets-list .stagger-item:nth-child(6)::before { animation-delay: 17.0s; }
+    .bullets-list .stagger-item:nth-child(6)::after  { animation-delay: 17.8s; }
+
+    /* 底部品牌 */
+    .brand-footer {
+      position: absolute;
+      bottom: 70px;
+      left: 0; right: 0;
+      text-align: center;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 22px;
+      letter-spacing: 8px;
+      color: rgba(232,196,107,0.55);
+      opacity: 0;
+      animation: fadeIn 0.6s ease 1.5s forwards;
+    }
+
+    .duration-debug {
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+<div class="stage">
+  <div class="blueprint"></div>
+
+  <div class="section-tag">KEY POINTS · 要 点</div>
+
+  <!-- 标题：描边 + 填色 -->
+  <div class="title-wrap">
+    <svg viewBox="0 0 928 200" preserveAspectRatio="xMinYMid meet">
+      <text class="title-stroke" x="0" y="120" text-anchor="start">他干对了三件事</text>
+      <text class="title-fill"   x="0" y="120" text-anchor="start">他干对了三件事</text>
+    </svg>
+  </div>
+  <div class="title-underline" aria-hidden="true"></div>
+
+  <!-- 主体绘制层：左侧脊柱 -->
+  <svg class="draw" viewBox="0 0 1080 1340" preserveAspectRatio="none">
+    <path class="spine" d="M 60 0 L 60 1300"/>
+  </svg>
+
+  <!--
+    bullets_html 注入格式：<li class="stagger-item">内容</li>
+    在每条 li 内自动渲染了序号 num 圆（由 CSS 控制位置）；
+    序号文本由 Python 不传，直接用 CSS counter? 这里改为内嵌 <span class="num">N</span> 兼容。
+    若注入只是纯 <li class="stagger-item">文本</li>，序号圆显示为空但不影响动效。
+  -->
+  <ul class="bullets-list" style="counter-reset: bullet-counter;">
+    <li class="stagger-item">顶部红黄双行大字 = 视觉锤</li><li class="stagger-item">'X 必须得 Y' = 文字钉</li><li class="stagger-item">聊观点脚本 = 唯一骨架</li>
+  </ul>
+
+  <div class="brand-footer">微 域 生 光 · 真 实 博 主 拆 解</div>
+
+  <div class="duration-debug">21600ms · bullets · #2</div>
+</div>
+
+<script>
+  // 兼容性：若注入的 li 内部没有 .num，则自动用计数器填充
+  (function(){
+    var items = document.querySelectorAll('.bullets-list .stagger-item');
+    items.forEach(function(li, i){
+      if (!li.querySelector('.num')) {
+        var span = document.createElement('span');
+        span.className = 'num';
+        span.textContent = String(i + 1).padStart(2, '0');
+        li.insertBefore(span, li.firstChild);
+      }
+    });
+  })();
+</script>
+</body>
+</html>

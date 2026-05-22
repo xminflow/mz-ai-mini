@@ -1,0 +1,291 @@
+<!-- v05 时间脊柱 · slide-cover · 左侧金色垂直脊柱 + 节点 stagger 点亮 + 右侧主标题区 -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>slide-cover — {{title}}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 1080px; height: 1920px; overflow: hidden;
+      background: #080808; color: #fff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── 关键帧 ── */
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes drawLine { to { stroke-dashoffset: 0; } }
+    @keyframes spineGlow {
+      0%, 100% { filter: drop-shadow(0 0 6px rgba(201,162,39,0.55)); }
+      50%      { filter: drop-shadow(0 0 16px rgba(232,196,107,0.85)); }
+    }
+    @keyframes dotPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201,162,39,0.55); }
+      50%      { box-shadow: 0 0 0 12px rgba(201,162,39,0); }
+    }
+    @keyframes nodeIn { to { opacity: 1; transform: translateY(0); } }
+    @keyframes shimmer {
+      from { background-position: 200% 0; }
+      to   { background-position: -200% 0; }
+    }
+
+    /* ── 舞台 + 背景 ── */
+    .stage {
+      position: relative; width: 1080px; height: 1920px;
+      background:
+        radial-gradient(ellipse at 70% 30%, rgba(201,162,39,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 80%, rgba(180,100,20,0.08) 0%, transparent 60%),
+        #0a0a0a;
+      overflow: hidden;
+    }
+    .grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      opacity: 0.5;
+    }
+
+    /* ── 顶部标签 ── */
+    .top-tag {
+      position: absolute; top: 60px; left: 80px;
+      font-size: 22px; letter-spacing: 6px;
+      color: rgba(232,196,107,0.75);
+      opacity: 0;
+      animation: fadeIn 0.8s ease 0.2s forwards;
+    }
+    .top-tag::before {
+      content: ""; display: inline-block;
+      width: 36px; height: 1px; background: #c9a227;
+      vertical-align: middle; margin-right: 14px;
+    }
+    .top-meta {
+      position: absolute; top: 60px; right: 80px;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 20px; letter-spacing: 3px;
+      color: rgba(255,255,255,0.45);
+      opacity: 0;
+      animation: fadeIn 0.8s ease 0.2s forwards;
+    }
+
+    /* ── 脊柱线 SVG ── */
+    .spine-svg {
+      position: absolute; left: 160px; top: 200px;
+      width: 80px; height: 1380px; overflow: visible;
+    }
+    .spine-line {
+      stroke: #c9a227; stroke-width: 3; fill: none;
+      stroke-dasharray: 1380; stroke-dashoffset: 1380;
+      animation: drawLine 1.5s ease-out 0.4s forwards,
+                 spineGlow 2.6s ease-in-out 5.2s infinite;
+      filter: drop-shadow(0 0 6px rgba(201,162,39,0.55));
+    }
+
+    /* ── 脊柱节点 ── */
+    .nodes {
+      position: absolute; left: 0; top: 200px;
+      width: 1080px; height: 1380px;
+    }
+    .node {
+      position: absolute; left: 160px; width: 200px;
+      opacity: 0; transform: translateY(12px);
+      animation: nodeIn 0.55s cubic-bezier(.2,.7,.2,1) forwards;
+    }
+    .node .dot {
+      position: absolute; left: -10px; top: 6px;
+      width: 22px; height: 22px;
+      border: 2px solid #c9a227; background: #0a0a0a;
+      border-radius: 50%;
+      animation: dotPulse 2.2s ease-in-out infinite;
+    }
+    .node.diamond .dot {
+      border-radius: 0; transform: rotate(45deg); top: 8px;
+    }
+    .node .dot::after {
+      content: ""; position: absolute; inset: 4px;
+      background: #e8c46b; border-radius: inherit;
+    }
+    .node .ring {
+      position: absolute; left: -22px; top: -6px;
+      width: 46px; height: 46px;
+      border: 1px dashed rgba(232,196,107,0.45);
+      border-radius: 50%;
+    }
+    .node .pin-line {
+      position: absolute; left: 24px; top: 16px;
+      height: 1px; width: 88px;
+      background: linear-gradient(to right, rgba(201,162,39,0.7), rgba(201,162,39,0.1));
+    }
+    .node .label {
+      position: absolute; left: 120px; top: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 22px; letter-spacing: 3px;
+      color: #c9a227; white-space: nowrap;
+    }
+    .node .label .v {
+      font-size: 30px; font-weight: 700; color: #e8c46b;
+      letter-spacing: 1px; margin-right: 8px;
+    }
+
+    /* 8 个节点定位 + stagger */
+    .n1 { top:   20px; animation-delay: 1.00s; }
+    .n2 { top:  190px; animation-delay: 1.25s; }
+    .n3 { top:  360px; animation-delay: 1.50s; }
+    .n4 { top:  530px; animation-delay: 1.75s; }
+    .n5 { top:  700px; animation-delay: 2.00s; }
+    .n6 { top:  870px; animation-delay: 2.25s; }
+    .n7 { top: 1040px; animation-delay: 2.50s; }
+    .n8 { top: 1210px; animation-delay: 2.75s; }
+
+    .n1 .dot { animation-delay: 1.00s; }
+    .n2 .dot { animation-delay: 1.25s; }
+    .n3 .dot { animation-delay: 1.50s; }
+    .n4 .dot { animation-delay: 1.75s; }
+    .n5 .dot { animation-delay: 2.00s; }
+    .n6 .dot { animation-delay: 2.25s; }
+    .n7 .dot { animation-delay: 2.50s; }
+    .n8 .dot { animation-delay: 2.75s; }
+
+    /* ── 右侧主标题区 ── */
+    .hero {
+      position: absolute;
+      left: 360px; top: 720px; width: 660px;
+      opacity: 0;
+      animation: fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 3.4s forwards;
+    }
+    .hero .kicker {
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 28px; letter-spacing: 0.42em;
+      color: #c9a227; margin-bottom: 22px;
+      text-transform: uppercase;
+    }
+    .hero .main {
+      font-size: 156px; line-height: 0.96;
+      font-weight: 900; letter-spacing: 4px;
+      background: linear-gradient(180deg, #ffffff 0%, #e8c46b 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 22px rgba(232,196,107,0.30);
+    }
+    .gold-underline {
+      margin-top: 28px;
+      height: 6px; width: 100%;
+      border-radius: 3px;
+      background: linear-gradient(to right, #f0d060, #c9a227, #f0d060, #c9a227, #f0d060);
+      background-size: 300% 100%;
+      box-shadow: 0 0 22px rgba(240,208,96,0.55);
+      animation: shimmer 2.8s linear 4.0s infinite;
+    }
+    .hero .sub {
+      margin-top: 26px;
+      font-size: 38px; font-weight: 500;
+      color: rgba(255,255,255,0.90);
+      letter-spacing: 3px;
+      line-height: 1.4;
+    }
+
+    /* ── Verdict 卡片（脊柱风格：左金竖线 + 节点装饰） ── */
+    .verdict {
+      position: absolute;
+      left: 360px; right: 80px;
+      bottom: 280px;
+      padding: 30px 40px 30px 50px;
+      border: 1px solid rgba(201,162,39,0.40);
+      background: rgba(201,162,39,0.05);
+      border-radius: 4px;
+      opacity: 0;
+      animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 4.0s forwards;
+    }
+    .verdict::before {
+      content: "";
+      position: absolute; left: 0; top: 14px; bottom: 14px;
+      width: 4px;
+      background: linear-gradient(to bottom, #f0d060, #c9a227, rgba(201,162,39,0.3));
+    }
+    .verdict::after {
+      content: "";
+      position: absolute; left: -8px; top: 50%;
+      width: 18px; height: 18px;
+      background: #e8c46b;
+      border: 2px solid #c9a227;
+      border-radius: 50%;
+      transform: translateY(-50%);
+      box-shadow: 0 0 14px rgba(232,196,107,0.7);
+    }
+    .verdict .lbl {
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 22px; letter-spacing: 0.32em;
+      color: rgba(201,162,39,0.75);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .verdict .txt {
+      font-size: 36px; font-weight: 600;
+      color: rgba(255,255,255,0.94);
+      line-height: 1.55;
+    }
+
+    /* ── 底部脚标 ── */
+    .footer {
+      position: absolute;
+      left: 0; right: 0; bottom: 90px;
+      text-align: center;
+      font-size: 20px; letter-spacing: 10px;
+      color: rgba(232,196,107,0.60);
+      opacity: 0;
+      animation: fadeIn 0.8s ease 4.6s forwards;
+    }
+    .duration-debug {
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="grid-bg"></div>
+
+    <div class="top-tag">BLOGGER · BREAKDOWN · TIMELINE</div>
+    <div class="top-meta">SPINE / 08</div>
+
+    <!-- 脊柱主线 -->
+    <svg class="spine-svg" viewBox="0 0 80 1380" preserveAspectRatio="none">
+      <line class="spine-line" x1="40" y1="0" x2="40" y2="1380"/>
+    </svg>
+
+    <!-- 8 个节点（装饰性时间脊柱） -->
+    <div class="nodes">
+      <div class="node n1"><span class="ring"></span><span class="dot"></span><span class="pin-line"></span><span class="label"><span class="v">01</span>起点</span></div>
+      <div class="node n2"><span class="dot"></span><span class="pin-line"></span><span class="label"><span class="v">02</span>试错</span></div>
+      <div class="node n3 diamond"><span class="ring"></span><span class="dot"></span><span class="pin-line"></span><span class="label"><span class="v">03</span>定位</span></div>
+      <div class="node n4"><span class="dot"></span><span class="pin-line"></span><span class="label"><span class="v">04</span>起势</span></div>
+      <div class="node n5 diamond"><span class="ring"></span><span class="dot"></span><span class="pin-line"></span><span class="label"><span class="v">05</span>放量</span></div>
+      <div class="node n6"><span class="dot"></span><span class="pin-line"></span><span class="label"><span class="v">06</span>变现</span></div>
+      <div class="node n7"><span class="dot"></span><span class="pin-line"></span><span class="label"><span class="v">07</span>系统</span></div>
+      <div class="node n8 diamond"><span class="ring"></span><span class="dot"></span><span class="pin-line"></span><span class="label"><span class="v">08</span>当下</span></div>
+    </div>
+
+    <!-- 右侧主标题区 -->
+    <div class="hero">
+      <div class="kicker">BLOGGER · TIMELINE</div>
+      <div class="main">{{title}}</div>
+      <div class="gold-underline" aria-hidden="true"></div>
+      <div class="sub">{{subtitle}}</div>
+    </div>
+
+    <!-- Verdict 卡片 -->
+    <div class="verdict">
+      <div class="lbl">核心结论 · VERDICT</div>
+      <div class="txt">{{verdict}}</div>
+    </div>
+
+    <div class="footer">微 域 生 光 · 真 实 博 主 拆 解</div>
+    <div class="duration-debug">{{DURATION_MS}}ms</div>
+  </div>
+</body>
+</html>
