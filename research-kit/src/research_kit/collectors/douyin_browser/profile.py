@@ -6,6 +6,8 @@ DOM 选择器照搬自 ua-agent/frontend/src/utility/keyword-crawl/domain/douyin
 
 from __future__ import annotations
 
+import re
+from pathlib import Path
 from typing import TypedDict
 
 from research_kit.collectors.douyin_browser.browser import BrowserHandle
@@ -95,13 +97,14 @@ _READ_PROFILE_JS = r"""
 
   // 抖音号
   let douyin_id = null;
+  let douyin_id_source = null;
   {
     const candidates = Array.from(document.querySelectorAll('div, span, p, [class*="account"], [data-e2e*="account"]'));
     for (const el of candidates) {
       const t = (el.textContent || '').replace(/\s+/g, ' ').trim();
       if (t.length === 0 || t.length > 200) continue;
-      const m = t.match(/(?:抖音号|Douyin\s*ID|ID)\s*[:：]\s*([\w.-]+)/i);
-      if (m !== null && m[1]) { douyin_id = m[1]; break; }
+      const m = t.match(/(?:抖音号|Douyin\s*ID|ID)\s*[:：]\s*([\w.-]+?)(?=IP\s*属地|属地|$|\s)/i);
+      if (m !== null && m[1]) { douyin_id = m[1]; douyin_id_source = t; break; }
     }
   }
 
@@ -209,7 +212,7 @@ _READ_PROFILE_JS = r"""
   }
 
   return {
-    display_name, avatar_url, douyin_id, signature, sec_uid,
+    display_name, avatar_url, douyin_id, douyin_id_source, signature, sec_uid,
     follow_text, fans_text, liked_text,
   };
 })()
@@ -322,6 +325,27 @@ def wait_for_stats(handle: BrowserHandle, *, timeout_ms: int = 12000, poll_ms: i
     return False
 
 
+def clean_douyin_id(value: object, *, source_text: object = None) -> str | None:
+    """清理从抖音主页 DOM 里提取的抖音号。
+
+    抖音 PC 页常把「抖音号：xxx」和「IP属地：...」渲染在同一个文本节点里；
+    当二者中间没有空格时，宽松的账号正则会误把 `IP` 当成账号尾缀。
+    """
+    if not isinstance(value, str):
+        return None
+    candidate = value.strip()
+    if candidate == "":
+        return None
+
+    candidate = re.split(r"(?:IP\s*属地|属地|关注|粉丝|获赞)", candidate, maxsplit=1, flags=re.IGNORECASE)[0].strip()
+    if candidate.lower().endswith("ip") and isinstance(source_text, str):
+        normalized_source = re.sub(r"\s+", " ", source_text).strip()
+        if re.search(re.escape(candidate) + r"\s*属地", normalized_source, flags=re.IGNORECASE):
+            candidate = candidate[:-2].strip()
+
+    return candidate or None
+
+
 def download_avatar(
     avatar_url: str,
     target_path: Path,
@@ -384,7 +408,7 @@ def read_profile(handle: BrowserHandle) -> ProfileFields:
     result: ProfileFields = {
         "display_name": raw.get("display_name"),
         "avatar_url": raw.get("avatar_url"),
-        "douyin_id": raw.get("douyin_id"),
+        "douyin_id": clean_douyin_id(raw.get("douyin_id"), source_text=raw.get("douyin_id_source")),
         "signature": raw.get("signature"),
         "sec_uid": raw.get("sec_uid"),
         "follow_count": _to_int(raw.get("follow_text"), is_follower=False),
@@ -551,6 +575,7 @@ def extract_all_works(handle: BrowserHandle) -> list[ExtractedWork]:
 __all__ = [
     "ExtractedWork",
     "ProfileFields",
+    "clean_douyin_id",
     "extract_all_works",
     "read_profile",
     "scroll_works_to_bottom",
