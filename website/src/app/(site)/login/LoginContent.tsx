@@ -77,7 +77,7 @@ export function LoginContent() {
             登录微域生光账号
           </h1>
           <p className="mt-4 text-sm leading-relaxed text-muted">
-            扫码关注公众号即可登录；登录后可在个人信息中绑定邮箱与修改用户名。
+            扫码关注微信公众号即可登录；登录后可在个人信息中绑定邮箱与修改用户名。
           </p>
         </div>
 

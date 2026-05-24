@@ -98,7 +98,7 @@ export const LibraryHubContent = ({ data }: LibraryHubContentProps) => {
         '基于公开权威数据，用投研级框架还原',
         '立场明确，告诉你「能不能切、什么时候切、怎么切」',
       ],
-      href: '/library?type=track',
+      href: '/tracks',
       ctaLabel:
         data.track.totalCount > 0 ? '浏览赛道分析' : '进入赛道分析',
       status: 'live',
@@ -203,7 +203,7 @@ export const LibraryHubContent = ({ data }: LibraryHubContentProps) => {
                 </h2>
               </div>
               <Link
-                href="/library?type=track"
+                href="/tracks"
                 className="inline-flex w-fit items-center gap-1.5 rounded-full border border-hairline bg-surface/60 px-3.5 py-1.5 text-[12.5px] font-medium text-ink-soft transition-colors hover:border-hairline-strong hover:text-ink sm:text-[13px]"
               >
                 查看全部

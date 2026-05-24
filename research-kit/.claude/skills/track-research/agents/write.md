@@ -38,7 +38,7 @@
   | `generated_at` | string | 当前 UTC | ISO 8601，如 `2026-05-21T08:00:00Z` |
   | `stance` | string | `00_overview.html` 一句话判断 | 枚举：`看好` / `谨慎看好` / `谨慎` / `看空` |
   | `stance_summary` | string | `00_overview.html` hero 区 | ≤ 50 字，解释立场核心逻辑 |
-  | `key_numbers` | object | `raw/data_index.md` | 至少 6 个量化指标，键名含单位后缀（`_cny_100m` / `_pct` / `_cny`）|
+  | `key_numbers` | object | `raw/data_index.md` | 至少 6 个量化指标；**键名必须从下文「§0 key_numbers 标准字段白名单」中选取**，自造键名会在官网卡片上裸奔成英文（已多次出过事故，禁止重蹈）|
   | `data_sources_count` | int | `raw/sources.json` → `total` 字段 | 直接取整数 |
   | `reports[].type` | string | 固定枚举 | **必须**是以下之一：`overview` / `market` / `competition` / `business_model` / `ai_analysis` / `playbook`；**禁止**用 `id` / `00_overview` 等其他形式 |
   | `reports[].file` | string | 固定文件名 | 如 `00_overview.html`；**禁止**用 `path` / `filename` 等其他字段名 |
@@ -53,6 +53,76 @@
   - 6 份 HTML 的绝对路径
   - 每份 HTML 的章节自检 grep 命令命中数（禁用术语 / 来源脚注 / 跨页跳转 / 数据图数量）
   - **不要回报完整的 HTML 内容**
+
+---
+
+## §0 `key_numbers` 标准字段白名单（**写 index.json 前必读**）
+
+### §0.1 为什么有白名单
+
+`index.json.key_numbers` 不是给你自己看的——它直接喂给官网赛道卡片做"三个亮点数字"展示。官网卡片只识别下表列出的标准键名：命中标准键名 → 显示中文 label + 单位；命中非标准键名 → **裸奔显示原始英文 key**（如 `female_user_pct 77.5`）。
+
+历史上每次新赛道（尤其是内容 / 情绪 / 心理类）都因为"按数据感觉造键名"翻车（`top_kol_followers_peak`、`female_user_pct`、`xuanxue_consumption_sam_cny_100m` 等），玄学经济赛道是最近一次复发。本节即根治该问题。
+
+### §0.2 白名单标准字段表
+
+| 标准字段名 | 含义 | 单位 | 卡片优先级 |
+|---|---|---|---|
+| `som_cny_100m` | 可获市场 SOM | 亿元 | ⭐ 最优先 |
+| `market_size_cny_100m` | 当前年市场规模 | 亿元 | ⭐ 次优先 |
+| `sam_cny_100m` | 服务可及市场 SAM | 亿元 | — |
+| `market_size_2024_cny_100m` | 2024 市场规模 | 亿元 | — |
+| `market_size_2025_cny_100m` | 2025 市场规模 | 亿元 | — |
+| `market_size_2026e_cny_100m` | 2026E 市场规模（预测）| 亿元 | — |
+| `market_size_2030e_cny_100m` | 2030E 市场规模（预测）| 亿元 | — |
+| `cagr_forecast_pct` | 预测 CAGR | % | ⭐ 优先 |
+| `cagr_historical_pct` | 历史 CAGR | % | — |
+| `cr5_pct` | CR5 集中度 | % | ⭐ 优先 |
+| `cr10_pct` | CR10 集中度 | % | — |
+| `ecommerce_penetration_pct` | 电商渗透率 | % | ⭐ 优先 |
+| `startup_cost_base_cny` | 启动成本（中性）| 元 | ⭐ 优先 |
+| `startup_cost_conservative_cny` | 启动成本（保守）| 元 | — |
+| `startup_cost_optimistic_cny` | 启动成本（乐观）| 元 | — |
+| `hit_rate_pct` | 中签率（内容赛道）| % | — |
+| `avg_roi` | 平均 ROI | × | — |
+| `traffic_cost_share_pct` | 流量成本占比 | % | — |
+| `production_cost_per_min_cny_2025` | 单分钟成本（内容赛道）| 元 | — |
+| `individual_tool_cost_per_month_cny` | 个人月工具成本 | 元 | — |
+
+官网卡片按下列顺序挑前 3 个填槽（命中即取）：
+
+```
+som_cny_100m → market_size_cny_100m → cagr_forecast_pct → cr5_pct
+→ ecommerce_penetration_pct → startup_cost_base_cny
+→ market_size_2025_cny_100m → hit_rate_pct → avg_roi
+→ traffic_cost_share_pct → market_size_2030e_cny_100m
+```
+
+### §0.3 硬约束
+
+1. **必须至少包含 4 个白名单字段**（卡片最多展示 3 个，留 1 个冗余防止其中某个被审查删掉）。
+2. **强烈推荐 4 个"通用兜底组合"全部齐备**：`market_size_cny_100m` + `cagr_forecast_pct` + `cr5_pct`（数据不可得时填 `startup_cost_base_cny` 顶替）+ `som_cny_100m`。即便数据公开渠道仅有粗略量级，也用机构估算填——填了能展示中文，留空就会被非白名单字段顶上来裸奔。
+3. **非白名单字段允许补充**（自媒体类赛道常见的女性占比、头部 KOL 粉丝峰值、客单价区间等），但**必须使用纯中文键名**（如 `女性用户占比_pct`、`头部KOL粉丝峰值_万`），不允许英文 + 下划线的形态。中文键名命中卡片 fallback 时至少裸奔成中文标签，不会暴露工程痕迹。
+4. **任何键名缺单位后缀都视为硬错误**——`_cny_100m`（亿元）/ `_cny`（元）/ `_pct`（百分比）/ `_万`（万）/ `_x`（倍数）五选一，按 §0.2 表对齐。
+5. **写完 `index.json` 后用以下 grep 自检**（命中数应 = 0）：
+
+   ```bash
+   grep -oE '"[a-z][a-z_0-9]*":' \
+     output/tracks/<track_slug>/reports/<run_id>/index.json \
+     | sort -u
+   ```
+
+   把输出列表逐项与 §0.2 白名单对照；任何"看起来像英文工程命名但不在白名单"的键名一律改写为白名单标准键或纯中文键。
+
+### §0.4 数据缺口处理
+
+某个白名单字段公开渠道完全找不到时（如冷门赛道无机构 CAGR），允许：
+
+- 用相邻指标外推（如已知 2022 / 2024 两点 → 算 2 年 CAGR 填入 `cagr_historical_pct`）
+- 用 3-5 家可比赛道的均值打分（在 `data_index.md` 注明出处）
+- **不允许** 直接省略该字段、然后用非白名单字段凑数
+
+如果实在补不齐 4 个白名单字段（极小众赛道），在主 SKILL 完成回报中明示"key_numbers 仅含 N 个白名单字段，卡片可能展示非白名单字段"，由主会话决定是否回流重采。
 
 ---
 

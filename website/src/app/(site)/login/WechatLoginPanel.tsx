@@ -211,7 +211,7 @@ export function WechatLoginPanel({ onSuccess }: WechatLoginPanelProps) {
 
       {panelState.phase === 'ready' && (
         <div className="flex flex-col items-center gap-3 py-2">
-          <p className="text-sm text-ink-soft">扫码关注公众号即可登录</p>
+          <p className="text-sm text-ink-soft">扫码关注微信公众号即可登录</p>
           {isMobile && bizmid ? (
             <a
               href={`https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=${encodeURIComponent(bizmid)}`}

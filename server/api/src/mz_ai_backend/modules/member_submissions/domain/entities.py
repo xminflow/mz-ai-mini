@@ -23,9 +23,10 @@ class SubmissionStatus(StrEnum):
     CANCELLED = "cancelled"
 
 
-SUBMISSION_QUOTA_LIMITS: dict[SubmissionType, int] = {
-    SubmissionType.BLOGGER: 10,
-    SubmissionType.TRACK: 10,
+# 按会员等级区分的月度配额上限；key 与 account_membership.MembershipTier 值对应。
+SUBMISSION_QUOTA_LIMITS: dict[str, dict[SubmissionType, int]] = {
+    "normal": {SubmissionType.BLOGGER: 3, SubmissionType.TRACK: 3},
+    "premium": {SubmissionType.BLOGGER: 10, SubmissionType.TRACK: 10},
 }
 
 

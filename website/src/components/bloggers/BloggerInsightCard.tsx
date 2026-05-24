@@ -49,6 +49,11 @@ export const BloggerInsightCard = ({ item }: BloggerInsightCardProps) => {
               会员
             </span>
           )}
+          {isWithinDays(item.created_at, 3) && (
+            <span className="rounded-full border border-sky-400/40 bg-sky-400/10 px-2.5 py-0.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-sky-300">
+              最新
+            </span>
+          )}
         </div>
 
         <h3 className="font-serif-zh truncate text-[17px] font-semibold leading-[1.4] text-ink sm:text-[18px]">
@@ -93,4 +98,10 @@ function formatPublishedAt(value: string | null): string {
 
 function pad(value: number): string {
   return value.toString().padStart(2, '0')
+}
+
+function isWithinDays(dateStr: string, days: number): boolean {
+  const date = new Date(dateStr)
+  if (Number.isNaN(date.getTime())) return false
+  return Date.now() - date.getTime() < days * 24 * 60 * 60 * 1000
 }

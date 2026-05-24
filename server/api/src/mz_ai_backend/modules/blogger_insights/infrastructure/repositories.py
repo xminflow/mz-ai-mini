@@ -133,10 +133,18 @@ def _apply_cursor(
 ) -> Select[tuple[BloggerInsightModel]]:
     if cursor is None:
         return statement
+    # 排序键 (is_free DESC, published_at DESC, slug DESC) 下的严格“小于游标”比较。
+    # is_free DESC 意味着 True 在前，因此“下一项”要么 is_free=False（cursor.is_free=True 时），
+    # 要么同 is_free 下时间更早，要么同 is_free 同时间下 slug 更小。
     return statement.where(
         or_(
-            BloggerInsightModel.published_at < cursor.sort_value,
+            BloggerInsightModel.is_free < cursor.is_free,
             and_(
+                BloggerInsightModel.is_free == cursor.is_free,
+                BloggerInsightModel.published_at < cursor.sort_value,
+            ),
+            and_(
+                BloggerInsightModel.is_free == cursor.is_free,
                 BloggerInsightModel.published_at == cursor.sort_value,
                 BloggerInsightModel.slug < cursor.slug,
             ),
@@ -262,6 +270,7 @@ class SqlAlchemyBloggerInsightRepository:
             )
 
         statement = _apply_cursor(statement, cursor=cursor).order_by(
+            desc(BloggerInsightModel.is_free),
             desc(BloggerInsightModel.published_at),
             desc(BloggerInsightModel.slug),
         ).limit(limit + 1)

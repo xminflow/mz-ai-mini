@@ -61,8 +61,12 @@ export default async function BloggersPage({ searchParams }: BloggersPageProps) 
           <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
             Blogger Insights
           </span>
-          <h1 className="font-serif-zh text-[28px] font-semibold leading-[1.3] text-ink sm:text-[34px]">
+          <h1 className="font-serif-zh flex flex-wrap items-center gap-3 text-[28px] font-semibold leading-[1.3] text-ink sm:text-[34px]">
             博主洞察 · 我们分析过的真实博主
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-400 px-3 py-1 text-[13px] font-semibold text-amber-900 shadow-[0_0_16px_rgba(251,191,36,0.5)]">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white/80" />
+              每日持续更新
+            </span>
           </h1>
         </div>
         <a

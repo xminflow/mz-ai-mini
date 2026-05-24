@@ -18,7 +18,7 @@ const FOOTER_GROUPS: Array<{
     links: [
       { label: "爆款拆解", href: "/library?type=breakdown" },
       { label: "博主洞察", href: "/bloggers" },
-      { label: "赛道分析", href: "/library?type=track" },
+      { label: "赛道分析", href: "/tracks" },
       { label: "百万粉博主运营方法论精炼", href: "/playbook" },
     ],
   },

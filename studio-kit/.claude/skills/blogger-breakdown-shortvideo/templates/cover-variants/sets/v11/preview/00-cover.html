@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!--
+  v11 研究报告 · slide-cover（mobile-optimized）
+  设计意图：把 research-kit 的 overview.html（14 章博主拆解报告）"压扁"成一张竖屏封面。
+            视觉上彻底告别金色 IP 风，改走"产品级研究报告扉页"——深底 + 翡翠绿 #10b981
+            主调 + 玻璃毛卡 + 等宽英文小标签 + 衬体中文大标。
+            mobile 短视频场景下，所有正文字号 ≥ 26px，关键数字 ≥ 78px，
+            章节 TOC 改为 4 个"招式" key-move 卡片（≤ 12 个汉字一行），
+            便于 7s 内被快速扫读。
+  视觉骨架：等宽顶标 → 横细线 → 真人头像 <img> + 博主大名 →
+            横细线 → 4 个数据网格 → 横细线 → 一句话答卷 qa-card →
+            4 个 "本期看点 · KEY MOVES" 招式块 → 微域生光底部脚标
+  数据维度：4 主数字网格（{{title}} 对应博主的 粉丝/获赞/作品/章节）+ 抖音号 +
+            底部 4 个招式短句（每条带 mono 序号）≥ 6 维
+  动画时间轴：
+    t=0.0s   背景渐变 + 点阵网格 + 4 角十字 立刻可见（首帧不空）
+    t=0.2s   等宽顶标 + 右上 label 淡入
+    t=0.5s   顶部横细线从左向右划开
+    t=0.7s   真人头像 scale-in + 博主大名（衬体加粗）fadeUp
+    t=1.1s   抖音号 + 自述 bio 淡入
+    t=1.5s   中部横细线划开 + 4 个数据格 stagger fadeUp（标签 → 数值）
+    t=2.6s   底部横细线划开 + 一句话答卷标签 fadeIn
+    t=2.9s   verdict 正文 fadeUp（带左侧绿竖条）
+    t=3.9s   "本期看点" 标签 + 4 个招式块 stagger 从左滑入（点亮绿色 mono 序号）
+    t=5.0s   底部 "微域生光 · 博主拆解" 脚标淡入
+    t=5.0–7.0s 全部定格，verdict 卡呼吸 idle，头像绿点闪烁
+-->
+<title>slide-cover · v11</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #050507;
+    color: #F5F5F7;
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .stage {
+    position: relative;
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(167,139,250,0.16) 0%, transparent 45%),
+      radial-gradient(circle at 85% 0%,  rgba(34,211,238,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 50% 110%, rgba(244,114,182,0.10) 0%, transparent 55%),
+      linear-gradient(180deg, #07070b 0%, #050507 50%, #030305 100%);
+  }
+
+  /* 极细点阵网格（研究报告骨架感） */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at center, rgba(255,255,255,0.045) 1px, transparent 1.5px);
+    background-size: 36px 36px;
+    mask-image: radial-gradient(ellipse 900px 1400px at 50% 50%, #000 35%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 900px 1400px at 50% 50%, #000 35%, transparent 80%);
+    z-index: 0;
+  }
+
+  /* 四角十字定位标（report-style fiducial） */
+  .fid {
+    position: absolute;
+    width: 18px; height: 18px;
+    z-index: 2;
+  }
+  .fid::before, .fid::after {
+    content: '';
+    position: absolute;
+    background: rgba(16,185,129,0.5);
+  }
+  .fid::before { left: 8px; top: 0;  width: 2px; height: 18px; }
+  .fid::after  { left: 0;  top: 8px; width: 18px; height: 2px; }
+  .fid.tl { top: 54px;    left: 54px; }
+  .fid.tr { top: 54px;    right: 54px; }
+  .fid.bl { bottom: 54px; left: 54px; }
+  .fid.br { bottom: 54px; right: 54px; }
+
+  /* 整体内容容器 */
+  .root {
+    position: relative;
+    z-index: 1;
+    width: 1080px;
+    height: 1920px;
+    padding: 88px 84px 76px 84px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── 顶部 mono 标签条 ── */
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 28px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.62);
+    opacity: 0;
+    animation: fadeIn 0.4s ease 0.2s forwards;
+  }
+  .top-bar .left { color: #10b981; font-weight: 600; }
+  .top-bar .right { color: rgba(255,255,255,0.40); font-size: 24px; letter-spacing: 0.28em; }
+
+  /* 横细线 */
+  .hairline {
+    height: 1px;
+    background: linear-gradient(to right, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 100%);
+    transform: scaleX(0);
+    transform-origin: left center;
+    animation: lineGrow 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .hairline-1 { margin-top: 42px;  animation-delay: 0.5s; }
+  .hairline-2 { margin-top: 56px;  animation-delay: 1.5s; }
+  .hairline-3 { margin-top: 56px;  animation-delay: 2.6s; }
+
+  /* ── 头像 + 标题块 ── */
+  .id-block {
+    margin-top: 48px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+  .avatar-wrap {
+    width: 184px; height: 184px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    background: linear-gradient(135deg, #14141a 0%, #1f1f2a 100%);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow:
+      0 0 0 6px rgba(255,255,255,0.03),
+      0 12px 36px -8px rgba(16,185,129,0.28);
+    overflow: hidden;
+    opacity: 0;
+    transform: scale(0.85);
+    animation: avatarIn 0.6s cubic-bezier(0.22,1,0.36,1) 0.7s forwards;
+  }
+  .avatar-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  /* 头像缺失时的渐变占位 */
+  .avatar-wrap.placeholder {
+    background:
+      radial-gradient(circle at 35% 30%, rgba(167,139,250,0.45), transparent 60%),
+      radial-gradient(circle at 65% 70%, rgba(34,211,238,0.40), transparent 60%),
+      linear-gradient(135deg, #14141a 0%, #1f1f2a 100%);
+  }
+  .avatar-status {
+    position: absolute;
+    bottom: 10px; right: 10px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: #10b981;
+    border: 3px solid #050507;
+    box-shadow: 0 0 14px rgba(16,185,129,0.8), 0 0 28px rgba(16,185,129,0.4);
+    z-index: 3;
+    opacity: 0;
+    animation: dotIn 0.4s ease 1.3s forwards, dotPulse 2.4s ease-in-out 2.5s infinite;
+  }
+
+  .id-text { flex: 1; min-width: 0; }
+  .id-text .name {
+    font-weight: 900;
+    font-size: 128px;
+    line-height: 1.0;
+    color: #F5F5F7;
+    letter-spacing: 0.04em;
+    margin-bottom: 22px;
+    opacity: 0;
+    transform: translateY(28px);
+    animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) 0.85s forwards;
+  }
+  .id-text .douyin-meta {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 26px;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.65);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    align-items: center;
+    opacity: 0;
+    animation: fadeIn 0.5s ease 1.05s forwards;
+  }
+  .id-text .douyin-meta .id-val { color: #10b981; font-weight: 600; }
+  .id-text .douyin-meta .sep { color: rgba(255,255,255,0.18); }
+  .id-text .douyin-meta .role {
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    color: rgba(212,212,216,0.92);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── 4 数据网格 ── */
+  .stats-grid {
+    margin-top: 44px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+  }
+  .stat {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .stat:nth-child(1) { animation-delay: 1.6s; }
+  .stat:nth-child(2) { animation-delay: 1.75s; }
+  .stat:nth-child(3) { animation-delay: 1.9s; }
+  .stat:nth-child(4) { animation-delay: 2.05s; }
+  .stat .label {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 20px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(184,170,150,0.85);
+    margin-bottom: 14px;
+  }
+  .stat .value {
+    font-weight: 800;
+    font-size: 72px;
+    color: #F5F5F7;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    display: flex;
+    align-items: baseline;
+  }
+  .stat .unit {
+    font-size: 28px;
+    color: rgba(212,212,216,0.75);
+    margin-left: 4px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  /* ── 一句话答卷 qa-card ── */
+  .verdict {
+    margin-top: 50px;
+    position: relative;
+    padding: 44px 48px 46px 60px;
+    background: rgba(16,185,129,0.07);
+    backdrop-filter: saturate(160%) blur(14px);
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    border: 1px solid rgba(16,185,129,0.22);
+    border-radius: 6px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) 2.9s forwards;
+  }
+  .verdict::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 28px; bottom: 28px;
+    width: 5px;
+    border-radius: 0 3px 3px 0;
+    background: linear-gradient(to bottom, #10b981 0%, #34d399 50%, rgba(16,185,129,0.2) 100%);
+    box-shadow: 0 0 22px rgba(16,185,129,0.55);
+  }
+  .verdict .verdict-label {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 22px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: #10b981;
+    margin-bottom: 22px;
+    opacity: 0;
+    animation: fadeIn 0.4s ease 2.8s forwards;
+  }
+  .verdict .verdict-text {
+    font-size: 40px;
+    line-height: 1.55;
+    color: #F5F5F7;
+    letter-spacing: 0.02em;
+    font-weight: 500;
+    text-align: justify;
+    text-justify: inter-ideograph;
+  }
+  .verdict .verdict-text em {
+    font-style: normal;
+    font-weight: 700;
+    background: linear-gradient(120deg, #10b981, #22d3ee, #a78bfa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ── 4 招式块（KEY MOVES） ── */
+  .moves {
+    margin-top: 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .moves-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 22px;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.50);
+    margin-bottom: 4px;
+    opacity: 0;
+    animation: fadeIn 0.4s ease 3.9s forwards;
+  }
+  .moves-label .label-l { color: #10b981; font-weight: 600; }
+  .moves-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .move {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    padding: 22px 28px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-left: 3px solid rgba(16,185,129,0.5);
+    border-radius: 4px;
+    opacity: 0;
+    transform: translateX(-16px);
+    animation: chIn 0.45s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .move .m-num {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 38px;
+    font-weight: 700;
+    color: #10b981;
+    letter-spacing: 0.04em;
+    min-width: 60px;
+    text-shadow: 0 0 12px rgba(16,185,129,0.45);
+  }
+  .move .m-body { flex: 1; min-width: 0; }
+  .move .m-title {
+    font-size: 34px;
+    color: #F5F5F7;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .move .m-sub {
+    font-size: 22px;
+    color: rgba(212,212,216,0.65);
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .move:nth-child(1) { animation-delay: 4.00s; }
+  .move:nth-child(2) { animation-delay: 4.15s; }
+  .move:nth-child(3) { animation-delay: 4.30s; }
+  .move:nth-child(4) { animation-delay: 4.45s; }
+
+  /* ── 底部脚标 ── */
+  .brand-foot {
+    margin-top: auto;
+    padding-top: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 24px;
+    letter-spacing: 0.28em;
+    color: rgba(255,255,255,0.32);
+    opacity: 0;
+    animation: fadeIn 0.5s ease 5.0s forwards;
+  }
+  .brand-foot .brand-l { display: flex; align-items: baseline; gap: 18px; }
+  .brand-foot .brand {
+    color: rgba(245,245,247,0.92);
+    font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
+    font-weight: 600;
+    font-size: 28px;
+    letter-spacing: 0.42em;
+  }
+  .brand-foot .brand-mark {
+    color: #10b981;
+    font-size: 32px;
+    font-weight: 800;
+    text-shadow: 0 0 14px rgba(16,185,129,0.55);
+  }
+  .brand-foot .tagline {
+    color: rgba(255,255,255,0.32);
+    letter-spacing: 0.3em;
+  }
+
+  /* ── keyframes ── */
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes lineGrow {
+    to { transform: scaleX(1); }
+  }
+  @keyframes avatarIn {
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes dotPulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(16,185,129,0.7), 0 0 24px rgba(16,185,129,0.35); }
+    50%      { box-shadow: 0 0 18px rgba(16,185,129,0.95), 0 0 36px rgba(16,185,129,0.55); }
+  }
+  @keyframes dotIn {
+    to { opacity: 1; }
+  }
+  @keyframes dotLight {
+    to { opacity: 1; }
+  }
+  @keyframes chIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .duration-debug {
+    position: absolute; bottom: 14px; right: 22px; z-index: 99;
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 10px; color: rgba(255,255,255,0.12);
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <div class="fid tl" aria-hidden="true"></div>
+  <div class="fid tr" aria-hidden="true"></div>
+  <div class="fid bl" aria-hidden="true"></div>
+  <div class="fid br" aria-hidden="true"></div>
+
+  <div class="root">
+
+    <!-- 顶部等宽标签 -->
+    <div class="top-bar">
+      <span class="left">CH·00 · 博主拆解</span>
+      <span class="right">RESEARCH REPORT</span>
+    </div>
+    <div class="hairline hairline-1"></div>
+
+    <!-- 头像 + 大名 + bio -->
+    <div class="id-block">
+      <div class="avatar-wrap">
+        <img src="avatar.jpg" alt="" onerror="this.parentElement.classList.add('placeholder'); this.remove();" />
+        <span class="avatar-status" aria-hidden="true"></span>
+      </div>
+      <div class="id-text">
+        <div class="name">经纬.</div>
+        <div class="douyin-meta">
+          <span>抖音号 <span class="id-val">51210980541IP</span></span>
+          <span class="sep">·</span>
+          <span class="role">短视频线索获客 · 持续四年</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hairline hairline-2"></div>
+
+    <!-- 4 数据格 -->
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="label">Followers</div>
+        <div class="value">32.5<span class="unit">万</span></div>
+      </div>
+      <div class="stat">
+        <div class="label">Likes</div>
+        <div class="value">197.7<span class="unit">万</span></div>
+      </div>
+      <div class="stat">
+        <div class="label">Works</div>
+        <div class="value">664</div>
+      </div>
+      <div class="stat">
+        <div class="label">Chapters</div>
+        <div class="value">14<span class="unit">章</span></div>
+      </div>
+    </div>
+
+    <div class="hairline hairline-3"></div>
+
+    <!-- 一句话答卷 -->
+    <div class="verdict">
+      <div class="verdict-label">One-Sentence Verdict · 一句话答卷</div>
+      <div class="verdict-text">以<em>「反流量话术」+「客户消费旅程」+「客户案例墙」</em>三式，把"为高客单老板拿线索的操盘手"钉进实体老板与专家心智。</div>
+    </div>
+
+    <!-- 本期看点 · KEY MOVES（4 个招式） -->
+    <div class="moves">
+      <div class="moves-label">
+        <span class="label-l">Key Moves · 本期看点</span>
+        <span>SCAN ↓</span>
+      </div>
+      <div class="moves-list">
+        <div class="move">
+          <span class="m-num">01</span>
+          <div class="m-body">
+            <div class="m-title">反流量话术</div>
+            <div class="m-sub">不要情绪 · 不要干货 · 不追播放</div>
+          </div>
+        </div>
+        <div class="move">
+          <span class="m-num">02</span>
+          <div class="m-body">
+            <div class="m-title">三型视频框架</div>
+            <div class="m-sub">认识型 / 信任型 / 成交型</div>
+          </div>
+        </div>
+        <div class="move">
+          <span class="m-num">03</span>
+          <div class="m-body">
+            <div class="m-title">客户实名案例墙</div>
+            <div class="m-sub">11 个项目操盘手当场报学历</div>
+          </div>
+        </div>
+        <div class="move">
+          <span class="m-num">04</span>
+          <div class="m-body">
+            <div class="m-title">显化购买信号</div>
+            <div class="m-sub">真购买理由 vs 假购买理由</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部脚标 -->
+    <div class="brand-foot">
+      <div class="brand-l">
+        <span class="brand-mark">W</span><span class="brand">微域生光</span>
+      </div>
+      <div class="tagline">博主拆解 · 真实数据驱动</div>
+    </div>
+
+  </div>
+
+  <div class="duration-debug">7000ms · slide-0 · cover</div>
+</div>
+</body>
+</html>

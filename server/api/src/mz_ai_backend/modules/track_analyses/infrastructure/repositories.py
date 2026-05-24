@@ -215,10 +215,18 @@ def _apply_cursor(
 ) -> Select[tuple[TrackAnalysisModel]]:
     if cursor is None:
         return statement
+    # 排序键 (is_free DESC, published_at DESC, slug DESC) 下的严格“小于游标”比较。
+    # is_free DESC 意味着 True 在前，因此“下一项”要么 is_free=False（cursor.is_free=True 时），
+    # 要么同 is_free 下时间更早，要么同 is_free 同时间下 slug 更小。
     return statement.where(
         or_(
-            TrackAnalysisModel.published_at < cursor.sort_value,
+            TrackAnalysisModel.is_free < cursor.is_free,
             and_(
+                TrackAnalysisModel.is_free == cursor.is_free,
+                TrackAnalysisModel.published_at < cursor.sort_value,
+            ),
+            and_(
+                TrackAnalysisModel.is_free == cursor.is_free,
                 TrackAnalysisModel.published_at == cursor.sort_value,
                 TrackAnalysisModel.slug < cursor.slug,
             ),
@@ -370,6 +378,7 @@ class SqlAlchemyTrackAnalysisRepository:
             )
 
         statement = _apply_cursor(statement, cursor=cursor).order_by(
+            desc(TrackAnalysisModel.is_free),
             desc(TrackAnalysisModel.published_at),
             desc(TrackAnalysisModel.slug),
         ).limit(limit + 1)

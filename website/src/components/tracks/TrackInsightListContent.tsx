@@ -29,8 +29,12 @@ export function TrackInsightListContent({
           <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
             Track Analysis
           </span>
-          <h1 className="font-serif-zh text-[28px] font-semibold leading-[1.3] text-ink sm:text-[34px]">
+          <h1 className="font-serif-zh flex flex-wrap items-center gap-3 text-[28px] font-semibold leading-[1.3] text-ink sm:text-[34px]">
             赛道分析 · 消除信息差，找准真方向——看清全局，一步到位
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-400 px-3 py-1 text-[13px] font-semibold text-amber-900 shadow-[0_0_16px_rgba(251,191,36,0.5)]">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white/80" />
+              每日持续更新
+            </span>
           </h1>
           <p className="max-w-[640px] text-[13.5px] leading-[1.85] text-muted">
             每一份赛道分析包含 6 份子报告：执行摘要 / 行业研判 / 竞争格局 / 商业模式 /
@@ -102,13 +106,12 @@ function TrackFilterPanel({
 
   return (
     <form
-      action="/library"
+      action="/tracks"
       method="get"
       role="search"
       aria-label="筛选赛道"
       className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-2xl border border-hairline bg-surface/40 px-4 py-2.5 transition-colors focus-within:border-hairline-strong sm:px-5 sm:py-3"
     >
-      <input type="hidden" name="type" value="track" />
       {activeIndustry && (
         <input type="hidden" name="industry" value={activeIndustry} />
       )}
@@ -196,7 +199,7 @@ function TrackFilterPanel({
 
       {hasFilters && (
         <a
-          href="/library?type=track"
+          href="/tracks"
           className="ml-auto font-mono text-[11px] uppercase tracking-[0.18em] text-muted transition-colors hover:text-ink"
         >
           清除
@@ -233,9 +236,9 @@ function buildHref(query: {
   keyword?: string
 }): string {
   const params = new URLSearchParams()
-  params.set('type', 'track')
   if (query.industry) params.set('industry', query.industry)
   if (query.stance) params.set('stance', query.stance)
   if (query.keyword) params.set('keyword', query.keyword)
-  return `/library?${params.toString()}`
+  const qs = params.toString()
+  return qs ? `/tracks?${qs}` : '/tracks'
 }

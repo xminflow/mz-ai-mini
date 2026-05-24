@@ -36,10 +36,12 @@ async function requestJson<T>(path: string, init: RequestInit = {}): Promise<T> 
   return payload as T
 }
 
-export async function createMembershipOrder(): Promise<CreateOrderResponse> {
+export async function createMembershipOrder(
+  sku: 'annual_normal' | 'annual_premium',
+): Promise<CreateOrderResponse> {
   return requestJson<CreateOrderResponse>('/api/membership/orders', {
     method: 'POST',
-    body: JSON.stringify({ sku: 'annual_normal' }),
+    body: JSON.stringify({ sku }),
   })
 }
 

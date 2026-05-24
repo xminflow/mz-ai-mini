@@ -52,11 +52,10 @@ def _load_template(slide_type: str) -> str:
 
 
 def _bullets_to_html(bullets: list[str]) -> str:
-    """把 bullets 列表转成 <ul><li>...</li></ul>。"""
+    """把 bullets 列表转成 <li class="stagger-item"> 列表项（不含外层 <ul>，由模板提供）。"""
     if not bullets:
         return ""
-    items = "".join(f"<li>{b}</li>" for b in bullets)
-    return f"<ul>{items}</ul>"
+    return "".join(f'<li class="stagger-item">{b}</li>' for b in bullets)
 
 
 def generate_slide_html(slide: SlideItem, out_html: Path) -> None:
@@ -79,6 +78,15 @@ def generate_slide_html(slide: SlideItem, out_html: Path) -> None:
         # cover 专用
         "{{subtitle}}": slide.subtitle,
         "{{verdict}}": slide.verdict or slide.quote,
+        "{{avatar_path}}": slide.avatar_path,
+        "{{move_1_title}}": slide.move_1_title,
+        "{{move_1_sub}}": slide.move_1_sub,
+        "{{move_2_title}}": slide.move_2_title,
+        "{{move_2_sub}}": slide.move_2_sub,
+        "{{move_3_title}}": slide.move_3_title,
+        "{{move_3_sub}}": slide.move_3_sub,
+        "{{move_4_title}}": slide.move_4_title,
+        "{{move_4_sub}}": slide.move_4_sub,
         # stats 专用
         "{{stat_1_label}}": slide.stat_1_label,
         "{{stat_1_value}}": slide.stat_1_value,
@@ -88,6 +96,9 @@ def generate_slide_html(slide: SlideItem, out_html: Path) -> None:
         "{{stat_3_value}}": slide.stat_3_value,
         "{{extra}}": slide.extra,
         "{{source}}": slide.title or "",
+        # hook 专用
+        "{{hook_big_text}}": slide.hook_big_text,
+        "{{hook_sub_text}}": slide.hook_sub_text,
     }
 
     html = template
@@ -119,8 +130,17 @@ async def _record_slide(
         )
         page = await ctx.new_page()
 
+        # CDP: 把页面默认背景（即未加载 / 加载中 / 透明区域）从白改成 #080808，
+        # 避免 goto 之前那 0.3-0.5s 的默认白底被录进首帧。
+        client = await ctx.new_cdp_session(page)
+        await client.send(
+            "Emulation.setDefaultBackgroundColorOverride",
+            {"color": {"r": 8, "g": 8, "b": 8, "a": 1.0}},
+        )
+
         file_url = html_path.as_uri()
-        await page.goto(file_url, wait_until="networkidle", timeout=15000)
+        # 所有模板均内联 CSS，无外部请求，用 load 即可立即开始录屏
+        await page.goto(file_url, wait_until="load", timeout=15000)
         # 注入时长，模板中的动画 JS 可读取此值
         await page.evaluate(f"window.STUDIO_KIT_DURATION_MS = {duration_ms}")
         # 等待动画播放完成

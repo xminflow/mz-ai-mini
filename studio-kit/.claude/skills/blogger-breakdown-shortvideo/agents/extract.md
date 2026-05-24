@@ -216,3 +216,16 @@ uv --directory D:\code\weelume-base\studio-kit run studio-kit extract \
 5. 每章 `bullets` 长度 ≤ 5，每条 ≤ 80 字。
 6. `top_quotes` 长度 ≤ 5。
 7. `frame_refs` 长度 ≤ 4。
+
+---
+
+## 关于方法论字段的填充策略
+
+`outline.json` **不持久化**方法论决策字段（如"主线支柱""核心成长动作""hook 候选句"）。`parser.py` 仅做 HTML → 结构化数据的纯映射，不引入语义判断。
+
+这些决策由 Claude 在 SKILL.md **Step 2.2 主线支柱决策** 阶段，基于 `outline.chapters` 在内存中推断，并按 `methodology-primer.md` 的句式范例直接写入 `script.json` 的对应 `narration` / `bullets` / `compare_*` / `hook_*` 字段。
+
+设计原因：
+- `outline.json` 是数据契约，方法论决策是"判断"，二者职责不同
+- 信息不足以做出判断时，应由 Claude 显式跳过（如不出 compare），而不是回写一个"空决策"到 outline
+- 任何"自动方法论提取"都会带来不可控的偏差，应由 LLM 在每次拆解时基于全文上下文重新判断

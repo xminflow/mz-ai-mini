@@ -97,6 +97,10 @@ def get_get_my_quota_use_case(
         SqlAlchemyMemberSubmissionRepository,
         Depends(get_member_submission_repository),
     ],
+    membership_status_reader: Annotated[
+        AccountMembershipStatusReader,
+        Depends(get_membership_status_reader),
+    ],
     current_time_provider: Annotated[
         SystemCurrentTimeProvider,
         Depends(get_current_time_provider),
@@ -104,6 +108,7 @@ def get_get_my_quota_use_case(
 ) -> GetMyQuotaUseCase:
     return GetMyQuotaUseCase(
         repository=repository,
+        membership_status_reader=membership_status_reader,
         current_time_provider=current_time_provider,
     )
 
@@ -122,6 +127,10 @@ def get_list_my_submissions_use_case(
         SqlAlchemyMemberSubmissionRepository,
         Depends(get_member_submission_repository),
     ],
+    membership_status_reader: Annotated[
+        AccountMembershipStatusReader,
+        Depends(get_membership_status_reader),
+    ],
     current_time_provider: Annotated[
         SystemCurrentTimeProvider,
         Depends(get_current_time_provider),
@@ -129,5 +138,6 @@ def get_list_my_submissions_use_case(
 ) -> ListMySubmissionsUseCase:
     return ListMySubmissionsUseCase(
         repository=repository,
+        membership_status_reader=membership_status_reader,
         current_time_provider=current_time_provider,
     )

@@ -5,7 +5,12 @@ from datetime import datetime
 import pytest
 
 from mz_ai_backend.modules.account_membership.application import GetOrderStatusQuery, GetOrderStatusUseCase
-from mz_ai_backend.modules.account_membership.domain import AccountMembershipOrder, MembershipSku, OrderStatus
+from mz_ai_backend.modules.account_membership.domain import (
+    SKU_TIER_MAP,
+    AccountMembershipOrder,
+    MembershipSku,
+    OrderStatus,
+)
 from mz_ai_backend.shared.wechat_pay import WechatPayNotification
 
 
@@ -45,7 +50,7 @@ class Repository:
     async def mark_order_wechat_query_attempted(self, *, order_no: str, queried_at: datetime) -> None:
         self.query_attempts += 1
 
-    async def process_wechat_pay_notification(self, *, notification, now: datetime, expected_tier):
+    async def process_wechat_pay_notification(self, *, notification, now: datetime, sku_tier_map):
         self.processed += 1
         self.order = self.order.model_copy(
             update={
@@ -98,6 +103,7 @@ async def test_get_order_status_triggers_query_when_not_recently_queried() -> No
         repository=repository,
         current_time_provider=Clock(),
         wechat_pay_gateway=gateway,
+        sku_tier_map=SKU_TIER_MAP,
     )
 
     result = await use_case.execute(GetOrderStatusQuery(account_id=2001, order_no="WEB1"))
@@ -116,6 +122,7 @@ async def test_get_order_status_throttles_recent_query() -> None:
         repository=repository,
         current_time_provider=Clock(),
         wechat_pay_gateway=gateway,
+        sku_tier_map=SKU_TIER_MAP,
     )
 
     result = await use_case.execute(GetOrderStatusQuery(account_id=2001, order_no="WEB1"))

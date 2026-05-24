@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>xhs-card-point — {{point_title}}</title>
+  <style>
+    /* ════════════════════════════════════════════════════════════════
+     * 内联 style.css 全文（与单文件 style.css 完全一致）
+     * ════════════════════════════════════════════════════════════════ */
+
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 300;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 400;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 600;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-65-Medium/AlibabaPuHuiTi-3-65-Medium.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 700;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-75-SemiBold/AlibabaPuHuiTi-3-75-SemiBold.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 800;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-85-Bold/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');
+      font-display: swap;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 1242px;
+      height: 1656px;
+      overflow: hidden;
+      color: #F5F5F7;
+      font-family: 'AlibabaPuHuiTi', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
+      background-color: #050507;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(167, 139, 250, 0.18), transparent 45%),
+        radial-gradient(circle at 85% 0%,   rgba(34, 211, 238, 0.14), transparent 50%),
+        radial-gradient(circle at 50% 110%, rgba(244, 114, 182, 0.12), transparent 55%);
+    }
+
+    .card-root {
+      position: relative;
+      width: 1242px;
+      height: 1656px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .aurora-text {
+      background: linear-gradient(120deg, #F5F5F7 0%, #A78BFA 40%, #22D3EE 70%, #F472B6 100%) !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+
+    .hairline          { background-color: rgba(255,255,255,0.08); height: 1px; width: 100%; }
+    .hairline-strong   { background-color: rgba(255,255,255,0.16); height: 1px; width: 100%; }
+    .hairline-short    { background-color: rgba(255,255,255,0.16); height: 1px; width: 120px; }
+
+    .top-bar {
+      height: 60px;
+      padding: 0 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .bottom-bar {
+      height: 64px;
+      padding: 0 80px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-shrink: 0;
+    }
+
+    .brand-mark {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-weight: 600;
+      font-size: 26px;
+      color: #F5F5F7;
+      letter-spacing: 0.16em;
+    }
+    .page-label {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-weight: 500;
+      font-size: 28px;
+      letter-spacing: 0.12em;
+      color: #8A8A94;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .body-section {
+      flex: 1;
+      padding: 0 80px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      min-height: 0;
+    }
+
+    .kicker {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 1.4;
+      color: #8A8A94;
+      letter-spacing: 0.04em;
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+     * card-point 专属样式（02~06 共用，渲染器传入 5 套不同数据）
+     * 布局：顶栏 + kicker + 短发线 + 极光大编号 + 标题 + 发线 + insight + 引用块（可选） + 底栏
+     * ════════════════════════════════════════════════════════════════ */
+
+    .point-body {
+      padding-top: 36px;       /* 顶栏 60 + 36 = 96 安全区 */
+      padding-bottom: 32px;
+      gap: 0;
+      justify-content: flex-start;
+    }
+
+    .point-kicker {
+      margin-bottom: 20px;
+    }
+
+    .point-hairline-short {
+      margin-bottom: 36px;
+    }
+
+    /* 大号编号（极光渐变） */
+    .point-no {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-weight: 700;
+      font-size: 240px;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums lining-nums;
+      margin-bottom: 28px;
+    }
+
+    .point-title {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-size: 76px;
+      font-weight: 800;
+      line-height: 1.18;
+      color: #F5F5F7;
+      letter-spacing: -0.02em;
+      margin-bottom: 36px;
+    }
+
+    .point-hairline-mid {
+      margin-bottom: 36px;
+    }
+
+    .point-insight {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-size: 38px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: #F5F5F7;
+      letter-spacing: 0;
+    }
+
+    /* 引用块（仅当 {{point_quote_block}} 被渲染器替换为完整 div 时出现） */
+    .quote-card {
+      margin-top: 40px;
+      padding: 32px 36px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-left: 3px solid rgba(167, 139, 250, 0.55);
+      border-radius: 12px;
+    }
+
+    .quote-text {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-weight: 400;
+      font-size: 36px;
+      line-height: 1.55;
+      color: #D4D4D8;
+      font-style: italic;
+      letter-spacing: 0;
+    }
+
+    .quote-source {
+      margin-top: 16px;
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-weight: 500;
+      font-size: 22px;
+      line-height: 1.4;
+      color: #8A8A94;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-root">
+    <!-- 顶栏：左品牌 / 右页码 -->
+    <div class="top-bar">
+      <span class="brand-mark">微域生光</span>
+      <span class="page-label">{{page_label}}</span>
+    </div>
+
+    <!-- 主体 -->
+    <div class="body-section point-body">
+      <div class="kicker point-kicker">{{point_kicker}}</div>
+      <div class="hairline-short point-hairline-short"></div>
+
+      <div class="point-no aurora-text">{{point_no}}</div>
+
+      <div class="point-title">{{point_title}}</div>
+
+      <div class="hairline point-hairline-mid"></div>
+
+      <div class="point-insight">{{point_insight}}</div>
+
+      <!--
+        引用块特殊占位符：渲染器在 point_quote 非空时替换为：
+          <div class="quote-card">
+            <div class="quote-text">"…"</div>
+            <div class="quote-source">— {{point_quote_source}}</div>
+          </div>
+        为空时替换为空字符串，整块消失，避免出现空引用框。
+      -->
+      {{point_quote_block}}
+    </div>
+
+    <!-- 底栏 -->
+    <div class="bottom-bar">
+      <span class="brand-mark">微域生光</span>
+    </div>
+  </div>
+</body>
+</html>
+</content>

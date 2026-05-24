@@ -15,12 +15,21 @@ class MembershipTier(StrEnum):
 
     NONE = "none"
     NORMAL = "normal"
+    PREMIUM = "premium"
 
 
 class MembershipSku(StrEnum):
     """Supported website account membership SKUs."""
 
     ANNUAL_NORMAL = "annual_normal"
+    ANNUAL_PREMIUM = "annual_premium"
+
+
+# SKU → 会员等级的映射；基础设施层无需感知此规则，由领域层统一定义。
+SKU_TIER_MAP: dict["MembershipSku", "MembershipTier"] = {
+    MembershipSku.ANNUAL_NORMAL: MembershipTier.NORMAL,
+    MembershipSku.ANNUAL_PREMIUM: MembershipTier.PREMIUM,
+}
 
 
 class OrderStatus(StrEnum):

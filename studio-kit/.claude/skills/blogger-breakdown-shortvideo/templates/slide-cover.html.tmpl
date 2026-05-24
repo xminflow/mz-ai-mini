@@ -2,281 +2,309 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
   <title>slide-cover — {{title}}</title>
-
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'bg-base':    '#050507',
-            'accent':     '#10b981',
-            'accent-dim': 'rgba(16,185,129,0.15)',
-            'purple':     '#A78BFA',
-            'cyan':       '#22d3ee',
-            'pink':       '#f472b6',
-          },
-          fontFamily: {
-            sans:  ['AlibabaPuHuiTi', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
-            mono:  ['JetBrains Mono', 'Courier New', 'monospace'],
-          },
-        },
-      },
-    };
-  </script>
-
-  <!-- Google Fonts: JetBrains Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-
   <style>
-    /* ── 字体 ── */
-    @font-face {
-      font-family: 'AlibabaPuHuiTi';
-      font-weight: 400;
-      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
-      font-display: swap;
-    }
-    @font-face {
-      font-family: 'AlibabaPuHuiTi';
-      font-weight: 700;
-      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-75-SemiBold/AlibabaPuHuiTi-3-75-SemiBold.woff2') format('woff2');
-      font-display: swap;
-    }
-    @font-face {
-      font-family: 'AlibabaPuHuiTi';
-      font-weight: 800;
-      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-85-Bold/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');
-      font-display: swap;
-    }
-
-    /* ── Reset ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     html, body {
-      width: 1080px; height: 1920px;
+      width: 1080px;
+      height: 1920px;
       overflow: hidden;
-      background: #050507;
-      color: #fff;
-      font-family: 'AlibabaPuHuiTi', 'PingFang SC', sans-serif;
+      background: #080808;
+      color: #ffffff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
 
     /* ── 关键帧 ── */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(40px); }
       to   { opacity: 1; transform: translateY(0); }
     }
     @keyframes fadeIn {
       from { opacity: 0; }
       to   { opacity: 1; }
     }
+    @keyframes shimmer {
+      from { background-position: 200% 0; }
+      to   { background-position: -200% 0; }
+    }
     @keyframes lineGrow {
       from { transform: scaleX(0); }
       to   { transform: scaleX(1); }
     }
 
-    /* ── 背景渐变网格 ── */
-    .bg-mesh {
-      position: absolute; inset: 0; z-index: 0;
-      background:
-        radial-gradient(ellipse 700px 600px at 20% 15%, rgba(167,139,250,0.18) 0%, transparent 70%),
-        radial-gradient(ellipse 500px 500px at 85% 30%, rgba(34,211,238,0.12) 0%, transparent 70%),
-        radial-gradient(ellipse 600px 700px at 50% 80%, rgba(244,114,182,0.10) 0%, transparent 70%),
-        #050507;
+    /* ── 背景层 ── */
+    .bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
     }
 
-    /* ── 装饰格线 ── */
+    /* 右上角金色大光晕 */
+    .bg-glow-tr {
+      position: absolute;
+      top: -220px; right: -180px;
+      width: 860px; height: 860px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,162,39,0.20) 0%, rgba(201,162,39,0.07) 38%, transparent 68%);
+    }
+
+    /* 左下角琥珀光晕 */
+    .bg-glow-bl {
+      position: absolute;
+      bottom: -160px; left: -160px;
+      width: 720px; height: 720px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(180,100,20,0.16) 0%, rgba(201,162,39,0.05) 40%, transparent 68%);
+    }
+
+    /* 细网格 */
     .bg-grid {
-      position: absolute; inset: 0; z-index: 0;
+      position: absolute;
+      inset: 0;
       background-image:
-        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-      background-size: 80px 80px;
+        linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+      background-size: 90px 90px;
     }
 
-    /* ── 内容层 ── */
-    .content {
-      position: relative; z-index: 1;
-      width: 100%; height: 100%;
-      display: flex; flex-direction: column;
-      padding: 80px 64px;
-    }
-
-    /* ── 博主名大字 ── */
-    .blogger-name {
-      font-size: clamp(52px, 7.5vw, 80px);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      color: #fff;
-      animation: fadeUp 0.4s cubic-bezier(0.22,1,0.36,1) 0.1s both;
-    }
-
-    /* 绿色下划线 */
-    .name-underline {
-      display: block;
-      height: 4px;
-      width: 100%;
-      background: linear-gradient(to right, #10b981, rgba(16,185,129,0.2));
+    /* 斜向光线 */
+    .bg-beam {
+      position: absolute;
+      width: 3px;
       border-radius: 2px;
-      margin-top: 12px;
-      transform-origin: left center;
-      animation: lineGrow 0.5s cubic-bezier(0.22,1,0.36,1) 0.45s both;
+      background: linear-gradient(to bottom, transparent 0%, rgba(201,162,39,0.09) 40%, rgba(201,162,39,0.09) 60%, transparent 100%);
+    }
+    .bg-beam-1 { height: 1300px; top: 80px;  left: 260px; transform: rotate(28deg); transform-origin: top center; }
+    .bg-beam-2 { height: 1200px; top: -80px; left: 680px; transform: rotate(-20deg); transform-origin: top center; opacity: 0.6; }
+    .bg-beam-3 { height: 1000px; top: 40px;  left: 500px; transform: rotate(10deg); transform-origin: top center; opacity: 0.4; }
+
+    /* ── 角落 L 形装饰 ── */
+    .corner {
+      position: absolute;
+      width: 28px; height: 28px;
+      border-color: #c9a227;
+      border-style: solid;
+      z-index: 3;
+    }
+    .corner-tl { top: 52px;    left: 52px;    border-width: 2px 0 0 2px; }
+    .corner-tr { top: 52px;    right: 52px;   border-width: 2px 2px 0 0; }
+    .corner-bl { bottom: 52px; left: 52px;    border-width: 0 0 2px 2px; }
+    .corner-br { bottom: 52px; right: 52px;   border-width: 0 2px 2px 0; }
+
+    /* ── 整体容器 ── */
+    .root {
+      width: 1080px;
+      height: 1920px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 88px 76px;
     }
 
-    /* ── 副标题 ── */
-    .subtitle {
-      font-size: 22px;
-      font-weight: 400;
-      color: rgba(255,255,255,0.55);
-      letter-spacing: 0.05em;
-      margin-top: 20px;
-      animation: fadeUp 0.4s cubic-bezier(0.22,1,0.36,1) 0.3s both;
-    }
+    /* ── 顶部区域 ── */
+    .top-section { display: flex; flex-direction: column; gap: 0; position: relative; z-index: 1; }
 
-    /* ── 装饰线段 ── */
-    .section-divider {
-      width: 56px; height: 2px;
-      background: linear-gradient(to right, #10b981, transparent);
-      border-radius: 1px;
-      margin: 40px 0;
-      animation: fadeIn 0.4s ease 0.4s both;
-    }
-
-    /* ── 一句话答卷 verdict 卡片 ── */
-    .verdict-card {
-      flex: 1;
-      display: flex; align-items: center;
-      animation: fadeUp 0.45s cubic-bezier(0.22,1,0.36,1) 0.55s both;
-    }
-
-    .verdict-inner {
-      border-left: 4px solid #10b981;
-      padding: 24px 28px;
-      background: rgba(16,185,129,0.07);
-      border-radius: 0 14px 14px 0;
-      backdrop-filter: blur(4px);
-    }
-
-    .verdict-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #10b981;
-      margin-bottom: 12px;
-    }
-
-    .verdict-text {
-      font-size: clamp(18px, 3vw, 24px);
-      font-weight: 600;
-      line-height: 1.7;
-      color: rgba(255,255,255,0.92);
-      letter-spacing: 0.02em;
-    }
-
-    /* ── 系列标签（左上角） ── */
     .series-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.2em;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 36px;
+      font-weight: 400;
+      color: #c9a227;
+      letter-spacing: 0.38em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-      margin-bottom: 48px;
-      animation: fadeIn 0.4s ease 0s both;
+      animation: fadeIn 0.45s ease 0s both;
+    }
+
+    /* 装饰线组合 */
+    .deco-lines {
+      margin-top: 56px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      animation: fadeIn 0.45s ease 0.08s both;
+    }
+    .deco-line-a {
+      height: 1px; width: 460px;
+      background: linear-gradient(to right, rgba(240,208,96,0.9), rgba(201,162,39,0.1));
+    }
+    .deco-line-b {
+      height: 1px; width: 220px;
+      background: linear-gradient(to right, rgba(201,162,39,0.55), transparent);
+    }
+    .deco-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #c9a227;
+      margin-top: 6px;
+      box-shadow: 0 0 14px rgba(201,162,39,0.7), 0 0 28px rgba(201,162,39,0.3);
+    }
+
+    /* ── 中央主体 ── */
+    .main-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 36px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .blogger-name {
+      font-size: 156px;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      word-break: break-all;
+      animation: fadeUp 0.5s 0.05s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    .gold-underline {
+      height: 8px;
+      width: 100%;
+      border-radius: 4px;
+      background: linear-gradient(to right, #f0d060, #c9a227, #f0d060, #c9a227, #f0d060);
+      background-size: 300% 100%;
+      transform-origin: left center;
+      box-shadow: 0 0 24px rgba(240,208,96,0.55), 0 0 48px rgba(201,162,39,0.18);
+      animation:
+        lineGrow 0.4s 0.32s cubic-bezier(0.22,1,0.36,1) both,
+        shimmer  2.8s 0.8s linear infinite;
+    }
+
+    .subtitle {
+      font-size: 42px;
+      font-weight: 500;
+      color: rgba(240,208,96,0.78);
+      letter-spacing: 0.07em;
+      animation: fadeUp 0.5s 0.32s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    /* Verdict 卡片 */
+    .verdict-card {
+      position: relative;
+      background: rgba(255,255,255,0.04);
+      border: 2px solid rgba(201,162,39,0.32);
+      border-radius: 16px;
+      padding: 38px 48px 38px 56px;
+      backdrop-filter: blur(8px);
+      animation: fadeUp 0.5s 0.48s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    .verdict-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20px; bottom: 20px;
+      width: 4px;
+      border-radius: 0 2px 2px 0;
+      background: linear-gradient(to bottom, #f0d060, #c9a227, rgba(201,162,39,0.3));
+    }
+    .verdict-label {
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 38px;
+      color: rgba(201,162,39,0.65);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .verdict-text {
+      font-size: 52px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.96);
+      line-height: 1.55;
     }
 
     /* ── 底部品牌 ── */
-    .brand-footer {
-      margin-top: auto;
-      display: flex; align-items: center;
-      gap: 14px;
-      animation: fadeIn 0.5s ease 0.8s both;
+    .brand-section {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      position: relative;
+      z-index: 1;
+      animation: fadeIn 0.5s 0.85s ease both;
     }
-
     .brand-w {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 24px; font-weight: 700;
-      color: #10b981;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 56px;
+      font-weight: 700;
+      color: #c9a227;
+      line-height: 1;
+      text-shadow: 0 0 24px rgba(201,162,39,0.5), 0 0 48px rgba(201,162,39,0.2);
     }
-
-    .brand-text-group { display: flex; flex-direction: column; gap: 2px; }
-
+    .brand-right { display: flex; flex-direction: column; gap: 4px; }
     .brand-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px; font-weight: 600;
-      letter-spacing: 0.35em;
-      color: rgba(255,255,255,0.5);
-      text-transform: uppercase;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 36px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.52);
+      letter-spacing: 0.58em;
     }
-
     .brand-tagline {
-      font-size: 11px;
-      color: rgba(255,255,255,0.25);
-      letter-spacing: 0.05em;
+      font-size: 38px;
+      color: rgba(255,255,255,0.22);
+      letter-spacing: 0.04em;
     }
 
-    /* ── debug 标记（供 render 命令参考，浏览器预览时不显示） ── */
     .duration-debug {
-      position: absolute; bottom: 12px; right: 20px; z-index: 99;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px; color: rgba(255,255,255,0.15);
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 10px; color: rgba(255,255,255,0.12);
     }
   </style>
 </head>
 <body>
-  <div style="width:1080px;height:1920px;position:relative;overflow:hidden;">
+  <div class="root">
+    <!-- 背景 -->
+    <div class="bg" aria-hidden="true">
+      <div class="bg-glow-tr"></div>
+      <div class="bg-glow-bl"></div>
+      <div class="bg-grid"></div>
+      <div class="bg-beam bg-beam-1"></div>
+      <div class="bg-beam bg-beam-2"></div>
+      <div class="bg-beam bg-beam-3"></div>
+    </div>
 
-    <!-- 背景层 -->
-    <div class="bg-mesh"></div>
-    <div class="bg-grid"></div>
+    <!-- 角落装饰 -->
+    <div class="corner corner-tl" aria-hidden="true"></div>
+    <div class="corner corner-tr" aria-hidden="true"></div>
+    <div class="corner corner-bl" aria-hidden="true"></div>
+    <div class="corner corner-br" aria-hidden="true"></div>
 
-    <!-- 内容层 -->
-    <div class="content">
-
-      <!-- 左上：系列标签 -->
+    <!-- 顶部 -->
+    <div class="top-section">
       <div class="series-tag">博主拆解系列</div>
-
-      <!-- 博主名 -->
-      <div>
-        <div class="blogger-name">{{title}}</div>
-        <span class="name-underline"></span>
+      <div class="deco-lines" aria-hidden="true">
+        <div class="deco-line-a"></div>
+        <div class="deco-line-b"></div>
+        <div class="deco-dot"></div>
       </div>
+    </div>
 
-      <!-- 副标题（可选） -->
+    <!-- 主体 -->
+    <div class="main-section">
+      <div class="blogger-name">{{title}}</div>
+      <div class="gold-underline" aria-hidden="true"></div>
       <div class="subtitle">{{subtitle}}</div>
-
-      <!-- 装饰分隔线 -->
-      <div class="section-divider"></div>
-
-      <!-- 一句话答卷 -->
       <div class="verdict-card">
-        <div class="verdict-inner">
-          <div class="verdict-label">核心结论</div>
-          <div class="verdict-text">{{verdict}}</div>
-        </div>
+        <div class="verdict-label">核心结论 · VERDICT</div>
+        <div class="verdict-text">{{verdict}}</div>
       </div>
+    </div>
 
-      <!-- 底部品牌 -->
-      <div class="brand-footer">
-        <div class="brand-w">W</div>
-        <div class="brand-text-group">
-          <div class="brand-name">WEELUME</div>
-          <div class="brand-tagline">博主拆解系列 · 真实数据驱动</div>
-        </div>
+    <!-- 底部品牌 -->
+    <div class="brand-section">
+      <span class="brand-w">W</span>
+      <div class="brand-right">
+        <span class="brand-name">微域生光</span>
+        <span class="brand-tagline">博主拆解系列 · 真实数据驱动</span>
       </div>
+    </div>
 
-    </div><!-- /content -->
-
-    <!-- duration debug -->
     <div class="duration-debug">{{DURATION_MS}}ms</div>
-
   </div>
 </body>
 </html>

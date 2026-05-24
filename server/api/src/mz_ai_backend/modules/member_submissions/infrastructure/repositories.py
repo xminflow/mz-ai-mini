@@ -210,4 +210,5 @@ class AccountMembershipStatusReader:
             account_id=snapshot.account_id,
             is_active=snapshot.is_active,
             expires_at=snapshot.expires_at,
+            tier=snapshot.tier.value,
         )

@@ -815,7 +815,7 @@ HTML 中展示画面素材时用占位符：
    - 左：头像 `<img data-rk-frame="avatar.jpg">`，圆形，96–112px
    - 右：
      - `<h1>` 昵称（Alibaba PuHuiTi · Bold，通过 `.font-serif-zh` class 自动套用）
-     - 元信息一行（mono）：`抖音号 <span class="text-report">meipleIP</span>` · `<a target="_blank" rel="noopener noreferrer">访问主页 ↗</a>`（href 透传 `profile.json.home_url`，必填，文字颜色用 `text-report`）
+     - 元信息一行（mono）：`抖音号 <span class="text-report">meiple</span>` · `<a target="_blank" rel="noopener noreferrer">访问主页 ↗</a>`（href 透传 `profile.json.home_url`，必填，文字颜色用 `text-report`；若 `profile.json.douyin_id` 末尾误带由 `IP属地` 粘连产生的 `IP`，必须先清理后再写入报告）
      - 完整个人简介（透传 profile.json.description，保留 emoji / @提及 / #话题）
 2. **Stats 矩阵**（4 列，必填）：
    - Followers · 粉丝（来自 `follower_count`）

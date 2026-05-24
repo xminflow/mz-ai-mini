@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>xhs-card-07 cta — {{cta_brand}}</title>
+  <style>
+    /* ════════════════════════════════════════════════════════════════
+     * 内联 style.css 全文（与单文件 style.css 完全一致）
+     * ════════════════════════════════════════════════════════════════ */
+
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 300;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 400;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 600;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-65-Medium/AlibabaPuHuiTi-3-65-Medium.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 700;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-75-SemiBold/AlibabaPuHuiTi-3-75-SemiBold.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 800;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-85-Bold/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');
+      font-display: swap;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 1242px;
+      height: 1656px;
+      overflow: hidden;
+      color: #F5F5F7;
+      font-family: 'AlibabaPuHuiTi', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
+      background-color: #050507;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(167, 139, 250, 0.18), transparent 45%),
+        radial-gradient(circle at 85% 0%,   rgba(34, 211, 238, 0.14), transparent 50%),
+        radial-gradient(circle at 50% 110%, rgba(244, 114, 182, 0.12), transparent 55%);
+    }
+
+    .card-root {
+      position: relative;
+      width: 1242px;
+      height: 1656px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .aurora-text {
+      background: linear-gradient(120deg, #F5F5F7 0%, #A78BFA 40%, #22D3EE 70%, #F472B6 100%) !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+
+    .hairline          { background-color: rgba(255,255,255,0.08); height: 1px; width: 100%; }
+    .hairline-strong   { background-color: rgba(255,255,255,0.16); height: 1px; width: 100%; }
+    .hairline-short    { background-color: rgba(255,255,255,0.16); height: 1px; width: 120px; }
+
+    .top-bar {
+      height: 60px;
+      padding: 0 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .bottom-bar {
+      height: 64px;
+      padding: 0 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-mark {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-weight: 600;
+      font-size: 26px;
+      color: #F5F5F7;
+      letter-spacing: 0.16em;
+    }
+    .page-label {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-weight: 500;
+      font-size: 28px;
+      letter-spacing: 0.12em;
+      color: #8A8A94;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .body-section {
+      flex: 1;
+      padding: 0 80px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      min-height: 0;
+    }
+
+    .kicker {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-weight: 500;
+      font-size: 28px;
+      line-height: 1.4;
+      color: #8A8A94;
+      letter-spacing: 0.04em;
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+     * card-cta 专属样式（07 行动号召）
+     * 布局：顶栏 + kicker + 短发线 + 大主文 2 行（末行极光）+ sub→箭头 + 发线 + 居中加大品牌字
+     * ════════════════════════════════════════════════════════════════ */
+
+    .cta-body {
+      padding-top: 36px;       /* 顶栏 60 + 36 = 96 安全区 */
+      padding-bottom: 32px;
+      gap: 0;
+      justify-content: flex-start;
+    }
+
+    .cta-kicker {
+      margin-bottom: 24px;
+    }
+
+    .cta-hairline-short {
+      margin-bottom: 96px;
+    }
+
+    .cta-big {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cta-big-line {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-size: 108px;
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: #F5F5F7;
+    }
+
+    /* 末行极光渐变（visual-spec：每张图 1 处极光强调） */
+    .cta-big-line-aurora {
+      /* aurora-text 已处理渐变 clip */
+    }
+
+    .cta-sub {
+      margin-top: 80px;
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-size: 38px;
+      font-weight: 500;
+      line-height: 1.5;
+      color: #D4D4D8;
+      letter-spacing: 0;
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+    }
+
+    .cta-arrow {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 38px;
+      font-weight: 600;
+      color: #A78BFA;
+      line-height: 1.5;
+    }
+
+    .cta-hairline-bottom {
+      margin-top: auto;
+      margin-bottom: 40px;
+    }
+
+    /* 居中加大品牌字 */
+    .cta-brand {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-size: 56px;
+      font-weight: 700;
+      color: #F5F5F7;
+      letter-spacing: 0.24em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-root">
+    <!-- 顶栏：左品牌 / 右页码 -->
+    <div class="top-bar">
+      <span class="brand-mark">微域生光</span>
+      <span class="page-label">{{page_label}}</span>
+    </div>
+
+    <!-- 主体 -->
+    <div class="body-section cta-body">
+      <div class="kicker cta-kicker">{{cta_kicker}}</div>
+      <div class="hairline-short cta-hairline-short"></div>
+
+      <div class="cta-big">
+        <div class="cta-big-line">{{cta_big_line_1}}</div>
+        <div class="cta-big-line cta-big-line-aurora aurora-text">{{cta_big_line_2}}</div>
+      </div>
+
+      <div class="cta-sub">
+        <span>{{cta_sub}}</span>
+        <span class="cta-arrow">&rarr;</span>
+      </div>
+
+      <div class="hairline-strong cta-hairline-bottom"></div>
+
+      <div class="cta-brand">{{cta_brand}}</div>
+    </div>
+
+    <!-- 底栏（cta 底栏留空，居中品牌字已在 body 末尾） -->
+    <div class="bottom-bar"></div>
+  </div>
+</body>
+</html>
+</content>

@@ -1,4 +1,4 @@
-export type MembershipTier = 'none' | 'normal'
+export type MembershipTier = 'none' | 'normal' | 'premium'
 
 export type MembershipOrderStatus = 'pending' | 'paid' | 'closed'
 

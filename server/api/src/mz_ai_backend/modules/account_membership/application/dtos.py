@@ -84,3 +84,14 @@ class GetMyMembershipQuery(BaseModel):
 
 
 MyMembershipResult = AccountMembershipSnapshot
+
+
+class SweepPendingOrdersResult(BaseModel):
+    """Outcome of one sweep over pending membership orders."""
+
+    model_config = ConfigDict(frozen=True)
+
+    scanned: int
+    paid: int
+    still_pending: int
+    errors: int

@@ -64,7 +64,8 @@ class CreateMemberSubmissionUseCase:
             raise MemberSubmissionMemberRequiredException()
 
         period_key = compute_period_key(now)
-        limit = SUBMISSION_QUOTA_LIMITS[command.type]
+        tier_limits = SUBMISSION_QUOTA_LIMITS.get(status.tier, SUBMISSION_QUOTA_LIMITS["normal"])
+        limit = tier_limits[command.type]
         consumed = await self._repository.count_consumed_in_period(
             account_id=command.account_id,
             submission_type=command.type,

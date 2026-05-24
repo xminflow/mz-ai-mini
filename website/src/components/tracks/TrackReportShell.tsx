@@ -357,7 +357,7 @@ function TopBar({ detail, authState, loginNext }: TopBarProps) {
       <div className="mx-auto flex h-[56px] w-full max-w-[1280px] items-center justify-between gap-3 px-4 sm:h-[64px] sm:px-6 lg:px-8">
         <div className="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
           <a
-            href="/library?type=track"
+            href="/tracks"
             className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[12px] font-medium text-[#d6cfc4] transition-colors hover:border-[#b8693a]/60 hover:bg-[#b8693a]/15 hover:text-[#fffdf7]"
           >
             <span aria-hidden>←</span>

@@ -40,10 +40,15 @@ export async function GET(_request: Request, context: RouteContext): Promise<Res
         })
       }
       if (error.status === 401) {
-        // 未登录用户访问付费内容，跳转到登录页
-        return NextResponse.redirect(
-          new URL(`/login?next=${encodeURIComponent(pathname)}`, _request.url),
-        )
+        // 未登录用户访问付费内容，跳转到登录页。
+        // 直接返回相对 Location header，让浏览器按当前页面 base 解析；不依赖
+        // x-forwarded-host/host —— Next.js standalone 容器内 host 为 0.0.0.0:3000，
+        // 反代如未透传 forwarded headers 会拼成 https://0.0.0.0:3000/login。
+        const location = `/login?next=${encodeURIComponent(pathname)}`
+        return new NextResponse(null, {
+          status: 307,
+          headers: { Location: location },
+        })
       }
       if (error.status === 403) {
         // 已登录但无有效会员，展示付费墙

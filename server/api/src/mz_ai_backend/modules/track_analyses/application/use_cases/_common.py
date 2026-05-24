@@ -24,17 +24,21 @@ def decode_cursor(cursor: str | None) -> TrackAnalysisCursor | None:
         payload = json.loads(decoded)
         sort_value = datetime.fromisoformat(payload["sort_value"])
         slug = payload["slug"]
+        is_free = payload["is_free"]
     except (ValueError, KeyError, json.JSONDecodeError) as exc:
         raise ValidationException(message="Cursor is invalid.") from exc
 
     if not isinstance(slug, str) or slug == "":
         raise ValidationException(message="Cursor is invalid.")
+    if not isinstance(is_free, bool):
+        raise ValidationException(message="Cursor is invalid.")
 
-    return TrackAnalysisCursor(sort_value=sort_value, slug=slug)
+    return TrackAnalysisCursor(is_free=is_free, sort_value=sort_value, slug=slug)
 
 
 def encode_cursor(cursor: TrackAnalysisCursor) -> str:
     payload = {
+        "is_free": cursor.is_free,
         "sort_value": cursor.sort_value.isoformat(),
         "slug": cursor.slug,
     }
@@ -51,6 +55,7 @@ def build_list_result(
         last_item = page.items[-1]
         next_cursor = encode_cursor(
             TrackAnalysisCursor(
+                is_free=last_item.is_free,
                 sort_value=sort_value_resolver(last_item),
                 slug=last_item.slug,
             )

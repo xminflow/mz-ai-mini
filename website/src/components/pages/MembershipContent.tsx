@@ -103,7 +103,7 @@ export function MembershipContent() {
           </Reveal>
           <Reveal delay={0.08}>
             <h1 className="font-serif-zh mt-6 max-w-3xl text-balance text-[28px] font-semibold leading-[1.4] tracking-[0.01em] sm:mt-7 sm:text-[40px] sm:leading-[1.3] lg:text-[48px] lg:leading-[1.25]">
-              一年 499 元，
+              一年 199 元起，
               <GradientText className="font-semibold">解锁四项硬核权益</GradientText>
             </h1>
           </Reveal>
@@ -198,8 +198,14 @@ export function MembershipContent() {
         }
         description={
           <>
-            提交你想拆的博主主页 URL，我们用 14 章方法论框架做深度拆解：矩阵布局、
-            增长曲线、内容方法论、可借鉴 vs 不可复制。
+            <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-yellow-400/40 bg-yellow-400/15 px-2.5 py-1 text-[11px] font-medium text-yellow-300">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-yellow-400" />
+              每日持续更新
+            </span>
+            <span className="block">
+              提交你想拆的博主主页 URL，我们用 14 章方法论框架做深度拆解：矩阵布局、
+              增长曲线、内容方法论、可借鉴 vs 不可复制。
+            </span>
           </>
         }
         bullets={[
@@ -234,8 +240,14 @@ export function MembershipContent() {
         }
         description={
           <>
-            提交你正在评估的赛道关键词，我们用投研级框架 + 微域生光方法论做赛道拆解，
-            输出 6 份专业报告，帮你判断「能不能切、怎么切」。
+            <span className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-yellow-400/40 bg-yellow-400/15 px-2.5 py-1 text-[11px] font-medium text-yellow-300">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-yellow-400" />
+              每日持续更新
+            </span>
+            <span className="block">
+              提交你正在评估的赛道关键词，我们用投研级框架 + 微域生光方法论做赛道拆解，
+              输出 6 份专业报告，帮你判断「能不能切、怎么切」。
+            </span>
           </>
         }
         bullets={[
@@ -343,7 +355,7 @@ export function MembershipContent() {
                   href="/pricing"
                   className="inline-flex items-center gap-1.5 rounded-full bg-ink px-5 py-2.5 text-[13px] font-semibold text-canvas transition-transform hover:-translate-y-0.5 sm:text-sm"
                 >
-                  立即开通 ¥499/年
+                  立即开通 ¥199/年起
                 </Link>
                 <button
                   type="button"

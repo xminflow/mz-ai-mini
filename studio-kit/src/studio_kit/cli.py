@@ -106,7 +106,11 @@ def cmd_extract(
 def cmd_script(
     script_path: Path = typer.Option(..., "--script", help="script.json 路径"),
     validate: bool = typer.Option(False, "--validate", is_flag=True, help="只校验，不写内容"),
-    target_seconds: int = typer.Option(110, "--target-seconds", help="目标时长（秒）"),
+    target_seconds: int | None = typer.Option(
+        None,
+        "--target-seconds",
+        help="目标时长（秒），未指定时使用 script.json 中的 target_seconds 字段（默认 70）",
+    ),
     speed: float = typer.Option(5.5, "--speed", help="语速（字/秒）"),
     log_level: str = typer.Option("INFO", "--log-level"),
 ) -> None:
@@ -126,7 +130,9 @@ def cmd_script(
         err_console.print(f"[red]script.json 解析失败：{e}[/red]")
         raise typer.Exit(1)
 
-    char_limit = int(target_seconds * speed)
+    # 命令行未显式覆盖时，使用 JSON 中的 target_seconds（默认 70）
+    effective_target_seconds = target_seconds if target_seconds is not None else script.target_seconds
+    char_limit = int(effective_target_seconds * speed)
     total_chars = script.total_chars
 
     table = Table(title="script.json 校验结果", show_header=True)
@@ -139,7 +145,7 @@ def cmd_script(
     table.add_row("总字数", str(total_chars), status_chars)
     table.add_row("字数上限", str(char_limit), "")
     table.add_row("预估时长", f"{total_chars / speed:.1f}s", "")
-    table.add_row("目标时长", f"{target_seconds}s", "")
+    table.add_row("目标时长", f"{effective_target_seconds}s", "")
 
     console.print(table)
 
@@ -298,7 +304,7 @@ def cmd_compose(
 def cmd_build(
     report_dir: Path = typer.Option(..., "--report-dir", help="博主拆解报告目录"),
     voice_sample: Optional[Path] = typer.Option(None, "--voice-sample", help="声音样本（placeholder 忽略）"),
-    target_seconds: int = typer.Option(110, "--target-seconds", help="目标时长（秒）"),
+    target_seconds: int = typer.Option(70, "--target-seconds", help="目标时长（秒），默认 70（区间 60-75）"),
     tts_backend: str = typer.Option("placeholder", "--tts-backend", help="TTS 后端"),
     force: bool = typer.Option(False, "--force", is_flag=True, help="强制重跑所有步骤"),
     log_level: str = typer.Option("INFO", "--log-level"),
@@ -335,6 +341,55 @@ def cmd_build(
 
     console.print(f"\n[bold green]build 完成！[/bold green]")
     console.print(f"  final.mp4 → {final_mp4}")
+
+
+# ════════════════════════════════════════════════════════════════════
+# render-xhs  （小红书图文 8 张 PNG）
+# ════════════════════════════════════════════════════════════════════
+
+@app.command("render-xhs")
+def cmd_render_xhs(
+    script_path: Path = typer.Option(..., "--script", help="xhs script.json 路径"),
+    out: Optional[Path] = typer.Option(None, "--out", help="输出目录（默认 script 同级 images/）"),
+    force: bool = typer.Option(False, "--force", is_flag=True, help="强制重新渲染所有卡片"),
+    log_level: str = typer.Option("INFO", "--log-level"),
+) -> None:
+    """渲染小红书图文 8 张 PNG（3:4 1242×1656）。
+
+    script.json 由 blogger-breakdown-xhs skill 在用户确认后写出，本命令只负责渲染。
+    """
+    configure_logging(log_level)
+
+    script_path = script_path.resolve()
+    if not script_path.exists():
+        err_console.print(f"[red]script.json 不存在：{script_path}[/red]")
+        raise typer.Exit(1)
+
+    from studio_kit.core.contracts import XhsDoc
+    from studio_kit.render.xhs import render_all_cards
+
+    try:
+        script = XhsDoc.model_validate_json(script_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        err_console.print(f"[red]xhs script.json 解析失败：{e}[/red]")
+        raise typer.Exit(1)
+
+    out_dir = (out.resolve() if out else script_path.parent / "images")
+
+    try:
+        png_paths = render_all_cards(script, out_dir, force=force)
+    except Exception as e:
+        err_console.print(f"[red]render-xhs 失败：{e}[/red]")
+        raise typer.Exit(1)
+
+    table = Table(title="xhs 图文渲染结果", show_header=True)
+    table.add_column("#", style="cyan", width=4)
+    table.add_column("类型", style="white", width=8)
+    table.add_column("PNG", style="green")
+    for card, png in zip(script.cards, png_paths):
+        table.add_row(f"{card.index:02d}", card.card_type, str(png))
+    console.print(table)
+    console.print(f"[green]render-xhs 完成：{len(png_paths)} 张 PNG → {out_dir}[/green]")
 
 
 # ════════════════════════════════════════════════════════════════════

@@ -5,6 +5,7 @@ from datetime import timedelta
 from ...domain import (
     AccountMembershipOrderForbiddenException,
     AccountMembershipOrderNotFoundException,
+    MembershipSku,
     MembershipTier,
     OrderStatus,
 )
@@ -21,10 +22,12 @@ class GetOrderStatusUseCase:
         repository: AccountMembershipRepository,
         current_time_provider: CurrentTimeProvider,
         wechat_pay_gateway: WechatPayNativeGateway,
+        sku_tier_map: dict[MembershipSku, MembershipTier],
     ) -> None:
         self._repository = repository
         self._current_time_provider = current_time_provider
         self._wechat_pay_gateway = wechat_pay_gateway
+        self._sku_tier_map = sku_tier_map
 
     async def execute(self, query: GetOrderStatusQuery) -> MembershipOrderStatusResult:
         now = self._current_time_provider.now()
@@ -44,7 +47,7 @@ class GetOrderStatusUseCase:
                 order = await self._repository.process_wechat_pay_notification(
                     notification=notification,
                     now=now,
-                    expected_tier=MembershipTier.NORMAL,
+                    sku_tier_map=self._sku_tier_map,
                 )
 
         return MembershipOrderStatusResult(

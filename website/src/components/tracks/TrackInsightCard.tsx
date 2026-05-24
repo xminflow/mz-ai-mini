@@ -138,6 +138,11 @@ export const TrackInsightCard = ({ item }: TrackInsightCardProps) => {
             会员
           </span>
         )}
+        {isWithinDays(item.created_at, 3) && (
+          <span className="rounded-full border border-sky-400/40 bg-sky-400/10 px-2.5 py-0.5 font-mono text-[10.5px] uppercase tracking-[0.16em] text-sky-300">
+            最新
+          </span>
+        )}
       </div>
 
       <h3 className="font-serif-zh relative line-clamp-2 text-[18.5px] font-semibold leading-[1.3] tracking-tight text-ink sm:text-[20px]">
@@ -261,4 +266,10 @@ function formatPublishedAt(value: string | null): string | null {
 
 function pad(value: number): string {
   return value.toString().padStart(2, '0')
+}
+
+function isWithinDays(dateStr: string, days: number): boolean {
+  const date = new Date(dateStr)
+  if (Number.isNaN(date.getTime())) return false
+  return Date.now() - date.getTime() < days * 24 * 60 * 60 * 1000
 }

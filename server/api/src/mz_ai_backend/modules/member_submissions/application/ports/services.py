@@ -28,6 +28,7 @@ class MembershipStatus(BaseModel):
     account_id: int
     is_active: bool
     expires_at: datetime | None
+    tier: str
 
 
 class MembershipStatusReader(Protocol):

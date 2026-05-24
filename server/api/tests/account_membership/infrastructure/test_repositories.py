@@ -14,6 +14,7 @@ from mz_ai_backend.modules.account_membership.application.dtos import (
     MembershipOrderRegistration,
 )
 from mz_ai_backend.modules.account_membership.domain import (
+    SKU_TIER_MAP,
     MembershipSku,
     MembershipTier,
     OrderStatus,
@@ -151,7 +152,7 @@ async def test_repository_enforces_transaction_id_uniqueness(db_session: AsyncSe
     await repository.process_wechat_pay_notification(
         notification=_success_notification(),
         now=datetime(2026, 5, 18, 10, 0, 0),
-        expected_tier=MembershipTier.NORMAL,
+        sku_tier_map=SKU_TIER_MAP,
     )
 
     with pytest.raises(IntegrityError):
@@ -161,7 +162,7 @@ async def test_repository_enforces_transaction_id_uniqueness(db_session: AsyncSe
                 transaction_id=TRANSACTION_ID,
             ),
             now=datetime(2026, 5, 18, 10, 0, 0),
-            expected_tier=MembershipTier.NORMAL,
+            sku_tier_map=SKU_TIER_MAP,
         )
 
     await db_session.rollback()
@@ -175,7 +176,7 @@ async def test_repository_applies_membership_update_atomically(db_session: Async
     paid_order = await repository.process_wechat_pay_notification(
         notification=_success_notification(),
         now=now,
-        expected_tier=MembershipTier.NORMAL,
+        sku_tier_map=SKU_TIER_MAP,
     )
     snapshot = await repository.get_membership_snapshot(account_id=ACCOUNT_ID, now=now)
 

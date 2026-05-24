@@ -42,7 +42,7 @@ export function MembershipSubmissionGate({
   if (!membership?.is_active) {
     return (
       <GateCallout
-        title="会员专享 · 一年 499 元"
+        title="会员专享 · 一年 199 元起"
         description={
           membership?.tier === 'normal'
             ? '会员已到期，续费后可继续提交博主 / 赛道。'

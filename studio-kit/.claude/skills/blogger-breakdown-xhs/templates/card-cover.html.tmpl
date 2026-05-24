@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>xhs-card-00 cover — {{cover_title_line_1}}</title>
+  <style>
+    /* ════════════════════════════════════════════════════════════════
+     * 内联 style.css 全文（保持与单文件 style.css 完全一致）
+     * 渲染器使用 patchright headless + file:// 加载本地 HTML，
+     * 不做 CSS 外链解析，因此必须内联。
+     * ════════════════════════════════════════════════════════════════ */
+
+    /* ─── 字体声明 ─── */
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 300;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 400;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 600;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-65-Medium/AlibabaPuHuiTi-3-65-Medium.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 700;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-75-SemiBold/AlibabaPuHuiTi-3-75-SemiBold.woff2') format('woff2');
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'AlibabaPuHuiTi';
+      font-weight: 800;
+      font-style: normal;
+      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-85-Bold/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');
+      font-display: swap;
+    }
+
+    /* ─── Reset ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 1242px;
+      height: 1656px;
+      overflow: hidden;
+      color: #F5F5F7;
+      font-family: 'AlibabaPuHuiTi', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: geometricPrecision;
+      background-color: #050507;
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(167, 139, 250, 0.18), transparent 45%),
+        radial-gradient(circle at 85% 0%,   rgba(34, 211, 238, 0.14), transparent 50%),
+        radial-gradient(circle at 50% 110%, rgba(244, 114, 182, 0.12), transparent 55%);
+    }
+
+    .card-root {
+      position: relative;
+      width: 1242px;
+      height: 1656px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .aurora-text {
+      background: linear-gradient(120deg, #F5F5F7 0%, #A78BFA 40%, #22D3EE 70%, #F472B6 100%) !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent !important;
+    }
+
+    .hairline          { background-color: rgba(255,255,255,0.08); height: 1px; width: 100%; }
+    .hairline-strong   { background-color: rgba(255,255,255,0.16); height: 1px; width: 100%; }
+    .hairline-short    { background-color: rgba(255,255,255,0.16); height: 1px; width: 120px; }
+
+    .top-bar {
+      height: 60px;
+      padding: 0 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .bottom-bar {
+      height: 64px;
+      padding: 0 80px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-shrink: 0;
+    }
+
+    .brand-mark {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-weight: 600;
+      font-size: 26px;
+      color: #F5F5F7;
+      letter-spacing: 0.16em;
+    }
+    .badge-mono {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-weight: 600;
+      font-size: 28px;
+      letter-spacing: 0.08em;
+      color: #8A8A94;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .body-section {
+      flex: 1;
+      padding: 0 80px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      min-height: 0;
+    }
+
+    .kicker-accent {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-weight: 600;
+      font-size: 32px;
+      line-height: 1.4;
+      color: #A78BFA;
+      letter-spacing: 0.06em;
+    }
+
+    .headline {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-weight: 800;
+      color: #F5F5F7;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+
+    .sub-text {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-weight: 400;
+      color: #D4D4D8;
+      line-height: 1.5;
+      letter-spacing: 0;
+    }
+
+    /* ════════════════════════════════════════════════════════════════
+     * card-cover 专属样式（00 封面）
+     * 布局：顶栏 + 发线 + kicker + 主标题三行 + followers 极光数字 + 发线 + 底栏
+     * ════════════════════════════════════════════════════════════════ */
+
+    .cover-body {
+      /* 顶部第 96 px 起为安全区，body-section 已在 80px 左右；
+       * 这里通过 padding-top/bottom 实现 96 安全区（顶栏 60 + 36 = 96） */
+      padding-top: 36px;
+      padding-bottom: 32px;
+      gap: 0;
+      justify-content: flex-start;
+    }
+
+    .cover-hairline-top {
+      margin-bottom: 56px;
+    }
+
+    .cover-kicker {
+      margin-bottom: 48px;
+    }
+
+    .cover-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cover-title-line-1,
+    .cover-title-line-2 {
+      font-size: 110px;
+      font-weight: 800;
+      color: #F5F5F7;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+    }
+
+    .cover-title-line-3 {
+      margin-top: 12px;
+      font-size: 60px;
+      font-weight: 600;
+      color: #D4D4D8;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+    }
+
+    /* followers 区：name + 极光大数字 */
+    .cover-stats {
+      margin-top: 88px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .cover-blogger-name {
+      font-size: 30px;
+      font-weight: 500;
+      color: #8A8A94;
+      letter-spacing: 0.04em;
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+    }
+
+    .cover-followers {
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    .cover-hairline-bottom {
+      margin-top: auto;
+      margin-bottom: 32px;
+    }
+
+    .cover-bottom-text {
+      font-family: 'AlibabaPuHuiTi', sans-serif;
+      font-weight: 500;
+      font-size: 26px;
+      color: #8A8A94;
+      letter-spacing: 0.06em;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-root">
+    <!-- 顶栏：左品牌字 / 右角标 -->
+    <div class="top-bar">
+      <span class="brand-mark">微域生光</span>
+      <span class="badge-mono">{{cover_badge}}</span>
+    </div>
+
+    <!-- 主体 -->
+    <div class="body-section cover-body">
+      <div class="hairline-strong cover-hairline-top"></div>
+
+      <div class="kicker-accent cover-kicker">{{cover_kicker}}</div>
+
+      <div class="cover-title">
+        <div class="cover-title-line-1">{{cover_title_line_1}}</div>
+        <div class="cover-title-line-2">{{cover_title_line_2}}</div>
+        <div class="cover-title-line-3">{{cover_title_line_3}}</div>
+      </div>
+
+      <div class="cover-stats">
+        <div class="cover-blogger-name">{{blogger_name}}</div>
+        <div class="cover-followers aurora-text">{{blogger_followers}}</div>
+      </div>
+
+      <div class="hairline-strong cover-hairline-bottom"></div>
+    </div>
+
+    <!-- 底栏 -->
+    <div class="bottom-bar">
+      <span class="cover-bottom-text">本期 08 张图，看完点击关注</span>
+    </div>
+  </div>
+</body>
+</html>
+</content>

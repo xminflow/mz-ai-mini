@@ -8,7 +8,12 @@ from mz_ai_backend.modules.account_membership.application import (
     HandleWechatPayNotifyCommand,
     HandleWechatPayNotifyUseCase,
 )
-from mz_ai_backend.modules.account_membership.domain import AccountMembershipOrder, MembershipSku, OrderStatus
+from mz_ai_backend.modules.account_membership.domain import (
+    SKU_TIER_MAP,
+    AccountMembershipOrder,
+    MembershipSku,
+    OrderStatus,
+)
 from mz_ai_backend.shared.wechat_pay import WechatPayNotification
 
 
@@ -18,7 +23,7 @@ class Repository:
         *,
         notification: WechatPayNotification,
         now: datetime,
-        expected_tier,
+        sku_tier_map,
     ) -> AccountMembershipOrder:
         assert notification.trade_state == "SUCCESS"
         return AccountMembershipOrder(
@@ -74,6 +79,7 @@ async def test_handle_wechat_pay_notify_processes_success() -> None:
         repository=Repository(),
         current_time_provider=Clock(),
         wechat_pay_gateway=Gateway(),
+        sku_tier_map=SKU_TIER_MAP,
     )
 
     result = await use_case.execute(

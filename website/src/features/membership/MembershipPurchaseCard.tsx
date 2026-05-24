@@ -15,9 +15,16 @@ type MembershipPurchaseCardProps = {
   authState: AuthState | null
   membership: MyMembershipResponse | null
   actionLabel: string
+  sku?: 'annual_normal' | 'annual_premium'
+  priceYuan?: number
+  priceNote?: string
+  tierLabel?: string
+  features?: string[]
   className?: string
   showStatus?: boolean
   variant?: 'pricing' | 'compact'
+  locked?: boolean
+  lockedNote?: string
 }
 
 function formatDate(value: string | null): string {
@@ -31,7 +38,7 @@ function formatDate(value: string | null): string {
 
 function resolveStatusLabel(membership: MyMembershipResponse | null): string {
   if (membership?.is_active) return '有效中'
-  if (membership?.tier === 'normal') return '已过期'
+  if (membership?.tier === 'normal' || membership?.tier === 'premium') return '已过期'
   return '未开通'
 }
 
@@ -39,9 +46,16 @@ export function MembershipPurchaseCard({
   authState,
   membership,
   actionLabel,
+  sku = 'annual_premium',
+  priceYuan = ANNUAL_PRICE_YUAN,
+  priceNote,
+  tierLabel = '年度会员',
+  features,
   className = '',
   showStatus = true,
   variant = 'pricing',
+  locked = false,
+  lockedNote = '已升级至更高等级，无需购买此档',
 }: MembershipPurchaseCardProps) {
   const router = useRouter()
   const [order, setOrder] = useState<CreateOrderResponse | null>(null)
@@ -58,7 +72,7 @@ export function MembershipPurchaseCard({
     setSubmitting(true)
     setError(null)
     try {
-      const createdOrder = await createMembershipOrder()
+      const createdOrder = await createMembershipOrder(sku)
       setOrder(createdOrder)
       setModalOpen(true)
     } catch (purchaseError) {
@@ -90,11 +104,35 @@ export function MembershipPurchaseCard({
       >
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="text-sm text-muted">年度会员</p>
-            <p className="mt-2 text-4xl font-semibold text-ink">¥{ANNUAL_PRICE_YUAN}</p>
+            <span
+              className={[
+                'inline-flex items-center rounded-full px-3 py-1 text-[11.5px] font-semibold uppercase tracking-[0.14em]',
+                sku === 'annual_premium'
+                  ? 'border border-amber-300/40 bg-amber-300/10 text-amber-200'
+                  : 'border border-hairline bg-canvas/60 text-ink-soft',
+              ].join(' ')}
+            >
+              {tierLabel}
+            </span>
+            <p className="mt-3 text-4xl font-semibold text-ink">¥{priceYuan}</p>
           </div>
           <p className="pb-1 text-sm text-muted">/ 年</p>
         </div>
+
+        {priceNote && (
+          <p className="mt-2 text-xs leading-5 text-accent-2">{priceNote}</p>
+        )}
+
+        {features && features.length > 0 && (
+          <ul className="mt-5 space-y-2 border-t border-hairline pt-4">
+            {features.map((f) => (
+              <li key={f} className="flex items-start gap-2 text-sm text-ink-soft">
+                <span className="mt-0.5 shrink-0 text-accent-2">✓</span>
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+        )}
 
         {showStatus && (
           <div className="mt-6 space-y-3 border-t border-hairline pt-5 text-sm text-ink-soft">
@@ -109,24 +147,32 @@ export function MembershipPurchaseCard({
           </div>
         )}
 
-        <button
-          type="button"
-          onClick={handlePurchase}
-          disabled={submitting}
-          className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-[6px] bg-ink px-5 text-sm font-medium text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {submitting ? '正在创建订单...' : actionLabel}
-        </button>
+        {locked ? (
+          <div className="mt-6 flex h-12 w-full items-center justify-center rounded-[6px] border border-hairline bg-surface/40 px-5 text-sm text-muted">
+            {lockedNote}
+          </div>
+        ) : (
+          <>
+            <button
+              type="button"
+              onClick={handlePurchase}
+              disabled={submitting}
+              className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-[6px] bg-ink px-5 text-sm font-medium text-canvas transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {submitting ? '正在创建订单...' : actionLabel}
+            </button>
 
-        {error && (
-          <p className="mt-4 rounded-[6px] border border-red-400/20 bg-red-400/10 px-3 py-2 text-sm text-red-100">
-            {error}
-          </p>
+            {error && (
+              <p className="mt-4 rounded-[6px] border border-red-400/20 bg-red-400/10 px-3 py-2 text-sm text-red-100">
+                {error}
+              </p>
+            )}
+
+            <p className="mt-4 text-xs leading-5 text-muted">
+              微信扫码支付。二维码有效期 15 分钟，支付成功后页面会自动确认订单状态。
+            </p>
+          </>
         )}
-
-        <p className="mt-4 text-xs leading-5 text-muted">
-          微信扫码支付。二维码有效期 15 分钟，支付成功后页面会自动确认订单状态。
-        </p>
       </aside>
 
       <PaymentQrCodeModal

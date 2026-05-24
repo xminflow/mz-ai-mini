@@ -78,7 +78,7 @@ export const TrackPaywallPage = ({ detail }: TrackPaywallPageProps) => {
             开通会员 · 解锁全部报告
           </Link>
           <p className="mt-4 text-center text-[11.5px] text-muted/60">
-            年费 ¥499，解锁全部博主洞察 + 赛道分析报告
+            年费 ¥199 起，解锁全部博主洞察 + 赛道分析报告
           </p>
         </div>
       </main>

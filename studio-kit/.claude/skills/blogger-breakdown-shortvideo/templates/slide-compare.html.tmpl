@@ -2,68 +2,23 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
   <title>slide-compare</title>
-
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'bg-base': '#050507',
-            'accent':  '#10b981',
-            'purple':  '#A78BFA',
-            'cyan':    '#22d3ee',
-          },
-          fontFamily: {
-            sans: ['AlibabaPuHuiTi', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
-            mono: ['JetBrains Mono', 'Courier New', 'monospace'],
-          },
-        },
-      },
-    };
-  </script>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-
   <style>
-    @font-face {
-      font-family: 'AlibabaPuHuiTi';
-      font-weight: 400;
-      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
-      font-display: swap;
-    }
-    @font-face {
-      font-family: 'AlibabaPuHuiTi';
-      font-weight: 700;
-      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-75-SemiBold/AlibabaPuHuiTi-3-75-SemiBold.woff2') format('woff2');
-      font-display: swap;
-    }
-    @font-face {
-      font-family: 'AlibabaPuHuiTi';
-      font-weight: 800;
-      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-85-Bold/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');
-      font-display: swap;
-    }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     html, body {
-      width: 1080px; height: 1920px;
+      width: 1080px;
+      height: 1920px;
       overflow: hidden;
-      background: #050507;
-      color: #fff;
-      font-family: 'AlibabaPuHuiTi', 'PingFang SC', sans-serif;
+      background: #080808;
+      color: #ffffff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
 
     /* ── 关键帧 ── */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(40px); }
       to   { opacity: 1; transform: translateY(0); }
     }
     @keyframes fadeIn {
@@ -71,196 +26,238 @@
       to   { opacity: 1; }
     }
     @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-20px); }
+      from { opacity: 0; transform: translateY(-30px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    @keyframes arrowBounce {
-      0%, 100% { transform: translateY(0); opacity: 0.7; }
-      50%       { transform: translateY(6px); opacity: 1; }
+    @keyframes bounceDown {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(8px); }
+    }
+    @keyframes shimmer {
+      from { background-position: 200% 0; }
+      to   { background-position: -200% 0; }
+    }
+    @keyframes lineGrow {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
     }
 
-    /* ── 背景 ── */
-    .bg-mesh {
-      position: absolute; inset: 0; z-index: 0;
-      background:
-        radial-gradient(ellipse 600px 500px at 85% 10%, rgba(167,139,250,0.10) 0%, transparent 70%),
-        radial-gradient(ellipse 500px 600px at 10% 85%, rgba(16,185,129,0.10) 0%, transparent 70%),
-        #050507;
-    }
+    /* ── 背景层 ── */
+    .bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 
-    /* ── 内容层 ── */
-    .content {
-      position: relative; z-index: 1;
-      width: 100%; height: 100%;
+    /* 左上角紫金光晕（体现变化前） */
+    .bg-glow-tl {
+      position: absolute; top: -150px; left: -120px;
+      width: 700px; height: 660px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(120,80,200,0.12) 0%, rgba(201,162,39,0.05) 45%, transparent 68%);
+    }
+    /* 右下角绿金光晕（体现变化后） */
+    .bg-glow-br {
+      position: absolute; bottom: -130px; right: -100px;
+      width: 680px; height: 680px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(50,180,80,0.10) 0%, rgba(201,162,39,0.05) 40%, transparent 68%);
+    }
+    .bg-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    .bg-beam {
+      position: absolute;
+      width: 2px; height: 1400px;
+      background: linear-gradient(to bottom, transparent, rgba(201,162,39,0.07), transparent);
+      transform-origin: top center;
+    }
+    .bg-beam-1 { left: 860px; top: 0; transform: rotate(14deg); }
+    .bg-beam-2 { left: 150px; top: 500px; transform: rotate(-10deg); opacity: 0.45; }
+
+    /* ── 整体布局 ── */
+    .root {
+      width: 1080px; height: 1920px;
+      position: relative; overflow: hidden;
       display: flex; flex-direction: column;
-      padding: 80px 64px;
+      padding: 88px 76px;
     }
 
     /* ── 顶部标签 ── */
     .section-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; font-weight: 700;
-      letter-spacing: 0.25em; text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-      animation: fadeIn 0.35s ease 0.05s both;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 36px; font-weight: 400;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      position: relative; z-index: 1;
+      animation: fadeIn 0.4s ease 0.04s both;
     }
 
     /* ── 主标题 ── */
     .slide-title {
-      font-size: clamp(36px, 5.2vw, 48px);
-      font-weight: 800;
-      line-height: 1.2;
-      letter-spacing: -0.01em;
-      margin-top: 24px;
-      animation: fadeUp 0.4s cubic-bezier(0.22,1,0.36,1) 0.12s both;
+      font-size: 58px; font-weight: 900;
+      line-height: 1.15; letter-spacing: -0.01em;
+      color: #ffffff;
+      margin-top: 28px;
+      position: relative; z-index: 1;
+      animation: fadeUp 0.45s cubic-bezier(0.22,1,0.36,1) 0.12s both;
     }
 
-    /* ── 分隔线 ── */
+    /* ── 金色分隔线 ── */
     .divider {
-      width: 56px; height: 2px;
-      background: linear-gradient(to right, #10b981, transparent);
+      height: 2px;
+      background: linear-gradient(to right, #f0d060, #c9a227, rgba(201,162,39,0.12));
+      background-size: 200% 100%;
       border-radius: 1px;
-      margin: 32px 0;
-      animation: fadeIn 0.35s ease 0.22s both;
+      margin: 36px 0 44px;
+      transform-origin: left center;
+      position: relative; z-index: 1;
+      animation:
+        lineGrow 0.5s cubic-bezier(0.22,1,0.36,1) 0.22s both,
+        shimmer  3s 0.8s linear infinite;
     }
 
-    /* ── 对照区域 ── */
+    /* ── 对照区域容器 ── */
     .compare-wrapper {
       flex: 1;
       display: flex; flex-direction: column;
-      justify-content: center;
-      gap: 0;
+      position: relative; z-index: 1;
     }
 
-    /* ── Before 卡片 ── */
+    /* ── Before 卡片（灰色调） ── */
     .compare-card-before {
-      background: rgba(255,255,255,0.04);
+      flex: 1;
+      background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.10);
-      border-radius: 18px 18px 0 0;
-      padding: 28px 32px;
-      animation: slideDown 0.45s cubic-bezier(0.22,1,0.36,1) 0.30s both;
+      border-radius: 16px 16px 0 0;
+      padding: 40px 48px;
+      animation: slideDown 0.5s cubic-bezier(0.22,1,0.36,1) 0.28s both;
     }
 
-    /* ── 箭头 ── */
+    /* ── 箭头区域 ── */
     .compare-arrow {
       display: flex; align-items: center; justify-content: center;
-      height: 56px;
-      font-size: 28px;
-      color: rgba(16,185,129,0.55);
+      height: 72px;
       background: rgba(255,255,255,0.02);
-      border-left: 1px solid rgba(255,255,255,0.06);
-      border-right: 1px solid rgba(255,255,255,0.06);
-      animation: fadeIn 0.3s ease 0.52s both;
+      border-left: 1px solid rgba(201,162,39,0.15);
+      border-right: 1px solid rgba(201,162,39,0.15);
+      animation: fadeIn 0.35s ease 0.50s both;
     }
-
-    .compare-arrow span {
-      animation: arrowBounce 1.6s ease-in-out 0.8s infinite;
+    .arrow-icon {
+      font-size: 44px;
+      color: #c9a227;
       display: inline-block;
+      animation: bounceDown 1.8s ease-in-out 0.9s infinite;
     }
 
-    /* ── After 卡片 ── */
+    /* ── After 卡片（金色调） ── */
     .compare-card-after {
-      background: rgba(16,185,129,0.08);
-      border: 1px solid rgba(16,185,129,0.28);
-      border-radius: 0 0 18px 18px;
-      padding: 28px 32px;
-      animation: fadeUp 0.45s cubic-bezier(0.22,1,0.36,1) 0.55s both;
+      flex: 1;
+      background: rgba(201,162,39,0.06);
+      border: 1px solid rgba(201,162,39,0.32);
+      border-radius: 0 0 16px 16px;
+      padding: 40px 48px 40px 56px;
+      position: relative;
+      animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 0.52s both;
+    }
+    /* 左侧 4px 金色竖线 */
+    .compare-card-after::before {
+      content: '';
+      position: absolute; left: 0; top: 20px; bottom: 20px;
+      width: 4px; border-radius: 0 3px 3px 0;
+      background: linear-gradient(to bottom, #f0d060, #c9a227, rgba(201,162,39,0.3));
     }
 
-    /* ── 卡片内标签 ── */
+    /* ── 卡片标签 ── */
     .card-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; font-weight: 700;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      margin-bottom: 14px;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 38px; font-weight: 600;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      margin-bottom: 20px;
     }
-
-    .card-label-before { color: rgba(255,255,255,0.35); }
-    .card-label-after  { color: #10b981; }
+    .card-label-before { color: rgba(255,255,255,0.32); }
+    .card-label-after  { color: #c9a227; }
 
     /* ── 卡片正文 ── */
     .card-text {
-      font-size: clamp(16px, 2.8vw, 20px);
-      font-weight: 400;
-      line-height: 1.7;
+      font-size: 38px; font-weight: 400;
+      line-height: 1.78;
     }
-
-    .card-text-before { color: rgba(255,255,255,0.65); }
+    .card-text-before { color: rgba(255,255,255,0.62); }
     .card-text-after  { color: rgba(255,255,255,0.92); }
 
     /* ── 底部品牌 ── */
     .brand-footer {
-      margin-top: 40px;
-      display: flex; align-items: center; gap: 12px;
-      animation: fadeIn 0.4s ease 0.85s both;
+      display: flex; align-items: center; gap: 18px;
+      margin-top: 44px;
+      position: relative; z-index: 1;
+      animation: fadeIn 0.45s ease 0.88s both;
     }
     .brand-w {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 18px; font-weight: 700; color: #10b981;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 46px; font-weight: 700;
+      color: #c9a227; line-height: 1;
+      text-shadow: 0 0 20px rgba(201,162,39,0.45);
     }
     .brand-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; font-weight: 600;
-      letter-spacing: 0.3em; color: rgba(255,255,255,0.3);
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 36px; font-weight: 400;
+      letter-spacing: 0.52em; color: rgba(255,255,255,0.42);
       text-transform: uppercase;
     }
 
-    /* ── debug ── */
     .duration-debug {
-      position: absolute; bottom: 12px; right: 20px; z-index: 99;
-      font-family: 'JetBrains Mono', monospace;
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
       font-size: 10px; color: rgba(255,255,255,0.12);
     }
   </style>
 </head>
 <body>
-  <div style="width:1080px;height:1920px;position:relative;overflow:hidden;">
+  <div class="root">
+    <!-- 背景 -->
+    <div class="bg" aria-hidden="true">
+      <div class="bg-glow-tl"></div>
+      <div class="bg-glow-br"></div>
+      <div class="bg-grid"></div>
+      <div class="bg-beam bg-beam-1"></div>
+      <div class="bg-beam bg-beam-2"></div>
+    </div>
 
-    <div class="bg-mesh"></div>
+    <!-- 顶部标签 -->
+    <div class="section-tag">成长动作 · GROWTH MOVE</div>
 
-    <div class="content">
+    <!-- 主标题 -->
+    <div class="slide-title">{{title}}</div>
 
-      <!-- 顶部标签 -->
-      <div class="section-tag">对照 · COMPARE</div>
+    <!-- 金色分隔线 -->
+    <div class="divider" aria-hidden="true"></div>
 
-      <!-- 主标题 -->
-      <div class="slide-title">{{title}}</div>
-
-      <!-- 分隔线 -->
-      <div class="divider"></div>
-
-      <!-- 对照区 -->
-      <div class="compare-wrapper">
-
-        <!-- Before 卡片 -->
-        <div class="compare-card-before">
-          <div class="card-label card-label-before">早期 / 弱点</div>
-          <div class="card-text card-text-before">{{compare_before}}</div>
-        </div>
-
-        <!-- 箭头 -->
-        <div class="compare-arrow">
-          <span>⬇</span>
-        </div>
-
-        <!-- After 卡片 -->
-        <div class="compare-card-after">
-          <div class="card-label card-label-after">近期 / 建议</div>
-          <div class="card-text card-text-after">{{compare_after}}</div>
-        </div>
-
+    <!-- 对照区：做对的事 → 把它放大（严禁短板/建议叙事） -->
+    <div class="compare-wrapper">
+      <!-- 做对的事 -->
+      <div class="compare-card-before">
+        <div class="card-label card-label-before">做对的事 · RIGHT MOVE</div>
+        <div class="card-text card-text-before">{{compare_before}}</div>
       </div>
 
-      <!-- 底部品牌 -->
-      <div class="brand-footer">
-        <div class="brand-w">W</div>
-        <div class="brand-name">WEELUME</div>
+      <!-- 放大箭头 -->
+      <div class="compare-arrow">
+        <span class="arrow-icon">&#11015;</span>
       </div>
 
+      <!-- 把它放大 -->
+      <div class="compare-card-after">
+        <div class="card-label card-label-after">把它放大 · SCALE UP</div>
+        <div class="card-text card-text-after">{{compare_after}}</div>
+      </div>
+    </div>
+
+    <!-- 底部品牌 -->
+    <div class="brand-footer">
+      <span class="brand-w">W</span>
+      <span class="brand-name">微域生光</span>
     </div>
 
     <div class="duration-debug">{{DURATION_MS}}ms</div>
-
   </div>
 </body>
 </html>

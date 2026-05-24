@@ -53,10 +53,15 @@ class ListPublicBloggerInsightsQuery(BaseModel):
 
 
 class BloggerInsightCursor(BaseModel):
-    """列表分页 cursor。"""
+    """列表分页 cursor。
+
+    排序键为 (is_free DESC, published_at DESC, slug DESC)，
+    免费内容固定排在会员内容之前；同一可见性下按时间倒序。
+    """
 
     model_config = ConfigDict(frozen=True)
 
+    is_free: bool
     sort_value: datetime
     slug: str
 

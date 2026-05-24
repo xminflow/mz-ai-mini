@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
 from ..modules import (
@@ -15,10 +18,56 @@ from ..modules import (
     system_router,
     track_analyses_router,
 )
-from .config import get_settings
+from ..modules.account_membership.infrastructure import (
+    PendingOrderSweepScheduler,
+    build_pending_order_sweep_scheduler,
+)
+from ..modules.account_membership.infrastructure.dependencies import (
+    get_website_wechat_pay_gateway,
+)
+from ..shared.wechat_pay import WechatPayConfigMissingException
+from .config import Settings, get_settings
+from .database import get_async_session_maker
 from .exception_handlers import register_exception_handlers
-from .logging import configure_logging
+from .logging import configure_logging, get_logger
 from .middleware import register_middlewares
+
+_app_logger = get_logger("mz_ai_backend.app")
+
+
+def _build_sweep_scheduler(settings: Settings) -> PendingOrderSweepScheduler | None:
+    if not settings.account_membership_sweep_enabled:
+        return None
+    if settings.database_url is None:
+        _app_logger.warning("sweep.scheduler.skipped reason=database_url_missing")
+        return None
+    try:
+        wechat_pay_gateway = get_website_wechat_pay_gateway(settings)
+    except WechatPayConfigMissingException:
+        _app_logger.warning("sweep.scheduler.skipped reason=wechat_pay_config_missing")
+        return None
+
+    session_maker = get_async_session_maker(settings.database_url)
+    return build_pending_order_sweep_scheduler(
+        settings=settings,
+        session_maker=session_maker,
+        wechat_pay_gateway=wechat_pay_gateway,
+    )
+
+
+@asynccontextmanager
+async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
+    settings = get_settings()
+    scheduler = _build_sweep_scheduler(settings)
+    if scheduler is not None:
+        await scheduler.start()
+        app.state.sweep_scheduler = scheduler
+    try:
+        yield
+    finally:
+        scheduler = getattr(app.state, "sweep_scheduler", None)
+        if scheduler is not None:
+            await scheduler.stop()
 
 
 def create_app() -> FastAPI:
@@ -31,6 +80,7 @@ def create_app() -> FastAPI:
         title=settings.app_name,
         version=settings.app_version,
         debug=settings.debug,
+        lifespan=_lifespan,
     )
     register_middlewares(app)
     register_exception_handlers(app)

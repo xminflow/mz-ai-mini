@@ -39,7 +39,11 @@ export function MyMembershipSection({ membership }: { membership: MyMembershipRe
         <div className="rounded-[8px] border border-hairline bg-surface/80 p-5">
           <p className="text-sm text-muted">等级</p>
           <p className="mt-3 text-2xl font-semibold text-ink">
-            {membership.tier === 'normal' ? '年度会员' : '未开通'}
+            {membership.tier === 'premium'
+              ? '高级会员'
+              : membership.tier === 'normal'
+                ? '普通会员'
+                : '未开通'}
           </p>
         </div>
         <div className="rounded-[8px] border border-hairline bg-surface/80 p-5">

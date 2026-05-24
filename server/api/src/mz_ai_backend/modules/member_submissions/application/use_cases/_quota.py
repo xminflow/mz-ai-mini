@@ -17,14 +17,16 @@ async def build_quota_snapshots(
     repository: MemberSubmissionRepository,
     account_id: int,
     now: datetime,
+    tier: str,
 ) -> list[SubmissionQuotaSnapshot]:
     """Build quota snapshots for every supported submission type for `now`."""
 
+    tier_limits = SUBMISSION_QUOTA_LIMITS.get(tier, SUBMISSION_QUOTA_LIMITS["normal"])
     period_key = compute_period_key(now)
     period_start, period_end = compute_period_bounds(period_key)
     snapshots: list[SubmissionQuotaSnapshot] = []
     for submission_type in SubmissionType:
-        limit = SUBMISSION_QUOTA_LIMITS[submission_type]
+        limit = tier_limits[submission_type]
         consumed = await repository.count_consumed_in_period(
             account_id=account_id,
             submission_type=submission_type,

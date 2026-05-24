@@ -22,6 +22,7 @@ from ..application import (
     GetOrderStatusUseCase,
     HandleWechatPayNotifyUseCase,
 )
+from ..domain import SKU_TIER_MAP, MembershipSku
 from .repositories import SqlAlchemyAccountMembershipRepository
 from .wechat_pay_native_adapter import WechatPayNativeAdapter
 
@@ -117,12 +118,16 @@ def get_create_membership_order_use_case(
 ) -> CreateMembershipOrderUseCase:
     """Construct create order use case."""
 
+    sku_prices = {
+        MembershipSku.ANNUAL_NORMAL: settings.account_membership_normal_fen,
+        MembershipSku.ANNUAL_PREMIUM: settings.account_membership_premium_fen,
+    }
     return CreateMembershipOrderUseCase(
         repository=repository,
         snowflake_id_generator=snowflake_id_generator,
         current_time_provider=current_time_provider,
         wechat_pay_gateway=wechat_pay_gateway,
-        annual_amount_fen=settings.account_membership_annual_fen,
+        sku_prices=sku_prices,
     )
 
 
@@ -140,6 +145,7 @@ def get_get_order_status_use_case(
         repository=repository,
         current_time_provider=current_time_provider,
         wechat_pay_gateway=wechat_pay_gateway,
+        sku_tier_map=SKU_TIER_MAP,
     )
 
 
@@ -172,4 +178,5 @@ def get_handle_wechat_pay_notify_use_case(
         repository=repository,
         current_time_provider=current_time_provider,
         wechat_pay_gateway=wechat_pay_gateway,
+        sku_tier_map=SKU_TIER_MAP,
     )

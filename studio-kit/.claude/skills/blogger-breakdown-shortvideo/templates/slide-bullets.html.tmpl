@@ -2,249 +2,238 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
   <title>slide-bullets</title>
-
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'bg-base': '#050507',
-            'accent':  '#10b981',
-            'purple':  '#A78BFA',
-            'cyan':    '#22d3ee',
-          },
-          fontFamily: {
-            sans: ['AlibabaPuHuiTi', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
-            mono: ['JetBrains Mono', 'Courier New', 'monospace'],
-          },
-        },
-      },
-    };
-  </script>
-
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-
   <style>
-    @font-face {
-      font-family: 'AlibabaPuHuiTi';
-      font-weight: 400;
-      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
-      font-display: swap;
-    }
-    @font-face {
-      font-family: 'AlibabaPuHuiTi';
-      font-weight: 700;
-      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-75-SemiBold/AlibabaPuHuiTi-3-75-SemiBold.woff2') format('woff2');
-      font-display: swap;
-    }
-    @font-face {
-      font-family: 'AlibabaPuHuiTi';
-      font-weight: 800;
-      src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-85-Bold/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');
-      font-display: swap;
-    }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     html, body {
-      width: 1080px; height: 1920px;
+      width: 1080px;
+      height: 1920px;
       overflow: hidden;
-      background: #050507;
-      color: #fff;
-      font-family: 'AlibabaPuHuiTi', 'PingFang SC', sans-serif;
+      background: #080808;
+      color: #ffffff;
+      font-family: 'Microsoft YaHei', 'PingFang SC', SimHei, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
 
     /* ── 关键帧 ── */
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(28px); }
+      from { opacity: 0; transform: translateY(40px); }
       to   { opacity: 1; transform: translateY(0); }
     }
     @keyframes fadeIn {
       from { opacity: 0; }
       to   { opacity: 1; }
     }
+    @keyframes shimmer {
+      from { background-position: 200% 0; }
+      to   { background-position: -200% 0; }
+    }
+    @keyframes lineGrow {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
     @keyframes slideRight {
-      from { opacity: 0; transform: translateX(-20px); }
+      from { opacity: 0; transform: translateX(-24px); }
       to   { opacity: 1; transform: translateX(0); }
     }
 
     /* ── 背景 ── */
-    .bg-mesh {
-      position: absolute; inset: 0; z-index: 0;
-      background:
-        radial-gradient(ellipse 600px 500px at 90% 15%, rgba(16,185,129,0.10) 0%, transparent 70%),
-        radial-gradient(ellipse 500px 400px at 5% 80%, rgba(167,139,250,0.08) 0%, transparent 70%),
-        #050507;
+    .bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+    /* 右上角金色光晕 */
+    .bg-glow-tr {
+      position: absolute; top: -160px; right: -120px;
+      width: 740px; height: 680px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,162,39,0.16) 0%, rgba(201,162,39,0.05) 38%, transparent 68%);
     }
+    /* 左下角紫金渐变 */
+    .bg-glow-bl {
+      position: absolute; bottom: -100px; left: -100px;
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(120,80,200,0.10) 0%, rgba(201,162,39,0.05) 45%, transparent 68%);
+    }
+    .bg-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(201,162,39,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,162,39,0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    .bg-beam {
+      position: absolute;
+      width: 2px; height: 1200px;
+      background: linear-gradient(to bottom, transparent, rgba(201,162,39,0.07), transparent);
+      transform-origin: top center;
+    }
+    .bg-beam-1 { left: 900px; top: 0; transform: rotate(12deg); }
+    .bg-beam-2 { left: 100px; top: 600px; transform: rotate(-6deg); opacity: 0.45; }
 
-    /* ── 内容层 ── */
-    .content {
-      position: relative; z-index: 1;
-      width: 100%; height: 100%;
+    /* ── 整体布局 ── */
+    .root {
+      width: 1080px; height: 1920px;
+      position: relative; overflow: hidden;
       display: flex; flex-direction: column;
-      padding: 80px 64px;
+      padding: 88px 76px;
     }
 
     /* ── 顶部标签 ── */
     .section-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; font-weight: 700;
-      letter-spacing: 0.25em; text-transform: uppercase;
-      color: #10b981;
-      animation: fadeIn 0.35s ease 0.05s both;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 36px; font-weight: 400;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: #c9a227;
+      position: relative; z-index: 1;
+      animation: fadeIn 0.4s ease 0.04s both;
     }
 
-    /* ── 标题区域（带左绿线） ── */
+    /* ── 标题块（带左侧金色竖线） ── */
     .title-block {
-      margin-top: 28px;
-      border-left: 4px solid #10b981;
-      padding-left: 20px;
-      animation: slideRight 0.4s cubic-bezier(0.22,1,0.36,1) 0.15s both;
+      margin-top: 32px;
+      padding-left: 24px;
+      border-left: 4px solid #c9a227;
+      position: relative; z-index: 1;
+      animation: slideRight 0.5s cubic-bezier(0.22,1,0.36,1) 0.14s both;
     }
-
     .slide-title {
-      font-size: clamp(36px, 5.5vw, 52px);
-      font-weight: 800;
-      line-height: 1.2;
-      letter-spacing: -0.01em;
-      color: #fff;
+      font-size: 64px; font-weight: 900;
+      line-height: 1.15; letter-spacing: -0.01em;
+      color: #ffffff;
     }
 
-    /* ── 分隔线 ── */
+    /* ── 金色分隔线 ── */
     .divider {
-      width: 56px; height: 2px;
-      background: linear-gradient(to right, #10b981, transparent);
+      height: 2px;
+      background: linear-gradient(to right, #f0d060, #c9a227, rgba(201,162,39,0.12));
+      background-size: 200% 100%;
       border-radius: 1px;
-      margin: 40px 0;
-      animation: fadeIn 0.35s ease 0.25s both;
+      margin: 40px 0 48px;
+      transform-origin: left center;
+      position: relative; z-index: 1;
+      animation:
+        lineGrow 0.5s cubic-bezier(0.22,1,0.36,1) 0.24s both,
+        shimmer  3s 0.8s linear infinite;
     }
 
     /* ── Bullets 列表 ── */
     /*
-     * {{bullets_html}} 由 Python render 命令注入，格式如下：
-     *   <li class="stagger-item">第一条内容</li>
-     *   <li class="stagger-item">第二条内容</li>
-     *
-     * 每条 <li> 由此处的 CSS 负责动画和样式。
+     * {{bullets_html}} 由 Python 渲染时注入，格式：<li class="stagger-item">内容</li>
+     * 外层 <ul class="bullets-list"> 由模板提供
      */
     .bullets-list {
       list-style: none;
       display: flex; flex-direction: column;
-      gap: 20px;
+      gap: 22px;
       flex: 1;
+      counter-reset: bullet-counter;
+      position: relative; z-index: 1;
     }
 
-    /* stagger 动画 */
     .bullets-list .stagger-item {
-      display: flex; align-items: flex-start; gap: 16px;
-      padding: 22px 24px;
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 28px 32px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,162,39,0.18);
       border-radius: 14px;
-      font-size: clamp(16px, 2.8vw, 20px);
+      font-size: 38px;
       font-weight: 400;
       line-height: 1.65;
       color: rgba(255,255,255,0.88);
-      animation: fadeUp 0.4s cubic-bezier(0.22,1,0.36,1) both;
       position: relative;
+      backdrop-filter: blur(6px);
+      animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both;
     }
 
-    /* 每条 bullet 的序号圆点 — 通过 counter 实现 */
-    .bullets-list {
-      counter-reset: bullet-counter;
-    }
-
+    /* 序号圆形 */
     .bullets-list .stagger-item::before {
       counter-increment: bullet-counter;
       content: counter(bullet-counter);
       flex-shrink: 0;
-      width: 28px; height: 28px;
+      width: 36px; height: 36px;
+      min-width: 36px;
       border-radius: 50%;
-      background: rgba(16,185,129,0.15);
-      border: 1px solid rgba(16,185,129,0.4);
+      background: rgba(201,162,39,0.10);
+      border: 1.5px solid rgba(201,162,39,0.50);
       display: flex; align-items: center; justify-content: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; font-weight: 700;
-      color: #10b981;
-      margin-top: 1px;
-      flex: 0 0 28px;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 34px; font-weight: 700;
+      color: #c9a227;
+      margin-top: 2px;
     }
 
-    /* stagger delay */
+    /* 入场 stagger 延迟 */
     .bullets-list .stagger-item:nth-child(1) { animation-delay: 0.20s; }
-    .bullets-list .stagger-item:nth-child(2) { animation-delay: 0.35s; }
-    .bullets-list .stagger-item:nth-child(3) { animation-delay: 0.50s; }
-    .bullets-list .stagger-item:nth-child(4) { animation-delay: 0.65s; }
-    .bullets-list .stagger-item:nth-child(5) { animation-delay: 0.80s; }
+    .bullets-list .stagger-item:nth-child(2) { animation-delay: 0.36s; }
+    .bullets-list .stagger-item:nth-child(3) { animation-delay: 0.52s; }
+    .bullets-list .stagger-item:nth-child(4) { animation-delay: 0.68s; }
+    .bullets-list .stagger-item:nth-child(5) { animation-delay: 0.84s; }
+    .bullets-list .stagger-item:nth-child(6) { animation-delay: 1.00s; }
 
     /* ── 底部品牌 ── */
     .brand-footer {
-      margin-top: 40px;
-      display: flex; align-items: center; gap: 12px;
-      animation: fadeIn 0.4s ease 0.9s both;
+      display: flex; align-items: center; gap: 18px;
+      margin-top: 44px;
+      position: relative; z-index: 1;
+      animation: fadeIn 0.45s ease 1.0s both;
     }
     .brand-w {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 18px; font-weight: 700; color: #10b981;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 46px; font-weight: 700;
+      color: #c9a227; line-height: 1;
+      text-shadow: 0 0 20px rgba(201,162,39,0.45);
     }
     .brand-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px; font-weight: 600;
-      letter-spacing: 0.3em; color: rgba(255,255,255,0.3);
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 36px; font-weight: 400;
+      letter-spacing: 0.52em; color: rgba(255,255,255,0.42);
       text-transform: uppercase;
     }
 
-    /* ── debug ── */
     .duration-debug {
-      position: absolute; bottom: 12px; right: 20px; z-index: 99;
-      font-family: 'JetBrains Mono', monospace;
+      position: absolute; bottom: 14px; right: 22px; z-index: 99;
+      font-family: Consolas, 'Courier New', monospace;
       font-size: 10px; color: rgba(255,255,255,0.12);
     }
   </style>
 </head>
 <body>
-  <div style="width:1080px;height:1920px;position:relative;overflow:hidden;">
+  <div class="root">
+    <!-- 背景 -->
+    <div class="bg" aria-hidden="true">
+      <div class="bg-glow-tr"></div>
+      <div class="bg-glow-bl"></div>
+      <div class="bg-grid"></div>
+      <div class="bg-beam bg-beam-1"></div>
+      <div class="bg-beam bg-beam-2"></div>
+    </div>
 
-    <div class="bg-mesh"></div>
+    <!-- 顶部标签 -->
+    <div class="section-tag">要点 · KEY POINTS</div>
 
-    <div class="content">
+    <!-- 标题（带左金线） -->
+    <div class="title-block">
+      <div class="slide-title">{{title}}</div>
+    </div>
 
-      <!-- 顶部标签 -->
-      <div class="section-tag">要点 · KEY POINTS</div>
+    <!-- 金色分隔线 -->
+    <div class="divider" aria-hidden="true"></div>
 
-      <!-- 标题（带左绿线） -->
-      <div class="title-block">
-        <div class="slide-title">{{title}}</div>
-      </div>
+    <!--
+      {{bullets_html}} 注入格式：<li class="stagger-item">内容</li>
+      不含外层 <ul>，由下方 <ul> 提供容器
+    -->
+    <ul class="bullets-list">
+      {{bullets_html}}
+    </ul>
 
-      <!-- 分隔线 -->
-      <div class="divider"></div>
-
-      <!-- Bullets 列表
-           {{bullets_html}} 由 Python 注入，每条格式：
-           <li class="stagger-item">内容文字</li>
-      -->
-      <ul class="bullets-list">
-        {{bullets_html}}
-      </ul>
-
-      <!-- 底部品牌 -->
-      <div class="brand-footer">
-        <div class="brand-w">W</div>
-        <div class="brand-name">WEELUME</div>
-      </div>
-
+    <!-- 底部品牌 -->
+    <div class="brand-footer">
+      <span class="brand-w">W</span>
+      <span class="brand-name">微域生光</span>
     </div>
 
     <div class="duration-debug">{{DURATION_MS}}ms</div>
-
   </div>
 </body>
 </html>

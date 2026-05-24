@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from mz_ai_backend.core.logging import get_logger
 
-from ...domain import MembershipTier
+from ...domain import MembershipSku, MembershipTier
 from ..dtos import HandleWechatPayNotifyCommand, MembershipOrderStatusResult
 from ..ports import AccountMembershipRepository, CurrentTimeProvider, WechatPayNativeGateway
 
@@ -18,10 +18,12 @@ class HandleWechatPayNotifyUseCase:
         repository: AccountMembershipRepository,
         current_time_provider: CurrentTimeProvider,
         wechat_pay_gateway: WechatPayNativeGateway,
+        sku_tier_map: dict[MembershipSku, MembershipTier],
     ) -> None:
         self._repository = repository
         self._current_time_provider = current_time_provider
         self._wechat_pay_gateway = wechat_pay_gateway
+        self._sku_tier_map = sku_tier_map
 
     async def execute(self, command: HandleWechatPayNotifyCommand) -> MembershipOrderStatusResult:
         notification = self._wechat_pay_gateway.parse_notification(
@@ -32,7 +34,7 @@ class HandleWechatPayNotifyUseCase:
         order = await self._repository.process_wechat_pay_notification(
             notification=notification,
             now=self._current_time_provider.now(),
-            expected_tier=MembershipTier.NORMAL,
+            sku_tier_map=self._sku_tier_map,
         )
         account_membership_logger.info(
             "account_membership.wechat_notify.handled order_no=%s status=%s trade_state=%s",

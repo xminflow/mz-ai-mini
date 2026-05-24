@@ -54,7 +54,7 @@ def run_build(
     settings: Settings,
     *,
     voice_sample: Path | None = None,
-    target_seconds: int = 110,
+    target_seconds: int = 70,
     tts_backend: str = "placeholder",
     force: bool = False,
 ) -> Path:
@@ -101,6 +101,17 @@ def run_build(
     slides_dir = run_dir / "slides"
     if not _is_slides_complete(slides_dir, n_slides) or force:
         logger.info("[4/5] render → %s", slides_dir)
+        slides_dir.mkdir(parents=True, exist_ok=True)
+        # 把 research-kit 抓的 raw/avatar.jpg 拷贝到 slides/avatar.jpg，
+        # 让 cover 模板可以通过 {{avatar_path}} = "avatar.jpg" 直接 <img src> 引用。
+        raw_avatar = report_dir.parent.parent / "raw" / "avatar.jpg"
+        if raw_avatar.is_file():
+            import shutil
+            target_avatar = slides_dir / "avatar.jpg"
+            shutil.copy2(raw_avatar, target_avatar)
+            logger.info("avatar 已复制：%s → %s", raw_avatar, target_avatar)
+        else:
+            logger.warning("未找到 raw/avatar.jpg（%s），cover 头像将降级为占位", raw_avatar)
         from studio_kit.render.slide_renderer import render_all_slides
         render_all_slides(script, audio_dir, slides_dir, force=force)
     else:

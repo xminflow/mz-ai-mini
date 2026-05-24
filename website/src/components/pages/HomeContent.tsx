@@ -227,7 +227,15 @@ export const HomeContent = ({ counts }: HomeContentProps) => {
           {CATEGORY_ORDER.map((type, index) => (
             <Reveal key={type} delay={index * 0.06}>
               <Link
-                href={type === LIBRARY_TYPES.PLAYBOOK ? '/playbook' : `/library?type=${type}`}
+                href={
+                  type === LIBRARY_TYPES.PLAYBOOK
+                    ? '/playbook'
+                    : type === LIBRARY_TYPES.BLOGGER
+                      ? '/bloggers'
+                      : type === LIBRARY_TYPES.TRACK
+                        ? '/tracks'
+                        : `/library?type=${type}`
+                }
                 className="group relative flex h-full flex-col gap-4 overflow-hidden rounded-2xl border border-hairline bg-surface/60 p-5 backdrop-blur-xl transition-all hover:-translate-y-1 hover:border-hairline-strong sm:rounded-[22px] sm:p-6"
               >
                 <div className="flex items-center justify-between">
@@ -241,6 +249,12 @@ export const HomeContent = ({ counts }: HomeContentProps) => {
                 <h3 className="font-serif-zh text-[18px] font-semibold leading-[1.4] text-ink sm:text-[20px]">
                   {LIBRARY_TYPE_LABELS[type]}
                 </h3>
+                {(type === LIBRARY_TYPES.BLOGGER || type === LIBRARY_TYPES.TRACK) && (
+                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full border border-yellow-400/40 bg-yellow-400/15 px-2.5 py-1 text-[10.5px] font-medium text-yellow-300">
+                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-yellow-400" />
+                    每日持续更新
+                  </span>
+                )}
                 <p className="text-[13px] leading-[1.85] text-muted sm:text-[13.5px]">
                   {LIBRARY_TYPE_TAGLINES[type]}
                 </p>

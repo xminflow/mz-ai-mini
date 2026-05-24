@@ -30,7 +30,7 @@ const NAV_LINKS: NavLink[] = [
     dropdown: [
       { label: '爆款拆解', href: '/library?type=breakdown', desc: '拆开钩子、结构、节奏与模板' },
       { label: '博主洞察', href: '/bloggers', desc: '矩阵布局、成长曲线、变现路径' },
-      { label: '赛道分析', href: '/library?type=track', desc: '玩家地图、机会窗口、天花板' },
+      { label: '赛道分析', href: '/tracks', desc: '玩家地图、机会窗口、天花板' },
       { label: '百万粉博主运营方法论精炼', href: '/playbook', desc: '可执行步骤与方法论清单' },
       { label: '赛道地图', href: '#', desc: '即将上线 · 决策性地图', soon: true },
     ],

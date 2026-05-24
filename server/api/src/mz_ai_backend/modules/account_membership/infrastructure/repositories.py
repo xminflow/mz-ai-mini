@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from mz_ai_backend.modules.agent_auth.infrastructure.models import AgentAccountModel
@@ -13,6 +13,7 @@ from mz_ai_backend.shared.wechat_pay import (
 
 from ..application.dtos import MembershipOrderRegistration
 from ..domain import (
+    ACCOUNT_MEMBERSHIP_DURATION_DAYS,
     AccountMembershipOrder,
     AccountMembershipOrderNotFoundException,
     AccountMembershipOrderStatusInvalidException,
@@ -121,7 +122,7 @@ class SqlAlchemyAccountMembershipRepository:
         *,
         notification: WechatPayNotification,
         now: datetime,
-        expected_tier: MembershipTier,
+        sku_tier_map: dict[MembershipSku, MembershipTier],
     ) -> AccountMembershipOrder:
         order_model = await self._load_order(order_no=notification.order_no, for_update=True)
         if order_model is None:
@@ -144,13 +145,29 @@ class SqlAlchemyAccountMembershipRepository:
             account_model = await self._load_account(account_id=order_model.account_id, for_update=True)
             if account_model is None:
                 raise AccountMembershipOrderNotFoundException()
-            started_at, expires_at = calculate_membership_period(
-                current_started_at=account_model.membership_started_at,
-                current_expires_at=account_model.membership_expires_at,
-                paid_at=notification.success_time or now,
-                now=now,
+
+            granted_tier = sku_tier_map.get(MembershipSku(order_model.sku), MembershipTier.NORMAL)
+            current_tier = MembershipTier(account_model.membership_tier or MembershipTier.NONE.value)
+            paid_at = notification.success_time or now
+
+            # 同等级续费：在现有到期日基础上延长；跨等级升级：从支付日起重新计算。
+            is_same_tier_renewal = (
+                granted_tier == current_tier
+                and account_model.membership_expires_at is not None
+                and account_model.membership_expires_at > now
             )
-            account_model.membership_tier = expected_tier.value
+            if is_same_tier_renewal:
+                started_at, expires_at = calculate_membership_period(
+                    current_started_at=account_model.membership_started_at,
+                    current_expires_at=account_model.membership_expires_at,
+                    paid_at=paid_at,
+                    now=now,
+                )
+            else:
+                started_at = paid_at
+                expires_at = paid_at + timedelta(days=ACCOUNT_MEMBERSHIP_DURATION_DAYS)
+
+            account_model.membership_tier = granted_tier.value
             account_model.membership_started_at = started_at
             account_model.membership_expires_at = expires_at
 
@@ -165,6 +182,50 @@ class SqlAlchemyAccountMembershipRepository:
         await self._session.commit()
         await self._session.refresh(order_model)
         return _to_order(order_model)
+
+    async def claim_pending_orders_for_sweep(
+        self,
+        *,
+        now: datetime,
+        batch_size: int,
+        retry_after: timedelta,
+        lookback: timedelta,
+    ) -> list[AccountMembershipOrder]:
+        # SKIP LOCKED 让多个 sweep 实例彼此错开；锁在 commit 后立刻释放，
+        # 防重复处理依赖随之写入的 last_wechat_query_at 节流。
+        cutoff_created_at = now - lookback
+        cutoff_retry_at = now - retry_after
+
+        statement = (
+            select(AccountMembershipOrderModel)
+            .where(
+                AccountMembershipOrderModel.status == OrderStatus.PENDING.value,
+                AccountMembershipOrderModel.is_deleted.is_(False),
+                AccountMembershipOrderModel.created_at >= cutoff_created_at,
+                or_(
+                    AccountMembershipOrderModel.last_wechat_query_at.is_(None),
+                    AccountMembershipOrderModel.last_wechat_query_at < cutoff_retry_at,
+                ),
+            )
+            .order_by(AccountMembershipOrderModel.created_at.asc())
+            .limit(batch_size)
+            .with_for_update(skip_locked=True)
+        )
+        result = await self._session.execute(statement)
+        models = list(result.scalars().all())
+
+        for model in models:
+            model.last_wechat_query_at = now
+            # 显式赋值避免触发 server-side onupdate 把 updated_at 标记为 expired，
+            # 否则 commit 后访问该列会触发 lazy-load 在异步上下文外抛 MissingGreenlet。
+            model.updated_at = now
+
+        # 在 commit 前完成 entity 快照，确保所有列仍处于已加载状态
+        orders = [_to_order(model) for model in models]
+
+        await self._session.commit()
+
+        return orders
 
     async def get_membership_snapshot(
         self,

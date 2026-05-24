@@ -1,0 +1,265 @@
+/* style.css — 小红书图文（极光黑）共享样式
+ *
+ * 适用画布：3:4 · 1242 × 1656 px · PNG · 8 张
+ * 设计基线：visual-spec.md（已冻结，禁止偏离）
+ *
+ * 关键约束：
+ *   - 字体只允许「阿里巴巴普惠体 3.0」（中文）+「JetBrains Mono」（数字/角标）
+ *   - 极光渐变文字只用于：cover followers / point 大编号 / hook 主文一处强调 / cta 末行
+ *     —— 每张图不超过 1 处
+ *   - 顶栏/底栏发线必须 1 px / rgba(255,255,255,0.16)
+ *   - 可见层禁止 weelume.com / 任何英文品牌 / 任何域名
+ *
+ * 本文件同时单独存档用于人类阅读，所有 .html.tmpl 在 <style> 顶部内联本文件全文。
+ */
+
+/* ─── 字体声明 ─── */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+/* 阿里巴巴普惠体 3.0 — 从 jsDelivr 加载，与 shortvideo deck.css 完全对齐 */
+@font-face {
+  font-family: 'AlibabaPuHuiTi';
+  font-weight: 300;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'AlibabaPuHuiTi';
+  font-weight: 400;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-55-Regular/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'AlibabaPuHuiTi';
+  font-weight: 600;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-65-Medium/AlibabaPuHuiTi-3-65-Medium.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'AlibabaPuHuiTi';
+  font-weight: 700;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-75-SemiBold/AlibabaPuHuiTi-3-75-SemiBold.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'AlibabaPuHuiTi';
+  font-weight: 800;
+  font-style: normal;
+  src: url('https://cdn.jsdelivr.net/npm/@alifd/fonts@1.0.1/AlibabaPuHuiTi-3/AlibabaPuHuiTi-3-85-Bold/AlibabaPuHuiTi-3-85-Bold.woff2') format('woff2');
+  font-display: swap;
+}
+
+/* ─── Reset ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  /* 画布固定 1242×1656，不用 vw/vh，避免截图 viewport 偏移时布局漂移 */
+  width: 1242px;
+  height: 1656px;
+  overflow: hidden;
+  color: #F5F5F7;
+  font-family: 'AlibabaPuHuiTi', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
+
+  /* 极光底纹（仅画布层）—— 严格按 visual-spec 给定的 3 圈 radial-gradient */
+  background-color: #050507;
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(167, 139, 250, 0.18), transparent 45%),
+    radial-gradient(circle at 85% 0%,   rgba(34, 211, 238, 0.14), transparent 50%),
+    radial-gradient(circle at 50% 110%, rgba(244, 114, 182, 0.12), transparent 55%);
+}
+
+/* ─── 根容器：固定 1242×1656，安全区在子元素内控制 ─── */
+.card-root {
+  position: relative;
+  width: 1242px;
+  height: 1656px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* 上下 96 / 左右 80 安全区（顶栏底栏除外，所以根本身不用 padding） */
+}
+
+/* ─── 极光渐变文字工具类（每张图最多 1 处） ─── *
+ * 工具类必须能压住同级业务类的 color 设置（如 .hook-big-line { color: #F5F5F7 }），
+ * 否则按 CSS 声明顺序后定义者赢，渐变会被实体白色 fill 盖住，渐变完全失效。
+ */
+.aurora-text {
+  background: linear-gradient(120deg, #F5F5F7 0%, #A78BFA 40%, #22D3EE 70%, #F472B6 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* ─── 发线工具类 ─── */
+.hairline {
+  background-color: rgba(255, 255, 255, 0.08);
+  height: 1px;
+  width: 100%;
+}
+
+.hairline-strong {
+  background-color: rgba(255, 255, 255, 0.16);
+  height: 1px;
+  width: 100%;
+}
+
+/* 短发线（标题下方装饰） */
+.hairline-short {
+  background-color: rgba(255, 255, 255, 0.16);
+  height: 1px;
+  width: 120px;
+}
+
+/* ─── 顶栏 / 底栏（60~64 px 高度） ─── */
+.top-bar {
+  height: 60px;
+  padding: 0 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.bottom-bar {
+  height: 64px;
+  padding: 0 80px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+}
+
+/* 品牌字（顶栏 / 底栏左侧） */
+.brand-mark {
+  font-family: 'AlibabaPuHuiTi', sans-serif;
+  font-weight: 600;
+  font-size: 26px;
+  color: #F5F5F7;
+  letter-spacing: 0.16em;
+}
+
+/* 角标（JetBrains Mono） */
+.badge-mono {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-weight: 600;
+  font-size: 28px;
+  letter-spacing: 0.08em;
+  color: #8A8A94;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* 页码（JetBrains Mono） */
+.page-label {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-weight: 500;
+  font-size: 28px;
+  letter-spacing: 0.12em;
+  color: #8A8A94;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* ─── 主体内容容器（在顶栏底栏之间，左右 80 安全区） ─── */
+.body-section {
+  flex: 1;
+  padding: 0 80px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 0;
+}
+
+/* ─── 小字 kicker（顶部赛道/章节标签） ─── */
+.kicker {
+  font-family: 'AlibabaPuHuiTi', sans-serif;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.4;
+  color: #8A8A94;
+  letter-spacing: 0.04em;
+}
+
+.kicker-accent {
+  /* 用于 cover 上方赛道标签，略带紫色提亮 */
+  font-family: 'AlibabaPuHuiTi', sans-serif;
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 1.4;
+  color: #A78BFA;
+  letter-spacing: 0.06em;
+}
+
+/* ─── 主标题（封面 / 钩子 / CTA 共用基类） ─── */
+.headline {
+  font-family: 'AlibabaPuHuiTi', sans-serif;
+  font-weight: 800;
+  color: #F5F5F7;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+/* 副文本 */
+.sub-text {
+  font-family: 'AlibabaPuHuiTi', sans-serif;
+  font-weight: 400;
+  color: #D4D4D8;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+/* ─── point 编号大数字（极光渐变） ─── */
+.point-no {
+  font-family: 'JetBrains Mono', sans-serif;
+  font-weight: 700;
+  font-size: 240px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* ─── 引用块 ─── */
+.quote-card {
+  margin-top: 36px;
+  padding: 32px 36px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 3px solid rgba(167, 139, 250, 0.55);
+  border-radius: 12px;
+}
+
+.quote-text {
+  font-family: 'AlibabaPuHuiTi', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 1.55;
+  color: #D4D4D8;
+  font-style: italic;
+  letter-spacing: 0;
+}
+
+.quote-source {
+  margin-top: 16px;
+  font-family: 'AlibabaPuHuiTi', sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.4;
+  color: #8A8A94;
+  letter-spacing: 0.04em;
+}
+</content>
+</invoke>

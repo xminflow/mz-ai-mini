@@ -25,29 +25,128 @@ def _slide_index_str(index: int) -> str:
     return f"{index:02d}"
 
 
-def _seconds_to_srt_time(total_seconds: float) -> str:
-    """把秒数转换为 SRT 时间格式 HH:MM:SS,mmm。"""
+
+def _seconds_to_ass_time(total_seconds: float) -> str:
+    """把秒数转换为 ASS 时间格式 H:MM:SS.xx（百分之秒）。"""
     hours = int(total_seconds // 3600)
     minutes = int((total_seconds % 3600) // 60)
     secs = int(total_seconds % 60)
-    millis = int((total_seconds - int(total_seconds)) * 1000)
-    return f"{hours:02d}:{minutes:02d}:{secs:02d},{millis:03d}"
+    centis = int((total_seconds - int(total_seconds)) * 100)
+    return f"{hours}:{minutes:02d}:{secs:02d}.{centis:02d}"
 
 
-def _generate_srt(
+import re as _re
+
+# 强标点：句子边界（一句话结束）
+_PRIMARY_PUNCT_RE = _re.compile(r'[。！？.!?]+')
+# 次标点：子句边界（仅在强标点切出的块仍超长时再切）
+_SECONDARY_PUNCT_RE = _re.compile(r'[，,；;、——–]+')
+# 残留首尾标点清理
+_TRIM_PUNCT = '，,。.；;、——–·-：:""\'\'（）()【】《》…'
+
+
+def _chunk_narration(narration: str, max_chars: int = 12) -> list[str]:
+    """按标点把旁白切成完整子句，每条不超过 max_chars 字。
+
+    切分优先级（保证语义完整）：
+      1. 按强标点（。！？）切句子。每句完整。
+      2. 若句子长度 > max_chars，再按次标点（，；、——）切子句。
+      3. 极端情况（子句仍超长）才按字数硬切作 fallback。
+
+    80px 字号下每个中文字约 80px 宽，12 字 × 80px = 960px < 1080px 视口宽。
+    """
+    text = narration.strip()
+    if not text:
+        return []
+
+    chunks: list[str] = []
+    # 第 1 层：按强标点切句子
+    sentences = [s for s in _PRIMARY_PUNCT_RE.split(text) if s.strip()]
+    for sent in sentences:
+        sent = sent.strip(_TRIM_PUNCT).strip()
+        if not sent:
+            continue
+        if len(sent) <= max_chars:
+            chunks.append(sent)
+            continue
+        # 第 2 层：按次标点切子句
+        subclauses = [s for s in _SECONDARY_PUNCT_RE.split(sent) if s.strip()]
+        for sub in subclauses:
+            sub = sub.strip(_TRIM_PUNCT).strip()
+            if not sub:
+                continue
+            if len(sub) <= max_chars:
+                chunks.append(sub)
+                continue
+            # 第 3 层 fallback：均匀硬切，避免产生 ≤3 字短尾
+            n = len(sub)
+            pieces = (n + max_chars - 1) // max_chars  # 估算切几片
+            per = (n + pieces - 1) // pieces            # 每片大致字数
+            i = 0
+            while i < n:
+                end = min(i + per, n)
+                chunks.append(sub[i:end])
+                i = end
+
+    # 短碎片合并：≤3 字的碎片（如"一"、"二"等序号）合并到下一段
+    merged: list[str] = []
+    for c in chunks:
+        if merged and len(merged[-1]) <= 3:
+            joined = merged[-1] + " " + c
+            if len(joined) <= max_chars:
+                merged[-1] = joined
+                continue
+        merged.append(c)
+    # 末段太短时回合并到前段（宽容 4 字，避免"定位"这种孤儿尾巴）
+    if len(merged) >= 2 and len(merged[-1]) <= 3:
+        joined = merged[-2] + " " + merged[-1]
+        if len(joined) <= max_chars + 4:
+            merged[-2] = joined
+            merged.pop()
+    return merged
+
+
+def _generate_ass(
     script: ScriptDoc,
     audio_dir: Path,
-    out_srt: Path,
+    out_ass: Path,
 ) -> None:
-    """生成 SRT 字幕文件，时间轴根据各段 audio meta.json 中的 duration_ms 累加。"""
-    entries: list[str] = []
+    """
+    生成 ASS 字幕文件。
+
+    PlayResX/PlayResY = 1080×1920，与视频分辨率 1:1 匹配，FontSize 单位即像素。
+    旁白按每段 18 字切分，在幻灯片时长内均分显示，避免大段文字堆满屏幕。
+    """
+    # ASS 文件头：脚本分辨率与视频一致，字体大小即真实像素
+    header = (
+        "[Script Info]\n"
+        "ScriptType: v4.00+\n"
+        "PlayResX: 1080\n"
+        "PlayResY: 1920\n"
+        "ScaledBorderAndShadow: yes\n"
+        "WrapStyle: 1\n"
+        "\n"
+        "[V4+ Styles]\n"
+        "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, "
+        "OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, "
+        "ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, "
+        "Alignment, MarginL, MarginR, MarginV, Encoding\n"
+        # FontSize=80px, 白字黑描边3px, 底部居中, 距底边480px（约屏幕高1/4处）
+        "Style: Default,Microsoft YaHei,80,"
+        "&H00FFFFFF,&H000000FF,&H00000000,&H00000000,"
+        "-1,0,0,0,100,100,0,0,1,3,0,2,40,40,480,1\n"
+        "\n"
+        "[Events]\n"
+        "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
+    )
+
+    dialogue_lines: list[str] = []
     current_s: float = 0.0
 
     for slide in script.slides:
         idx_str = _slide_index_str(slide.index)
         meta_path = audio_dir / f"{idx_str}.meta.json"
 
-        # 获取本段时长
         duration_s = slide.duration_estimate_s if slide.duration_estimate_s > 0 else 3.0
         if meta_path.exists():
             try:
@@ -56,28 +155,26 @@ def _generate_srt(
             except Exception as e:
                 logger.warning("读取 audio meta 失败，使用估算时长：%s", e)
 
-        start_time = _seconds_to_srt_time(current_s)
-        end_time = _seconds_to_srt_time(current_s + duration_s)
+        chunks = _chunk_narration(slide.narration)
+        if not chunks:
+            current_s += duration_s
+            continue
 
-        # 每条字幕显示 narration（长文本分行，每行最多 20 字）
-        narration = slide.narration.strip()
-        # 按 20 字切分成多行
-        lines: list[str] = []
-        while len(narration) > 20:
-            lines.append(narration[:20])
-            narration = narration[20:]
-        if narration:
-            lines.append(narration)
-        subtitle_text = "\n".join(lines)
+        # 每个短句均分幻灯片时长
+        chunk_dur = duration_s / len(chunks)
+        for i, chunk in enumerate(chunks):
+            t_start = current_s + i * chunk_dur
+            t_end = t_start + chunk_dur
+            dialogue_lines.append(
+                f"Dialogue: 0,{_seconds_to_ass_time(t_start)},{_seconds_to_ass_time(t_end)},"
+                f"Default,,0,0,0,,{chunk}"
+            )
 
-        entries.append(
-            f"{slide.index + 1}\n{start_time} --> {end_time}\n{subtitle_text}\n"
-        )
         current_s += duration_s
 
-    out_srt.parent.mkdir(parents=True, exist_ok=True)
-    out_srt.write_text("\n".join(entries), encoding="utf-8")
-    logger.info("SRT 字幕已生成：%s", out_srt)
+    out_ass.parent.mkdir(parents=True, exist_ok=True)
+    out_ass.write_text(header + "\n".join(dialogue_lines) + "\n", encoding="utf-8")
+    logger.info("ASS 字幕已生成：%s", out_ass)
 
 
 def _merge_slide_av(
@@ -85,7 +182,10 @@ def _merge_slide_av(
     audio_wav: Path,
     out_av_mp4: Path,
 ) -> None:
-    """把无音轨的幻灯片 mp4 与对应 WAV 合并成含音轨的 mp4。"""
+    """把无音轨的幻灯片 mp4 与对应 WAV 合并成含音轨的 mp4。
+
+    录屏比音频多 300ms 缓冲，-shortest 确保视频截到与音频等长，消除末帧冻结导致的音画漂移。
+    """
     v_in = ffmpeg.input(str(slide_mp4))
     a_in = ffmpeg.input(str(audio_wav))
     (
@@ -97,6 +197,7 @@ def _merge_slide_av(
             vcodec="copy",
             acodec="aac",
             **{"b:a": "192k"},
+            shortest=None,  # 截到较短流（音频），避免尾帧冻结
         )
         .overwrite_output()
         .run(quiet=True)
@@ -162,26 +263,24 @@ def compose(
     concat_txt = work_dir / "concat.txt"
     _write_concat_txt(av_paths, concat_txt)
 
-    # 步骤 3：生成 SRT 字幕
-    srt_path = work_dir / "subtitles.srt"
-    _generate_srt(script, audio_dir, srt_path)
+    # 步骤 3：生成 ASS 字幕（PlayResX/Y=1080×1920，FontSize 单位=像素）
+    ass_path = work_dir / "subtitles.ass"
+    _generate_ass(script, audio_dir, ass_path)
 
     # 步骤 4：concat + 烧入字幕 → final.mp4
-    # 用 subprocess 调 ffmpeg 以便精确控制 filter_complex（ffmpeg-python 的字幕滤镜有路径转义问题）
-    _concat_with_subtitles(concat_txt, srt_path, out_mp4)
+    _concat_with_subtitles(concat_txt, ass_path, out_mp4)
 
     logger.info("final.mp4 合成完成：%s", out_mp4)
 
 
 def _concat_with_subtitles(
     concat_txt: Path,
-    srt_path: Path,
+    ass_path: Path,
     out_mp4: Path,
 ) -> None:
-    """用 subprocess 调 ffmpeg 完成 concat + 字幕烧入。"""
-    # Windows 路径分隔符问题：subtitles 滤镜需要转义冒号
-    # 用 srt_path.as_posix() 并替换冒号
-    srt_posix = srt_path.as_posix().replace(":", "\\:")
+    """用 subprocess 调 ffmpeg 完成 concat + ASS 字幕烧入。"""
+    # Windows 路径分隔符：subtitles 滤镜需把盘符冒号转义为 \:
+    ass_posix = ass_path.as_posix().replace(":", "\\:")
 
     cmd: list[str] = [
         "ffmpeg",
@@ -189,7 +288,8 @@ def _concat_with_subtitles(
         "-f", "concat",
         "-safe", "0",
         "-i", str(concat_txt),
-        "-vf", f"subtitles='{srt_posix}':force_style='FontSize=30,PrimaryColour=&HFFFFFF,Alignment=2'",
+        "-vf", f"ass='{ass_posix}'",
+        "-af", "asetpts=PTS-STARTPTS",  # 拼接后重置音频 PTS，消除时间戳累积漂移
         "-c:v", "libx264",
         "-preset", "fast",
         "-crf", "23",

@@ -83,7 +83,7 @@ h6 {
 }
 
 @utility font-serif-zh {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-feature-settings: "palt", "pkna";
 }
 
