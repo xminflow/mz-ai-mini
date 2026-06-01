@@ -15,4 +15,5 @@ dist/
 
 # misc
 *.log
+*.tsbuildinfo
 .DS_Store
