@@ -17,3 +17,6 @@ dist/
 *.log
 *.tsbuildinfo
 .DS_Store
+
+# 本项目使用 pnpm，禁止 npm lockfile 混入
+package-lock.json
