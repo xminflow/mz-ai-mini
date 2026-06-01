@@ -3,9 +3,9 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+// 「提问」由右侧 CTA 按钮承载，导航项不再重复列出
 const NAV_LINKS = [
   { label: '首页', to: '/' },
-  { label: '提问', to: '/new' },
   { label: '标签', to: '/tags' },
 ]
 
