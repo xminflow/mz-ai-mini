@@ -7,10 +7,12 @@ import type { FeedItem } from '@/lib/mock/feed'
 export default function FeedPage() {
   const [items, setItems] = useState<FeedItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   useEffect(() => {
     bffGet<{ items: FeedItem[] }>('feed')
       .then((data) => setItems(data.items))
+      .catch(() => setError('加载失败，请稍后重试'))
       .finally(() => setLoading(false))
   }, [])
 
@@ -19,6 +21,8 @@ export default function FeedPage() {
       <h1 className="font-display text-3xl font-medium text-ink">信息流</h1>
       {loading ? (
         <p className="mt-6 text-sm text-mute">加载中…</p>
+      ) : error ? (
+        <p className="mt-6 text-sm text-amber">{error}</p>
       ) : (
         <ul className="mt-6 space-y-3">
           {items.map((item) => (
