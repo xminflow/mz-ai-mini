@@ -1,4 +1,4 @@
-// AI 编程训练营页面的数据与类型层：集中存放主题色、章节、交付物、讲师资历、
+// AI 编程训练营页面的数据与类型层：集中存放主题色、课时、交付物、讲师资历、
 // 服务阶段、能力主线时间线等纯数据定义与相关纯函数。本模块不含 JSX 与客户端逻辑。
 
 export type ThemeKey =
@@ -57,10 +57,10 @@ export const STAGE1_CHAPTERS: Chapter[] = [
     hours: '6–8 课时',
     deliverable: '一个能在本地浏览器打开的静态网页',
     theme: 'cognition',
-    intro: '本章先补齐零基础最缺的认知地基，再带学员安装并跑通主力 AI 工具，最后做出第一版能本地打开的网页。',
+    intro: '本节课时先补齐零基础最缺的认知地基，再带学员安装并跑通主力 AI 工具，最后做出第一版能本地打开的网页。',
     warning: {
       label: '零基础提示',
-      body: '1.1 与 1.2 是整门课的地基，宁可慢一点。学员在这里建立的概念地图，决定了后面九章是否「踩得稳」。',
+      body: '1.1 与 1.2 是整门课的地基，宁可慢一点。学员在这里建立的概念地图，决定了后面九节课时是否「踩得稳」。',
     },
     lessons: [
       { code: '1.1', title: '开发世界速览', brief: '用大白话讲清前端、后端、数据库、终端，给后面所有内容打地基。' },
@@ -76,7 +76,7 @@ export const STAGE1_CHAPTERS: Chapter[] = [
     hours: '5–6 课时',
     deliverable: '一套个人提示词模板 + 一个持续积累的知识库',
     theme: 'cognition',
-    intro: '把「与 AI 高效交流」提升为本章核心能力，并教学员沉淀经验、搭建个人外脑。',
+    intro: '把「与 AI 高效交流」提升为本节课时核心能力，并教学员沉淀经验、搭建个人外脑。',
     lessons: [
       { code: '2.1', title: '学会与 AI 高效交流(核心)', brief: '清晰描述需求、有效贴报错、拆分复杂任务、给错答案时如何纠偏。' },
       { code: '2.2', title: '各类智能体工具的使用技巧', brief: '横向对比国内外工具的定位与取舍，知道何时用什么。' },
@@ -90,7 +90,7 @@ export const STAGE1_CHAPTERS: Chapter[] = [
     hours: '6–7 课时',
     deliverable: '一份美观、响应式的前端页面',
     theme: 'frontend',
-    intro: '承接第一章的静态页面，把它升级为有设计感、能适配手机的版本。',
+    intro: '承接第一节课时的静态页面，把它升级为有设计感、能适配手机的版本。',
     lessons: [
       { code: '3.1', title: '如何让你的应用更加美观', brief: '掌握配色、排版、间距、对齐等基础原则，并准确传达给 AI。' },
       { code: '3.2', title: '如何制作炫酷的动画效果', brief: '过渡、悬停、加载等常见动画，让页面活起来。' },
@@ -118,7 +118,7 @@ export const STAGE1_CHAPTERS: Chapter[] = [
     hours: '8–10 课时',
     deliverable: '前后端打通、数据能存能取的完整应用',
     theme: 'backend',
-    intro: '全程最陡的一段坡。本章特意放慢节奏：先把概念讲透再动手，并把「前后端联调」作为独立难点专门攻克。',
+    intro: '全程最陡的一段坡。本节课时特意放慢节奏：先把概念讲透再动手，并把「前后端联调」作为独立难点专门攻克。',
     lessons: [
       { code: '5.1', title: '后端是什么 + 用 AI 搭建管理数据库', brief: '先花足篇幅讲明白「数据存哪、接口是什么」，再动手建库。' },
       { code: '5.2', title: '基于 AI 搭建自己的后端开发环境', brief: '把后端跑起来，让 AI 一步步配置并启动环境。' },
@@ -146,11 +146,11 @@ export const STAGE1_CHAPTERS: Chapter[] = [
     hours: '6–7 课时',
     deliverable: '一个可对话、有记忆的 AI 智能体应用',
     theme: 'agent',
-    intro: '点明智能体本质就是一个「调用大模型的后端服务」，与第五、六章一脉相承——做出一个可对话、有记忆的智能体应用。',
+    intro: '点明智能体本质就是一个「调用大模型的后端服务」，与第五、六节课时一脉相承——做出一个可对话、有记忆的智能体应用。',
     lessons: [
       { code: '7.1', title: '认识智能体的基本结构', brief: '破除神秘感:它本质是个会调用大模型 API 的后端服务。' },
       { code: '7.2', title: '使用 AI 来设计自己的智能体', brief: '定义角色与能力边界，用 AI 协助设计提示词与行为。' },
-      { code: '7.3', title: '给智能体接入记忆系统', brief: '衔接第五章数据库:记忆本质就是把对话存下来。' },
+      { code: '7.3', title: '给智能体接入记忆系统', brief: '衔接第五节课时数据库:记忆本质就是把对话存下来。' },
       { code: '7.4', title: '开发出自己的第一个 AI 智能体应用', brief: '完整跑通一次真实对话，让记忆系统真正生效。' },
     ],
   },
@@ -179,9 +179,9 @@ export const STAGE1_CHAPTERS: Chapter[] = [
     intro: '复用前面已学的后端，强调小程序是「换一个壳」而非从零重来。',
     lessons: [
       { code: '9.1', title: '准备小程序开发环境', brief: '小程序账号与开发者工具，理解与网页开发的异同。' },
-      { code: '9.2', title: '如何在小程序中设计自己的应用主题', brief: '把第四章的主题思路迁移到小程序，掌握界面要点。' },
+      { code: '9.2', title: '如何在小程序中设计自己的应用主题', brief: '把第四节课时的主题思路迁移到小程序，掌握界面要点。' },
       { code: '9.3', title: '基于 AI 开发自己的小程序应用', brief: '用熟悉的 AI 工作流，把已有应用的核心功能搬进小程序。' },
-      { code: '9.4', title: '复用已有后端构造小程序服务', brief: '直接对接第五、六章的后端，不重复造轮子。' },
+      { code: '9.4', title: '复用已有后端构造小程序服务', brief: '直接对接第五、六节课时的后端，不重复造轮子。' },
       { code: '9.5', title: '学会如何上线自己的小程序', brief: '掌握提交、审核、发布与后续更新流程。' },
     ],
   },
@@ -191,9 +191,9 @@ export const STAGE1_CHAPTERS: Chapter[] = [
     hours: '5–6 课时',
     deliverable: '一份属于自己的「长期维护 + 产品设计」检查清单',
     theme: 'mindset',
-    intro: '数据安全已提前到第六章，本章聚焦真正长期、思想层面的内容，并对全程做一次完整复盘，作为收尾升华。',
+    intro: '数据安全已提前到第六节课时，本节聚焦真正长期、思想层面的内容，并对全程做一次完整复盘，作为收尾升华。',
     lessons: [
-      { code: '10.1', title: '保证系统整洁 + 数据备份策略', brief: '承接第六章的安全意识，落到具体的备份与恢复实践。' },
+      { code: '10.1', title: '保证系统整洁 + 数据备份策略', brief: '承接第六节课时的安全意识，落到具体的备份与恢复实践。' },
       { code: '10.2', title: '如何升级迭代自己的应用', brief: '建立版本管理思想，安全发布与出问题如何回退。' },
       { code: '10.3', title: '如何与其他人协作', brief: '从单打独斗到团队协作，用 AI 辅助沟通与代码整合。' },
       { code: '10.4', title: '如何监控自己的应用访问数据', brief: '关注关键访问指标，用监控发现潜在问题。' },
@@ -297,10 +297,10 @@ export const STAGE1_SERVICE_STAGES: ServiceStage[] = [
     stage: '第一阶段',
     duration: '1 个月',
     title: '线上直播 · 集中授课',
-    highlight: '每周固定时间在线直播 · 跟着节奏走完十章主线',
-    body: '把十章系统化课程结构化交付给你，现场答疑、现场演示，节奏紧凑而不慌乱——一个月跑通从认识工具到独立上线全流程。',
+    highlight: '每周固定时间在线直播 · 跟着节奏走完十节课时主线',
+    body: '把十节课时系统化课程结构化交付给你，现场答疑、现场演示，节奏紧凑而不慌乱——一个月跑通从认识工具到独立上线全流程。',
     features: [
-      '每周固定时间在线直播，按章节推进',
+      '每周固定时间在线直播，按课时推进',
       '现场答疑、现场演示，不容易掉队',
       '直播全程录像，永久回放、可反复看',
       '边学边做，结业时 4 件你自己亲手做出来的交付成果同步产出',
@@ -333,15 +333,15 @@ export type TimelineNode = {
 }
 
 export const PROJECT_TIMELINE: TimelineNode[] = [
-  { chapter: '第一章', milestone: '静态网页', detail: '用 AI 做出第一版能在本地浏览器打开的网页。', theme: 'cognition' },
-  { chapter: '第三章', milestone: '美观响应式', detail: '掌握设计原则与组件库，做出美观、适配手机的页面。', theme: 'frontend' },
-  { chapter: '第四章', milestone: '前端工程化', detail: '主题、组件、目录结构与控制台排错四件套到位。', theme: 'frontend' },
-  { chapter: '第五章', milestone: '接上后端', detail: '数据库 + 接口 + 联调，第一个真正能用的全栈应用。', theme: 'backend' },
-  { chapter: '第六章', milestone: '后端工程化', detail: '给后端加上日志、分层与数据安全基础。', theme: 'backend' },
-  { chapter: '第七章', milestone: '智能体应用', detail: '做出一个可对话、有记忆的 AI 智能体应用。', theme: 'agent' },
-  { chapter: '第八章', milestone: '部署上线', detail: '服务器、域名、HTTPS——让应用真正能被公网访问。', theme: 'launch' },
-  { chapter: '第九章', milestone: '小程序形态', detail: '复用已有后端，发布一个微信小程序版本。', theme: 'mobile' },
-  { chapter: '第十章', milestone: '长期维护', detail: '形成版本管理、备份、监控与产品设计的工程心智。', theme: 'mindset' },
+  { chapter: '课时 1', milestone: '静态网页', detail: '用 AI 做出第一版能在本地浏览器打开的网页。', theme: 'cognition' },
+  { chapter: '课时 3', milestone: '美观响应式', detail: '掌握设计原则与组件库，做出美观、适配手机的页面。', theme: 'frontend' },
+  { chapter: '课时 4', milestone: '前端工程化', detail: '主题、组件、目录结构与控制台排错四件套到位。', theme: 'frontend' },
+  { chapter: '课时 5', milestone: '接上后端', detail: '数据库 + 接口 + 联调，第一个真正能用的全栈应用。', theme: 'backend' },
+  { chapter: '课时 6', milestone: '后端工程化', detail: '给后端加上日志、分层与数据安全基础。', theme: 'backend' },
+  { chapter: '课时 7', milestone: '智能体应用', detail: '做出一个可对话、有记忆的 AI 智能体应用。', theme: 'agent' },
+  { chapter: '课时 8', milestone: '部署上线', detail: '服务器、域名、HTTPS——让应用真正能被公网访问。', theme: 'launch' },
+  { chapter: '课时 9', milestone: '小程序形态', detail: '复用已有后端，发布一个微信小程序版本。', theme: 'mobile' },
+  { chapter: '课时 10', milestone: '长期维护', detail: '形成版本管理、备份、监控与产品设计的工程心智。', theme: 'mindset' },
 ]
 
 export const OVERVIEW_CARDS = [
@@ -354,13 +354,13 @@ export const OVERVIEW_CARDS = [
   {
     eyebrow: '02',
     title: '能力主线',
-    body: '十章不是十个孤立练习——前端、后端、智能体、上线、小程序按序叠加，后一章的能力都建立在前一章之上。每章都有看得见、摸得着的交付物。',
+    body: '十节课时不是十个孤立练习——前端、后端、智能体、上线、小程序按序叠加，后一节课时的能力都建立在前一节之上。每节课时都有看得见、摸得着的交付物。',
     theme: 'backend' as ThemeKey,
   },
   {
     eyebrow: '03',
     title: '核心理念',
-    body: 'AI 不是魔法。学会「如何描述需求、如何读懂报错、如何把问题讲清楚给 AI」，是比任何具体工具都重要的能力——这条暗线将贯穿全部十章反复训练。',
+    body: 'AI 不是魔法。学会「如何描述需求、如何读懂报错、如何把问题讲清楚给 AI」，是比任何具体工具都重要的能力——这条暗线将贯穿全部十节课时反复训练。',
     theme: 'agent' as ThemeKey,
   },
 ]
@@ -699,9 +699,9 @@ export const AUDIENCES = {
 }
 
 // 全景路径里程碑(第二阶段 3 簇;第一阶段复用 PROJECT_TIMELINE)
-export type JourneyMilestone = { label: string; gain: string; theme: Stage2ThemeKey }
+export type JourneyMilestone = { label: string; range: string; gain: string; theme: Stage2ThemeKey }
 export const STAGE2_MILESTONES: JourneyMilestone[] = [
-  { label: '能力进阶', gain: '企业级工程能力 + RAG 应用 + 智能体', theme: 'advance' },
-  { label: '企业实战', gain: '2 套可上线的企业级实战系统', theme: 'enterprise' },
-  { label: '求职冲刺', gain: '面试题库 + 答案稿 + 模拟面试', theme: 'career' },
+  { label: '能力进阶', range: '课 1–8', gain: '企业级工程能力 + RAG 应用 + 智能体', theme: 'advance' },
+  { label: '企业实战', range: '课 9–12', gain: '2 套可上线的企业级实战系统', theme: 'enterprise' },
+  { label: '求职冲刺', range: '课 13–14', gain: '面试题库 + 答案稿 + 模拟面试', theme: 'career' },
 ]

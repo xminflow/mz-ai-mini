@@ -24,7 +24,7 @@ export function AiCodingCampContent() {
       {/* 1. Hero */}
       <Hero />
 
-      {/* 2. 全景学习路径：完整主线 + 双购买覆盖范围括号 */}
+      {/* 2. 全景学习路径：纵向主线 + 嵌套购买覆盖框（外层 ¥3999 含内层 ¥1999） */}
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-32">
         <Reveal>
           <div className="flex flex-col gap-4">
@@ -36,7 +36,7 @@ export function AiCodingCampContent() {
               </span>
             </h2>
             <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
-              一条完整主线串起全部旅程：前段是第一阶段「零基础 AI 编程」，后段是第二阶段「职业开发者进阶」。下方两条覆盖范围一目了然——¥1999 覆盖前段，¥3999 含第一阶段全部、覆盖整条路径。
+              一条纵向主线串起全部里程碑：前段是第一阶段「零基础 AI 编程」，后段是第二阶段「职业开发者进阶」。外层 ¥3999 含第一阶段全部、覆盖整条路径，内层 ¥1999 仅覆盖第一阶段。
             </p>
           </div>
         </Reveal>
@@ -59,7 +59,7 @@ export function AiCodingCampContent() {
       {/* 3. 讲师介绍：行明 */}
       <InstructorSection />
 
-      {/* 第一阶段：交付成果 / 课程总览 / 十章大纲 / 服务模式 + ¥1999 报名入口 */}
+      {/* 第一阶段：交付成果 / 课程总览 / 课时大纲 / 服务模式 + ¥1999 报名入口 */}
       <StageOneSection onEnroll={openContact} />
 
       {/* 第二阶段：收获墙 / 三段 14 课大纲 / 服务拟稿 + ¥3999 报名入口 */}

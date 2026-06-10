@@ -168,19 +168,19 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
         </div>
       </section>
 
-      {/* 6. 十章大纲：差异化主题色 + 超大背景序号 */}
+      {/* 6. 课时大纲：差异化主题色 + 超大背景序号 */}
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <div className="flex flex-col gap-4">
-            <SectionEyebrow color="#F0ABFC">十章大纲</SectionEyebrow>
+            <SectionEyebrow color="#F0ABFC">课时大纲</SectionEyebrow>
             <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
-              <span className="block">每一章都有看得见、</span>
+              <span className="block">每节课时都有看得见、</span>
               <span className="mt-1 block sm:mt-1.5">
                 <GradientText className="font-semibold">摸得着的产出物</GradientText>
               </span>
             </h2>
             <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
-              每章都有看得见、摸得着的交付物——前一章的能力承接后一章。
+              每节课时都有看得见、摸得着的交付物——前一节的能力承接后一节。
             </p>
           </div>
         </Reveal>
@@ -204,7 +204,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                     className="pointer-events-none absolute left-0 top-0 h-full w-1.5"
                     style={{ background: `linear-gradient(to bottom, ${t.gradientFrom}, ${t.gradientTo})` }}
                   />
-                  {/* 右下角超大半透明章节号 */}
+                  {/* 右下角超大半透明课时序号 */}
                   <span
                     aria-hidden
                     className="pointer-events-none absolute -bottom-4 -right-2 select-none font-mono text-[120px] font-black leading-none tabular sm:-bottom-6 sm:-right-4 sm:text-[180px] lg:text-[220px]"
@@ -218,7 +218,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                   </span>
 
                   <div className="relative flex flex-col gap-5">
-                    {/* 顶部：章号 + 标题 + 主题标签 */}
+                    {/* 顶部：课时序号 + 标题 + 主题标签 */}
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
                       <div className="flex items-start gap-4 sm:gap-5">
                         <span
@@ -235,7 +235,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                             className="font-mono text-[10.5px] font-medium uppercase tracking-[0.22em]"
                             style={{ color: t.hex }}
                           >
-                            第 {chapter.index} 章 · {t.label} · {chapter.hours}
+                            课时 {chapter.index} · {t.label} · {chapter.hours}
                           </span>
                           <h3 className="font-serif-zh text-[19px] font-semibold leading-[1.4] text-ink sm:text-[22px] lg:text-[25px]">
                             {chapter.title}
@@ -289,7 +289,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                       </div>
                     )}
 
-                    {/* 子章节列表 */}
+                    {/* 子条目列表 */}
                     <ul className="grid grid-cols-1 gap-2.5 sm:gap-3 md:grid-cols-2">
                       {chapter.lessons.map((lesson) => (
                         <li
@@ -341,7 +341,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
               </span>
             </h2>
             <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
-              用一个月把十章系统化课程结构化交付给你，再用最长 6 个月把能力真正稳住——边学边做，结业时 4 件你自己亲手做出来的交付成果同步产出；课程之外的真实问题，6 个月内都可以继续来问。
+              用一个月把十节课时系统化课程结构化交付给你，再用最长 6 个月把能力真正稳住——边学边做，结业时 4 件你自己亲手做出来的交付成果同步产出；课程之外的真实问题，6 个月内都可以继续来问。
             </p>
           </div>
         </Reveal>

@@ -1,7 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
-
 import { Reveal } from '../../motion'
 import {
   PROJECT_TIMELINE,
@@ -15,441 +13,140 @@ import {
 import type { Theme } from './data'
 
 /* ─────────────────────────  全景学习路径 JourneyMap  ─────────────────────────
- * 模型：一条完整主线（全旅程）+ 主线下方两条「购买覆盖范围括号」。
- * - 前 9 个节点 = 第一阶段（PROJECT_TIMELINE，明快七彩）。
- * - 后 3 个节点 = 第二阶段（STAGE2_MILESTONES，深色职业系）。
- * - 中间「LEVEL UP · 进阶解锁」分隔标识：调色板/层级过渡，非付费门槛。
- * 复用 CapabilityTimeline 的成熟做法：SVG 平滑主线 + 流光 dash 动画 + 节点辉光滤镜 + 移动端竖向时间线。
+ * 模型：纵向时间轴 + 嵌套覆盖框，用空间包含关系直观表达「¥1999 ⊂ ¥3999」。
+ * - 外层框（¥3999 职业开发者进阶）包住整条主线：第一阶段全部 + 第二阶段。
+ * - 内层框（¥1999 零基础 AI 编程）嵌在外层内，只包住第一阶段的 9 个里程碑卡。
+ * - 第二阶段 3 个里程碑卡在外层内、内层外 → 视觉上「¥3999 含第一阶段全部 + 更多」。
+ * - 中间「LEVEL UP · 进阶解锁」分隔带：调色板/层级过渡，非付费门槛。
+ * 单一响应式纵向布局（不再区分横向桌面端）：左侧渐变主轴 + 节点辉光圆点 + 右侧详情卡。
+ * 数据直接映射 PROJECT_TIMELINE / STAGE2_MILESTONES，无需平行坐标数组，避免坐标与数据失配。
  * ──────────────────────────────────────────────────────────────────────── */
 
-// viewBox：宽 1200，主线沿浅波浪线分布。第一阶段占左 ~58%，第二阶段占右 ~42%。
-const VB_W = 1200
-const VB_H = 280
+// 第一阶段亮色主轴渐变（认知 → 后端），用于内层框主轴。
+const STAGE1_SPINE = `linear-gradient(to bottom, ${THEMES.cognition.hex}, ${THEMES.frontend.hex}, ${THEMES.backend.hex}, ${THEMES.agent.hex}, ${THEMES.launch.hex}, ${THEMES.mobile.hex})`
+// 第二阶段深色主轴渐变（能力进阶 → 求职冲刺），用于第二阶段段主轴。
+const STAGE2_SPINE = `linear-gradient(to bottom, ${STAGE2_THEMES.advance.hex}, ${STAGE2_THEMES.enterprise.hex}, ${STAGE2_THEMES.career.hex})`
 
-// 第一阶段 9 节点：x 落在 60~660（约 5%~55%），交替起伏的波浪。
-const STAGE1_XY: ReadonlyArray<{ x: number; y: number }> = [
-  { x: 60, y: 175 },
-  { x: 135, y: 130 },
-  { x: 210, y: 160 },
-  { x: 285, y: 110 },
-  { x: 360, y: 150 },
-  { x: 435, y: 105 },
-  { x: 510, y: 150 },
-  { x: 585, y: 100 },
-  { x: 660, y: 140 },
-]
+// 内层框（¥1999）强调色：第一阶段认知 → 后端。
+const STAGE1_ACCENT_FROM = THEMES.cognition.hex
+const STAGE1_ACCENT_TO = THEMES.backend.hex
+// 外层框（¥3999）强调色：第一阶段认知 → 第二阶段求职冲刺，跨阶段过渡。
+const STAGE2_ACCENT_FROM = THEMES.cognition.hex
+const STAGE2_ACCENT_TO = STAGE2_THEMES.career.hex
 
-// 分隔点：第一阶段末与第二阶段首之间。
-const DIVIDER_X = 720
+/* ─────────────────────────  里程碑节点圆点（复用移动端辉光做法）  ───────────────────────── */
 
-// 第二阶段 3 节点：x 落在 810~1140（约 67%~95%），台阶式上扬，象征「进阶上升」。
-const STAGE2_XY: ReadonlyArray<{ x: number; y: number }> = [
-  { x: 825, y: 120 },
-  { x: 980, y: 95 },
-  { x: 1135, y: 70 },
-]
-
-// 由全部 12 个有序节点生成一条平滑波浪主线（Catmull-Rom 思路的二次贝塞尔近似）。
-function buildJourneyPath(points: ReadonlyArray<{ x: number; y: number }>): string {
-  let d = `M ${points[0].x} ${points[0].y}`
-  for (let i = 0; i < points.length - 1; i++) {
-    const cur = points[i]
-    const next = points[i + 1]
-    const cx = (cur.x + next.x) / 2
-    d += ` Q ${cx} ${cur.y}, ${cx} ${(cur.y + next.y) / 2} T ${next.x} ${next.y}`
-  }
-  return d
-}
-
-// 不变量：坐标数必须与数据数一一对应。桌面端按下标取数（STAGE1_XY[i] ↔ PROJECT_TIMELINE[i]），
-// 一旦数量不匹配会静默丢节点或越界取 undefined。此处立即抛错，把静默缺陷变成显式失败（符合「禁止静默失败」）。
-if (STAGE1_XY.length !== PROJECT_TIMELINE.length) {
-  throw new Error('JourneyMap: STAGE1_XY 坐标数与 PROJECT_TIMELINE 数据数不一致')
-}
-if (STAGE2_XY.length !== STAGE2_MILESTONES.length) {
-  throw new Error('JourneyMap: STAGE2_XY 坐标数与 STAGE2_MILESTONES 数据数不一致')
-}
-
-const ALL_XY = [...STAGE1_XY, ...STAGE2_XY]
-const JOURNEY_PATH = buildJourneyPath(ALL_XY)
-
-// 主线渐变停靠点：第一阶段亮色 → 分隔处 → 第二阶段深色，跨分隔可见过渡。
-// 注意：下方 <linearGradient> 的 offset 与「9 个一阶段 + 3 个二阶段」节点布局绑定，增删节点需同步调整 offset。
-const stage1Colors = [
-  THEMES.cognition.hex,
-  THEMES.frontend.hex,
-  THEMES.backend.hex,
-  THEMES.agent.hex,
-  THEMES.launch.hex,
-  THEMES.mobile.hex,
-]
-const stage2Colors = [
-  STAGE2_THEMES.advance.hex,
-  STAGE2_THEMES.enterprise.hex,
-  STAGE2_THEMES.career.hex,
-]
-
-// 节点辉光节点单元（复用 CapabilityTimeline 的三层圆 + 辉光做法）。
-function GlowNode({ x, y, theme }: { x: number; y: number; theme: Theme }) {
+function SpineDot({ theme }: { theme: Theme }) {
   return (
-    <g filter="url(#journey-glow)">
-      <circle cx={x} cy={y} r="17" fill={theme.gradientFrom} opacity="0.28" />
-      <circle cx={x} cy={y} r="9" fill={theme.hex} />
-      <circle cx={x} cy={y} r="3.6" fill="#F5F5F7" />
-    </g>
+    <span
+      aria-hidden
+      className="absolute left-[-1px] top-1.5 z-10 h-[18px] w-[18px] -translate-x-1/2 rounded-full sm:h-[20px] sm:w-[20px]"
+      style={{
+        background: `radial-gradient(circle, ${theme.gradientFrom} 0%, ${theme.gradientTo} 80%)`,
+        boxShadow: `0 0 18px ${theme.hex}66, 0 0 0 4px rgba(5,5,7,0.6)`,
+      }}
+    />
   )
 }
 
-export function JourneyMap() {
+/* ─────────────────────────  第一阶段里程碑卡  ───────────────────────── */
+
+function Stage1Card({ chapter, milestone, detail, theme }: { chapter: string; milestone: string; detail: string; theme: Theme }) {
   return (
-    <>
-      {/* ───────────── 桌面端：横向全景主线 ───────────── */}
-      <div className="relative hidden lg:block">
-        <div className="relative h-[300px] w-full">
-          <svg
-            viewBox={`0 0 ${VB_W} ${VB_H}`}
-            className="absolute inset-x-0 top-0 h-[280px] w-full"
-            preserveAspectRatio="none"
-          >
-            <defs>
-              <linearGradient id="journey-line" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stopColor={stage1Colors[0]} stopOpacity="0.95" />
-                <stop offset="0.18" stopColor={stage1Colors[1]} stopOpacity="0.95" />
-                <stop offset="0.34" stopColor={stage1Colors[2]} stopOpacity="0.95" />
-                <stop offset="0.46" stopColor={stage1Colors[3]} stopOpacity="0.95" />
-                <stop offset="0.55" stopColor={stage1Colors[4]} stopOpacity="0.95" />
-                {/* 分隔处：亮色末尾过渡到第二阶段首色 */}
-                <stop offset="0.6" stopColor={stage1Colors[5]} stopOpacity="0.9" />
-                <stop offset="0.7" stopColor={stage2Colors[0]} stopOpacity="0.95" />
-                <stop offset="0.85" stopColor={stage2Colors[1]} stopOpacity="0.95" />
-                <stop offset="1" stopColor={stage2Colors[2]} stopOpacity="0.95" />
-              </linearGradient>
-              <filter id="journey-glow" x="-60%" y="-60%" width="220%" height="220%">
-                <feGaussianBlur stdDeviation="4" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {/* 底层虚化主线 */}
-            <path d={JOURNEY_PATH} stroke="url(#journey-line)" strokeWidth="2.4" fill="none" opacity="0.5" />
-            {/* 流光线（dash 动画运行光，仅一条，保证性能） */}
-            <path
-              d={JOURNEY_PATH}
-              stroke="white"
-              strokeWidth="2"
-              fill="none"
-              strokeDasharray="42 1500"
-              strokeLinecap="round"
-              opacity="0.85"
-            >
-              <animate attributeName="stroke-dashoffset" from="0" to="-1542" dur="7s" repeatCount="indefinite" />
-            </path>
-
-            {/* 分隔竖线：从第一阶段末色过渡到第二阶段首色（层级/调色板过渡，非付费门槛） */}
-            <line
-              x1={DIVIDER_X}
-              y1="30"
-              x2={DIVIDER_X}
-              y2="250"
-              stroke="url(#journey-divider)"
-              strokeWidth="2"
-              strokeDasharray="5 5"
-              opacity="0.7"
-            />
-            <linearGradient id="journey-divider" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor={stage1Colors[5]} stopOpacity="0" />
-              <stop offset="0.5" stopColor={stage2Colors[0]} stopOpacity="0.9" />
-              <stop offset="1" stopColor={stage2Colors[0]} stopOpacity="0" />
-            </linearGradient>
-
-            {/* 第一阶段节点 */}
-            {STAGE1_XY.map((p, i) => (
-              <GlowNode key={`s1-${i}`} x={p.x} y={p.y} theme={THEMES[PROJECT_TIMELINE[i].theme]} />
-            ))}
-            {/* 第二阶段节点 */}
-            {STAGE2_XY.map((p, i) => (
-              <GlowNode key={`s2-${i}`} x={p.x} y={p.y} theme={STAGE2_THEMES[STAGE2_MILESTONES[i].theme]} />
-            ))}
-          </svg>
-
-          {/* ── LEVEL UP 分隔徽标（绝对定位在分隔点上方） ── */}
-          <div
-            className="absolute -translate-x-1/2 -translate-y-1/2"
-            style={{ left: `${(DIVIDER_X / VB_W) * 100}%`, top: '14%' }}
-          >
-            <span
-              className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-ink"
-              style={{
-                borderColor: `${stage2Colors[0]}66`,
-                background: `linear-gradient(110deg, ${stage1Colors[5]}22, ${stage2Colors[0]}33)`,
-                boxShadow: `0 0 22px -4px ${stage2Colors[0]}88`,
-              }}
-            >
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: stage2Colors[0] }} />
-              LEVEL UP · 进阶解锁
-            </span>
-          </div>
-
-          {/* ── 第一阶段标签：上下交替 ── */}
-          {STAGE1_XY.map((p, i) => {
-            const node = PROJECT_TIMELINE[i]
-            const t = THEMES[node.theme]
-            const above = i % 2 === 1
-            const leftPct = (p.x / VB_W) * 100
-            const topPx = above ? (p.y / VB_H) * 280 - 86 : (p.y / VB_H) * 280 + 26
-            return (
-              <motion.div
-                key={`s1-label-${i}`}
-                initial={{ opacity: 0, y: above ? 10 : -10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.5, delay: 0.04 * i, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute w-[112px] -translate-x-1/2 text-center"
-                style={{ left: `${leftPct}%`, top: topPx }}
-              >
-                <span className="font-mono text-[9.5px] uppercase tracking-[0.16em]" style={{ color: t.hex }}>
-                  {node.chapter}
-                </span>
-                <h4 className="font-serif-zh mt-0.5 text-[12.5px] font-semibold leading-[1.3] text-ink">
-                  {node.milestone}
-                </h4>
-              </motion.div>
-            )
-          })}
-
-          {/* ── 第二阶段标签：突出「收获」 ── */}
-          {STAGE2_XY.map((p, i) => {
-            const m = STAGE2_MILESTONES[i]
-            const t = STAGE2_THEMES[m.theme]
-            const above = i % 2 === 1
-            const leftPct = (p.x / VB_W) * 100
-            const topPx = above ? (p.y / VB_H) * 280 - 100 : (p.y / VB_H) * 280 + 26
-            return (
-              <motion.div
-                key={`s2-label-${i}`}
-                initial={{ opacity: 0, y: above ? 10 : -10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.5, delay: 0.04 * (i + 9), ease: [0.22, 1, 0.36, 1] }}
-                className="absolute w-[150px] -translate-x-1/2 text-center"
-                style={{ left: `${leftPct}%`, top: topPx }}
-              >
-                <span
-                  className="inline-block rounded-full px-2 py-0.5 font-mono text-[9.5px] font-semibold uppercase tracking-[0.14em]"
-                  style={{ color: t.hex, background: `${t.hex}1f` }}
-                >
-                  {m.label}
-                </span>
-                <p className="mt-1 text-[11px] font-medium leading-[1.5] text-ink-soft">{m.gain}</p>
-              </motion.div>
-            )
-          })}
-        </div>
-
-        {/* ───────────── 两条购买覆盖范围括号（HTML，位于主线下方） ─────────────
-         * left/width 百分比按节点 x 坐标「目测对齐」：
-         * - 第一阶段节点 x ∈ [60, 660] → 视口 5%~55%；括号取 left 3% / width 56% 覆盖前段。
-         * - 全程节点 x ∈ [60, 1135] → 视口 5%~95%；括号取 left 3% / width 94% 覆盖整线。
-         */}
-        <div className="relative mt-3 h-[150px] w-full">
-          {/* 括号 1：第一阶段 ¥1999，仅覆盖前段 */}
-          <CoverageBracket
-            top={6}
-            left={3}
-            width={56}
-            accentFrom={THEMES.cognition.hex}
-            accentTo={THEMES.backend.hex}
-            audience={AUDIENCES.stage1}
-            price={STAGE1_PRICE.now}
-            originalPrice={STAGE1_PRICE.original}
-          />
-          {/* 括号 2：第二阶段 ¥3999，覆盖整线，标注「含第一阶段全部」 */}
-          <CoverageBracket
-            top={74}
-            left={3}
-            width={94}
-            accentFrom={THEMES.cognition.hex}
-            accentTo={STAGE2_THEMES.career.hex}
-            audience={AUDIENCES.stage2}
-            price={STAGE2_PRICE.now}
-            includesBadge={STAGE2_PRICE.includes}
-            full
-          />
-        </div>
+    <div
+      className="relative overflow-hidden rounded-2xl border p-4 backdrop-blur-md sm:rounded-[20px] sm:p-5 lg:p-6"
+      style={{
+        borderColor: `rgba(${theme.rgb}, 0.22)`,
+        background: `linear-gradient(120deg, rgba(${theme.rgb}, 0.10) 0%, rgba(13,13,18,0.55) 60%)`,
+        boxShadow: `inset 2px 0 0 0 rgba(${theme.rgb}, 0.55), inset 0 0 0 1px rgba(${theme.rgb}, 0.05)`,
+      }}
+    >
+      {/* 右下角超大半透明里程碑名首字（弱化装饰） */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -bottom-3 -right-1 select-none font-mono text-[88px] font-black leading-none tabular sm:text-[120px]"
+        style={{ color: theme.hex, opacity: 0.05 }}
+      >
+        {milestone.slice(0, 1)}
+      </span>
+      <div className="relative flex flex-col gap-1.5 sm:gap-2">
+        <span className="font-mono text-[10.5px] uppercase tracking-[0.16em] sm:text-[11.5px]" style={{ color: theme.hex }}>
+          {chapter} · {theme.label}
+        </span>
+        <h4 className="font-serif-zh text-[16px] font-semibold leading-[1.35] text-ink sm:text-[18px]">
+          {milestone}
+        </h4>
+        <p className="text-[12.5px] leading-[1.7] text-ink-soft sm:text-[13px]">{detail}</p>
       </div>
-
-      {/* ───────────── 移动端：竖向时间线 + 两张覆盖卡 ───────────── */}
-      <div className="relative lg:hidden">
-        <div
-          aria-hidden
-          className="absolute left-[18px] top-2 bottom-2 w-px"
-          style={{
-            background: `linear-gradient(to bottom, ${stage1Colors[0]}, ${stage1Colors[2]}, ${stage1Colors[4]}, ${stage2Colors[0]}, ${stage2Colors[2]})`,
-            opacity: 0.55,
-          }}
-        />
-        <ol className="flex flex-col gap-5">
-          {/* 第一阶段节点 */}
-          {PROJECT_TIMELINE.map((node, i) => {
-            const t = THEMES[node.theme]
-            return (
-              <Reveal key={`m-s1-${node.chapter}`} delay={i * 0.03}>
-                <li className="relative pl-12">
-                  <span
-                    aria-hidden
-                    className="absolute left-[10px] top-1.5 h-[18px] w-[18px] rounded-full"
-                    style={{
-                      background: `radial-gradient(circle, ${t.gradientFrom} 0%, ${t.gradientTo} 80%)`,
-                      boxShadow: `0 0 18px ${t.hex}66`,
-                    }}
-                  />
-                  <span className="font-mono text-[10.5px] uppercase tracking-[0.18em]" style={{ color: t.hex }}>
-                    {node.chapter}
-                  </span>
-                  <h4 className="font-serif-zh mt-1 text-[15px] font-semibold leading-[1.35] text-ink">
-                    {node.milestone}
-                  </h4>
-                  <p className="mt-1 text-[12px] leading-[1.7] text-ink-soft">{node.detail}</p>
-                </li>
-              </Reveal>
-            )
-          })}
-
-          {/* 进阶解锁分隔卡 */}
-          <Reveal delay={0.05}>
-            <li className="relative pl-12">
-              <span
-                aria-hidden
-                className="absolute left-[10px] top-1.5 h-[18px] w-[18px] rounded-full"
-                style={{
-                  background: `radial-gradient(circle, ${stage2Colors[0]} 0%, ${STAGE2_THEMES.advance.gradientTo} 80%)`,
-                  boxShadow: `0 0 18px ${stage2Colors[0]}88`,
-                }}
-              />
-              <div
-                className="rounded-xl border px-3 py-2"
-                style={{
-                  borderColor: `${stage2Colors[0]}55`,
-                  background: `linear-gradient(110deg, ${stage1Colors[5]}1a, ${stage2Colors[0]}26)`,
-                }}
-              >
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.16em]" style={{ color: stage2Colors[0] }}>
-                  LEVEL UP · 进阶解锁 · 第二阶段
-                </span>
-                <p className="mt-0.5 text-[11.5px] leading-[1.6] text-muted">从明快七彩切换到职业硬核深色系，能力继续上扬。</p>
-              </div>
-            </li>
-          </Reveal>
-
-          {/* 第二阶段里程碑 */}
-          {STAGE2_MILESTONES.map((m, i) => {
-            const t = STAGE2_THEMES[m.theme]
-            return (
-              <Reveal key={`m-s2-${m.label}`} delay={i * 0.03}>
-                <li className="relative pl-12">
-                  <span
-                    aria-hidden
-                    className="absolute left-[10px] top-1.5 h-[18px] w-[18px] rounded-full"
-                    style={{
-                      background: `radial-gradient(circle, ${t.gradientFrom} 0%, ${t.gradientTo} 80%)`,
-                      boxShadow: `0 0 18px ${t.hex}66`,
-                    }}
-                  />
-                  <span className="font-mono text-[10.5px] uppercase tracking-[0.18em]" style={{ color: t.hex }}>
-                    {m.label}
-                  </span>
-                  <p className="mt-1 text-[12.5px] font-medium leading-[1.6] text-ink">{m.gain}</p>
-                </li>
-              </Reveal>
-            )
-          })}
-        </ol>
-
-        {/* 两张覆盖卡 */}
-        <div className="mt-8 flex flex-col gap-4">
-          <CoverageCard
-            accentFrom={THEMES.cognition.hex}
-            accentTo={THEMES.backend.hex}
-            audience={AUDIENCES.stage1}
-            price={STAGE1_PRICE.now}
-            originalPrice={STAGE1_PRICE.original}
-          />
-          <CoverageCard
-            accentFrom={THEMES.cognition.hex}
-            accentTo={STAGE2_THEMES.career.hex}
-            audience={AUDIENCES.stage2}
-            price={STAGE2_PRICE.now}
-            includesBadge={STAGE2_PRICE.includes}
-            full
-          />
-        </div>
-      </div>
-    </>
+    </div>
   )
 }
 
-/* ─────────────────────────  覆盖范围括号（桌面）  ───────────────────────── */
+/* ─────────────────────────  第二阶段里程碑卡（职业硬核深色系）  ───────────────────────── */
 
-type Audience = { name: string; price: string; coverage: string; fit: string }
+function Stage2Card({ label, range, gain, theme }: { label: string; range: string; gain: string; theme: Theme }) {
+  return (
+    <div
+      className="relative overflow-hidden rounded-2xl border p-4 backdrop-blur-md sm:rounded-[20px] sm:p-5 lg:p-6"
+      style={{
+        borderColor: `rgba(${theme.rgb}, 0.30)`,
+        background: `linear-gradient(120deg, rgba(${theme.rgb}, 0.12) 0%, rgba(8,8,12,0.7) 60%)`,
+        boxShadow: `inset 2px 0 0 0 rgba(${theme.rgb}, 0.6), inset 0 0 0 1px rgba(${theme.rgb}, 0.06)`,
+      }}
+    >
+      <span
+        aria-hidden
+        className="pointer-events-none absolute -bottom-3 -right-1 select-none font-mono text-[88px] font-black leading-none tabular sm:text-[120px]"
+        style={{ color: theme.hex, opacity: 0.05 }}
+      >
+        {label.slice(0, 1)}
+      </span>
+      <div className="relative flex flex-col gap-1.5 sm:gap-2">
+        <span
+          className="inline-flex w-fit items-center gap-1.5 rounded-full px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] sm:text-[11px]"
+          style={{ color: theme.hex, background: `${theme.hex}1f` }}
+        >
+          {label} · {range}
+        </span>
+        <h4 className="font-serif-zh text-[16px] font-semibold leading-[1.4] text-ink sm:text-[18px]">
+          {gain}
+        </h4>
+      </div>
+    </div>
+  )
+}
 
-function CoverageBracket({
-  top,
-  left,
-  width,
-  accentFrom,
-  accentTo,
-  audience,
+/* ─────────────────────────  框头：价格 + 适合人群 + 覆盖范围  ───────────────────────── */
+
+function FrameHeader({
+  name,
   price,
   originalPrice,
   includesBadge,
+  fit,
+  coverage,
+  accentFrom,
+  accentTo,
   full = false,
 }: {
-  top: number
-  left: number
-  width: number
-  accentFrom: string
-  accentTo: string
-  audience: Audience
+  name: string
   price: string
   originalPrice?: string
   includesBadge?: string
+  fit: string
+  coverage: string
+  accentFrom: string
+  accentTo: string
   full?: boolean
 }) {
   const gradient = `linear-gradient(90deg, ${accentFrom}, ${accentTo})`
   return (
-    <div className="absolute" style={{ top, left: `${left}%`, width: `${width}%` }}>
-      {/* 横杆 + 两端端帽（┤ ├ 观感） */}
-      <div className="relative h-[14px]">
-        <span aria-hidden className="absolute left-0 top-0 h-[14px] w-[2px]" style={{ background: gradient }} />
-        <span aria-hidden className="absolute right-0 top-0 h-[14px] w-[2px]" style={{ background: gradient }} />
-        <span
-          aria-hidden
-          className="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2"
-          style={{ background: gradient, opacity: 0.85 }}
-        />
-        {/* 中央向下指示小三角 */}
-        <span
-          aria-hidden
-          className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rotate-45"
-          style={{ background: accentTo }}
-        />
-      </div>
-      {/* 标签卡 */}
-      <div
-        className="mt-2 inline-flex max-w-full flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border px-4 py-2.5 backdrop-blur-md"
-        style={{
-          borderColor: `${accentTo}66`,
-          background: `linear-gradient(110deg, ${accentFrom}14, ${accentTo}1a)`,
-          boxShadow: `0 0 28px -8px ${accentTo}66`,
-        }}
-      >
-        <span className="font-serif-zh text-[14px] font-bold text-ink">{audience.name}</span>
+    <div className="flex flex-col gap-2.5">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <span className="font-serif-zh text-[16px] font-bold text-ink sm:text-[18px]">{name}</span>
         {includesBadge && (
           <span
-            className="rounded-full px-2 py-0.5 font-mono text-[9.5px] font-bold uppercase tracking-[0.14em] text-ink"
+            className="rounded-full px-2 py-0.5 font-mono text-[9.5px] font-bold uppercase tracking-[0.12em] text-ink sm:text-[10px]"
             style={{ background: gradient, boxShadow: `0 4px 14px -3px ${accentTo}aa` }}
           >
             {includesBadge}
@@ -457,75 +154,173 @@ function CoverageBracket({
         )}
         <span className="flex items-baseline gap-1.5">
           {originalPrice && (
-            <span className="font-mono text-[11px] text-muted line-through tabular">{originalPrice}</span>
+            <span className="font-mono text-[11px] text-muted line-through tabular sm:text-[12px]">原价 {originalPrice}</span>
           )}
           <span
-            className="font-serif-zh text-[18px] font-bold tabular"
+            className="font-serif-zh text-[20px] font-bold tabular sm:text-[24px]"
             style={{ color: full ? '#FECDD3' : accentFrom, textShadow: `0 0 16px ${accentTo}66` }}
           >
             {price}
           </span>
         </span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted">{audience.coverage}</span>
-        <span className="basis-full text-[11px] leading-[1.5] text-ink-soft">适合：{audience.fit}</span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted sm:text-[10.5px]">{coverage}</span>
       </div>
+      <p className="text-[12px] leading-[1.6] text-ink-soft sm:text-[12.5px]">适合：{fit}</p>
     </div>
   )
 }
 
-/* ─────────────────────────  覆盖卡（移动端）  ───────────────────────── */
+/* ─────────────────────────  起点 / 终点小标  ───────────────────────── */
 
-function CoverageCard({
-  accentFrom,
-  accentTo,
-  audience,
-  price,
-  originalPrice,
-  includesBadge,
-  full = false,
-}: {
-  accentFrom: string
-  accentTo: string
-  audience: Audience
-  price: string
-  originalPrice?: string
-  includesBadge?: string
-  full?: boolean
-}) {
-  const gradient = `linear-gradient(90deg, ${accentFrom}, ${accentTo})`
+function JourneyCap({ label, text }: { label: string; text: string }) {
   return (
-    <div
-      className="rounded-2xl border p-4 backdrop-blur-md"
-      style={{
-        borderColor: `${accentTo}55`,
-        background: `linear-gradient(120deg, ${accentFrom}12, ${accentTo}1a)`,
-        boxShadow: `0 0 26px -10px ${accentTo}66`,
-      }}
-    >
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="font-serif-zh text-[15px] font-bold text-ink">{audience.name}</span>
-        {includesBadge && (
-          <span
-            className="rounded-full px-2 py-0.5 font-mono text-[9.5px] font-bold uppercase tracking-[0.14em] text-ink"
-            style={{ background: gradient, boxShadow: `0 4px 14px -3px ${accentTo}aa` }}
-          >
-            {includesBadge}
-          </span>
-        )}
-      </div>
-      <div className="mt-1.5 flex items-baseline gap-2">
-        {originalPrice && (
-          <span className="font-mono text-[12px] text-muted line-through tabular">{originalPrice}</span>
-        )}
-        <span
-          className="font-serif-zh text-[22px] font-bold tabular"
-          style={{ color: full ? '#FECDD3' : accentFrom, textShadow: `0 0 16px ${accentTo}66` }}
+    <div className="flex items-center gap-2.5 pl-1 text-muted">
+      <span aria-hidden className="inline-flex h-2 w-2 rounded-full" style={{ background: 'rgba(255,255,255,0.35)' }} />
+      <span className="font-mono text-[10px] uppercase tracking-[0.2em] sm:text-[10.5px]">{label}</span>
+      <span className="text-[12px] leading-[1.5] text-ink-soft sm:text-[12.5px]">{text}</span>
+    </div>
+  )
+}
+
+export function JourneyMap() {
+  return (
+    <div className="mx-auto w-full max-w-2xl">
+      {/* 嵌套关系说明 */}
+      <Reveal>
+        <p className="mb-4 text-center text-[11.5px] leading-[1.6] text-muted sm:mb-5 sm:text-[12px]">
+          外层 ¥3999 含第一阶段全部内容，内层 ¥1999 仅覆盖第一阶段
+        </p>
+      </Reveal>
+
+      {/* 起点小标 */}
+      <Reveal>
+        <div className="mb-3 sm:mb-4">
+          <JourneyCap label="起点" text="零基础，不用看一行代码" />
+        </div>
+      </Reveal>
+
+      {/* ───────────── 外层框：¥3999 职业开发者进阶 ───────────── */}
+      <Reveal delay={0.04}>
+        <div
+          className="relative rounded-[24px] border p-4 sm:rounded-[28px] sm:p-6 lg:p-7"
+          style={{
+            borderColor: `${STAGE2_ACCENT_TO}55`,
+            background: `linear-gradient(135deg, ${STAGE2_ACCENT_FROM}0f 0%, ${STAGE2_ACCENT_TO}14 100%)`,
+            boxShadow: `0 0 40px -16px ${STAGE2_ACCENT_TO}66`,
+          }}
         >
-          {price}
-        </span>
-        <span className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted">{audience.coverage}</span>
-      </div>
-      <p className="mt-2 text-[12px] leading-[1.7] text-ink-soft">适合：{audience.fit}</p>
+          {/* 外层框头 */}
+          <FrameHeader
+            name={AUDIENCES.stage2.name}
+            price={STAGE2_PRICE.now}
+            includesBadge={STAGE2_PRICE.includes}
+            fit={AUDIENCES.stage2.fit}
+            coverage={AUDIENCES.stage2.coverage}
+            accentFrom={STAGE2_ACCENT_FROM}
+            accentTo={STAGE2_ACCENT_TO}
+            full
+          />
+
+          {/* ───────────── 内层框：¥1999 零基础 AI 编程（包住第一阶段 9 卡） ───────────── */}
+          <div
+            className="relative mt-5 rounded-[20px] border p-4 sm:mt-6 sm:rounded-[24px] sm:p-5 lg:p-6"
+            style={{
+              borderColor: `${STAGE1_ACCENT_TO}55`,
+              background: `linear-gradient(135deg, ${STAGE1_ACCENT_FROM}0f 0%, ${STAGE1_ACCENT_TO}14 100%)`,
+              boxShadow: `inset 0 0 0 1px ${STAGE1_ACCENT_FROM}14`,
+            }}
+          >
+            {/* 内层框头 */}
+            <FrameHeader
+              name={AUDIENCES.stage1.name}
+              price={STAGE1_PRICE.now}
+              originalPrice={STAGE1_PRICE.original}
+              fit={AUDIENCES.stage1.fit}
+              coverage={AUDIENCES.stage1.coverage}
+              accentFrom={STAGE1_ACCENT_FROM}
+              accentTo={STAGE1_ACCENT_TO}
+            />
+
+            {/* 第一阶段纵向主线 + 9 张里程碑卡 */}
+            <div className="relative mt-5 pl-8 sm:mt-6 sm:pl-10">
+              <span
+                aria-hidden
+                className="absolute left-[7px] top-2 bottom-2 w-[2px] sm:left-[9px]"
+                style={{ background: STAGE1_SPINE, opacity: 0.65 }}
+              />
+              <ol className="flex flex-col gap-5 sm:gap-6">
+                {PROJECT_TIMELINE.map((node, i) => {
+                  const t = THEMES[node.theme]
+                  return (
+                    <Reveal key={`s1-${node.chapter}`} delay={Math.min(i, 5) * 0.03}>
+                      <li className="relative">
+                        <SpineDot theme={t} />
+                        <Stage1Card chapter={node.chapter} milestone={node.milestone} detail={node.detail} theme={t} />
+                      </li>
+                    </Reveal>
+                  )
+                })}
+              </ol>
+            </div>
+          </div>
+
+          {/* ───────────── LEVEL UP 分隔带（内层框外、外层框内） ───────────── */}
+          <Reveal delay={0.04}>
+            <div
+              className="relative mt-5 flex items-center gap-3 rounded-2xl border px-4 py-2.5 sm:mt-6 sm:px-5 sm:py-3"
+              style={{
+                borderColor: `${STAGE2_THEMES.advance.hex}55`,
+                background: `linear-gradient(110deg, ${THEMES.mobile.hex}1a, ${STAGE2_THEMES.advance.hex}26)`,
+                boxShadow: `0 0 24px -8px ${STAGE2_THEMES.advance.hex}66`,
+              }}
+            >
+              <span
+                aria-hidden
+                className="inline-flex h-2 w-2 flex-none animate-pulse rounded-full"
+                style={{ background: STAGE2_THEMES.advance.hex }}
+              />
+              <span
+                className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em] sm:text-[11.5px]"
+                style={{ color: STAGE2_THEMES.advance.hex }}
+              >
+                LEVEL UP · 进阶解锁 · 第二阶段
+              </span>
+              <span className="hidden text-[11.5px] leading-[1.5] text-muted sm:inline">
+                从明快七彩切换到职业硬核深色系，能力继续上扬。
+              </span>
+            </div>
+          </Reveal>
+
+          {/* ───────────── 第二阶段纵向主线 + 3 张里程碑卡（外层框内、内层框外） ───────────── */}
+          <div className="relative mt-5 pl-8 sm:mt-6 sm:pl-10">
+            <span
+              aria-hidden
+              className="absolute left-[7px] top-2 bottom-2 w-[2px] sm:left-[9px]"
+              style={{ background: STAGE2_SPINE, opacity: 0.7 }}
+            />
+            <ol className="flex flex-col gap-5 sm:gap-6">
+              {STAGE2_MILESTONES.map((m, i) => {
+                const t = STAGE2_THEMES[m.theme]
+                return (
+                  <Reveal key={`s2-${m.label}`} delay={i * 0.04}>
+                    <li className="relative">
+                      <SpineDot theme={t} />
+                      <Stage2Card label={m.label} range={m.range} gain={m.gain} theme={t} />
+                    </li>
+                  </Reveal>
+                )
+              })}
+            </ol>
+          </div>
+        </div>
+      </Reveal>
+
+      {/* 终点小标 */}
+      <Reveal delay={0.04}>
+        <div className="mt-3 sm:mt-4">
+          <JourneyCap label="终点" text="独立交付企业级应用 + 拿到 offer 的实战与话术" />
+        </div>
+      </Reveal>
     </div>
   )
 }
