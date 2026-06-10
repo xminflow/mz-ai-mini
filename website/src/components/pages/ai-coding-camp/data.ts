@@ -391,3 +391,344 @@ export const buildSmoothPath = () => {
   }
   return d
 }
+
+// ===== 第二阶段：职业开发者进阶 =====
+
+// 第二阶段「职业硬核」深色系,与第一阶段明快七彩区分
+export type Stage2ThemeKey = 'advance' | 'enterprise' | 'career'
+
+export const STAGE2_THEMES: Record<Stage2ThemeKey, Theme> = {
+  advance:    { label: '能力进阶', hex: '#60A5FA', rgb: '96, 165, 250',  gradientFrom: '#93C5FD', gradientTo: '#1E40AF' }, // 钢蓝/靛
+  enterprise: { label: '企业实战', hex: '#D4A24E', rgb: '212, 162, 78',  gradientFrom: '#E8C77A', gradientTo: '#92600E' }, // 暗金/铜
+  career:     { label: '求职冲刺', hex: '#2DD4BF', rgb: '45, 212, 191',  gradientFrom: '#5EEAD4', gradientTo: '#0F766E' }, // 翡翠深绿
+}
+
+export type Stage2Lesson = {
+  code: string          // 课号,如 'S2-1'
+  title: string
+  hours: string         // 拟稿待确认
+  goal: string          // 本节目标(outline)
+  points: string[]      // 子条目(outline 的 x.y 行,逐字照抄)
+  output: string        // 课后产出;课1-5 为拟稿
+  outputDraft?: boolean // true 表示该 output 为拟稿待确认
+  theme: Stage2ThemeKey
+}
+
+export type Stage2Group = {
+  key: Stage2ThemeKey
+  title: string
+  subtitle: string
+  lessons: Stage2Lesson[]
+}
+
+export const STAGE2_GROUPS: Stage2Group[] = [
+  {
+    key: 'advance',
+    title: '能力进阶',
+    subtitle: '补齐企业级 AI 工程能力地图(课 1–8)',
+    lessons: [
+      {
+        code: 'S2-1',
+        title: 'Claude Code 与 Codex 进阶',
+        hours: '待确认',
+        goal: '掌握两大 agentic 编程工具的深度用法,建立一套可复用的 AI 开发工作流。',
+        points: [
+          '1.1 工具全景与选型：Claude Code 与 Codex 的能力边界、计费方式与适用场景，什么任务用哪个。',
+          '1.2 项目级配置：CLAUDE.md / AGENTS.md 编写规范，把项目约定与上下文喂给 AI。',
+          '1.3 自定义命令、hooks 与权限管理：把重复操作固化成命令，控制 AI 的操作边界与安全范围。',
+          '1.4 上下文工程实战：context window 控制、压缩策略、长会话管理，避免越聊越乱。',
+          '1.5 subagent 与并行开发：用子代理拆分任务，基于 git worktree 多分支并行推进。',
+          '1.6 MCP 工具接入：接入数据库、文档、第三方服务，扩展 AI 的实际能力。',
+          '1.7 大型与陌生代码库导航：快速理解既有架构，安全地定位与改动。',
+        ],
+        output: '一套可复用的个人 AI 开发工作流配置(CLAUDE.md / 自定义命令 / hooks)',
+        outputDraft: true,
+        theme: 'advance',
+      },
+      {
+        code: 'S2-2',
+        title: 'AI 全栈进阶',
+        hours: '待确认',
+        goal: '补齐全栈知识地图,学会用 AI 快速进入任意技术栈。',
+        points: [
+          '2.1 现代全栈技术栈全景：前端、后端、数据库、部署的主流选择与取舍。',
+          '2.2 选型方法论：按项目规模、团队能力与长期维护成本做技术决策。',
+          '2.3 用 AI 攻克陌生技术栈：从"读文档"到"能上手"的高效路径。',
+          '2.4 前端工程化生态：构建工具、包管理、类型系统。',
+          '2.5 后端服务生态：API 设计、ORM、缓存、消息队列。',
+          '2.6 存储选型：关系型、NoSQL、向量数据库的适用场景。',
+          '2.7 云原生与容器化基础：Docker、镜像、基础编排概念。',
+        ],
+        output: '一张个人全栈技术地图 + 一次陌生技术栈上手记录',
+        outputDraft: true,
+        theme: 'advance',
+      },
+      {
+        code: 'S2-3',
+        title: 'AI 测试工程',
+        hours: '待确认',
+        goal: '建立企业级测试思维,用 AI 把测试做扎实,而非只凑覆盖率数字。',
+        points: [
+          '3.1 测试策略与金字塔：单元、集成、E2E 测试的分层与配比。',
+          '3.2 用 AI 生成测试用例：让 AI 覆盖边界条件与异常路径。',
+          '3.3 测试数据与场景构造：用 AI 生成贴近真实业务的测试数据。',
+          '3.4 TDD 与 AI 协作的节奏：先写测试、再让 AI 实现的工作方式。',
+          '3.5 Mock、桩与依赖隔离：隔离外部依赖的工程实践。',
+          '3.6 有效覆盖率：区分"覆盖率数字"与"是否真的测到了"。',
+          '3.7 接入 CI：把自动化测试纳入持续集成流水线。',
+        ],
+        output: '为一个已有项目补上分层测试并接入 CI',
+        outputDraft: true,
+        theme: 'advance',
+      },
+      {
+        code: 'S2-4',
+        title: 'AI 运维工程',
+        hours: '待确认',
+        goal: '掌握应用上线后「看得见、稳得住」的运维基本功。',
+        points: [
+          '4.1 可观测性三支柱：日志、指标、链路追踪。',
+          '4.2 用 AI 搭建监控告警：关键指标设计与告警阈值设定。',
+          '4.3 容器化与编排：Docker 与 Kubernetes 基础。',
+          '4.4 CI/CD 流水线设计：从代码提交到自动部署的完整链路。',
+          '4.5 基础设施即代码（IaC）：用代码管理运行环境。',
+          '4.6 线上故障排查：AI 辅助的根因分析（RCA）方法。',
+        ],
+        output: '给应用接上监控告警 + 一条可用的 CI/CD 流水线',
+        outputDraft: true,
+        theme: 'advance',
+      },
+      {
+        code: 'S2-5',
+        title: 'SDD 驱动编程与协作开发',
+        hours: '待确认',
+        goal: '从「凭感觉写」升级到「规范驱动」,让 AI 协作可控、可复现。',
+        points: [
+          '5.1 什么是 SDD：规范驱动开发（Spec-Driven Development）与 vibe coding 的本质区别。',
+          '5.2 写好一份 spec：需求、约束与验收标准的清晰表达，让 AI 真正听懂。',
+          '5.3 完整链路：spec → 设计 → 任务拆解 → 实现 → 验收。',
+          '5.4 工具实践：spec-kit、openspec、superpowers 等工具的实战用法。',
+          '5.5 团队规范沉淀：把团队约定变成可复用的资产。',
+          '5.6 AI 代码评审协作：让 AI 参与 Code Review，提升评审效率与一致性。',
+        ],
+        output: '用 spec-kit / superpowers 跑通一次 spec → 实现 → 验收',
+        outputDraft: true,
+        theme: 'advance',
+      },
+      {
+        code: 'S2-6',
+        title: '整洁架构与领域驱动设计',
+        hours: '待确认',
+        goal: '掌握让代码长期可维护的架构方法,并教会 AI 守住架构。',
+        points: [
+          '6.1 整洁架构核心思想：分层、依赖方向与关注点分离。',
+          '6.2 依赖倒置与模块边界：让业务核心不依赖具体框架。',
+          '6.3 DDD 基础：限界上下文、聚合、实体、值对象。',
+          '6.4 用 AI 重构"屎山代码"：渐进式重构策略与风险控制。',
+          '6.5 维持架构一致性：把架构约束表达给 AI，防止改着改着结构崩坏。',
+        ],
+        output: '把一段高耦合代码重构为清晰分层，并写下一份架构约束说明。',
+        theme: 'advance',
+      },
+      {
+        code: 'S2-7',
+        title: '大模型应用开发 · RAG 与上下文工程',
+        hours: '待确认',
+        goal: '掌握大模型应用的核心能力——把私有知识接进模型。',
+        points: [
+          '7.1 大模型应用基础：token、embedding、prompt 的底层机制。',
+          '7.2 上下文工程原理：如何组织进入模型的信息以获得稳定输出。',
+          '7.3 RAG 全流程：检索 → 召回 → 重排 → 生成。',
+          '7.4 文档切分与 embedding 策略：影响召回质量的关键环节。',
+          '7.5 向量库工程化：选型、索引构建与数据更新。',
+          '7.6 RAG 效果评估：召回率、准确率的衡量与迭代方法。',
+        ],
+        output: '搭建一个能基于自己文档问答的最小 RAG 应用。',
+        theme: 'advance',
+      },
+      {
+        code: 'S2-8',
+        title: '大模型应用开发 · 智能体与 harness',
+        hours: '待确认',
+        goal: '理解智能体的真实结构,能从零搭建一个可控的 agent。',
+        points: [
+          '8.1 智能体核心架构：感知 - 决策 - 行动循环。',
+          '8.2 Agent Harness 设计：工具调用、循环控制与错误恢复。',
+          '8.3 记忆系统：短期与长期记忆、状态管理。',
+          '8.4 工具与 MCP：给智能体接入外部能力。',
+          '8.5 多智能体协作：常见的编排与协作模式。',
+          '8.6 可靠性与评估：让智能体可控、可测、可信。',
+        ],
+        output: '实现一个带工具调用与基础记忆的智能体。',
+        theme: 'advance',
+      },
+    ],
+  },
+  {
+    key: 'enterprise',
+    title: '企业实战直播',
+    subtitle: '从零搭两套可上线的企业级系统(课 9–12)',
+    lessons: [
+      {
+        code: 'S2-9',
+        title: '企业级实战直播 · 智能问数系统(上)',
+        hours: '待确认',
+        goal: '从零启动一个企业级 Text-to-SQL 系统,完成核心链路。',
+        points: [
+          '9.1 项目拆解：业务场景分析与需求边界确定。',
+          '9.2 整体架构设计：模块划分与数据流设计。',
+          '9.3 schema 与元数据管理：让模型理解数据库结构。',
+          '9.4 业务语义层：把业务术语映射到具体的表与字段。',
+          '9.5 Text-to-SQL 核心实现：自然语言到查询语句的生成。',
+        ],
+        output: '跑通"提问 → 生成 SQL → 返回结果"的最小闭环。',
+        theme: 'enterprise',
+      },
+      {
+        code: 'S2-10',
+        title: '企业级实战直播 · 智能问数系统(下)',
+        hours: '待确认',
+        goal: '把 demo 打磨成可上线、准确且安全的产品。',
+        points: [
+          '10.1 准确率优化：schema linking 与 few-shot 示例工程。',
+          '10.2 自校验与纠错：让模型自我检查并修正 SQL。',
+          '10.3 结果可视化：根据查询结果自动生成图表。',
+          '10.4 部署上线：生产环境配置与发布。',
+          '10.5 权限隔离与数据安全：行级权限、防注入与数据脱敏。',
+        ],
+        output: '把智能问数系统部署到可访问环境，并加上权限控制。',
+        theme: 'enterprise',
+      },
+      {
+        code: 'S2-11',
+        title: '企业级实战直播 · Hermes/Openclaw 智能体系统(上)',
+        hours: '待确认',
+        goal: '从零搭建一个智能体系统的骨架与核心能力。',
+        points: [
+          '11.1 系统定位与边界：明确这个智能体要解决的核心问题。',
+          '11.2 整体架构设计：引擎、工具、记忆、接口之间的关系。',
+          '11.3 核心引擎与调度循环：智能体主循环的实现。',
+          '11.4 工具系统设计：工具的注册、调用与结果处理。',
+          '11.5 外部能力接入：接入真实业务接口与数据。',
+        ],
+        output: '跑通智能体"接收任务 → 调用工具 → 产出结果"的主流程。',
+        theme: 'enterprise',
+      },
+      {
+        code: 'S2-12',
+        title: '企业级实战直播 · Hermes/Openclaw 智能体系统(下)',
+        hours: '待确认',
+        goal: '把智能体从「能跑」做到「能上线、稳定、可运营」。',
+        points: [
+          '12.1 记忆与长期上下文管理：跨会话的状态维护。',
+          '12.2 多轮对话与任务编排：复杂任务的拆解与衔接。',
+          '12.3 异常处理与降级：工具失败、超时等情况的兜底策略。',
+          '12.4 生产部署：环境与配置管理。',
+          '12.5 监控与稳定性：可观测性建设与告警。',
+        ],
+        output: '把智能体系统部署上线，并接入基础监控。',
+        theme: 'enterprise',
+      },
+    ],
+  },
+  {
+    key: 'career',
+    title: '求职冲刺',
+    subtitle: '把课程实战讲成 offer(课 13–14)',
+    lessons: [
+      {
+        code: 'S2-13',
+        title: '求职面试专题(一)· 大模型应用',
+        hours: '待确认',
+        goal: '系统梳理大模型应用方向高频面试题,做到能答、能讲、能动手。',
+        points: [
+          '13.1 大模型基础高频题：token、embedding、上下文窗口、温度等关键参数；Transformer 的高层原理；主流模型的对比与选型逻辑。',
+          '13.2 Prompt 与上下文工程题：prompt 设计原则、few-shot 与示例工程、上下文工程，以及常见失效场景与应对。',
+          '13.3 RAG 系统面试题：RAG 全流程、切分与 embedding 策略、检索与重排、混合检索；RAG 效果如何评估；RAG、微调、长上下文三者如何取舍。',
+          '13.4 智能体面试题：agent 架构、工具调用、记忆设计、任务规划、多智能体协作、harness 设计与可靠性保障。',
+          '13.5 大模型应用系统设计题：如何设计企业知识库问答 / 智能客服 / 智能体平台，重点考查成本、延迟、并发、评估与安全的权衡。',
+          '13.6 工程与生产实战题：幻觉治理、prompt 注入防护、评估体系（eval）建设、成本与延迟优化、线上可观测性。',
+          '13.7 项目讲述与实战演示：用 STAR 结构把课程里的 RAG / 智能体实战讲到面试官认可，并能现场口述或白板还原核心设计。',
+          '13.8 模拟面试：覆盖以上各模块的高频追问与压力测试式演练。',
+        ],
+        output: '整理一份"大模型应用面试题库 + 个人答案稿"，并完成一次完整的模拟面试。',
+        theme: 'career',
+      },
+      {
+        code: 'S2-14',
+        title: '求职面试专题(二)· VibeCoding 与企业架构',
+        hours: '待确认',
+        goal: '梳理 AI 编程工作流与企业级工程能力高频面试题。',
+        points: [
+          '14.1 AI 编程工具与工作流题：Claude Code / Codex 的用法、上下文工程、subagent、MCP，以及"如何用 AI 高效开发一个项目"这类开放题的应答思路。',
+          '14.2 SDD 与协作开发题：规范驱动开发与 vibe coding 的区别、如何写好 spec、AI 时代的团队协作与代码评审。',
+          '14.3 整洁架构与 DDD 题：分层、依赖倒置、限界上下文、聚合、实体、值对象等核心概念的考查与辨析。',
+          '14.4 测试工程题：测试金字塔、TDD、Mock 与依赖隔离、覆盖率的真实含义，以及如何用 AI 做测试。',
+          '14.5 运维与 DevOps 题：可观测性三支柱、CI/CD、容器化与编排、IaC、线上故障排查。',
+          '14.6 全栈与技术选型题：技术栈选型的权衡、前后端生态、存储选型。',
+          '14.7 企业级系统设计题：设计一个高可用 Web 系统 / 后台服务（非大模型方向），考查架构、扩展性、数据一致性与容量评估。',
+          '14.8 工程素养开放题与模拟面试：代码可维护性、如何带 AI 维持架构、如何评估一个系统/产品的好坏；结合项目讲述完成一次完整模拟面试。',
+        ],
+        output: '一份 VibeCoding/企业架构面试题库 + 个人答案稿 + 完整模拟面试',
+        outputDraft: true,
+        theme: 'career',
+      },
+    ],
+  },
+]
+
+export type Stage2Deliverable = {
+  code: string; title: string; subtitle: string; body: string; badges: string[]; theme: Stage2ThemeKey
+}
+
+export const STAGE2_DELIVERABLES: Stage2Deliverable[] = [
+  { code: '01', title: '一套企业级 AI 工程能力', subtitle: '测试 · 运维 · SDD · 整洁架构',
+    body: '从有效测试、可观测运维、规范驱动开发到整洁架构与 DDD,补齐职业开发者真正缺的工程地图,并教 AI 守住架构。',
+    badges: ['分层测试', 'CI/CD', '架构约束'], theme: 'advance' },
+  { code: '02', title: 'RAG 问答应用 + 带记忆的智能体', subtitle: '大模型应用核心能力 · 可运行',
+    body: '把私有文档接进模型做出最小 RAG 问答应用,并从零实现一个带工具调用与基础记忆的可控智能体。',
+    badges: ['RAG', '工具调用', '记忆系统'], theme: 'advance' },
+  { code: '03', title: '智能问数系统(可上线)', subtitle: 'Text-to-SQL · 带权限与数据安全',
+    body: '从「提问 → 生成 SQL → 返回结果」最小闭环,打磨到准确率优化、自校验、结果可视化、行级权限与防注入,部署到可访问环境。',
+    badges: ['Text-to-SQL', '可上线', '权限隔离'], theme: 'enterprise' },
+  { code: '04', title: 'Hermes/Openclaw 智能体系统(可上线)', subtitle: '引擎 · 工具 · 记忆 · 监控',
+    body: '从智能体主循环、工具系统到长期记忆、多轮编排、异常降级与生产监控,搭出一套能上线、稳定、可运营的智能体系统。',
+    badges: ['Agent 引擎', '生产部署', '监控告警'], theme: 'enterprise' },
+  { code: '05', title: '面试题库 + 个人答案稿 + 模拟面试', subtitle: '大模型应用 / VibeCoding 与架构 两方向',
+    body: '把课程里的 RAG / 智能体 / 架构实战,用 STAR 结构讲到面试官认可;沉淀两方向的高频题库与个人答案稿,并完成完整模拟面试。',
+    badges: ['题库', 'STAR 讲述', '模拟面试'], theme: 'career' },
+]
+
+// 第二阶段服务模式(拟稿待确认)
+export const STAGE2_SERVICE_DRAFT = {
+  note: '以下服务节奏为拟稿,待确认',
+  duration: '待确认',
+  title: '企业级实战直播 + 长期陪跑',
+  highlight: '直播带做两套企业级系统 · 课程外问题长期答疑(时长待确认)',
+  body: '第二阶段以企业级实战直播为主,带你从零做出智能问数与智能体两套可上线系统;直播之外的真实项目、求职准备等问题持续陪跑(具体节奏与时长待确认)。',
+  features: [
+    '企业级实战直播,带做两套可上线系统',
+    '求职专题 + 模拟面试陪练',
+    '课程之外的真实项目与求职问题长期答疑(时长待确认)',
+    '专属沟通渠道(细节待确认)',
+  ],
+}
+
+export const STAGE1_PRICE = { now: '¥1999', original: '¥2999' }
+export const STAGE2_PRICE = { now: '¥3999', includes: '含第一阶段全部内容' }
+
+// 适合人群(拟稿待确认)
+export const AUDIENCES = {
+  stage1: { name: '零基础 AI 编程', price: '¥1999', coverage: '第一阶段 · 10 课',
+    fit: '零开发经验、想用 AI 做出自己的应用' },
+  stage2: { name: '职业开发者进阶', price: '¥3999', coverage: '第一阶段 + 第二阶段 · 共 24 课',
+    fit: '已有基础、想进阶到企业级 AI 工程并拿下求职 offer' },
+}
+
+// 全景路径里程碑(第二阶段 3 簇;第一阶段复用 PROJECT_TIMELINE)
+export type JourneyMilestone = { label: string; gain: string; theme: Stage2ThemeKey }
+export const STAGE2_MILESTONES: JourneyMilestone[] = [
+  { label: '能力进阶', gain: '企业级工程能力 + RAG 应用 + 智能体', theme: 'advance' },
+  { label: '企业实战', gain: '2 套可上线的企业级实战系统', theme: 'enterprise' },
+  { label: '求职冲刺', gain: '面试题库 + 答案稿 + 模拟面试', theme: 'career' },
+]
