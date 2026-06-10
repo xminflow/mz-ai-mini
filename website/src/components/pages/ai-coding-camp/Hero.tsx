@@ -12,7 +12,7 @@ const OVERVIEW_STATS: { value: string; label: string }[] = [
 ]
 
 export function Hero() {
-  // 第二阶段强调色(钢蓝),作为「职业进阶」锚点的专业感主色
+  // 第二阶段强调色(钢蓝),作为「AI 编程专家」锚点的专业感主色
   const advance = STAGE2_THEMES.advance
 
   return (
@@ -30,8 +30,7 @@ export function Hero() {
             <p className="text-balance text-[15px] font-medium leading-[1.75] text-ink-soft sm:text-[18px] lg:text-[20px]">
               <span className="block">
                 零基础入门 +{' '}
-                <GradientText className="font-semibold">职业开发者进阶</GradientText>
-                {' '}· 两门课,各得其所
+                <GradientText className="font-semibold">AI 编程专家</GradientText>
               </span>
               <span className="mt-2 block text-[14px] sm:mt-3 sm:text-[16px] lg:text-[17px]">
                 <span
@@ -67,7 +66,7 @@ export function Hero() {
           </div>
         </Reveal>
 
-        {/* 双课程价格锚点：零基础 ¥1999 / 职业进阶 ¥3999(含第一阶段),点击跳转对应阶段 */}
+        {/* 双课程价格锚点：零基础 ¥1999 / AI 编程专家 ¥3999(含第一阶段),点击跳转对应阶段 */}
         <Reveal delay={0.3}>
           <div className="mt-9 grid w-full max-w-2xl grid-cols-1 gap-3.5 sm:mt-11 sm:grid-cols-2 sm:gap-4">
             {/* 锚点 1：零基础 AI 编程 → #stage-one */}
@@ -117,7 +116,7 @@ export function Hero() {
               </span>
             </a>
 
-            {/* 锚点 2：职业开发者进阶 → #stage-two(含第一阶段全部) */}
+            {/* 锚点 2：AI 编程专家 → #stage-two(含第一阶段全部) */}
             <a
               href="#stage-two"
               className="group relative flex flex-col gap-2 rounded-[20px] border p-4 text-left backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 sm:p-5"
@@ -135,14 +134,14 @@ export function Hero() {
                     boxShadow: `0 4px 14px -2px rgba(${advance.rgb}, 0.6)`,
                   }}
                 >
-                  职业进阶
+                  AI 专家
                 </span>
                 <span className="font-mono text-[10.5px] font-medium tracking-[0.04em] text-muted transition-colors group-hover:text-ink-soft sm:text-[11px]">
                   ↓ 看课程
                 </span>
               </div>
               <span className="font-serif-zh text-[16px] font-semibold text-ink sm:text-[17px]">
-                第二阶段 · 职业开发者进阶
+                第二阶段 · AI 编程专家
               </span>
               <div className="flex items-baseline gap-2">
                 <span

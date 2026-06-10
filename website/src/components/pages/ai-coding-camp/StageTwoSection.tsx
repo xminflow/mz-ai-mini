@@ -31,7 +31,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
       <section className="relative mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-24 lg:py-28">
         <Reveal>
           <div className="flex flex-col gap-4">
-            <SectionEyebrow color={advance.hex}>第二阶段 · 职业开发者进阶</SectionEyebrow>
+            <SectionEyebrow color={advance.hex}>第二阶段 · AI 编程专家</SectionEyebrow>
             <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
               <span className="block">从能用 AI，</span>
               <span className="mt-1 block sm:mt-1.5">
@@ -53,7 +53,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
             <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
               <span className="block">学完，你手里会多出</span>
               <span className="mt-1 block sm:mt-1.5">
-                <GradientText className="font-semibold">5 项职业级硬核成果</GradientText>
+                <GradientText className="font-semibold">5 项专家级硬核成果</GradientText>
               </span>
             </h2>
           </div>
@@ -458,7 +458,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
 
             {/* 价格条 + 含第一阶段全部内容 pill */}
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-              <PriceChip badge="职业进阶" specialLabel="全包价" price={STAGE2_PRICE.now} />
+              <PriceChip badge="AI 专家" specialLabel="全包价" price={STAGE2_PRICE.now} />
               <span
                 className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[12px] font-semibold sm:text-[12.5px]"
                 style={{
@@ -475,7 +475,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
 
             {/* 报名按钮 */}
             <div className="mt-1">
-              <EnrollButton label="报名职业开发者进阶 · ¥3999" onClick={onEnroll} />
+              <EnrollButton label="报名 AI 编程专家 · ¥3999" onClick={onEnroll} />
             </div>
           </div>
         </Reveal>

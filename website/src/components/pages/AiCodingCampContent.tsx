@@ -31,12 +31,12 @@ export function AiCodingCampContent() {
             <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
               <span className="mt-1 block sm:mt-1.5">
                 <GradientText className="font-semibold">
-                  覆盖从零基础到职业进阶
+                  覆盖从零基础到 AI 编程专家
                 </GradientText>
               </span>
             </h2>
             <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
-              一条时间轴串起全部里程碑：第一阶段「零基础 AI 编程」¥1999，第二阶段「职业开发者进阶」¥3999、含第一阶段全部内容。
+              一条时间轴串起全部里程碑：第一阶段「零基础 AI 编程」¥1999，第二阶段「AI 编程专家」¥3999、含第一阶段全部内容。
             </p>
           </div>
         </Reveal>

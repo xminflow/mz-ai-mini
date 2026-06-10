@@ -365,7 +365,7 @@ export const OVERVIEW_CARDS = [
   },
 ]
 
-// ===== 第二阶段：职业开发者进阶 =====
+// ===== 第二阶段：AI 编程专家 =====
 
 // 第二阶段「职业硬核」深色系,与第一阶段明快七彩区分
 export type Stage2ThemeKey = 'advance' | 'enterprise' | 'career'
@@ -694,7 +694,7 @@ export const STAGE2_PRICE = { now: '¥3999', includes: '含第一阶段全部内
 export const AUDIENCES = {
   stage1: { name: '零基础 AI 编程', price: '¥1999', coverage: '第一阶段 · 10 课',
     fit: '零开发经验、想用 AI 做出自己的应用' },
-  stage2: { name: '职业开发者进阶', price: '¥3999', coverage: '第一阶段 + 第二阶段 · 共 24 课',
+  stage2: { name: 'AI 编程专家', price: '¥3999', coverage: '第一阶段 + 第二阶段 · 共 24 课',
     fit: '已有基础、想进阶到企业级 AI 工程并拿下求职 offer' },
 }
 
