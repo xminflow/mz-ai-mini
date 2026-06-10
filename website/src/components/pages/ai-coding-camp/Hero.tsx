@@ -154,7 +154,6 @@ export function Hero() {
                 <span
                   className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[10.5px] font-semibold sm:text-[11px]"
                   style={{
-                    borderColor: `rgba(${advance.rgb}, 0.42)`,
                     border: `1px solid rgba(${advance.rgb}, 0.42)`,
                     background: `rgba(${advance.rgb}, 0.12)`,
                     color: advance.gradientFrom,
