@@ -9,7 +9,6 @@ import {
   THEMES,
   STAGE2_THEMES,
   AUDIENCES,
-  STAGE1_PRICE,
   STAGE2_PRICE,
 } from './data'
 import type { Theme, Stage2ThemeKey } from './data'
@@ -219,7 +218,7 @@ function StageHead({
 }: {
   accent: string
   name: string
-  price: string
+  price?: string
   originalPrice?: string
   includes?: string
   coverage: string
@@ -233,9 +232,11 @@ function StageHead({
         <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
           <span className="font-serif-zh text-[16px] font-bold text-ink sm:text-[18px]">{name}</span>
           {originalPrice && <span className="font-mono text-[11px] text-muted line-through tabular">原价 {originalPrice}</span>}
-          <span className="font-serif-zh text-[19px] font-bold tabular sm:text-[21px]" style={{ color: full ? '#FECDD3' : accent, textShadow: `0 0 14px ${accent}55` }}>
-            {price}
-          </span>
+          {price && (
+            <span className="font-serif-zh text-[19px] font-bold tabular sm:text-[21px]" style={{ color: full ? '#FECDD3' : accent, textShadow: `0 0 14px ${accent}55` }}>
+              {price}
+            </span>
+          )}
           {includes && <span className="font-mono text-[10px] font-semibold tracking-[0.04em]" style={{ color: accent }}>· {includes}</span>}
           <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-muted">{coverage}</span>
         </div>
@@ -254,22 +255,22 @@ const STAGE1_STOPS = [
   { offset: 0.85, color: THEMES.launch.hex }, { offset: 1, color: THEMES.mindset.hex },
 ]
 
-/* 第二阶段压缩为单条成长曲线：把「上/下」「一/二」等分集课时合并，14 → 11 个节点。 */
-const STAGE2_CURVE: { title: string; theme: Stage2ThemeKey }[] = [
-  { title: 'Claude Code 与 Codex 进阶', theme: 'advance' },
-  { title: 'AI 全栈工程', theme: 'advance' },
-  { title: 'AI 测试工程', theme: 'advance' },
-  { title: 'AI 运维工程', theme: 'advance' },
-  { title: 'SDD 驱动编程与协作开发', theme: 'advance' },
-  { title: '工程结构设计', theme: 'advance' },
-  { title: '大模型应用开发 · RAG 与上下文工程', theme: 'advance' },
-  { title: '大模型应用开发 · 智能体与 harness', theme: 'advance' },
-  { title: '企业级实战直播 · 智能问数系统', theme: 'enterprise' }, // 合并 上/下
-  { title: '企业级实战直播 · Hermes/Openclaw 智能体系统', theme: 'enterprise' }, // 合并 上/下
-  { title: '求职面试专题', theme: 'career' }, // 合并 一/二
+/* 第二阶段压缩为单条成长曲线：把「上/下」「一/二」等分集课时合并，14 → 11 个节点，各带一句描述。 */
+const STAGE2_CURVE: { title: string; detail: string; theme: Stage2ThemeKey }[] = [
+  { title: 'Claude Code 与 Codex 进阶', detail: 'agentic 工具深度用法 + 可复用 AI 工作流', theme: 'advance' },
+  { title: 'AI 全栈工程', detail: '补齐全栈技术地图，快速上手任意技术栈', theme: 'advance' },
+  { title: 'AI 测试工程', detail: '企业级测试思维，用 AI 把测试做扎实', theme: 'advance' },
+  { title: 'AI 运维工程', detail: '可观测性 + 监控告警 + CI/CD 流水线', theme: 'advance' },
+  { title: 'SDD 驱动编程与协作开发', detail: '规范驱动开发，让 AI 协作可控可复现', theme: 'advance' },
+  { title: '工程结构设计', detail: '整洁架构 + DDD，代码长期可维护', theme: 'advance' },
+  { title: '大模型应用开发 · RAG 与上下文工程', detail: '把私有知识接进模型，搭最小 RAG 应用', theme: 'advance' },
+  { title: '大模型应用开发 · 智能体与 harness', detail: '从零搭一个可控、带记忆的智能体', theme: 'advance' },
+  { title: '企业级实战直播 · 智能问数系统', detail: '企业级 Text-to-SQL，可上线带权限', theme: 'enterprise' }, // 合并 上/下
+  { title: '企业级实战直播 · Hermes/Openclaw 智能体系统', detail: '可上线、可运营的智能体系统', theme: 'enterprise' }, // 合并 上/下
+  { title: '求职面试专题', detail: '高频面试题 + 个人答案稿 + 模拟面试', theme: 'career' }, // 合并 一/二
 ]
 const STAGE2_NODES: CurveNode[] = STAGE2_CURVE.map((n, i) => ({
-  key: `s2-${i}`, theme: STAGE2_THEMES[n.theme], badge: '', title: n.title, detail: '',
+  key: `s2-${i}`, theme: STAGE2_THEMES[n.theme], badge: '', title: n.title, detail: n.detail,
 }))
 // 11 节点单行成长曲线（viewBox 1200×280），加大起伏、上下散开标签。
 const STAGE2_COORDS: Pt[] = [
@@ -292,7 +293,6 @@ export function JourneyMap() {
         <StageHead
           accent={THEMES.cognition.hex}
           name={AUDIENCES.stage1.name}
-          price={STAGE1_PRICE.now}
           coverage={AUDIENCES.stage1.coverage}
           fit={AUDIENCES.stage1.fit}
         />
@@ -328,7 +328,6 @@ export function JourneyMap() {
         <StageHead
           accent={STAGE2_THEMES.advance.hex}
           name={AUDIENCES.stage2.name}
-          price={STAGE2_PRICE.now}
           includes={STAGE2_PRICE.includes}
           coverage={AUDIENCES.stage2.coverage}
           fit={AUDIENCES.stage2.fit}
@@ -341,13 +340,12 @@ export function JourneyMap() {
           coords={STAGE2_COORDS}
           pathD={STAGE2_PATH}
           vbH={280}
-          svgTop={90}
-          containerH={480}
-          aboveOffset={62}
+          svgTop={100}
+          containerH={520}
+          aboveOffset={96}
           pathLen={1400}
           gradientStops={STAGE2_STOPS}
           idPrefix="s2"
-          showDetail={false}
           labelW="w-[140px]"
         />
       </div>
