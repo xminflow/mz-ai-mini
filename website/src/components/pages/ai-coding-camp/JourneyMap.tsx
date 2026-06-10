@@ -15,41 +15,55 @@ import {
 } from './data'
 import type { Theme } from './data'
 
-/* ─────────────────────────  全景学习路径 JourneyMap（一脉相承的成长曲线）  ─────────────────────────
- * 复刻原 CapabilityTimeline 的设计：一条平滑流动的成长曲线（Q/T 平滑贝塞尔）+ 辉光节点 + 流光动画。
- * 分两个阶段板块：
- *  - 第一阶段：9 个课时里程碑一条曲线（带一句收获说明）。
- *  - 第二阶段：outline.md 的 14 个课时全部铺在曲线上（按 能力进阶/企业实战/求职冲刺 三组上色，标签精炼）。
- * 桌面端横向成长曲线（标签上下交替）；移动端降级为竖向时间线。无嵌套框。
+/* ─────────────────────────  全景学习路径 JourneyMap（蛇形蜿蜒成长曲线）  ─────────────────────────
+ * 复刻原 CapabilityTimeline 的平滑流动曲线 + 辉光节点 + 流光动画，并把走线改成「蛇形(boustrophedon)」：
+ * 上行 → 右侧圆角下折 → 下行 → … 这样一条曲线能容纳更多节点。
+ *  - 第一阶段：9 个课时里程碑，单行成长曲线（带一句收获）。
+ *  - 第二阶段：outline.md 全部 14 个课时，蛇形两行(7+7)铺开，按 能力进阶/企业实战/求职冲刺 三组上色。
+ * 桌面端蛇形曲线（标签上下交替）；移动端降级为竖向时间线。无嵌套框。
  * ──────────────────────────────────────────────────────────────────────── */
 
+type Pt = { x: number; y: number }
 type CurveNode = { key: string; theme: Theme; badge: string; title: string; detail: string }
 
-/* 平滑成长曲线路径（Q + T 平滑贝塞尔，沿不规则起伏的节点自然流动）。 */
-function buildSmoothPath(pts: ReadonlyArray<{ x: number; y: number }>): string {
+/* Catmull-Rom → 三次贝塞尔：平滑穿过任意点序列（含蛇形转弯航点），整条线自然流动。 */
+function smoothThrough(pts: ReadonlyArray<Pt>): string {
+  if (pts.length < 2) return pts.length ? `M ${pts[0].x} ${pts[0].y}` : ''
   let d = `M ${pts[0].x} ${pts[0].y}`
   for (let i = 0; i < pts.length - 1; i++) {
-    const cur = pts[i]
-    const next = pts[i + 1]
-    const cx = (cur.x + next.x) / 2
-    d += ` Q ${cx} ${cur.y}, ${cx} ${(cur.y + next.y) / 2} T ${next.x} ${next.y}`
+    const p0 = pts[i - 1] ?? pts[i]
+    const p1 = pts[i]
+    const p2 = pts[i + 1]
+    const p3 = pts[i + 2] ?? p2
+    const c1x = p1.x + (p2.x - p0.x) / 6
+    const c1y = p1.y + (p2.y - p0.y) / 6
+    const c2x = p2.x - (p3.x - p1.x) / 6
+    const c2y = p2.y - (p3.y - p1.y) / 6
+    d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`
   }
   return d
 }
 
-// 第一阶段 9 节点坐标（沿浅波浪起伏，viewBox 1200×260）——取自原成长曲线。
-const STAGE1_XY: ReadonlyArray<{ x: number; y: number }> = [
+/* ── 第一阶段：9 节点单行成长曲线（viewBox 1200×260） ── */
+const STAGE1_COORDS: Pt[] = [
   { x: 60, y: 170 }, { x: 200, y: 120 }, { x: 340, y: 150 }, { x: 480, y: 90 }, { x: 620, y: 145 },
   { x: 760, y: 100 }, { x: 900, y: 160 }, { x: 1040, y: 105 }, { x: 1140, y: 175 },
 ]
-// 第二阶段 14 节点坐标（x 等距，y 不规则起伏，viewBox 1200×260）。
-const STAGE2_XY: ReadonlyArray<{ x: number; y: number }> = [
-  { x: 46, y: 165 }, { x: 130, y: 100 }, { x: 215, y: 150 }, { x: 300, y: 95 }, { x: 385, y: 155 },
-  { x: 470, y: 105 }, { x: 555, y: 150 }, { x: 640, y: 110 }, { x: 725, y: 160 }, { x: 810, y: 95 },
-  { x: 895, y: 150 }, { x: 980, y: 100 }, { x: 1065, y: 150 }, { x: 1154, y: 175 },
-]
+const STAGE1_PATH = smoothThrough(STAGE1_COORDS)
 
-/* 第二阶段 14 课时的精炼标题（忠实缩写自 outline.md，长标题留在下方课时大纲）。 */
+/* ── 第二阶段：14 节点蛇形两行（viewBox 1200×390）。上行 L→R，右侧圆角下折，下行 R→L ── */
+const S2_ROW0: Pt[] = [
+  { x: 70, y: 90 }, { x: 245, y: 62 }, { x: 420, y: 88 }, { x: 595, y: 60 }, { x: 770, y: 88 }, { x: 945, y: 62 }, { x: 1120, y: 82 },
+]
+const S2_ROW1: Pt[] = [
+  { x: 1120, y: 300 }, { x: 945, y: 326 }, { x: 770, y: 300 }, { x: 595, y: 328 }, { x: 420, y: 300 }, { x: 245, y: 326 }, { x: 70, y: 305 },
+]
+// 右侧转弯航点（仅参与连线，不画节点），让下折成向外的圆角。
+const S2_TURN: Pt = { x: 1184, y: 191 }
+const STAGE2_COORDS: Pt[] = [...S2_ROW0, ...S2_ROW1] // 节点：课时 1–14，蛇形顺序
+const STAGE2_PATH = smoothThrough([...S2_ROW0, S2_TURN, ...S2_ROW1])
+
+/* 第二阶段 14 课时的精炼标题（忠实缩写自 outline.md，完整长标题留在下方课时大纲）。 */
 const S2_SHORT: Record<string, string> = {
   'S2-1': 'CC / Codex 进阶', 'S2-2': 'AI 全栈进阶', 'S2-3': 'AI 测试工程', 'S2-4': 'AI 运维工程',
   'S2-5': 'SDD 与协作', 'S2-6': '整洁架构 · DDD', 'S2-7': 'RAG 与上下文', 'S2-8': '智能体与 harness',
@@ -61,27 +75,33 @@ const S2_SHORT: Record<string, string> = {
 function GrowthCurve({
   nodes,
   coords,
+  pathD,
   vbH,
+  svgTop,
+  containerH,
+  aboveOffset,
+  pathLen,
   gradientStops,
   idPrefix,
   showDetail = true,
 }: {
   nodes: CurveNode[]
-  coords: ReadonlyArray<{ x: number; y: number }>
+  coords: ReadonlyArray<Pt>
+  pathD: string
   vbH: number
+  svgTop: number
+  containerH: number
+  aboveOffset: number
+  pathLen: number
   gradientStops: { offset: number; color: string }[]
   idPrefix: string
   showDetail?: boolean
 }) {
-  const pathD = useMemo(() => buildSmoothPath(coords), [coords])
-  const containerH = vbH + 200
-  const svgTop = 100
-  const pathLen = 1300
-  const aboveOffset = showDetail ? 96 : 52
+  const memoPath = useMemo(() => pathD, [pathD])
 
   return (
     <>
-      {/* 桌面端：横向成长曲线 */}
+      {/* 桌面端：蛇形成长曲线 */}
       <div className="relative hidden lg:block">
         <div className="relative w-full" style={{ height: containerH }}>
           <svg
@@ -113,18 +133,18 @@ function GrowthCurve({
             </defs>
 
             {/* 底层虚化曲线 */}
-            <path d={pathD} stroke={`url(#${idPrefix}-line)`} strokeWidth="2.2" fill="none" opacity="0.45" />
+            <path d={memoPath} stroke={`url(#${idPrefix}-line)`} strokeWidth="2.4" fill="none" opacity="0.5" />
             {/* 流光线（dash 动画顺曲线流动） */}
             <path
-              d={pathD}
+              d={memoPath}
               stroke="white"
               strokeWidth="2"
               fill="none"
-              strokeDasharray={`40 ${pathLen}`}
+              strokeDasharray={`46 ${pathLen}`}
               strokeLinecap="round"
               opacity="0.85"
             >
-              <animate attributeName="stroke-dashoffset" from="0" to={`-${pathLen + 40}`} dur="6s" repeatCount="indefinite" />
+              <animate attributeName="stroke-dashoffset" from="0" to={`-${pathLen + 46}`} dur="7s" repeatCount="indefinite" />
             </path>
 
             {/* 辉光节点（三层圆） */}
@@ -149,7 +169,7 @@ function GrowthCurve({
             return (
               <motion.div
                 key={node.key}
-                initial={{ opacity: 0, y: above ? 12 : -12 }}
+                initial={{ opacity: 0, y: above ? 10 : -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-80px' }}
                 transition={{ duration: 0.5, delay: Math.min(i, 8) * 0.04, ease: [0.22, 1, 0.36, 1] }}
@@ -278,7 +298,18 @@ export function JourneyMap() {
         />
       </Reveal>
       <div className="mt-4 sm:mt-6">
-        <GrowthCurve nodes={STAGE1_NODES} coords={STAGE1_XY} vbH={260} gradientStops={STAGE1_STOPS} idPrefix="s1" />
+        <GrowthCurve
+          nodes={STAGE1_NODES}
+          coords={STAGE1_COORDS}
+          pathD={STAGE1_PATH}
+          vbH={260}
+          svgTop={100}
+          containerH={460}
+          aboveOffset={96}
+          pathLen={1300}
+          gradientStops={STAGE1_STOPS}
+          idPrefix="s1"
+        />
       </div>
 
       {/* ── LEVEL UP 分隔 ── */}
@@ -292,7 +323,7 @@ export function JourneyMap() {
         </div>
       </Reveal>
 
-      {/* ── 第二阶段板块（14 课时全景） ── */}
+      {/* ── 第二阶段板块（14 课时蛇形全景） ── */}
       <Reveal>
         <StageHead
           accent={STAGE2_THEMES.advance.hex}
@@ -305,7 +336,19 @@ export function JourneyMap() {
         />
       </Reveal>
       <div className="mt-4 sm:mt-6">
-        <GrowthCurve nodes={STAGE2_NODES} coords={STAGE2_XY} vbH={260} gradientStops={STAGE2_STOPS} idPrefix="s2" showDetail={false} />
+        <GrowthCurve
+          nodes={STAGE2_NODES}
+          coords={STAGE2_COORDS}
+          pathD={STAGE2_PATH}
+          vbH={390}
+          svgTop={60}
+          containerH={470}
+          aboveOffset={52}
+          pathLen={2400}
+          gradientStops={STAGE2_STOPS}
+          idPrefix="s2"
+          showDetail={false}
+        />
       </div>
     </div>
   )
