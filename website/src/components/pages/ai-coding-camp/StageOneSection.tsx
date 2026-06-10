@@ -122,18 +122,9 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
       {/* 6. 课时大纲：差异化主题色 + 超大背景序号 */}
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
-          <div className="flex flex-col gap-4">
-            <SectionEyebrow color="#F0ABFC">课时大纲</SectionEyebrow>
-            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
-              <span className="block">每节课时都有看得见、</span>
-              <span className="mt-1 block sm:mt-1.5">
-                <GradientText className="font-semibold">摸得着的产出物</GradientText>
-              </span>
-            </h2>
-            <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
-              每节课时都有看得见、摸得着的交付物——前一节的能力承接后一节。
-            </p>
-          </div>
+          <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.4] tracking-[0.005em] sm:text-[26px] lg:text-[34px]">
+            零基础 AI 编程课程大纲（初阶）
+          </h2>
         </Reveal>
 
         <div className="mt-10 flex flex-col gap-5 sm:mt-12 sm:gap-6">
