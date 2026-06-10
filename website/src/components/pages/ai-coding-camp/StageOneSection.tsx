@@ -4,6 +4,7 @@ import { GradientText, Reveal } from '../../motion'
 import {
   STAGE1_DELIVERABLES as DELIVERABLES, OVERVIEW_CARDS,
   STAGE1_CHAPTERS as CHAPTERS, STAGE1_SERVICE_STAGES as SERVICE_STAGES, THEMES,
+  STAGE1_PRICE,
 } from './data'
 import { SectionEyebrow, PriceChip, EnrollButton } from './primitives'
 
@@ -234,7 +235,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                             className="font-mono text-[10.5px] font-medium uppercase tracking-[0.22em]"
                             style={{ color: t.hex }}
                           >
-                            第 {chapter.index} 章 · {t.label}
+                            第 {chapter.index} 章 · {t.label} · {chapter.hours}
                           </span>
                           <h3 className="font-serif-zh text-[19px] font-semibold leading-[1.4] text-ink sm:text-[22px] lg:text-[25px]">
                             {chapter.title}
@@ -505,7 +506,12 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
             <SectionEyebrow color="#FDA4AF">本阶段报名</SectionEyebrow>
 
             {/* 价格条（复用 Hero.tsx 样式） */}
-            <PriceChip badge="首批限定" originalPrice="原价 ¥2999" specialLabel="限时特价" price="¥1999" />
+            <PriceChip
+              badge="首批限定"
+              originalPrice={`原价 ${STAGE1_PRICE.original}`}
+              specialLabel="限时特价"
+              price={STAGE1_PRICE.now}
+            />
 
             {/* 报名按钮（复用 BottomCta.tsx 按钮样式） */}
             <div className="mt-1">

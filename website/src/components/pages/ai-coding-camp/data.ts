@@ -35,7 +35,6 @@ export type SubLesson = {
 }
 
 export type Warning = {
-  kind: 'beginner' | 'difficulty'
   label: string
   body: string
 }
@@ -60,7 +59,6 @@ export const STAGE1_CHAPTERS: Chapter[] = [
     theme: 'cognition',
     intro: '本章先补齐零基础最缺的认知地基，再带学员安装并跑通主力 AI 工具，最后做出第一版能本地打开的网页。',
     warning: {
-      kind: 'beginner',
       label: '零基础提示',
       body: '1.1 与 1.2 是整门课的地基，宁可慢一点。学员在这里建立的概念地图，决定了后面九章是否「踩得稳」。',
     },
