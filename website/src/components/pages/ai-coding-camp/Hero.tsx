@@ -2,7 +2,7 @@
 
 import { GradientText, Reveal } from '../../motion'
 import { HeroAuroraLayers, FloatingOrbs, ShimmerHeading } from './primitives'
-import { STAGE1_PRICE, STAGE2_PRICE, STAGE2_THEMES, THEMES } from './data'
+import { THEMES } from './data'
 
 // 首屏核心宣传：七条承诺（文案按用户原话，逐字不改）。
 const PROMISES: string[] = [
@@ -20,9 +20,6 @@ const PROMISE_THEMES = [
 ]
 
 export function Hero() {
-  // 第二阶段强调色(钢蓝),作为「AI 编程专家」锚点的专业感主色
-  const advance = STAGE2_THEMES.advance
-
   return (
     <section className="relative overflow-hidden">
       <HeroAuroraLayers />
@@ -54,131 +51,32 @@ export function Hero() {
           </div>
         </Reveal>
 
-        {/* 双课程价格锚点：零基础 ¥1999 / AI 编程专家 ¥3999(含第一阶段),点击跳转对应阶段 */}
-        <Reveal delay={0.3}>
-          <div className="mt-9 grid w-full max-w-2xl grid-cols-1 gap-3.5 sm:mt-11 sm:grid-cols-2 sm:gap-4">
-            {/* 锚点 1：零基础 AI 编程 → #stage-one */}
-            <a
-              href="#stage-one"
-              className="group relative flex flex-col gap-2 rounded-[20px] border p-4 text-left backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 sm:p-5"
-              style={{
-                borderColor: 'rgba(251,113,133,0.5)',
-                background:
-                  'linear-gradient(135deg, rgba(251,113,133,0.16), rgba(251,191,36,0.10) 70%)',
-                boxShadow: 'inset 0 0 0 1px rgba(251,113,133,0.08), 0 0 28px -10px rgba(251,113,133,0.5)',
-              }}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <span
-                  className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-canvas sm:text-[10.5px]"
-                  style={{
-                    background: 'linear-gradient(135deg, #FB7185, #E11D48)',
-                    boxShadow: '0 4px 14px -2px rgba(251,113,133,0.6)',
-                  }}
-                >
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
-                  首批限定
-                </span>
-                <span
-                  className="font-mono text-[10.5px] font-medium tracking-[0.04em] text-muted transition-colors group-hover:text-ink-soft sm:text-[11px]"
-                >
-                  ↓ 看课程
-                </span>
-              </div>
-              <span className="font-serif-zh text-[16px] font-semibold text-ink sm:text-[17px]">
-                第一阶段 · 零基础 AI 编程
-              </span>
-              <div className="flex items-baseline gap-2">
-                <span
-                  className="font-serif-zh text-[26px] font-bold tabular sm:text-[30px]"
-                  style={{ color: '#FECDD3', textShadow: '0 0 18px rgba(251,113,133,0.6)' }}
-                >
-                  {STAGE1_PRICE.now}
-                </span>
-              </div>
-              <span className="text-[12px] leading-[1.6] text-ink-soft sm:text-[12.5px]">
-                适合零基础 · 想用 AI 做出自己的应用
-              </span>
-            </a>
-
-            {/* 锚点 2：AI 编程专家 → #stage-two(含第一阶段全部) */}
-            <a
-              href="#stage-two"
-              className="group relative flex flex-col gap-2 rounded-[20px] border p-4 text-left backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 sm:p-5"
-              style={{
-                borderColor: `rgba(${advance.rgb}, 0.5)`,
-                background: `linear-gradient(135deg, rgba(${advance.rgb}, 0.18), rgba(${STAGE2_THEMES.career.rgb}, 0.10) 70%)`,
-                boxShadow: `inset 0 0 0 1px rgba(${advance.rgb}, 0.10), 0 0 28px -10px rgba(${advance.rgb}, 0.5)`,
-              }}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <span
-                  className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] text-canvas sm:text-[10.5px]"
-                  style={{
-                    background: `linear-gradient(135deg, ${advance.gradientFrom}, ${advance.gradientTo})`,
-                    boxShadow: `0 4px 14px -2px rgba(${advance.rgb}, 0.6)`,
-                  }}
-                >
-                  AI 专家
-                </span>
-                <span className="font-mono text-[10.5px] font-medium tracking-[0.04em] text-muted transition-colors group-hover:text-ink-soft sm:text-[11px]">
-                  ↓ 看课程
-                </span>
-              </div>
-              <span className="font-serif-zh text-[16px] font-semibold text-ink sm:text-[17px]">
-                第二阶段 · AI 编程专家
-              </span>
-              <div className="flex items-baseline gap-2">
-                <span
-                  className="font-serif-zh text-[26px] font-bold tabular sm:text-[30px]"
-                  style={{ color: advance.gradientFrom, textShadow: `0 0 18px rgba(${advance.rgb}, 0.55)` }}
-                >
-                  {STAGE2_PRICE.now}
-                </span>
-                <span
-                  className="inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2 py-0.5 text-[10.5px] font-semibold sm:text-[11px]"
-                  style={{
-                    border: `1px solid rgba(${advance.rgb}, 0.42)`,
-                    background: `rgba(${advance.rgb}, 0.12)`,
-                    color: advance.gradientFrom,
-                  }}
-                >
-                  {STAGE2_PRICE.includes}
-                </span>
-              </div>
-              <span className="text-[12px] leading-[1.6] text-ink-soft sm:text-[12.5px]">
-                适合有基础者 · 进阶企业级 AI 工程与求职
-              </span>
-            </a>
-          </div>
-        </Reveal>
-
-        {/* 七大承诺 · 首屏核心宣传（文案逐字按用户原话） */}
-        <Reveal delay={0.4}>
-          <div className="mt-12 w-full max-w-3xl sm:mt-16">
+        {/* 七大承诺 · 首屏核心宣传（文案逐字按用户原话；首屏主角，放大突出） */}
+        <Reveal delay={0.28}>
+          <div className="mt-11 w-full max-w-4xl sm:mt-14">
             <div className="flex justify-center">
               <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-ink-soft sm:text-[12px]">
                 · 我们的承诺 · COMMITMENT ·
               </span>
             </div>
-            <div className="mt-6 grid grid-cols-1 gap-x-10 gap-y-4 text-left sm:mt-8 sm:grid-cols-2">
+            <div className="mt-7 grid grid-cols-1 gap-x-12 gap-y-5 text-left sm:mt-9 sm:grid-cols-2 sm:gap-y-6">
               {PROMISES.map((text, i) => {
                 const t = PROMISE_THEMES[i]
                 return (
-                  <div key={i} className="flex items-start gap-3">
+                  <div key={i} className="flex items-start gap-3.5">
                     <span
                       aria-hidden
-                      className="mt-px inline-flex h-[18px] w-[18px] flex-none items-center justify-center rounded-full"
+                      className="mt-0.5 inline-flex h-[22px] w-[22px] flex-none items-center justify-center rounded-full"
                       style={{
                         background: `linear-gradient(135deg, ${t.gradientFrom}, ${t.gradientTo})`,
-                        boxShadow: `0 0 12px -2px ${t.hex}aa`,
+                        boxShadow: `0 0 14px -2px ${t.hex}bb`,
                       }}
                     >
-                      <svg viewBox="0 0 16 16" className="h-2.5 w-2.5" fill="none" stroke="#0a0a0c" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                      <svg viewBox="0 0 16 16" className="h-3 w-3" fill="none" stroke="#0a0a0c" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M3.5 8.5l3 3 6-6.5" />
                       </svg>
                     </span>
-                    <p className="text-[13.5px] leading-[1.7] text-ink-soft sm:text-[14px]">{text}</p>
+                    <p className="text-[15px] font-medium leading-[1.65] text-ink sm:text-[16.5px]">{text}</p>
                   </div>
                 )
               })}
