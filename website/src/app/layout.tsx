@@ -106,7 +106,7 @@ const WEBSITE_JSON_LD = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const isProd = process.env.NODE_ENV === 'production'
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" className="scroll-smooth">
       <head>
         <script
           type="application/ld+json"

@@ -26,7 +26,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
   const advance = STAGE2_THEMES.advance
 
   return (
-    <div id="stage-two" className="relative">
+    <div id="stage-two" className="relative scroll-mt-20 sm:scroll-mt-24">
       {/* 1. 定位头 */}
       <section className="relative mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-24 lg:py-28">
         <Reveal>

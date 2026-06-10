@@ -9,7 +9,7 @@ import { SectionEyebrow, PriceChip, EnrollButton } from './primitives'
 
 export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
   return (
-    <div id="stage-one" className="relative">
+    <div id="stage-one" className="relative scroll-mt-20 sm:scroll-mt-24">
       {/* 2. 四大成果：你将拿到什么 */}
       <section className="relative mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-24 lg:py-28">
         <Reveal>
