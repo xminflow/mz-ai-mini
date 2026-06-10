@@ -8,18 +8,17 @@ import {
   STAGE1_CHAPTERS,
   THEMES,
   STAGE2_THEMES,
-  STAGE2_GROUPS,
   AUDIENCES,
   STAGE1_PRICE,
   STAGE2_PRICE,
 } from './data'
-import type { Theme } from './data'
+import type { Theme, Stage2ThemeKey } from './data'
 
 /* ─────────────────────────  全景学习路径 JourneyMap（蛇形蜿蜒成长曲线）  ─────────────────────────
  * 复刻原 CapabilityTimeline 的平滑流动曲线 + 辉光节点 + 流光动画，并把走线改成「蛇形(boustrophedon)」：
  * 上行 → 右侧圆角下折 → 下行 → … 这样一条曲线能容纳更多节点。
  *  - 第一阶段：outline.md 全部 10 个课时全称，单行平滑成长曲线（带一句交付物）。
- *  - 第二阶段：分阶段时间轴——3 个阶段（能力进阶/企业实战/求职冲刺）各占一列，列内是该段课时全称的竖向小时间线。
+ *  - 第二阶段：同款单行成长曲线，把分集课时（上/下、一/二）合并压缩到 11 个节点。
  * 桌面端蛇形曲线（标签上下交替）；移动端降级为竖向时间线。无嵌套框。
  * ──────────────────────────────────────────────────────────────────────── */
 
@@ -254,64 +253,35 @@ const STAGE1_STOPS = [
   { offset: 0.85, color: THEMES.launch.hex }, { offset: 1, color: THEMES.mindset.hex },
 ]
 
-/* ─────────────────────────  第二阶段：分阶段时间轴（3 个阶段，每段竖向小时间线）  ───────────────────────── */
-// 三段课程范围：能力进阶 课1–8 / 企业实战 课9–12 / 求职冲刺 课13–14（按 lessons 数量推算）。
-const STAGE2_RANGES: string[] = (() => {
-  let cum = 0
-  return STAGE2_GROUPS.map((g) => {
-    const start = cum + 1
-    cum += g.lessons.length
-    return `课 ${start}–${cum}`
-  })
-})()
-
-function PhasedTimeline() {
-  return (
-    <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-6">
-      {STAGE2_GROUPS.map((g, gi) => {
-        const t = STAGE2_THEMES[g.key]
-        return (
-          <Reveal key={g.key} delay={0.06 + gi * 0.08}>
-            <div className="flex h-full flex-col gap-4">
-              {/* 阶段头 */}
-              <div className="flex items-center gap-2.5 border-b pb-3" style={{ borderColor: `rgba(${t.rgb}, 0.25)` }}>
-                <span
-                  aria-hidden
-                  className="inline-flex h-3.5 w-3.5 flex-none rounded-full"
-                  style={{ background: `radial-gradient(circle, ${t.gradientFrom}, ${t.gradientTo})`, boxShadow: `0 0 12px ${t.hex}` }}
-                />
-                <div className="flex flex-col">
-                  <span className="font-serif-zh text-[16px] font-bold sm:text-[17px]" style={{ color: t.hex }}>
-                    {g.title}
-                  </span>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">{STAGE2_RANGES[gi]}</span>
-                </div>
-              </div>
-              {/* 该阶段课程：竖向小时间线 */}
-              <ol className="relative flex flex-col gap-3.5">
-                <span
-                  aria-hidden
-                  className="absolute left-[5px] top-2 bottom-2 w-px"
-                  style={{ background: `linear-gradient(to bottom, ${t.gradientFrom}, ${t.gradientTo})`, opacity: 0.55 }}
-                />
-                {g.lessons.map((l) => (
-                  <li key={l.code} className="relative pl-6">
-                    <span
-                      aria-hidden
-                      className="absolute left-[1px] top-[5px] h-2.5 w-2.5 rounded-full"
-                      style={{ background: t.hex, boxShadow: `0 0 8px ${t.hex}aa` }}
-                    />
-                    <span className="text-[13px] leading-[1.55] text-ink sm:text-[13.5px]">{l.title}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </Reveal>
-        )
-      })}
-    </div>
-  )
-}
+/* 第二阶段压缩为单条成长曲线：把「上/下」「一/二」等分集课时合并，14 → 11 个节点。 */
+const STAGE2_CURVE: { title: string; theme: Stage2ThemeKey }[] = [
+  { title: 'Claude Code 与 Codex 进阶', theme: 'advance' },
+  { title: 'AI 全栈进阶', theme: 'advance' },
+  { title: 'AI 测试工程', theme: 'advance' },
+  { title: 'AI 运维工程', theme: 'advance' },
+  { title: 'SDD 驱动编程与协作开发', theme: 'advance' },
+  { title: '整洁架构与领域驱动设计', theme: 'advance' },
+  { title: '大模型应用开发 · RAG 与上下文工程', theme: 'advance' },
+  { title: '大模型应用开发 · 智能体与 harness', theme: 'advance' },
+  { title: '企业级实战直播 · 智能问数系统', theme: 'enterprise' }, // 合并 上/下
+  { title: '企业级实战直播 · Hermes/Openclaw 智能体系统', theme: 'enterprise' }, // 合并 上/下
+  { title: '求职面试专题', theme: 'career' }, // 合并 一/二
+]
+const STAGE2_NODES: CurveNode[] = STAGE2_CURVE.map((n, i) => ({
+  key: `s2-${i}`, theme: STAGE2_THEMES[n.theme], badge: '', title: n.title, detail: '',
+}))
+// 11 节点单行成长曲线（viewBox 1200×260），浅波浪起伏。
+const STAGE2_COORDS: Pt[] = [
+  { x: 60, y: 170 }, { x: 168, y: 115 }, { x: 276, y: 150 }, { x: 384, y: 95 }, { x: 492, y: 150 },
+  { x: 600, y: 100 }, { x: 708, y: 155 }, { x: 816, y: 105 }, { x: 924, y: 150 }, { x: 1032, y: 110 }, { x: 1140, y: 165 },
+]
+const STAGE2_PATH = smoothThrough(STAGE2_COORDS)
+// 渐变：能力进阶(钢蓝, 1–8) → 企业实战(暗金, 9–10) → 求职冲刺(翡翠, 11)。
+const STAGE2_STOPS = [
+  { offset: 0, color: STAGE2_THEMES.advance.hex }, { offset: 0.66, color: STAGE2_THEMES.advance.hex },
+  { offset: 0.74, color: STAGE2_THEMES.enterprise.hex }, { offset: 0.88, color: STAGE2_THEMES.enterprise.hex },
+  { offset: 0.94, color: STAGE2_THEMES.career.hex }, { offset: 1, color: STAGE2_THEMES.career.hex },
+]
 
 export function JourneyMap() {
   return (
@@ -352,7 +322,7 @@ export function JourneyMap() {
         </div>
       </Reveal>
 
-      {/* ── 第二阶段板块（分阶段时间轴：3 个阶段 × 各自课时） ── */}
+      {/* ── 第二阶段板块（单条成长曲线，11 个合并节点） ── */}
       <Reveal>
         <StageHead
           accent={STAGE2_THEMES.advance.hex}
@@ -364,8 +334,21 @@ export function JourneyMap() {
           full
         />
       </Reveal>
-      <div className="mt-6 sm:mt-8">
-        <PhasedTimeline />
+      <div className="mt-4 sm:mt-6">
+        <GrowthCurve
+          nodes={STAGE2_NODES}
+          coords={STAGE2_COORDS}
+          pathD={STAGE2_PATH}
+          vbH={260}
+          svgTop={90}
+          containerH={440}
+          aboveOffset={62}
+          pathLen={1400}
+          gradientStops={STAGE2_STOPS}
+          idPrefix="s2"
+          showDetail={false}
+          labelW="w-[140px]"
+        />
       </div>
     </div>
   )
