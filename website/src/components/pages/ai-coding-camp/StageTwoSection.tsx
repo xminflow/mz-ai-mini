@@ -283,9 +283,9 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
 
                             {/* 子条目列表 */}
                             <ul className="grid grid-cols-1 gap-2.5 sm:gap-3 md:grid-cols-2">
-                              {lesson.points.map((point, pi) => (
+                              {lesson.points.map((point) => (
                                 <li
-                                  key={pi}
+                                  key={point}
                                   className="flex items-start gap-3 rounded-xl border p-3.5 transition-colors hover:border-hairline-strong sm:gap-3.5 sm:p-4"
                                   style={{
                                     borderColor: 'rgba(255,255,255,0.07)',
@@ -379,12 +379,15 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
                 <span
                   className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[11px] tracking-[0.06em]"
                   style={{
-                    borderColor: 'rgba(212,162,78,0.4)',
-                    background: 'rgba(212,162,78,0.12)',
-                    color: '#E8C77A',
+                    borderColor: `rgba(${STAGE2_THEMES.enterprise.rgb}, 0.4)`,
+                    background: `rgba(${STAGE2_THEMES.enterprise.rgb}, 0.12)`,
+                    color: STAGE2_THEMES.enterprise.gradientFrom,
                   }}
                 >
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: '#E8C77A' }} />
+                  <span
+                    className="h-1.5 w-1.5 animate-pulse rounded-full"
+                    style={{ background: STAGE2_THEMES.enterprise.gradientFrom }}
+                  />
                   {STAGE2_SERVICE_DRAFT.note}
                 </span>
               </div>
