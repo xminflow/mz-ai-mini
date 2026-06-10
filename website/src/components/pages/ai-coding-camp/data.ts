@@ -367,31 +367,6 @@ export const OVERVIEW_CARDS = [
   },
 ]
 
-// 9 节点：在 1200×260 viewBox 中沿浅波浪线分布
-export const TIMELINE_NODES_XY: ReadonlyArray<{ x: number; y: number }> = [
-  { x: 60, y: 170 },
-  { x: 200, y: 120 },
-  { x: 340, y: 150 },
-  { x: 480, y: 90 },
-  { x: 620, y: 145 },
-  { x: 760, y: 100 },
-  { x: 900, y: 160 },
-  { x: 1040, y: 105 },
-  { x: 1140, y: 175 },
-]
-
-export const buildSmoothPath = () => {
-  const pts = TIMELINE_NODES_XY
-  let d = `M ${pts[0].x} ${pts[0].y}`
-  for (let i = 0; i < pts.length - 1; i++) {
-    const cur = pts[i]
-    const next = pts[i + 1]
-    const cx = (cur.x + next.x) / 2
-    d += ` Q ${cx} ${cur.y}, ${cx} ${(cur.y + next.y) / 2} T ${next.x} ${next.y}`
-  }
-  return d
-}
-
 // ===== 第二阶段：职业开发者进阶 =====
 
 // 第二阶段「职业硬核」深色系,与第一阶段明快七彩区分

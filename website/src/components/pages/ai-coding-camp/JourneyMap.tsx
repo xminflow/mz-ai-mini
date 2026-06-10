@@ -61,10 +61,20 @@ function buildJourneyPath(points: ReadonlyArray<{ x: number; y: number }>): stri
   return d
 }
 
+// 不变量：坐标数必须与数据数一一对应。桌面端按下标取数（STAGE1_XY[i] ↔ PROJECT_TIMELINE[i]），
+// 一旦数量不匹配会静默丢节点或越界取 undefined。此处立即抛错，把静默缺陷变成显式失败（符合「禁止静默失败」）。
+if (STAGE1_XY.length !== PROJECT_TIMELINE.length) {
+  throw new Error('JourneyMap: STAGE1_XY 坐标数与 PROJECT_TIMELINE 数据数不一致')
+}
+if (STAGE2_XY.length !== STAGE2_MILESTONES.length) {
+  throw new Error('JourneyMap: STAGE2_XY 坐标数与 STAGE2_MILESTONES 数据数不一致')
+}
+
 const ALL_XY = [...STAGE1_XY, ...STAGE2_XY]
 const JOURNEY_PATH = buildJourneyPath(ALL_XY)
 
 // 主线渐变停靠点：第一阶段亮色 → 分隔处 → 第二阶段深色，跨分隔可见过渡。
+// 注意：下方 <linearGradient> 的 offset 与「9 个一阶段 + 3 个二阶段」节点布局绑定，增删节点需同步调整 offset。
 const stage1Colors = [
   THEMES.cognition.hex,
   THEMES.frontend.hex,
