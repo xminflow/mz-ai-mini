@@ -18,8 +18,8 @@ import type { Theme } from './data'
 /* ─────────────────────────  全景学习路径 JourneyMap（蛇形蜿蜒成长曲线）  ─────────────────────────
  * 复刻原 CapabilityTimeline 的平滑流动曲线 + 辉光节点 + 流光动画，并把走线改成「蛇形(boustrophedon)」：
  * 上行 → 右侧圆角下折 → 下行 → … 这样一条曲线能容纳更多节点。
- *  - 第一阶段：9 个课时里程碑，单行成长曲线（带一句收获）。
- *  - 第二阶段：outline.md 全部 14 个课时，蛇形两行(7+7)铺开，按 能力进阶/企业实战/求职冲刺 三组上色。
+ *  - 第一阶段：outline.md 全部 10 个课时全称，单行平滑成长曲线（带一句交付物）。
+ *  - 第二阶段：outline.md 全部 14 个课时全称，直线矩形蛇形（每行 4 个、共 4 行），按 能力进阶/企业实战/求职冲刺 三组上色。
  * 桌面端蛇形曲线（标签上下交替）；移动端降级为竖向时间线。无嵌套框。
  * ──────────────────────────────────────────────────────────────────────── */
 
@@ -51,17 +51,20 @@ const STAGE1_COORDS: Pt[] = [
 ]
 const STAGE1_PATH = smoothThrough(STAGE1_COORDS)
 
-/* ── 第二阶段：14 节点蛇形两行（viewBox 1200×390）。上行 L→R，右侧圆角下折，下行 R→L ── */
-const S2_ROW0: Pt[] = [
-  { x: 70, y: 90 }, { x: 245, y: 62 }, { x: 420, y: 88 }, { x: 595, y: 60 }, { x: 770, y: 88 }, { x: 945, y: 62 }, { x: 1120, y: 82 },
+/* 直线折线：依次用直线段连接各点（矩形蛇形的横、竖直线）。 */
+function buildStraightPath(pts: ReadonlyArray<Pt>): string {
+  if (!pts.length) return ''
+  return pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
+}
+
+/* ── 第二阶段：14 课时直线矩形蛇形，每行 4 个共 4 行（4+4+4+2），viewBox 1200×690 ── */
+const STAGE2_COORDS: Pt[] = [
+  { x: 160, y: 60 }, { x: 480, y: 60 }, { x: 800, y: 60 }, { x: 1080, y: 60 },
+  { x: 1080, y: 250 }, { x: 800, y: 250 }, { x: 480, y: 250 }, { x: 160, y: 250 },
+  { x: 160, y: 440 }, { x: 480, y: 440 }, { x: 800, y: 440 }, { x: 1080, y: 440 },
+  { x: 1080, y: 630 }, { x: 800, y: 630 },
 ]
-const S2_ROW1: Pt[] = [
-  { x: 1120, y: 300 }, { x: 945, y: 326 }, { x: 770, y: 300 }, { x: 595, y: 328 }, { x: 420, y: 300 }, { x: 245, y: 326 }, { x: 70, y: 305 },
-]
-// 右侧转弯航点（仅参与连线，不画节点），让下折成向外的圆角。
-const S2_TURN: Pt = { x: 1184, y: 191 }
-const STAGE2_COORDS: Pt[] = [...S2_ROW0, ...S2_ROW1] // 节点：课时 1–14，蛇形顺序
-const STAGE2_PATH = smoothThrough([...S2_ROW0, S2_TURN, ...S2_ROW1])
+const STAGE2_PATH = buildStraightPath(STAGE2_COORDS)
 
 /* 一条成长曲线（桌面 SVG 流动曲线 + 辉光节点 + 流光；含上下交替标签）。 */
 function GrowthCurve({
@@ -76,6 +79,7 @@ function GrowthCurve({
   gradientStops,
   idPrefix,
   showDetail = true,
+  labelW = 'w-[128px]',
 }: {
   nodes: CurveNode[]
   coords: ReadonlyArray<Pt>
@@ -88,6 +92,7 @@ function GrowthCurve({
   gradientStops: { offset: number; color: string }[]
   idPrefix: string
   showDetail?: boolean
+  labelW?: string
 }) {
   const memoPath = useMemo(() => pathD, [pathD])
 
@@ -165,7 +170,7 @@ function GrowthCurve({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-80px' }}
                 transition={{ duration: 0.5, delay: Math.min(i, 8) * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute w-[128px] -translate-x-1/2 text-center"
+                className={`absolute ${labelW} -translate-x-1/2 text-center`}
                 style={{ left: `${leftPct}%`, top: topPx }}
               >
                 <span className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: node.theme.hex }}>
@@ -331,14 +336,15 @@ export function JourneyMap() {
           nodes={STAGE2_NODES}
           coords={STAGE2_COORDS}
           pathD={STAGE2_PATH}
-          vbH={390}
-          svgTop={60}
-          containerH={470}
-          aboveOffset={52}
-          pathLen={2400}
+          vbH={690}
+          svgTop={70}
+          containerH={800}
+          aboveOffset={64}
+          pathLen={3700}
           gradientStops={STAGE2_STOPS}
           idPrefix="s2"
           showDetail={false}
+          labelW="w-[168px]"
         />
       </div>
     </div>
