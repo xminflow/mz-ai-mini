@@ -5,7 +5,7 @@ import {
   STAGE1_DELIVERABLES as DELIVERABLES, OVERVIEW_CARDS,
   STAGE1_CHAPTERS as CHAPTERS, STAGE1_SERVICE_STAGES as SERVICE_STAGES, THEMES,
 } from './data'
-import { ArrowRight, SectionEyebrow } from './primitives'
+import { SectionEyebrow, PriceChip, EnrollButton } from './primitives'
 
 export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
   return (
@@ -505,77 +505,11 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
             <SectionEyebrow color="#FDA4AF">本阶段报名</SectionEyebrow>
 
             {/* 价格条（复用 Hero.tsx 样式） */}
-            <div
-              className="inline-flex items-center gap-3 rounded-full border px-4 py-2 sm:gap-4 sm:px-5 sm:py-2.5"
-              style={{
-                borderColor: 'rgba(251,113,133,0.5)',
-                background:
-                  'linear-gradient(110deg, rgba(251,113,133,0.18), rgba(251,191,36,0.14))',
-                boxShadow:
-                  'inset 0 0 0 1px rgba(251,113,133,0.10), 0 0 28px -6px rgba(251,113,133,0.55)',
-              }}
-            >
-              <span
-                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.18em] sm:text-[11px]"
-                style={{
-                  background: 'linear-gradient(135deg, #FB7185, #E11D48)',
-                  color: '#F5F5F7',
-                  boxShadow: '0 4px 14px -2px rgba(251,113,133,0.65)',
-                }}
-              >
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
-                首批限定
-              </span>
-              <div className="flex items-baseline gap-1.5 whitespace-nowrap">
-                <span className="font-mono text-[11.5px] text-muted line-through tabular sm:text-[12.5px]">
-                  原价 ¥2999
-                </span>
-              </div>
-              <span aria-hidden className="text-muted">→</span>
-              <div className="flex items-baseline gap-1 whitespace-nowrap">
-                <span
-                  className="font-mono text-[10.5px] font-medium uppercase tracking-[0.14em]"
-                  style={{ color: '#FDA4AF' }}
-                >
-                  限时特价
-                </span>
-                <span
-                  className="font-serif-zh text-[22px] font-bold tabular sm:text-[26px]"
-                  style={{
-                    color: '#FECDD3',
-                    textShadow: '0 0 18px rgba(251,113,133,0.6)',
-                  }}
-                >
-                  ¥1999
-                </span>
-              </div>
-            </div>
+            <PriceChip badge="首批限定" originalPrice="原价 ¥2999" specialLabel="限时特价" price="¥1999" />
 
             {/* 报名按钮（复用 BottomCta.tsx 按钮样式） */}
             <div className="mt-1">
-              <button
-                type="button"
-                onClick={onEnroll}
-                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-7 py-3 text-[13px] font-semibold text-canvas transition-transform hover:-translate-y-0.5 sm:px-8 sm:py-3.5 sm:text-sm"
-                style={{
-                  background: '#F5F5F7',
-                  boxShadow: '0 12px 40px -8px rgba(167,139,250,0.55)',
-                }}
-              >
-                <span
-                  aria-hidden
-                  className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{
-                    background: 'linear-gradient(120deg, #C4B5FD, #67E8F9, #F0ABFC, #FCD34D)',
-                    backgroundSize: '200% 200%',
-                    animation: 'shimmerText 4s linear infinite',
-                  }}
-                />
-                <span className="relative z-10 flex items-center gap-2">
-                  报名零基础 AI 编程 · ¥1999
-                  <ArrowRight />
-                </span>
-              </button>
+              <EnrollButton label="报名零基础 AI 编程 · ¥1999" onClick={onEnroll} />
             </div>
           </div>
         </Reveal>

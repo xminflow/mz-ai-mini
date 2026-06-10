@@ -18,6 +18,102 @@ export const SectionEyebrow = ({ children, color = '#A78BFA' }: { children: Reac
   </span>
 )
 
+/* ─────────────────────────  共享报名按钮 / 价格条  ───────────────────────── */
+
+// 白底渐变流光报名按钮：标题与点击回调由调用方传入，样式保持统一
+export function EnrollButton({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-7 py-3 text-[13px] font-semibold text-canvas transition-transform hover:-translate-y-0.5 sm:px-8 sm:py-3.5 sm:text-sm"
+      style={{
+        background: '#F5F5F7',
+        boxShadow: '0 12px 40px -8px rgba(167,139,250,0.55)',
+      }}
+    >
+      <span
+        aria-hidden
+        className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        style={{
+          background: 'linear-gradient(120deg, #C4B5FD, #67E8F9, #F0ABFC, #FCD34D)',
+          backgroundSize: '200% 200%',
+          animation: 'shimmerText 4s linear infinite',
+        }}
+      />
+      <span className="relative z-10 flex items-center gap-2">
+        {label}
+        <ArrowRight />
+      </span>
+    </button>
+  )
+}
+
+// 折扣价格条：originalPrice 缺省时隐藏原价划线与箭头，可复用于不同价位
+export function PriceChip({
+  badge,
+  originalPrice,
+  specialLabel,
+  price,
+}: {
+  badge: string
+  originalPrice?: string
+  specialLabel: string
+  price: string
+}) {
+  return (
+    <div
+      className="inline-flex items-center gap-3 rounded-full border px-4 py-2 sm:gap-4 sm:px-5 sm:py-2.5"
+      style={{
+        borderColor: 'rgba(251,113,133,0.5)',
+        background:
+          'linear-gradient(110deg, rgba(251,113,133,0.18), rgba(251,191,36,0.14))',
+        boxShadow:
+          'inset 0 0 0 1px rgba(251,113,133,0.10), 0 0 28px -6px rgba(251,113,133,0.55)',
+      }}
+    >
+      <span
+        className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.18em] sm:text-[11px]"
+        style={{
+          background: 'linear-gradient(135deg, #FB7185, #E11D48)',
+          color: '#F5F5F7',
+          boxShadow: '0 4px 14px -2px rgba(251,113,133,0.65)',
+        }}
+      >
+        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
+        {badge}
+      </span>
+      {originalPrice && (
+        <>
+          <div className="flex items-baseline gap-1.5 whitespace-nowrap">
+            <span className="font-mono text-[11.5px] text-muted line-through tabular sm:text-[12.5px]">
+              {originalPrice}
+            </span>
+          </div>
+          <span aria-hidden className="text-muted">→</span>
+        </>
+      )}
+      <div className="flex items-baseline gap-1 whitespace-nowrap">
+        <span
+          className="font-mono text-[10.5px] font-medium uppercase tracking-[0.14em]"
+          style={{ color: '#FDA4AF' }}
+        >
+          {specialLabel}
+        </span>
+        <span
+          className="font-serif-zh text-[22px] font-bold tabular sm:text-[26px]"
+          style={{
+            color: '#FECDD3',
+            textShadow: '0 0 18px rgba(251,113,133,0.6)',
+          }}
+        >
+          {price}
+        </span>
+      </div>
+    </div>
+  )
+}
+
 /* ─────────────────────────  Hero 视觉元素  ───────────────────────── */
 
 export const HeroAuroraLayers = () => (

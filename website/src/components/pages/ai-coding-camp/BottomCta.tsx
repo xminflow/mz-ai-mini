@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 
 import { GradientText, Reveal } from '../../motion'
-import { ArrowRight } from './primitives'
+import { EnrollButton } from './primitives'
 
 export function BottomCta({ onContact }: { onContact: () => void }) {
   return (
@@ -72,29 +72,7 @@ export function BottomCta({ onContact }: { onContact: () => void }) {
               训练营按期开班、限量招生。先扫码联系，我们会按你的基础与目标给出具体的入营建议。
             </p>
             <div className="mt-2">
-              <button
-                type="button"
-                onClick={onContact}
-                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-7 py-3 text-[13px] font-semibold text-canvas transition-transform hover:-translate-y-0.5 sm:px-8 sm:py-3.5 sm:text-sm"
-                style={{
-                  background: '#F5F5F7',
-                  boxShadow: '0 12px 40px -8px rgba(167,139,250,0.55)',
-                }}
-              >
-                <span
-                  aria-hidden
-                  className="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{
-                    background: 'linear-gradient(120deg, #C4B5FD, #67E8F9, #F0ABFC, #FCD34D)',
-                    backgroundSize: '200% 200%',
-                    animation: 'shimmerText 4s linear infinite',
-                  }}
-                />
-                <span className="relative z-10 flex items-center gap-2">
-                  立即咨询报名
-                  <ArrowRight />
-                </span>
-              </button>
+              <EnrollButton label="立即咨询报名" onClick={onContact} />
             </div>
           </div>
         </div>

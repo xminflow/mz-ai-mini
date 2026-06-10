@@ -1,7 +1,7 @@
 'use client'
 
 import { GradientText, Reveal } from '../../motion'
-import { HeroAuroraLayers, FloatingOrbs, ShimmerHeading } from './primitives'
+import { HeroAuroraLayers, FloatingOrbs, ShimmerHeading, PriceChip } from './primitives'
 
 export function Hero() {
   return (
@@ -37,51 +37,7 @@ export function Hero() {
         <Reveal delay={0.3}>
           <div className="mt-9 flex flex-col items-center gap-4 sm:mt-11">
             {/* 价格条 */}
-            <div
-              className="inline-flex items-center gap-3 rounded-full border px-4 py-2 sm:gap-4 sm:px-5 sm:py-2.5"
-              style={{
-                borderColor: 'rgba(251,113,133,0.5)',
-                background:
-                  'linear-gradient(110deg, rgba(251,113,133,0.18), rgba(251,191,36,0.14))',
-                boxShadow:
-                  'inset 0 0 0 1px rgba(251,113,133,0.10), 0 0 28px -6px rgba(251,113,133,0.55)',
-              }}
-            >
-              <span
-                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.18em] sm:text-[11px]"
-                style={{
-                  background: 'linear-gradient(135deg, #FB7185, #E11D48)',
-                  color: '#F5F5F7',
-                  boxShadow: '0 4px 14px -2px rgba(251,113,133,0.65)',
-                }}
-              >
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
-                首批限定
-              </span>
-              <div className="flex items-baseline gap-1.5 whitespace-nowrap">
-                <span className="font-mono text-[11.5px] text-muted line-through tabular sm:text-[12.5px]">
-                  原价 ¥2999
-                </span>
-              </div>
-              <span aria-hidden className="text-muted">→</span>
-              <div className="flex items-baseline gap-1 whitespace-nowrap">
-                <span
-                  className="font-mono text-[10.5px] font-medium uppercase tracking-[0.14em]"
-                  style={{ color: '#FDA4AF' }}
-                >
-                  限时特价
-                </span>
-                <span
-                  className="font-serif-zh text-[22px] font-bold tabular sm:text-[26px]"
-                  style={{
-                    color: '#FECDD3',
-                    textShadow: '0 0 18px rgba(251,113,133,0.6)',
-                  }}
-                >
-                  ¥1999
-                </span>
-              </div>
-            </div>
+            <PriceChip badge="首批限定" originalPrice="原价 ¥2999" specialLabel="限时特价" price="¥1999" />
           </div>
         </Reveal>
 
