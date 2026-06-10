@@ -5,7 +5,7 @@ import {
   STAGE2_GROUPS, STAGE2_DELIVERABLES, STAGE2_THEMES,
   STAGE2_SERVICE_DRAFT, STAGE2_PRICE,
 } from './data'
-import { SectionEyebrow, PriceChip, EnrollButton } from './primitives'
+import { SectionEyebrow, PriceChip } from './primitives'
 
 // 「待确认」占位标签：暗灰、低存在感,读起来像「待最终敲定」而非告警
 const DraftTag = ({ children }: { children?: React.ReactNode }) => (
@@ -431,7 +431,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
 
             {/* 价格条 + 含第一阶段全部内容 pill */}
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-              <PriceChip badge="AI 专家" specialLabel="全包价" price={STAGE2_PRICE.now} />
+              <PriceChip badge="AI 专家" specialLabel="全包价" price={STAGE2_PRICE.now} onClick={onEnroll} />
               <span
                 className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[12px] font-semibold sm:text-[12.5px]"
                 style={{
@@ -446,10 +446,6 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
               </span>
             </div>
 
-            {/* 报名按钮 */}
-            <div className="mt-1">
-              <EnrollButton label="报名 AI 编程专家" onClick={onEnroll} />
-            </div>
           </div>
         </Reveal>
       </section>

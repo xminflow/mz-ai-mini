@@ -55,15 +55,19 @@ export function PriceChip({
   originalPrice,
   specialLabel,
   price,
+  onClick,
 }: {
   badge: string
   originalPrice?: string
   specialLabel: string
   price: string
+  onClick: () => void
 }) {
   return (
-    <div
-      className="inline-flex items-center gap-3 rounded-full border px-4 py-2 sm:gap-4 sm:px-5 sm:py-2.5"
+    <button
+      type="button"
+      onClick={onClick}
+      className="group inline-flex cursor-pointer items-center gap-3 rounded-full border px-4 py-2 transition-transform hover:-translate-y-0.5 sm:gap-4 sm:px-5 sm:py-2.5"
       style={{
         borderColor: 'rgba(251,113,133,0.5)',
         background:
@@ -110,7 +114,14 @@ export function PriceChip({
           {price}
         </span>
       </div>
-    </div>
+      <span
+        className="inline-flex items-center gap-1 whitespace-nowrap pl-1 font-mono text-[11px] font-semibold uppercase tracking-[0.1em]"
+        style={{ color: '#FDA4AF' }}
+      >
+        立即报名
+        <ArrowRight />
+      </span>
+    </button>
   )
 }
 

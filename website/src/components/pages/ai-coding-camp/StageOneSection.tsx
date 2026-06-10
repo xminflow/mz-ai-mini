@@ -6,7 +6,7 @@ import {
   STAGE1_CHAPTERS as CHAPTERS, STAGE1_SERVICE_STAGES as SERVICE_STAGES, THEMES,
   STAGE1_PRICE,
 } from './data'
-import { SectionEyebrow, PriceChip, EnrollButton } from './primitives'
+import { SectionEyebrow, PriceChip } from './primitives'
 
 export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
   return (
@@ -447,17 +447,13 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
           <div className="flex flex-col items-center gap-6 text-center">
             <SectionEyebrow color="#FDA4AF">本阶段报名</SectionEyebrow>
 
-            {/* 价格条（复用 Hero.tsx 样式） */}
+            {/* 价格条本身可点击报名（点击打开扫码报名弹窗） */}
             <PriceChip
               badge="首批限定"
               specialLabel="限时特价"
               price={STAGE1_PRICE.now}
+              onClick={onEnroll}
             />
-
-            {/* 报名按钮（复用 BottomCta.tsx 按钮样式） */}
-            <div className="mt-1">
-              <EnrollButton label="报名零基础 AI 编程" onClick={onEnroll} />
-            </div>
           </div>
         </Reveal>
       </section>
