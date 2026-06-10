@@ -35,8 +35,15 @@ export function Hero() {
           </div>
         </Reveal>
 
-        {/* 八条核心主旨 · 无边框中性玻璃卡片（关键词统一渐变放大；文案逐字按用户原话） */}
-        <div className="mt-11 grid w-full max-w-5xl grid-cols-1 gap-4 text-left sm:mt-14 sm:grid-cols-2 lg:grid-cols-4">
+        {/* 为什么选我们 */}
+        <Reveal delay={0.22}>
+          <h2 className="font-serif-zh mt-12 text-[24px] font-bold leading-[1.3] text-ink sm:mt-16 sm:text-[30px] lg:text-[34px]">
+            为什么选我们？
+          </h2>
+        </Reveal>
+
+        {/* 八大核心 · 无边框中性玻璃卡片（关键词统一渐变放大；文案逐字按用户原话） */}
+        <div className="mt-7 grid w-full max-w-5xl grid-cols-1 gap-4 text-left sm:mt-9 sm:grid-cols-2 lg:grid-cols-4">
           {PROMISES.map((p, i) => (
             <Reveal key={i} delay={0.06 + i * 0.05}>
               <div

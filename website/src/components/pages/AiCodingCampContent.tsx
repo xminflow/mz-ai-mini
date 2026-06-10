@@ -20,10 +20,13 @@ export function AiCodingCampContent() {
 
   return (
     <div className="relative">
-      {/* 1. Hero */}
+      {/* 1. Hero：为什么选我们（核心价值） */}
       <Hero />
 
-      {/* 2. 全景学习路径：纵向主线 + 嵌套购买覆盖框（外层 ¥3999 含内层 ¥1999） */}
+      {/* 2. 主讲老师：行明（首屏价值区——由谁带你） */}
+      <InstructorSection />
+
+      {/* 3. 全景学习路径：纵向主线 + 嵌套购买覆盖框（外层 ¥3999 含内层 ¥1999） */}
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-32">
         <Reveal>
           <div className="flex flex-col gap-4">
@@ -46,10 +49,7 @@ export function AiCodingCampContent() {
         </div>
       </section>
 
-      {/* 3. 讲师介绍：行明 */}
-      <InstructorSection />
-
-      {/* 第一阶段：交付成果 / 课程总览 / 课时大纲 / 服务模式 + ¥1999 报名入口 */}
+      {/* 第一阶段：课程大纲 / 四大成果 / 服务模式 + ¥1999 报名入口 */}
       <StageOneSection onEnroll={openContact} />
 
       {/* 第二阶段：收获墙 / 三段 14 课大纲 / 服务拟稿 + ¥3999 报名入口 */}
