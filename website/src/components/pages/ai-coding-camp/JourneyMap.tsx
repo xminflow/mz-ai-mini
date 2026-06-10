@@ -176,9 +176,11 @@ function GrowthCurve({
                 className={`absolute ${labelW} -translate-x-1/2 text-center`}
                 style={{ left: `${leftPct}%`, top: topPx }}
               >
-                <span className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: node.theme.hex }}>
-                  {node.badge}
-                </span>
+                {node.badge && (
+                  <span className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: node.theme.hex }}>
+                    {node.badge}
+                  </span>
+                )}
                 <h4 className="font-serif-zh mt-1 text-[13px] font-semibold leading-[1.3] text-ink sm:text-[13.5px]">{node.title}</h4>
                 {showDetail && node.detail && <p className="mt-1 text-[11px] leading-[1.55] text-muted">{node.detail}</p>}
               </motion.div>
@@ -206,9 +208,11 @@ function GrowthCurve({
                     boxShadow: `0 0 18px ${node.theme.hex}66`,
                   }}
                 />
-                <span className="font-mono text-[10.5px] uppercase tracking-[0.18em]" style={{ color: node.theme.hex }}>
-                  {node.badge}
-                </span>
+                {node.badge && (
+                  <span className="font-mono text-[10.5px] uppercase tracking-[0.18em]" style={{ color: node.theme.hex }}>
+                    {node.badge}
+                  </span>
+                )}
                 <h4 className="font-serif-zh mt-1 text-[15px] font-semibold leading-[1.35] text-ink">{node.title}</h4>
                 {showDetail && node.detail && <p className="mt-1 text-[12px] leading-[1.7] text-ink-soft">{node.detail}</p>}
               </li>
@@ -260,13 +264,13 @@ function StageHead({
 }
 
 const STAGE1_NODES: CurveNode[] = STAGE1_CHAPTERS.map((c) => ({
-  key: `s1-${c.index}`, theme: THEMES[c.theme], badge: `课时 ${c.index}`, title: c.title, detail: c.deliverable,
+  key: `s1-${c.index}`, theme: THEMES[c.theme], badge: '', title: c.title, detail: c.deliverable,
 }))
 // 第二阶段：outline.md 全部 14 个课时（按出现顺序编号 课时 1–14，按所属组上色）。
-const STAGE2_NODES: CurveNode[] = STAGE2_GROUPS.flatMap((g) => g.lessons).map((l, i) => ({
+const STAGE2_NODES: CurveNode[] = STAGE2_GROUPS.flatMap((g) => g.lessons).map((l) => ({
   key: l.code,
   theme: STAGE2_THEMES[l.theme],
-  badge: `课时 ${i + 1}`,
+  badge: '',
   title: l.title,
   detail: '',
 }))
