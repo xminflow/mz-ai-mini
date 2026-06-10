@@ -4,17 +4,18 @@ import { GradientText, Reveal } from '../../motion'
 import { HeroAuroraLayers, FloatingOrbs, ShimmerHeading } from './primitives'
 import { THEMES } from './data'
 
-// 首屏核心宣传：七条承诺（文案按用户原话，逐字不改）。
-const PROMISES: string[] = [
-  '我们专注于做好每一节精品课程，CTO亲自带你从零一步步实操',
-  '我们需要对你的学习效果负责，持续跟踪你的掌握进度',
-  '我们是市面上最好的，真正的全程AI思维驱动的AI编程实战课',
-  '我们知道未来必定是全民AI编程，并针对性地挖掘出你未来的核心竞争力',
-  '我们确定软件应用开发领域你只需要这一套课程即可搞定',
-  '我们知道知识需要不断更新，于是为你打造了持续进化的AI社区',
-  '我们知道你的真实求职压力，于是为你安排了最实用的求职面试专题',
+/* 首屏核心宣传：七条承诺。文案逐字按用户原话——拆成 pre+em+post 只为给关键短语上霓虹高亮，
+ * 三段拼接后与原句完全一致，未改一字。 */
+const PROMISES: { pre: string; em: string; post: string }[] = [
+  { pre: '我们专注于做好每一节精品课程，', em: 'CTO亲自带你从零一步步实操', post: '' },
+  { pre: '我们需要', em: '对你的学习效果负责', post: '，持续跟踪你的掌握进度' },
+  { pre: '我们是', em: '市面上最好的', post: '，真正的全程AI思维驱动的AI编程实战课' },
+  { pre: '我们知道未来必定是全民AI编程，并针对性地挖掘出', em: '你未来的核心竞争力', post: '' },
+  { pre: '我们确定软件应用开发领域你', em: '只需要这一套课程即可搞定', post: '' },
+  { pre: '我们知道知识需要不断更新，于是为你打造了', em: '持续进化的AI社区', post: '' },
+  { pre: '我们知道你的真实求职压力，于是为你安排了', em: '最实用的求职面试专题', post: '' },
 ]
-// 七条各取一个主题色作勾选标记（沿用第一阶段七彩）。
+// 七条各取一个主题色（沿用第一阶段七彩）。
 const PROMISE_THEMES = [
   THEMES.cognition, THEMES.frontend, THEMES.backend, THEMES.agent, THEMES.launch, THEMES.mobile, THEMES.mindset,
 ]
@@ -37,47 +38,50 @@ export function Hero() {
                 零基础入门 +{' '}
                 <GradientText className="font-semibold">AI 编程专家</GradientText>
               </span>
-              <span className="mt-2 block text-[14px] sm:mt-3 sm:text-[16px] lg:text-[17px]">
-                <span
-                  className="font-semibold"
-                  style={{ color: '#67E8F9', textShadow: '0 0 14px rgba(103,232,249,0.45)' }}
-                >
-                  零基础也不用担心学不会
-                </span>
-                <span className="text-ink-soft"> · 有基础者直通企业级 AI 工程 </span>
-                <span className="font-semibold text-ink">按需选择,从想法到上线</span>
-              </span>
             </p>
           </div>
         </Reveal>
 
-        {/* 七大承诺 · 首屏核心宣传（文案逐字按用户原话；首屏主角，放大突出） */}
-        <Reveal delay={0.28}>
-          <div className="mt-11 w-full max-w-4xl sm:mt-14">
-            <div className="flex justify-center">
+        {/* 七大承诺 · 首屏核心宣传：霓虹编号宣言（炫酷、突出；文案逐字按用户原话） */}
+        <Reveal delay={0.26}>
+          <div className="mt-12 w-full max-w-4xl sm:mt-16">
+            <div className="flex items-center justify-center gap-3">
+              <span aria-hidden className="h-px w-8 sm:w-12" style={{ background: 'linear-gradient(to right, transparent, rgba(196,181,253,0.7))' }} />
               <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-ink-soft sm:text-[12px]">
-                · 我们的承诺 · COMMITMENT ·
+                我们的承诺 · COMMITMENT
               </span>
+              <span aria-hidden className="h-px w-8 sm:w-12" style={{ background: 'linear-gradient(to left, transparent, rgba(196,181,253,0.7))' }} />
             </div>
-            <div className="mt-7 grid grid-cols-1 gap-x-12 gap-y-5 text-left sm:mt-9 sm:grid-cols-2 sm:gap-y-6">
-              {PROMISES.map((text, i) => {
+
+            <div className="mt-8 grid grid-cols-1 gap-x-10 gap-y-6 text-left sm:mt-10 sm:grid-cols-2 sm:gap-x-12 sm:gap-y-7">
+              {PROMISES.map((p, i) => {
                 const t = PROMISE_THEMES[i]
                 return (
-                  <div key={i} className="flex items-start gap-3.5">
-                    <span
-                      aria-hidden
-                      className="mt-0.5 inline-flex h-[22px] w-[22px] flex-none items-center justify-center rounded-full"
-                      style={{
-                        background: `linear-gradient(135deg, ${t.gradientFrom}, ${t.gradientTo})`,
-                        boxShadow: `0 0 14px -2px ${t.hex}bb`,
-                      }}
-                    >
-                      <svg viewBox="0 0 16 16" className="h-3 w-3" fill="none" stroke="#0a0a0c" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3.5 8.5l3 3 6-6.5" />
-                      </svg>
-                    </span>
-                    <p className="text-[15px] font-medium leading-[1.65] text-ink sm:text-[16.5px]">{text}</p>
-                  </div>
+                  <Reveal key={i} delay={0.1 + i * 0.07}>
+                    <div className="group relative flex items-start gap-3.5 sm:gap-4">
+                      {/* 大号发光序号 */}
+                      <span
+                        aria-hidden
+                        className="relative font-serif-zh text-[30px] font-black leading-none tabular transition-transform duration-300 group-hover:scale-110 sm:text-[40px]"
+                        style={{ color: t.hex, textShadow: `0 0 22px ${t.hex}aa, 0 0 4px ${t.hex}` }}
+                      >
+                        {String(i + 1).padStart(2, '0')}
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute -inset-3 -z-10 rounded-full opacity-50 blur-xl transition-opacity duration-300 group-hover:opacity-90"
+                          style={{ background: `radial-gradient(circle, ${t.hex}66 0%, transparent 70%)` }}
+                        />
+                      </span>
+                      {/* 整句（关键短语霓虹高亮） */}
+                      <p className="pt-0.5 text-[14.5px] font-medium leading-[1.65] text-ink sm:text-[16.5px] sm:leading-[1.6]">
+                        {p.pre}
+                        <span className="font-bold" style={{ color: t.hex, textShadow: `0 0 16px ${t.hex}66` }}>
+                          {p.em}
+                        </span>
+                        {p.post}
+                      </p>
+                    </div>
+                  </Reveal>
                 )
               })}
             </div>
