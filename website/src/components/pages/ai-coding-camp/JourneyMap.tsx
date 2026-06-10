@@ -19,7 +19,7 @@ import type { Theme } from './data'
  * 复刻原 CapabilityTimeline 的平滑流动曲线 + 辉光节点 + 流光动画，并把走线改成「蛇形(boustrophedon)」：
  * 上行 → 右侧圆角下折 → 下行 → … 这样一条曲线能容纳更多节点。
  *  - 第一阶段：outline.md 全部 10 个课时全称，单行平滑成长曲线（带一句交付物）。
- *  - 第二阶段：outline.md 全部 14 个课时全称，蜿蜒蛇形（每行 4 个、共 4 行，行内起伏 + 折返圆弧），按 能力进阶/企业实战/求职冲刺 三组上色。
+ *  - 第二阶段：分阶段时间轴——3 个阶段（能力进阶/企业实战/求职冲刺）各占一列，列内是该段课时全称的竖向小时间线。
  * 桌面端蛇形曲线（标签上下交替）；移动端降级为竖向时间线。无嵌套框。
  * ──────────────────────────────────────────────────────────────────────── */
 
@@ -50,24 +50,6 @@ const STAGE1_COORDS: Pt[] = [
   { x: 660, y: 100 }, { x: 780, y: 150 }, { x: 900, y: 105 }, { x: 1020, y: 160 }, { x: 1140, y: 120 },
 ]
 const STAGE1_PATH = smoothThrough(STAGE1_COORDS)
-
-/* ── 第二阶段：14 课时蜿蜒蛇形，每行 4 个共 4 行；行内轻微起伏 + 折返处圆弧外凸，有「地图路线」感 ── */
-const STAGE2_COORDS: Pt[] = [
-  { x: 160, y: 82 }, { x: 480, y: 58 }, { x: 800, y: 84 }, { x: 1080, y: 60 },
-  { x: 1080, y: 252 }, { x: 800, y: 278 }, { x: 480, y: 250 }, { x: 160, y: 276 },
-  { x: 160, y: 442 }, { x: 480, y: 418 }, { x: 800, y: 444 }, { x: 1080, y: 420 },
-  { x: 1080, y: 612 }, { x: 800, y: 636 },
-]
-// 折返处圆弧航点（仅连线、不画节点），让蛇形下折成向外圆弧而非直角。
-const STAGE2_PATH = smoothThrough([
-  STAGE2_COORDS[0], STAGE2_COORDS[1], STAGE2_COORDS[2], STAGE2_COORDS[3],
-  { x: 1180, y: 156 },
-  STAGE2_COORDS[4], STAGE2_COORDS[5], STAGE2_COORDS[6], STAGE2_COORDS[7],
-  { x: 60, y: 359 },
-  STAGE2_COORDS[8], STAGE2_COORDS[9], STAGE2_COORDS[10], STAGE2_COORDS[11],
-  { x: 1180, y: 516 },
-  STAGE2_COORDS[12], STAGE2_COORDS[13],
-])
 
 /* 一条成长曲线（桌面 SVG 流动曲线 + 辉光节点 + 流光；含上下交替标签）。 */
 function GrowthCurve({
@@ -266,26 +248,70 @@ function StageHead({
 const STAGE1_NODES: CurveNode[] = STAGE1_CHAPTERS.map((c) => ({
   key: `s1-${c.index}`, theme: THEMES[c.theme], badge: '', title: c.title, detail: c.deliverable,
 }))
-// 第二阶段：outline.md 全部 14 个课时（按出现顺序编号 课时 1–14，按所属组上色）。
-const STAGE2_NODES: CurveNode[] = STAGE2_GROUPS.flatMap((g) => g.lessons).map((l) => ({
-  key: l.code,
-  theme: STAGE2_THEMES[l.theme],
-  badge: '',
-  title: l.title,
-  detail: '',
-}))
-
 const STAGE1_STOPS = [
   { offset: 0, color: THEMES.cognition.hex }, { offset: 0.3, color: THEMES.frontend.hex },
   { offset: 0.55, color: THEMES.backend.hex }, { offset: 0.72, color: THEMES.agent.hex },
   { offset: 0.85, color: THEMES.launch.hex }, { offset: 1, color: THEMES.mindset.hex },
 ]
-// 第二阶段渐变：能力进阶(钢蓝, 课1–8) → 企业实战(暗金, 课9–12) → 求职冲刺(翡翠, 课13–14)。
-const STAGE2_STOPS = [
-  { offset: 0, color: STAGE2_THEMES.advance.hex }, { offset: 0.55, color: STAGE2_THEMES.advance.hex },
-  { offset: 0.62, color: STAGE2_THEMES.enterprise.hex }, { offset: 0.84, color: STAGE2_THEMES.enterprise.hex },
-  { offset: 0.9, color: STAGE2_THEMES.career.hex }, { offset: 1, color: STAGE2_THEMES.career.hex },
-]
+
+/* ─────────────────────────  第二阶段：分阶段时间轴（3 个阶段，每段竖向小时间线）  ───────────────────────── */
+// 三段课程范围：能力进阶 课1–8 / 企业实战 课9–12 / 求职冲刺 课13–14（按 lessons 数量推算）。
+const STAGE2_RANGES: string[] = (() => {
+  let cum = 0
+  return STAGE2_GROUPS.map((g) => {
+    const start = cum + 1
+    cum += g.lessons.length
+    return `课 ${start}–${cum}`
+  })
+})()
+
+function PhasedTimeline() {
+  return (
+    <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-6">
+      {STAGE2_GROUPS.map((g, gi) => {
+        const t = STAGE2_THEMES[g.key]
+        return (
+          <Reveal key={g.key} delay={0.06 + gi * 0.08}>
+            <div className="flex h-full flex-col gap-4">
+              {/* 阶段头 */}
+              <div className="flex items-center gap-2.5 border-b pb-3" style={{ borderColor: `rgba(${t.rgb}, 0.25)` }}>
+                <span
+                  aria-hidden
+                  className="inline-flex h-3.5 w-3.5 flex-none rounded-full"
+                  style={{ background: `radial-gradient(circle, ${t.gradientFrom}, ${t.gradientTo})`, boxShadow: `0 0 12px ${t.hex}` }}
+                />
+                <div className="flex flex-col">
+                  <span className="font-serif-zh text-[16px] font-bold sm:text-[17px]" style={{ color: t.hex }}>
+                    {g.title}
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">{STAGE2_RANGES[gi]}</span>
+                </div>
+              </div>
+              {/* 该阶段课程：竖向小时间线 */}
+              <ol className="relative flex flex-col gap-3.5">
+                <span
+                  aria-hidden
+                  className="absolute left-[5px] top-2 bottom-2 w-px"
+                  style={{ background: `linear-gradient(to bottom, ${t.gradientFrom}, ${t.gradientTo})`, opacity: 0.55 }}
+                />
+                {g.lessons.map((l) => (
+                  <li key={l.code} className="relative pl-6">
+                    <span
+                      aria-hidden
+                      className="absolute left-[1px] top-[5px] h-2.5 w-2.5 rounded-full"
+                      style={{ background: t.hex, boxShadow: `0 0 8px ${t.hex}aa` }}
+                    />
+                    <span className="text-[13px] leading-[1.55] text-ink sm:text-[13.5px]">{l.title}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </Reveal>
+        )
+      })}
+    </div>
+  )
+}
 
 export function JourneyMap() {
   return (
@@ -326,7 +352,7 @@ export function JourneyMap() {
         </div>
       </Reveal>
 
-      {/* ── 第二阶段板块（14 课时蛇形全景） ── */}
+      {/* ── 第二阶段板块（分阶段时间轴：3 个阶段 × 各自课时） ── */}
       <Reveal>
         <StageHead
           accent={STAGE2_THEMES.advance.hex}
@@ -338,21 +364,8 @@ export function JourneyMap() {
           full
         />
       </Reveal>
-      <div className="mt-4 sm:mt-6">
-        <GrowthCurve
-          nodes={STAGE2_NODES}
-          coords={STAGE2_COORDS}
-          pathD={STAGE2_PATH}
-          vbH={690}
-          svgTop={70}
-          containerH={800}
-          aboveOffset={64}
-          pathLen={3700}
-          gradientStops={STAGE2_STOPS}
-          idPrefix="s2"
-          showDetail={false}
-          labelW="w-[168px]"
-        />
+      <div className="mt-6 sm:mt-8">
+        <PhasedTimeline />
       </div>
     </div>
   )
