@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 
 import { Reveal } from '../../motion'
 import {
-  PROJECT_TIMELINE,
+  STAGE1_CHAPTERS,
   THEMES,
   STAGE2_THEMES,
   STAGE2_GROUPS,
@@ -44,10 +44,10 @@ function smoothThrough(pts: ReadonlyArray<Pt>): string {
   return d
 }
 
-/* ── 第一阶段：9 节点单行成长曲线（viewBox 1200×260） ── */
+/* ── 第一阶段：10 个课时单行成长曲线（viewBox 1200×260） ── */
 const STAGE1_COORDS: Pt[] = [
-  { x: 60, y: 170 }, { x: 200, y: 120 }, { x: 340, y: 150 }, { x: 480, y: 90 }, { x: 620, y: 145 },
-  { x: 760, y: 100 }, { x: 900, y: 160 }, { x: 1040, y: 105 }, { x: 1140, y: 175 },
+  { x: 60, y: 170 }, { x: 180, y: 115 }, { x: 300, y: 150 }, { x: 420, y: 95 }, { x: 540, y: 155 },
+  { x: 660, y: 100 }, { x: 780, y: 150 }, { x: 900, y: 105 }, { x: 1020, y: 160 }, { x: 1140, y: 120 },
 ]
 const STAGE1_PATH = smoothThrough(STAGE1_COORDS)
 
@@ -62,14 +62,6 @@ const S2_ROW1: Pt[] = [
 const S2_TURN: Pt = { x: 1184, y: 191 }
 const STAGE2_COORDS: Pt[] = [...S2_ROW0, ...S2_ROW1] // 节点：课时 1–14，蛇形顺序
 const STAGE2_PATH = smoothThrough([...S2_ROW0, S2_TURN, ...S2_ROW1])
-
-/* 第二阶段 14 课时的精炼标题（忠实缩写自 outline.md，完整长标题留在下方课时大纲）。 */
-const S2_SHORT: Record<string, string> = {
-  'S2-1': 'CC / Codex 进阶', 'S2-2': 'AI 全栈进阶', 'S2-3': 'AI 测试工程', 'S2-4': 'AI 运维工程',
-  'S2-5': 'SDD 与协作', 'S2-6': '整洁架构 · DDD', 'S2-7': 'RAG 与上下文', 'S2-8': '智能体与 harness',
-  'S2-9': '智能问数 (上)', 'S2-10': '智能问数 (下)', 'S2-11': '智能体系统 (上)', 'S2-12': '智能体系统 (下)',
-  'S2-13': '面试 · 大模型', 'S2-14': '面试 · 架构',
-}
 
 /* 一条成长曲线（桌面 SVG 流动曲线 + 辉光节点 + 流光；含上下交替标签）。 */
 function GrowthCurve({
@@ -259,15 +251,15 @@ function StageHead({
   )
 }
 
-const STAGE1_NODES: CurveNode[] = PROJECT_TIMELINE.map((n) => ({
-  key: `s1-${n.chapter}`, theme: THEMES[n.theme], badge: n.chapter, title: n.milestone, detail: n.detail,
+const STAGE1_NODES: CurveNode[] = STAGE1_CHAPTERS.map((c) => ({
+  key: `s1-${c.index}`, theme: THEMES[c.theme], badge: `课时 ${c.index}`, title: c.title, detail: c.deliverable,
 }))
 // 第二阶段：outline.md 全部 14 个课时（按出现顺序编号 课时 1–14，按所属组上色）。
 const STAGE2_NODES: CurveNode[] = STAGE2_GROUPS.flatMap((g) => g.lessons).map((l, i) => ({
   key: l.code,
   theme: STAGE2_THEMES[l.theme],
   badge: `课时 ${i + 1}`,
-  title: S2_SHORT[l.code] ?? l.title,
+  title: l.title,
   detail: '',
 }))
 

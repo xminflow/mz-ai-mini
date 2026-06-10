@@ -53,7 +53,7 @@ export type Chapter = {
 export const STAGE1_CHAPTERS: Chapter[] = [
   {
     index: 1,
-    title: 'AI 工具学习',
+    title: 'AI 基础工具学习',
     hours: '6–8 课时',
     deliverable: '一个能在本地浏览器打开的静态网页',
     theme: 'cognition',
@@ -187,7 +187,7 @@ export const STAGE1_CHAPTERS: Chapter[] = [
   },
   {
     index: 10,
-    title: '工程思想:长期稳定维护自己的软件应用',
+    title: '工程思想：长期稳定维护软件应用',
     hours: '5–6 课时',
     deliverable: '一份属于自己的「长期维护 + 产品设计」检查清单',
     theme: 'mindset',
@@ -544,7 +544,7 @@ export const STAGE2_GROUPS: Stage2Group[] = [
     lessons: [
       {
         code: 'S2-9',
-        title: '企业级实战直播 · 智能问数系统(上)',
+        title: '企业级实战直播 · 智能问数系统（上）',
         hours: '待确认',
         goal: '从零启动一个企业级 Text-to-SQL 系统,完成核心链路。',
         points: [
@@ -559,7 +559,7 @@ export const STAGE2_GROUPS: Stage2Group[] = [
       },
       {
         code: 'S2-10',
-        title: '企业级实战直播 · 智能问数系统(下)',
+        title: '企业级实战直播 · 智能问数系统（下）',
         hours: '待确认',
         goal: '把 demo 打磨成可上线、准确且安全的产品。',
         points: [
@@ -574,7 +574,7 @@ export const STAGE2_GROUPS: Stage2Group[] = [
       },
       {
         code: 'S2-11',
-        title: '企业级实战直播 · Hermes/Openclaw 智能体系统(上)',
+        title: '企业级实战直播 · Hermes/Openclaw 智能体系统（上）',
         hours: '待确认',
         goal: '从零搭建一个智能体系统的骨架与核心能力。',
         points: [
@@ -589,7 +589,7 @@ export const STAGE2_GROUPS: Stage2Group[] = [
       },
       {
         code: 'S2-12',
-        title: '企业级实战直播 · Hermes/Openclaw 智能体系统(下)',
+        title: '企业级实战直播 · Hermes/Openclaw 智能体系统（下）',
         hours: '待确认',
         goal: '把智能体从「能跑」做到「能上线、稳定、可运营」。',
         points: [
@@ -611,7 +611,7 @@ export const STAGE2_GROUPS: Stage2Group[] = [
     lessons: [
       {
         code: 'S2-13',
-        title: '求职面试专题(一)· 大模型应用',
+        title: '求职面试专题（一）· 大模型应用',
         hours: '待确认',
         goal: '系统梳理大模型应用方向高频面试题,做到能答、能讲、能动手。',
         points: [
@@ -629,7 +629,7 @@ export const STAGE2_GROUPS: Stage2Group[] = [
       },
       {
         code: 'S2-14',
-        title: '求职面试专题(二)· VibeCoding 与企业架构',
+        title: '求职面试专题（二）· VibeCoding 与企业架构',
         hours: '待确认',
         goal: '梳理 AI 编程工作流与企业级工程能力高频面试题。',
         points: [
