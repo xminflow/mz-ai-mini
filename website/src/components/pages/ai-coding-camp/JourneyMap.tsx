@@ -8,7 +8,7 @@ import {
   PROJECT_TIMELINE,
   THEMES,
   STAGE2_THEMES,
-  STAGE2_MILESTONES,
+  STAGE2_GROUPS,
   AUDIENCES,
   STAGE1_PRICE,
   STAGE2_PRICE,
@@ -17,8 +17,10 @@ import type { Theme } from './data'
 
 /* ─────────────────────────  全景学习路径 JourneyMap（一脉相承的成长曲线）  ─────────────────────────
  * 复刻原 CapabilityTimeline 的设计：一条平滑流动的成长曲线（Q/T 平滑贝塞尔）+ 辉光节点 + 流光动画。
- * 分两个阶段板块：第一阶段 9 个课时节点一条曲线，第二阶段 3 个里程碑一条曲线，各带价格小标。
- * 桌面端横向成长曲线（标签上下交替）；移动端降级为竖向时间线。无嵌套框、节点标签精炼。
+ * 分两个阶段板块：
+ *  - 第一阶段：9 个课时里程碑一条曲线（带一句收获说明）。
+ *  - 第二阶段：outline.md 的 14 个课时全部铺在曲线上（按 能力进阶/企业实战/求职冲刺 三组上色，标签精炼）。
+ * 桌面端横向成长曲线（标签上下交替）；移动端降级为竖向时间线。无嵌套框。
  * ──────────────────────────────────────────────────────────────────────── */
 
 type CurveNode = { key: string; theme: Theme; badge: string; title: string; detail: string }
@@ -40,10 +42,20 @@ const STAGE1_XY: ReadonlyArray<{ x: number; y: number }> = [
   { x: 60, y: 170 }, { x: 200, y: 120 }, { x: 340, y: 150 }, { x: 480, y: 90 }, { x: 620, y: 145 },
   { x: 760, y: 100 }, { x: 900, y: 160 }, { x: 1040, y: 105 }, { x: 1140, y: 175 },
 ]
-// 第二阶段 3 节点坐标（gentle wave，viewBox 1200×200）。
+// 第二阶段 14 节点坐标（x 等距，y 不规则起伏，viewBox 1200×260）。
 const STAGE2_XY: ReadonlyArray<{ x: number; y: number }> = [
-  { x: 140, y: 130 }, { x: 600, y: 70 }, { x: 1060, y: 120 },
+  { x: 46, y: 165 }, { x: 130, y: 100 }, { x: 215, y: 150 }, { x: 300, y: 95 }, { x: 385, y: 155 },
+  { x: 470, y: 105 }, { x: 555, y: 150 }, { x: 640, y: 110 }, { x: 725, y: 160 }, { x: 810, y: 95 },
+  { x: 895, y: 150 }, { x: 980, y: 100 }, { x: 1065, y: 150 }, { x: 1154, y: 175 },
 ]
+
+/* 第二阶段 14 课时的精炼标题（忠实缩写自 outline.md，长标题留在下方课时大纲）。 */
+const S2_SHORT: Record<string, string> = {
+  'S2-1': 'CC / Codex 进阶', 'S2-2': 'AI 全栈进阶', 'S2-3': 'AI 测试工程', 'S2-4': 'AI 运维工程',
+  'S2-5': 'SDD 与协作', 'S2-6': '整洁架构 · DDD', 'S2-7': 'RAG 与上下文', 'S2-8': '智能体与 harness',
+  'S2-9': '智能问数 (上)', 'S2-10': '智能问数 (下)', 'S2-11': '智能体系统 (上)', 'S2-12': '智能体系统 (下)',
+  'S2-13': '面试 · 大模型', 'S2-14': '面试 · 架构',
+}
 
 /* 一条成长曲线（桌面 SVG 流动曲线 + 辉光节点 + 流光；含上下交替标签）。 */
 function GrowthCurve({
@@ -52,17 +64,20 @@ function GrowthCurve({
   vbH,
   gradientStops,
   idPrefix,
+  showDetail = true,
 }: {
   nodes: CurveNode[]
   coords: ReadonlyArray<{ x: number; y: number }>
   vbH: number
   gradientStops: { offset: number; color: string }[]
   idPrefix: string
+  showDetail?: boolean
 }) {
   const pathD = useMemo(() => buildSmoothPath(coords), [coords])
-  const containerH = vbH + 200 // 上方 100 + 下方 100 给标签留白
+  const containerH = vbH + 200
   const svgTop = 100
   const pathLen = 1300
+  const aboveOffset = showDetail ? 96 : 52
 
   return (
     <>
@@ -117,9 +132,9 @@ function GrowthCurve({
               const { x, y } = coords[i]
               return (
                 <g key={node.key} filter={`url(#${idPrefix}-glow)`}>
-                  <circle cx={x} cy={y} r="18" fill={`url(#${idPrefix}-node-${i})`} opacity="0.55" />
-                  <circle cx={x} cy={y} r="9" fill={node.theme.hex} />
-                  <circle cx={x} cy={y} r="4" fill="#F5F5F7" />
+                  <circle cx={x} cy={y} r="16" fill={`url(#${idPrefix}-node-${i})`} opacity="0.55" />
+                  <circle cx={x} cy={y} r="8" fill={node.theme.hex} />
+                  <circle cx={x} cy={y} r="3.6" fill="#F5F5F7" />
                 </g>
               )
             })}
@@ -130,22 +145,22 @@ function GrowthCurve({
             const { x, y } = coords[i]
             const above = i % 2 === 0
             const leftPct = (x / 1200) * 100
-            const topPx = above ? svgTop + y - 96 : svgTop + y + 26
+            const topPx = above ? svgTop + y - aboveOffset : svgTop + y + 24
             return (
               <motion.div
                 key={node.key}
                 initial={{ opacity: 0, y: above ? 12 : -12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-80px' }}
-                transition={{ duration: 0.55, delay: 0.05 * i, ease: [0.22, 1, 0.36, 1] }}
-                className="absolute w-[136px] -translate-x-1/2 text-center"
+                transition={{ duration: 0.5, delay: Math.min(i, 8) * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute w-[128px] -translate-x-1/2 text-center"
                 style={{ left: `${leftPct}%`, top: topPx }}
               >
-                <span className="font-mono text-[10.5px] uppercase tracking-[0.16em]" style={{ color: node.theme.hex }}>
+                <span className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: node.theme.hex }}>
                   {node.badge}
                 </span>
-                <h4 className="font-serif-zh mt-1 text-[14px] font-semibold leading-[1.3] text-ink">{node.title}</h4>
-                <p className="mt-1 text-[11px] leading-[1.55] text-muted">{node.detail}</p>
+                <h4 className="font-serif-zh mt-1 text-[13px] font-semibold leading-[1.3] text-ink sm:text-[13.5px]">{node.title}</h4>
+                {showDetail && node.detail && <p className="mt-1 text-[11px] leading-[1.55] text-muted">{node.detail}</p>}
               </motion.div>
             )
           })}
@@ -159,9 +174,9 @@ function GrowthCurve({
           className="absolute left-[18px] top-2 bottom-2 w-px"
           style={{ background: `linear-gradient(to bottom, ${nodes.map((n) => n.theme.hex).join(', ')})`, opacity: 0.55 }}
         />
-        <ol className="flex flex-col gap-5">
+        <ol className="flex flex-col gap-4">
           {nodes.map((node, i) => (
-            <Reveal key={node.key} delay={i * 0.04}>
+            <Reveal key={node.key} delay={Math.min(i, 8) * 0.03}>
               <li className="relative pl-12">
                 <span
                   aria-hidden
@@ -175,7 +190,7 @@ function GrowthCurve({
                   {node.badge}
                 </span>
                 <h4 className="font-serif-zh mt-1 text-[15px] font-semibold leading-[1.35] text-ink">{node.title}</h4>
-                <p className="mt-1 text-[12px] leading-[1.7] text-ink-soft">{node.detail}</p>
+                {showDetail && node.detail && <p className="mt-1 text-[12px] leading-[1.7] text-ink-soft">{node.detail}</p>}
               </li>
             </Reveal>
           ))}
@@ -227,8 +242,13 @@ function StageHead({
 const STAGE1_NODES: CurveNode[] = PROJECT_TIMELINE.map((n) => ({
   key: `s1-${n.chapter}`, theme: THEMES[n.theme], badge: n.chapter, title: n.milestone, detail: n.detail,
 }))
-const STAGE2_NODES: CurveNode[] = STAGE2_MILESTONES.map((m) => ({
-  key: `s2-${m.label}`, theme: STAGE2_THEMES[m.theme], badge: m.range, title: m.label, detail: m.gain,
+// 第二阶段：outline.md 全部 14 个课时（按出现顺序编号 课时 1–14，按所属组上色）。
+const STAGE2_NODES: CurveNode[] = STAGE2_GROUPS.flatMap((g) => g.lessons).map((l, i) => ({
+  key: l.code,
+  theme: STAGE2_THEMES[l.theme],
+  badge: `课时 ${i + 1}`,
+  title: S2_SHORT[l.code] ?? l.title,
+  detail: '',
 }))
 
 const STAGE1_STOPS = [
@@ -236,9 +256,11 @@ const STAGE1_STOPS = [
   { offset: 0.55, color: THEMES.backend.hex }, { offset: 0.72, color: THEMES.agent.hex },
   { offset: 0.85, color: THEMES.launch.hex }, { offset: 1, color: THEMES.mindset.hex },
 ]
+// 第二阶段渐变：能力进阶(钢蓝, 课1–8) → 企业实战(暗金, 课9–12) → 求职冲刺(翡翠, 课13–14)。
 const STAGE2_STOPS = [
-  { offset: 0, color: STAGE2_THEMES.advance.hex }, { offset: 0.5, color: STAGE2_THEMES.enterprise.hex },
-  { offset: 1, color: STAGE2_THEMES.career.hex },
+  { offset: 0, color: STAGE2_THEMES.advance.hex }, { offset: 0.55, color: STAGE2_THEMES.advance.hex },
+  { offset: 0.62, color: STAGE2_THEMES.enterprise.hex }, { offset: 0.84, color: STAGE2_THEMES.enterprise.hex },
+  { offset: 0.9, color: STAGE2_THEMES.career.hex }, { offset: 1, color: STAGE2_THEMES.career.hex },
 ]
 
 export function JourneyMap() {
@@ -270,7 +292,7 @@ export function JourneyMap() {
         </div>
       </Reveal>
 
-      {/* ── 第二阶段板块 ── */}
+      {/* ── 第二阶段板块（14 课时全景） ── */}
       <Reveal>
         <StageHead
           accent={STAGE2_THEMES.advance.hex}
@@ -283,7 +305,7 @@ export function JourneyMap() {
         />
       </Reveal>
       <div className="mt-4 sm:mt-6">
-        <GrowthCurve nodes={STAGE2_NODES} coords={STAGE2_XY} vbH={200} gradientStops={STAGE2_STOPS} idPrefix="s2" />
+        <GrowthCurve nodes={STAGE2_NODES} coords={STAGE2_XY} vbH={260} gradientStops={STAGE2_STOPS} idPrefix="s2" showDetail={false} />
       </div>
     </div>
   )
