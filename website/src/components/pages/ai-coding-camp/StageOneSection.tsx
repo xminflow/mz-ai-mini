@@ -2,7 +2,7 @@
 
 import { GradientText, Reveal } from '../../motion'
 import {
-  STAGE1_DELIVERABLES as DELIVERABLES, OVERVIEW_CARDS,
+  STAGE1_DELIVERABLES as DELIVERABLES,
   STAGE1_CHAPTERS as CHAPTERS, STAGE1_SERVICE_STAGES as SERVICE_STAGES, THEMES,
   STAGE1_PRICE,
 } from './data'
@@ -113,55 +113,6 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                     </div>
                   </div>
                 </article>
-              </Reveal>
-            )
-          })}
-        </div>
-      </section>
-
-      {/* 4. 课程总览：三张卡片（带主题色光晕） */}
-      <section className="relative mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-24 lg:py-28">
-        <Reveal>
-          <div className="flex flex-col gap-4">
-            <SectionEyebrow>课程总览</SectionEyebrow>
-            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
-              <span className="block">不是教你「用 AI 写两段代码」，</span>
-              <span className="mt-1 block sm:mt-1.5">
-                <GradientText className="font-semibold">而是带你做一个真正能用的产品</GradientText>
-              </span>
-            </h2>
-          </div>
-        </Reveal>
-
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-12 sm:gap-5 md:grid-cols-3">
-          {OVERVIEW_CARDS.map((card, i) => {
-            const t = THEMES[card.theme]
-            return (
-              <Reveal key={card.eyebrow} delay={i * 0.08}>
-                <div
-                  className="group relative flex h-full flex-col gap-4 overflow-hidden rounded-2xl border p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[22px] sm:p-7"
-                  style={{
-                    borderColor: `rgba(${t.rgb}, 0.22)`,
-                    background: `linear-gradient(135deg, rgba(${t.rgb}, 0.10) 0%, rgba(13,13,18,0.55) 65%)`,
-                    boxShadow: `inset 0 0 0 1px rgba(${t.rgb}, 0.06)`,
-                  }}
-                >
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute -top-16 -right-16 h-44 w-44 rounded-full opacity-50 transition-opacity duration-500 group-hover:opacity-90"
-                    style={{ background: `radial-gradient(circle, ${t.hex}55 0%, transparent 65%)`, filter: 'blur(20px)' }}
-                  />
-                  <span
-                    className="font-mono text-[12px] font-semibold tracking-[0.18em]"
-                    style={{ color: t.hex }}
-                  >
-                    {card.eyebrow}
-                  </span>
-                  <h3 className="font-serif-zh text-[17px] font-semibold leading-[1.4] text-ink sm:text-[19px]">
-                    {card.title}
-                  </h3>
-                  <p className="text-[13px] leading-[1.85] text-ink-soft sm:text-[13.5px]">{card.body}</p>
-                </div>
               </Reveal>
             )
           })}
