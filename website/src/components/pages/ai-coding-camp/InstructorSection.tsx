@@ -11,9 +11,8 @@ export function InstructorSection() {
         <div className="flex flex-col gap-4">
           <SectionEyebrow color="#C4B5FD">讲师介绍</SectionEyebrow>
           <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
-            <span className="block">亲自带你的人 ·</span>
             <span className="mt-1 block sm:mt-1.5">
-              <GradientText className="font-semibold">12 年实战 + 4 年 CTO + 2 年 AI 大模型应用教学</GradientText>
+              <GradientText className="font-semibold">12 年产品研发实战 + 4 年 CTO + 2 年 AI 大模型应用教学</GradientText>
             </span>
           </h2>
           <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">

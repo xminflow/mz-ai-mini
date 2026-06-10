@@ -2,18 +2,17 @@
 
 import { GradientText, Reveal } from '../../motion'
 
-/* 首屏核心宣传：八条核心主旨，无边框中性玻璃卡片 + 关键词统一品牌渐变放大。
- * 文案逐字按用户原话——拆成 pre+em+post 只为给关键词上渐变高亮，三段拼接后与原句完全一致，未改一字。 */
-type Pitch = { pre: string; em: string; post: string }
+/* 「为什么选我们」八大核心：短标题 + 完整描述（描述逐字按用户原话，未改一字）。 */
+type Pitch = { title: string; desc: string }
 const PROMISES: Pitch[] = [
-  { pre: '我们专注于做好每一节精品课程，', em: 'CTO亲自带你从零一步步实操', post: '' },
-  { pre: '从开发到上线，我们教你真正做完', em: '软件全生命周期闭环', post: '' },
-  { pre: '我们需要', em: '对你的学习效果负责', post: '，持续跟踪你的掌握进度' },
-  { pre: '我们是', em: '市面上最好的', post: '，真正的全程AI思维驱动的AI编程实战课' },
-  { pre: '我们知道未来必定是全民AI编程，并针对性地挖掘出', em: '你未来的核心竞争力', post: '' },
-  { pre: '我们提炼了软件工程中最核心的思维骨架，只需要这一套课程即可', em: '悟透软件应用开发领域', post: '' },
-  { pre: '我们知道知识需要不断更新，于是为你打造了', em: '持续进化的AI社区', post: '' },
-  { pre: '我们知道你的真实求职压力，于是为你安排了', em: '最实用的求职面试专题', post: '' },
+  { title: 'CTO 亲授', desc: '我们专注于做好每一节精品课程，CTO亲自带你从零一步步实操' },
+  { title: '软件闭环', desc: '从开发到上线，我们教你真正做完软件全生命周期闭环' },
+  { title: '结果负责', desc: '我们需要对你的学习效果负责，持续跟踪你的掌握进度' },
+  { title: 'AI 思维', desc: '我们是市面上最好的，真正的全程AI思维驱动的AI编程实战课' },
+  { title: '核心竞争力', desc: '我们知道未来必定是全民AI编程，并针对性地挖掘出你未来的核心竞争力' },
+  { title: '思维骨架', desc: '我们提炼了软件工程中最核心的思维骨架，只需要这一套课程即可悟透软件应用开发领域' },
+  { title: 'AI 社区', desc: '我们知道知识需要不断更新，于是为你打造了持续进化的AI社区' },
+  { title: '面试专题', desc: '我们知道你的真实求职压力，于是为你安排了最实用的求职面试专题' },
 ]
 
 export function Hero() {
@@ -47,19 +46,21 @@ export function Hero() {
           {PROMISES.map((p, i) => (
             <Reveal key={i} delay={0.06 + i * 0.05}>
               <div
-                className="h-full rounded-[20px] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 sm:p-6"
+                className="group h-full rounded-[20px] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 sm:p-6"
                 style={{
                   background: 'linear-gradient(150deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.018) 100%)',
                   boxShadow: '0 14px 36px -22px rgba(0,0,0,0.85)',
                 }}
               >
-                <p className="text-[14.5px] font-medium leading-[1.9] text-ink-soft sm:text-[15px]">
-                  {p.pre}
-                  <span className="font-bold" style={{ fontSize: '1.32em' }}>
-                    <GradientText className="font-bold">{p.em}</GradientText>
-                  </span>
-                  {p.post}
-                </p>
+                <span
+                  aria-hidden
+                  className="block h-[3px] w-9 rounded-full transition-all duration-300 group-hover:w-14"
+                  style={{ background: 'linear-gradient(90deg, #C4B5FD, #67E8F9)' }}
+                />
+                <h3 className="mt-4 font-serif-zh text-[19px] font-bold leading-tight sm:text-[21px]">
+                  <GradientText>{p.title}</GradientText>
+                </h3>
+                <p className="mt-2.5 text-[13px] leading-[1.8] text-ink-soft sm:text-[13.5px]">{p.desc}</p>
               </div>
             </Reveal>
           ))}
