@@ -11,114 +11,6 @@ import { SectionEyebrow, PriceChip, EnrollButton } from './primitives'
 export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
   return (
     <div id="stage-one" className="relative scroll-mt-20 sm:scroll-mt-24">
-      {/* 2. 四大成果：你将拿到什么 */}
-      <section className="relative mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-24 lg:py-28">
-        <Reveal>
-          <div className="flex flex-col gap-4">
-            <SectionEyebrow color="#FDA4AF">你将拿到</SectionEyebrow>
-            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
-              <span className="block">学完，你手里会有</span>
-              <span className="mt-1 block sm:mt-1.5">
-                <GradientText className="font-semibold">4 件你自己亲手做出来的交付成果</GradientText>
-              </span>
-            </h2>
-            <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
-              不是看老师演示的截图，不是跑一遍 demo——是亲手做出来、能扫码访问、能发给朋友看的产品。
-            </p>
-          </div>
-        </Reveal>
-
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-12 sm:gap-5 lg:grid-cols-2">
-          {DELIVERABLES.map((item, i) => {
-            const t = THEMES[item.theme]
-            return (
-              <Reveal key={item.code} delay={i * 0.06}>
-                <article
-                  className="group relative h-full overflow-hidden rounded-[22px] border p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[26px] sm:p-7"
-                  style={{
-                    borderColor: `rgba(${t.rgb}, 0.28)`,
-                    background: `linear-gradient(135deg, rgba(${t.rgb}, 0.12) 0%, rgba(13,13,18,0.6) 60%)`,
-                    boxShadow: `inset 0 0 0 1px rgba(${t.rgb}, 0.06)`,
-                  }}
-                >
-                  {/* 主题色光晕 */}
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full opacity-60 transition-opacity duration-500 group-hover:opacity-100"
-                    style={{
-                      background: `radial-gradient(circle, ${t.hex}55 0%, transparent 65%)`,
-                      filter: 'blur(24px)',
-                    }}
-                  />
-                  {/* 巨大半透明序号 */}
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute -bottom-2 right-2 select-none font-mono text-[120px] font-black leading-none tabular sm:right-3 sm:text-[160px]"
-                    style={{ color: t.hex, opacity: 0.06 }}
-                  >
-                    {item.code}
-                  </span>
-
-                  <div className="relative flex h-full flex-col gap-4">
-                    <div className="flex items-center justify-between">
-                      <span
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-lg font-mono text-[12px] font-bold text-canvas sm:h-10 sm:w-10 sm:text-[13px]"
-                        style={{
-                          background: `linear-gradient(135deg, ${t.gradientFrom}, ${t.gradientTo})`,
-                          boxShadow: `0 4px 16px -2px ${t.hex}66`,
-                        }}
-                      >
-                        {item.code}
-                      </span>
-                      <span
-                        className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10.5px]"
-                        style={{
-                          borderColor: `rgba(${t.rgb}, 0.35)`,
-                          color: t.hex,
-                          background: `rgba(${t.rgb}, 0.08)`,
-                        }}
-                      >
-                        <span className="h-1.5 w-1.5 rounded-full" style={{ background: t.hex }} />
-                        交付物 · DELIVERABLE
-                      </span>
-                    </div>
-
-                    <h3 className="font-serif-zh text-[19px] font-semibold leading-[1.35] text-ink sm:text-[22px]">
-                      {item.title}
-                    </h3>
-                    <p
-                      className="text-[12.5px] font-medium leading-[1.6] sm:text-[13px]"
-                      style={{ color: t.hex }}
-                    >
-                      {item.subtitle}
-                    </p>
-                    <p className="text-[13px] leading-[1.85] text-ink-soft sm:text-[13.5px]">
-                      {item.body}
-                    </p>
-
-                    <div className="mt-auto flex flex-wrap gap-1.5 pt-2">
-                      {item.badges.map((badge) => (
-                        <span
-                          key={badge}
-                          className="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10.5px]"
-                          style={{
-                            borderColor: `rgba(${t.rgb}, 0.25)`,
-                            background: `rgba(${t.rgb}, 0.05)`,
-                            color: `rgba(${t.rgb}, 1)`,
-                          }}
-                        >
-                          ✓ {badge}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </article>
-              </Reveal>
-            )
-          })}
-        </div>
-      </section>
-
       {/* 6. 课时大纲：差异化主题色 + 超大背景序号 */}
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
@@ -263,6 +155,114 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                         </li>
                       ))}
                     </ul>
+                  </div>
+                </article>
+              </Reveal>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* 四大成果：初阶课程学完的产出物 */}
+      <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
+        <Reveal>
+          <div className="flex flex-col gap-4">
+            <SectionEyebrow color="#FDA4AF">你将拿到</SectionEyebrow>
+            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
+              <span className="block">学完，你手里会有</span>
+              <span className="mt-1 block sm:mt-1.5">
+                <GradientText className="font-semibold">4 件你自己亲手做出来的交付成果</GradientText>
+              </span>
+            </h2>
+            <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
+              不是看老师演示的截图，不是跑一遍 demo——是亲手做出来、能扫码访问、能发给朋友看的产品。
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-12 sm:gap-5 lg:grid-cols-2">
+          {DELIVERABLES.map((item, i) => {
+            const t = THEMES[item.theme]
+            return (
+              <Reveal key={item.code} delay={i * 0.06}>
+                <article
+                  className="group relative h-full overflow-hidden rounded-[22px] border p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[26px] sm:p-7"
+                  style={{
+                    borderColor: `rgba(${t.rgb}, 0.28)`,
+                    background: `linear-gradient(135deg, rgba(${t.rgb}, 0.12) 0%, rgba(13,13,18,0.6) 60%)`,
+                    boxShadow: `inset 0 0 0 1px rgba(${t.rgb}, 0.06)`,
+                  }}
+                >
+                  {/* 主题色光晕 */}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full opacity-60 transition-opacity duration-500 group-hover:opacity-100"
+                    style={{
+                      background: `radial-gradient(circle, ${t.hex}55 0%, transparent 65%)`,
+                      filter: 'blur(24px)',
+                    }}
+                  />
+                  {/* 巨大半透明序号 */}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute -bottom-2 right-2 select-none font-mono text-[120px] font-black leading-none tabular sm:right-3 sm:text-[160px]"
+                    style={{ color: t.hex, opacity: 0.06 }}
+                  >
+                    {item.code}
+                  </span>
+
+                  <div className="relative flex h-full flex-col gap-4">
+                    <div className="flex items-center justify-between">
+                      <span
+                        className="inline-flex h-9 w-9 items-center justify-center rounded-lg font-mono text-[12px] font-bold text-canvas sm:h-10 sm:w-10 sm:text-[13px]"
+                        style={{
+                          background: `linear-gradient(135deg, ${t.gradientFrom}, ${t.gradientTo})`,
+                          boxShadow: `0 4px 16px -2px ${t.hex}66`,
+                        }}
+                      >
+                        {item.code}
+                      </span>
+                      <span
+                        className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[10.5px]"
+                        style={{
+                          borderColor: `rgba(${t.rgb}, 0.35)`,
+                          color: t.hex,
+                          background: `rgba(${t.rgb}, 0.08)`,
+                        }}
+                      >
+                        <span className="h-1.5 w-1.5 rounded-full" style={{ background: t.hex }} />
+                        交付物 · DELIVERABLE
+                      </span>
+                    </div>
+
+                    <h3 className="font-serif-zh text-[19px] font-semibold leading-[1.35] text-ink sm:text-[22px]">
+                      {item.title}
+                    </h3>
+                    <p
+                      className="text-[12.5px] font-medium leading-[1.6] sm:text-[13px]"
+                      style={{ color: t.hex }}
+                    >
+                      {item.subtitle}
+                    </p>
+                    <p className="text-[13px] leading-[1.85] text-ink-soft sm:text-[13.5px]">
+                      {item.body}
+                    </p>
+
+                    <div className="mt-auto flex flex-wrap gap-1.5 pt-2">
+                      {item.badges.map((badge) => (
+                        <span
+                          key={badge}
+                          className="inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[10.5px]"
+                          style={{
+                            borderColor: `rgba(${t.rgb}, 0.25)`,
+                            background: `rgba(${t.rgb}, 0.05)`,
+                            color: `rgba(${t.rgb}, 1)`,
+                          }}
+                        >
+                          ✓ {badge}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </article>
               </Reveal>
