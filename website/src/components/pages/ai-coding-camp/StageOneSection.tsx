@@ -456,7 +456,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
 
             {/* 报名按钮（复用 BottomCta.tsx 按钮样式） */}
             <div className="mt-1">
-              <EnrollButton label="报名零基础 AI 编程 · ¥1999" onClick={onEnroll} />
+              <EnrollButton label="报名零基础 AI 编程" onClick={onEnroll} />
             </div>
           </div>
         </Reveal>

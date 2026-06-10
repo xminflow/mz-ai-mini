@@ -475,7 +475,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
 
             {/* 报名按钮 */}
             <div className="mt-1">
-              <EnrollButton label="报名 AI 编程专家 · ¥3999" onClick={onEnroll} />
+              <EnrollButton label="报名 AI 编程专家" onClick={onEnroll} />
             </div>
           </div>
         </Reveal>
