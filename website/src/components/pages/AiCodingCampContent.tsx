@@ -10,7 +10,6 @@ import { JourneyMap } from "./ai-coding-camp/JourneyMap";
 import { InstructorSection } from "./ai-coding-camp/InstructorSection";
 import { StageOneSection } from "./ai-coding-camp/StageOneSection";
 import { StageTwoSection } from "./ai-coding-camp/StageTwoSection";
-import { BottomCta } from "./ai-coding-camp/BottomCta";
 
 /* ─────────────────────────  主组件  ───────────────────────── */
 
@@ -55,9 +54,6 @@ export function AiCodingCampContent() {
 
       {/* 第二阶段：收获墙 / 三段 14 课大纲 / 服务拟稿 + ¥3999 报名入口 */}
       <StageTwoSection onEnroll={openContact} />
-
-      {/* 8. 底部 CTA */}
-      <BottomCta onContact={openContact} />
 
       <ContactQrCodeModal open={contactOpen} onClose={closeContact} />
     </div>
