@@ -155,18 +155,9 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
       {/* 3. 三段分组课程大纲：能力进阶 / 企业实战直播 / 求职冲刺 */}
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
-          <div className="flex flex-col gap-4">
-            <SectionEyebrow color={STAGE2_THEMES.enterprise.hex}>课程大纲</SectionEyebrow>
-            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
-              <span className="block">三段进阶，</span>
-              <span className="mt-1 block sm:mt-1.5">
-                <GradientText className="font-semibold">14 课从能力地图到求职冲刺</GradientText>
-              </span>
-            </h2>
-            <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
-              能力进阶补齐企业级 AI 工程地图，企业实战直播带你从零搭两套可上线系统，求职冲刺把实战讲成 offer。
-            </p>
-          </div>
+          <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.4] tracking-[0.005em] sm:text-[26px] lg:text-[34px]">
+            AI 架构专家课程大纲（高阶）
+          </h2>
         </Reveal>
 
         <div className="mt-10 flex flex-col gap-12 sm:mt-12 sm:gap-16">
