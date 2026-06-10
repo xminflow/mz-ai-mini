@@ -267,7 +267,7 @@ const STAGE2_CURVE: { title: string; detail: string; theme: Stage2ThemeKey }[] =
   { title: '大模型应用开发 · 智能体与 harness', detail: '从零搭一个可控、带记忆的智能体', theme: 'advance' },
   { title: '企业级实战直播 · 智能问数系统', detail: '企业级 Text-to-SQL，可上线带权限', theme: 'enterprise' }, // 合并 上/下
   { title: '企业级实战直播 · Hermes/Openclaw 智能体系统', detail: '可上线、可运营的智能体系统', theme: 'enterprise' }, // 合并 上/下
-  { title: '求职面试专题', detail: '高频面试题 + 个人答案稿 + 模拟面试', theme: 'career' }, // 合并 一/二
+  { title: '求职面试专题', detail: '高频面试题 + 个人答案稿', theme: 'career' }, // 合并 一/二
 ]
 const STAGE2_NODES: CurveNode[] = STAGE2_CURVE.map((n, i) => ({
   key: `s2-${i}`, theme: STAGE2_THEMES[n.theme], badge: '', title: n.title, detail: n.detail,
