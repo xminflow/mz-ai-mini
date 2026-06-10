@@ -4,13 +4,6 @@ import { GradientText, Reveal } from '../../motion'
 import { HeroAuroraLayers, FloatingOrbs, ShimmerHeading } from './primitives'
 import { STAGE1_PRICE, STAGE2_PRICE, STAGE2_THEMES, THEMES } from './data'
 
-// Hero 概览数字：2 阶段 / 24 课 / 9+ 件可展示产出(第一阶段 4 件交付 + 第二阶段 5 项收获)
-const OVERVIEW_STATS: { value: string; label: string }[] = [
-  { value: '2', label: '阶段' },
-  { value: '24', label: '课' },
-  { value: '9+', label: '件可展示产出' },
-]
-
 // 首屏核心宣传：七条承诺（文案按用户原话，逐字不改）。
 const PROMISES: string[] = [
   '我们专注于做好每一节精品课程，CTO亲自带你从零一步步实操',
@@ -58,26 +51,6 @@ export function Hero() {
                 <span className="font-semibold text-ink">按需选择,从想法到上线</span>
               </span>
             </p>
-          </div>
-        </Reveal>
-
-        {/* 概览数字行：2 阶段 · 24 课 · 9+ 件可展示产出 */}
-        <Reveal delay={0.22}>
-          <div className="mt-6 flex items-center gap-3 font-mono text-ink-soft sm:mt-7 sm:gap-4">
-            {OVERVIEW_STATS.map((stat, i) => (
-              <div key={stat.label} className="flex items-center gap-3 sm:gap-4">
-                {i > 0 && <span aria-hidden className="text-muted">·</span>}
-                <span className="flex items-baseline gap-1.5">
-                  <span
-                    className="text-[16px] font-bold tabular sm:text-[18px]"
-                    style={{ color: '#C4B5FD', textShadow: '0 0 14px rgba(196,181,253,0.45)' }}
-                  >
-                    {stat.value}
-                  </span>
-                  <span className="text-[12px] tracking-[0.04em] sm:text-[13px]">{stat.label}</span>
-                </span>
-              </div>
-            ))}
           </div>
         </Reveal>
 
