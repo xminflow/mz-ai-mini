@@ -19,7 +19,7 @@ import type { Theme } from './data'
  * 复刻原 CapabilityTimeline 的平滑流动曲线 + 辉光节点 + 流光动画，并把走线改成「蛇形(boustrophedon)」：
  * 上行 → 右侧圆角下折 → 下行 → … 这样一条曲线能容纳更多节点。
  *  - 第一阶段：outline.md 全部 10 个课时全称，单行平滑成长曲线（带一句交付物）。
- *  - 第二阶段：outline.md 全部 14 个课时全称，直线矩形蛇形（每行 4 个、共 4 行），按 能力进阶/企业实战/求职冲刺 三组上色。
+ *  - 第二阶段：outline.md 全部 14 个课时全称，蜿蜒蛇形（每行 4 个、共 4 行，行内起伏 + 折返圆弧），按 能力进阶/企业实战/求职冲刺 三组上色。
  * 桌面端蛇形曲线（标签上下交替）；移动端降级为竖向时间线。无嵌套框。
  * ──────────────────────────────────────────────────────────────────────── */
 
@@ -51,20 +51,23 @@ const STAGE1_COORDS: Pt[] = [
 ]
 const STAGE1_PATH = smoothThrough(STAGE1_COORDS)
 
-/* 直线折线：依次用直线段连接各点（矩形蛇形的横、竖直线）。 */
-function buildStraightPath(pts: ReadonlyArray<Pt>): string {
-  if (!pts.length) return ''
-  return pts.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ')
-}
-
-/* ── 第二阶段：14 课时直线矩形蛇形，每行 4 个共 4 行（4+4+4+2），viewBox 1200×690 ── */
+/* ── 第二阶段：14 课时蜿蜒蛇形，每行 4 个共 4 行；行内轻微起伏 + 折返处圆弧外凸，有「地图路线」感 ── */
 const STAGE2_COORDS: Pt[] = [
-  { x: 160, y: 60 }, { x: 480, y: 60 }, { x: 800, y: 60 }, { x: 1080, y: 60 },
-  { x: 1080, y: 250 }, { x: 800, y: 250 }, { x: 480, y: 250 }, { x: 160, y: 250 },
-  { x: 160, y: 440 }, { x: 480, y: 440 }, { x: 800, y: 440 }, { x: 1080, y: 440 },
-  { x: 1080, y: 630 }, { x: 800, y: 630 },
+  { x: 160, y: 82 }, { x: 480, y: 58 }, { x: 800, y: 84 }, { x: 1080, y: 60 },
+  { x: 1080, y: 252 }, { x: 800, y: 278 }, { x: 480, y: 250 }, { x: 160, y: 276 },
+  { x: 160, y: 442 }, { x: 480, y: 418 }, { x: 800, y: 444 }, { x: 1080, y: 420 },
+  { x: 1080, y: 612 }, { x: 800, y: 636 },
 ]
-const STAGE2_PATH = buildStraightPath(STAGE2_COORDS)
+// 折返处圆弧航点（仅连线、不画节点），让蛇形下折成向外圆弧而非直角。
+const STAGE2_PATH = smoothThrough([
+  STAGE2_COORDS[0], STAGE2_COORDS[1], STAGE2_COORDS[2], STAGE2_COORDS[3],
+  { x: 1180, y: 156 },
+  STAGE2_COORDS[4], STAGE2_COORDS[5], STAGE2_COORDS[6], STAGE2_COORDS[7],
+  { x: 60, y: 359 },
+  STAGE2_COORDS[8], STAGE2_COORDS[9], STAGE2_COORDS[10], STAGE2_COORDS[11],
+  { x: 1180, y: 516 },
+  STAGE2_COORDS[12], STAGE2_COORDS[13],
+])
 
 /* 一条成长曲线（桌面 SVG 流动曲线 + 辉光节点 + 流光；含上下交替标签）。 */
 function GrowthCurve({
