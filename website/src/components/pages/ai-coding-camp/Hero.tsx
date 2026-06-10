@@ -35,8 +35,7 @@ export function Hero() {
           <div className="mt-6 max-w-3xl sm:mt-7">
             <p className="text-balance text-[15px] font-medium leading-[1.75] text-ink-soft sm:text-[18px] lg:text-[20px]">
               <span className="block">
-                零基础入门 +{' '}
-                <GradientText className="font-semibold">AI 编程专家</GradientText>
+                迎接<GradientText className="font-semibold">全民 AI 编程</GradientText>时代
               </span>
             </p>
           </div>
@@ -45,15 +44,7 @@ export function Hero() {
         {/* 七大承诺 · 首屏核心宣传：霓虹编号宣言（炫酷、突出；文案逐字按用户原话） */}
         <Reveal delay={0.26}>
           <div className="mt-12 w-full max-w-4xl sm:mt-16">
-            <div className="flex items-center justify-center gap-3">
-              <span aria-hidden className="h-px w-8 sm:w-12" style={{ background: 'linear-gradient(to right, transparent, rgba(196,181,253,0.7))' }} />
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.3em] text-ink-soft sm:text-[12px]">
-                我们的承诺 · COMMITMENT
-              </span>
-              <span aria-hidden className="h-px w-8 sm:w-12" style={{ background: 'linear-gradient(to left, transparent, rgba(196,181,253,0.7))' }} />
-            </div>
-
-            <div className="mt-8 grid grid-cols-1 gap-x-10 gap-y-6 text-left sm:mt-10 sm:grid-cols-2 sm:gap-x-12 sm:gap-y-7">
+            <div className="grid grid-cols-1 gap-x-10 gap-y-6 text-left sm:grid-cols-2 sm:gap-x-12 sm:gap-y-7">
               {PROMISES.map((p, i) => {
                 const t = PROMISE_THEMES[i]
                 return (
