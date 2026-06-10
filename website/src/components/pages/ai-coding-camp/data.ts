@@ -420,7 +420,7 @@ export const STAGE2_GROUPS: Stage2Group[] = [
       },
       {
         code: 'S2-2',
-        title: 'AI 全栈进阶',
+        title: 'AI 全栈工程',
         hours: '待确认',
         goal: '补齐全栈知识地图,学会用 AI 快速进入任意技术栈。',
         points: [
@@ -490,7 +490,7 @@ export const STAGE2_GROUPS: Stage2Group[] = [
       },
       {
         code: 'S2-6',
-        title: '整洁架构与领域驱动设计',
+        title: '工程结构设计',
         hours: '待确认',
         goal: '掌握让代码长期可维护的架构方法,并教会 AI 守住架构。',
         points: [

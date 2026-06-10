@@ -257,11 +257,11 @@ const STAGE1_STOPS = [
 /* 第二阶段压缩为单条成长曲线：把「上/下」「一/二」等分集课时合并，14 → 11 个节点。 */
 const STAGE2_CURVE: { title: string; theme: Stage2ThemeKey }[] = [
   { title: 'Claude Code 与 Codex 进阶', theme: 'advance' },
-  { title: 'AI 全栈进阶', theme: 'advance' },
+  { title: 'AI 全栈工程', theme: 'advance' },
   { title: 'AI 测试工程', theme: 'advance' },
   { title: 'AI 运维工程', theme: 'advance' },
   { title: 'SDD 驱动编程与协作开发', theme: 'advance' },
-  { title: '整洁架构与领域驱动设计', theme: 'advance' },
+  { title: '工程结构设计', theme: 'advance' },
   { title: '大模型应用开发 · RAG 与上下文工程', theme: 'advance' },
   { title: '大模型应用开发 · 智能体与 harness', theme: 'advance' },
   { title: '企业级实战直播 · 智能问数系统', theme: 'enterprise' }, // 合并 上/下
