@@ -409,7 +409,7 @@ export type Stage2Lesson = {
   hours: string         // 拟稿待确认
   goal: string          // 本节目标(outline)
   points: string[]      // 子条目(outline 的 x.y 行,逐字照抄)
-  output: string        // 课后产出;课1-5 为拟稿
+  output: string        // 课后产出;拟稿项以 outputDraft 标记为准
   outputDraft?: boolean // true 表示该 output 为拟稿待确认
   theme: Stage2ThemeKey
 }
