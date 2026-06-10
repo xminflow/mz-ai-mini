@@ -107,9 +107,6 @@ export function Hero() {
                 >
                   {STAGE1_PRICE.now}
                 </span>
-                <span className="font-mono text-[11.5px] text-muted line-through tabular sm:text-[12.5px]">
-                  原价 {STAGE1_PRICE.original}
-                </span>
               </div>
               <span className="text-[12px] leading-[1.6] text-ink-soft sm:text-[12.5px]">
                 适合零基础 · 想用 AI 做出自己的应用

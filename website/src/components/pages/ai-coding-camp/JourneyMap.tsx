@@ -292,7 +292,6 @@ export function JourneyMap() {
           accent={THEMES.cognition.hex}
           name={AUDIENCES.stage1.name}
           price={STAGE1_PRICE.now}
-          originalPrice={STAGE1_PRICE.original}
           coverage={AUDIENCES.stage1.coverage}
           fit={AUDIENCES.stage1.fit}
         />

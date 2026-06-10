@@ -459,7 +459,6 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
             {/* 价格条（复用 Hero.tsx 样式） */}
             <PriceChip
               badge="首批限定"
-              originalPrice={`原价 ${STAGE1_PRICE.original}`}
               specialLabel="限时特价"
               price={STAGE1_PRICE.now}
             />
