@@ -43,10 +43,11 @@ function smoothThrough(pts: ReadonlyArray<Pt>): string {
   return d
 }
 
-/* ── 第一阶段：10 个课时单行成长曲线（viewBox 1200×260） ── */
+/* ── 第一阶段：10 个课时单行成长曲线（viewBox 1200×280）。
+ * 起伏加大且「上标签节点抬高、下标签节点压低」，让标签向上下两端散开、腾出中间空间。 ── */
 const STAGE1_COORDS: Pt[] = [
-  { x: 60, y: 170 }, { x: 180, y: 115 }, { x: 300, y: 150 }, { x: 420, y: 95 }, { x: 540, y: 155 },
-  { x: 660, y: 100 }, { x: 780, y: 150 }, { x: 900, y: 105 }, { x: 1020, y: 160 }, { x: 1140, y: 120 },
+  { x: 60, y: 78 }, { x: 180, y: 195 }, { x: 300, y: 74 }, { x: 420, y: 198 }, { x: 540, y: 80 },
+  { x: 660, y: 193 }, { x: 780, y: 76 }, { x: 900, y: 197 }, { x: 1020, y: 78 }, { x: 1140, y: 195 },
 ]
 const STAGE1_PATH = smoothThrough(STAGE1_COORDS)
 
@@ -270,10 +271,10 @@ const STAGE2_CURVE: { title: string; theme: Stage2ThemeKey }[] = [
 const STAGE2_NODES: CurveNode[] = STAGE2_CURVE.map((n, i) => ({
   key: `s2-${i}`, theme: STAGE2_THEMES[n.theme], badge: '', title: n.title, detail: '',
 }))
-// 11 节点单行成长曲线（viewBox 1200×260），浅波浪起伏。
+// 11 节点单行成长曲线（viewBox 1200×280），加大起伏、上下散开标签。
 const STAGE2_COORDS: Pt[] = [
-  { x: 60, y: 170 }, { x: 168, y: 115 }, { x: 276, y: 150 }, { x: 384, y: 95 }, { x: 492, y: 150 },
-  { x: 600, y: 100 }, { x: 708, y: 155 }, { x: 816, y: 105 }, { x: 924, y: 150 }, { x: 1032, y: 110 }, { x: 1140, y: 165 },
+  { x: 60, y: 78 }, { x: 168, y: 195 }, { x: 276, y: 74 }, { x: 384, y: 198 }, { x: 492, y: 80 },
+  { x: 600, y: 193 }, { x: 708, y: 76 }, { x: 816, y: 197 }, { x: 924, y: 78 }, { x: 1032, y: 195 }, { x: 1140, y: 80 },
 ]
 const STAGE2_PATH = smoothThrough(STAGE2_COORDS)
 // 渐变：能力进阶(钢蓝, 1–8) → 企业实战(暗金, 9–10) → 求职冲刺(翡翠, 11)。
@@ -301,9 +302,9 @@ export function JourneyMap() {
           nodes={STAGE1_NODES}
           coords={STAGE1_COORDS}
           pathD={STAGE1_PATH}
-          vbH={260}
+          vbH={280}
           svgTop={100}
-          containerH={460}
+          containerH={500}
           aboveOffset={96}
           pathLen={1300}
           gradientStops={STAGE1_STOPS}
@@ -339,9 +340,9 @@ export function JourneyMap() {
           nodes={STAGE2_NODES}
           coords={STAGE2_COORDS}
           pathD={STAGE2_PATH}
-          vbH={260}
+          vbH={280}
           svgTop={90}
-          containerH={440}
+          containerH={480}
           aboveOffset={62}
           pathLen={1400}
           gradientStops={STAGE2_STOPS}
