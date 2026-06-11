@@ -31,6 +31,14 @@ from .repositories import SqlAlchemyAgentAccountRepository
 from .wechat_official import WechatOfficialAccountGateway
 
 
+def _clean(value: str | None) -> str | None:
+    """去除配置字符串首尾空白，空串归一为 None。"""
+    if value is None:
+        return None
+    stripped = value.strip()
+    return stripped or None
+
+
 class Sha256TokenService:
     """Opaque token generator and stable token hasher."""
 
@@ -41,7 +49,7 @@ class Sha256TokenService:
         from mz_ai_backend.core.exceptions import InternalServerException
 
         if pepper is None or pepper.strip() == "":
-            raise InternalServerException(message="Agent auth token pepper is not configured.")
+            raise InternalServerException(message="Auth token pepper is not configured.")
         self._pepper = pepper
         self._hashlib = hashlib
         self._secrets = secrets
@@ -276,6 +284,7 @@ def get_handle_wechat_callback_use_case(
         SnowflakeGenerator,
         Depends(get_snowflake_id_generator),
     ],
+    settings: Annotated[Settings, Depends(get_settings_dependency)],
 ) -> HandleAgentWechatCallbackUseCase:
     """Construct the WeChat callback handler use case."""
 
@@ -283,6 +292,13 @@ def get_handle_wechat_callback_use_case(
         account_repository=account_repository,
         wechat_gateway=wechat_gateway,
         snowflake_id_generator=snowflake_id_generator,
+        auto_reply_enabled=settings.wechat_official_auto_reply_enabled,
+        auto_reply_subscribe_news_title=_clean(settings.wechat_official_auto_reply_subscribe_news_title),
+        auto_reply_subscribe_news_description=_clean(
+            settings.wechat_official_auto_reply_subscribe_news_description
+        ),
+        auto_reply_subscribe_news_pic_url=_clean(settings.wechat_official_auto_reply_subscribe_news_pic_url),
+        auto_reply_subscribe_news_url=_clean(settings.wechat_official_auto_reply_subscribe_news_url),
     )
 
 

@@ -11,7 +11,6 @@ from mz_ai_backend.modules.camp_auth.application import (
     CampTokenPair,
     CampWechatLoginSessionStatusResult,
     CreateCampWechatLoginSessionResult,
-    CampWechatLoginSessionCreate,
     LogoutCampSessionResult,
 )
 from mz_ai_backend.modules.camp_auth.application.dtos import CampWechatLoginSessionSummary

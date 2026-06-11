@@ -194,18 +194,6 @@ class CampWechatLoginGrantIssue(BaseModel):
     authenticated_at: datetime
 
 
-class HandleCampWechatCallbackCommand(BaseModel):
-    """Input command for handling one official account callback."""
-
-    model_config = ConfigDict(frozen=True)
-
-    signature: str | None
-    msg_signature: str | None
-    timestamp: str | None
-    nonce: str | None
-    xml_body: str
-
-
 class LogoutCampSessionResult(BaseModel):
     """Result returned after logout."""
 
