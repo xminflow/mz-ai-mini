@@ -1,3 +1,15 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout'
+import Welcome from './components/Welcome'
+
 export default function App() {
-  return <div className="p-6 text-2xl font-bold text-blue-600">Tailwind 已生效</div>
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Welcome />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  )
 }
