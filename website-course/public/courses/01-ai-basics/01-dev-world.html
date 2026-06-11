@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>开发世界速览</title>
+    <style>
+      html { background: #050507; }
+      * { box-sizing: border-box; }
+      body {
+        background: transparent;
+        color: #d4d4d8;
+        font-family: "Inter", "Noto Sans SC", "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 64px 32px;
+        line-height: 1.85;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      /* ---------- 文字层级 ---------- */
+      .eyebrow {
+        font-size: 0.78rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #8a8a94;
+        margin: 0 0 1.1rem;
+      }
+      h1 {
+        font-size: 2.4rem;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.9rem;
+        font-weight: 700;
+        background: linear-gradient(100deg, #a78bfa 0%, #22d3ee 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .lead {
+        font-size: 1.08rem;
+        color: #8a8a94;
+        margin: 0 0 0.4rem;
+        max-width: 62ch;
+      }
+
+      h2 {
+        font-size: 1.45rem;
+        letter-spacing: -0.01em;
+        margin: 0;
+        color: #f5f5f7;
+        font-weight: 650;
+        display: flex;
+        align-items: center;
+        gap: 0.62rem;
+      }
+      h2 .ico { flex: 0 0 auto; display: inline-flex; }
+
+      p { margin: 1.05rem 0 0; }
+      strong { color: #f5f5f7; font-weight: 600; }
+
+      /* 概念色编码 */
+      .c-front { color: #a78bfa; }
+      .c-back  { color: #22d3ee; }
+      .c-data  { color: #f472b6; }
+      .c-term  { color: #fbbf24; }
+
+      ul { margin: 0.9rem 0 0; padding: 0; list-style: none; }
+      li {
+        position: relative;
+        padding-left: 1.3rem;
+        margin: 0.5rem 0;
+      }
+      li::before {
+        content: "";
+        position: absolute;
+        left: 0.1rem;
+        top: 0.78em;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: currentColor;
+        opacity: 0.55;
+      }
+      li b { color: #f5f5f7; font-weight: 600; }
+
+      code {
+        font-family: "SFMono-Regular", "Consolas", "Liberation Mono", Menlo, monospace;
+        font-size: 0.86em;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 4px;
+        padding: 0.1em 0.4em;
+        color: #e7e7ea;
+      }
+
+      /* ---------- 分隔与节奏 ---------- */
+      .rule {
+        height: 1px;
+        border: 0;
+        margin: 3.4rem 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+      }
+      section { margin-top: 2.8rem; }
+      section .body { color: #d4d4d8; }
+
+      /* ---------- 比喻区 ---------- */
+      .analogy {
+        margin-top: 2.4rem;
+        padding: 0 0 0 1.2rem;
+        border-left: 2px solid rgba(167, 139, 250, 0.45);
+      }
+      .analogy p { margin-top: 0.6rem; }
+      .analogy p:first-child { margin-top: 0; }
+
+      /* ---------- 插图通用 ---------- */
+      figure { margin: 2rem 0 0; }
+      figure svg { display: block; width: 100%; height: auto; }
+      figcaption {
+        margin-top: 0.9rem;
+        font-size: 0.84rem;
+        color: #8a8a94;
+        text-align: center;
+      }
+      .svg-label { fill: #d4d4d8; font-size: 13px; }
+      .svg-sub   { fill: #8a8a94; font-size: 11px; }
+      .svg-title { fill: #f5f5f7; font-size: 14px; font-weight: 600; }
+      .svg-mono  { font-family: "SFMono-Regular", "Consolas", monospace; }
+
+      /* ---------- 终端窗口示意 ---------- */
+      .term { max-width: 540px; margin: 2rem auto 0; }
+
+      /* 收尾点题 */
+      .closing {
+        margin-top: 3.4rem;
+        padding-top: 2.2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .flow-line {
+        font-size: 1.02rem;
+        color: #f5f5f7;
+        line-height: 2.1;
+      }
+      .flow-line .arrow { color: #8a8a94; margin: 0 0.35rem; }
+
+      @media (max-width: 600px) {
+        body { padding: 48px 22px; }
+        h1 { font-size: 1.95rem; }
+        h2 { font-size: 1.28rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="eyebrow">AI 基础工具学习 · 第一节</p>
+      <h1>开发世界速览</h1>
+      <p class="lead">
+        用大白话讲清<strong>前端、后端、数据库、终端</strong>这四个词，
+        给后面所有内容打地基。先鸟瞰全貌，再逐个深入。
+      </p>
+    </header>
+
+    <section>
+      <p class="body">
+        欢迎进入开发世界。你可能听过"前端""后端""数据库""终端"这些词，
+        它们听起来像四个互不相干的黑话，其实只是一套系统里分工不同的四个角色。
+        这一节我们不写一行代码，只把这四个角色的<strong>位置、职责、彼此怎么连</strong>讲明白。
+        理解了它们的关系，后面学任何工具、看任何教程，你心里都有一张地图，不会再被术语绕晕。
+      </p>
+    </section>
+
+    <!-- ========== 贯穿全节的大比喻 ========== -->
+    <div class="analogy">
+      <p>
+        先给你一个能贯穿全节的比喻：<strong>把一个 App 或网站想象成一家餐厅。</strong>
+      </p>
+      <p>
+        <span class="c-front"><strong>前端</strong></span>是<strong>店面和菜单</strong>——顾客看得见、摸得着、点单的地方；
+        <span class="c-back"><strong>后端</strong></span>是<strong>后厨</strong>——顾客看不见，但所有的活儿在这里干；
+        <span class="c-data"><strong>数据库</strong></span>是<strong>仓库和冰箱</strong>——食材、订单、会员信息都存在这儿；
+        <span class="c-term"><strong>终端</strong></span>则是厨房里那台<strong>操作台兼对讲机</strong>——开发者（厨师长）用它直接下达指令、查看状态。
+      </p>
+      <p>
+        记住这家餐厅，下面四个概念你就都能对号入座了。
+      </p>
+    </div>
+
+    <hr class="rule" />
+
+    <!-- ========== 全景协作图（核心） ========== -->
+    <figure>
+      <svg viewBox="0 0 860 360" role="img" aria-label="用户、前端、后端、数据库的协作全景图，终端作为开发者入口" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="#8a8a94" />
+          </marker>
+        </defs>
+
+        <!-- 四个节点的纵向中线 y=140 -->
+        <!-- 节点 1: 用户/浏览器 -->
+        <g>
+          <circle cx="80" cy="140" r="30" fill="none" stroke="#8a8a94" stroke-width="1.5" />
+          <!-- 简笔人 -->
+          <circle cx="80" cy="131" r="6" fill="none" stroke="#d4d4d8" stroke-width="1.5" />
+          <path d="M68 153 q12 -16 24 0" fill="none" stroke="#d4d4d8" stroke-width="1.5" />
+          <text class="svg-title" x="80" y="195" text-anchor="middle">用户 / 浏览器</text>
+          <text class="svg-sub" x="80" y="213" text-anchor="middle">点按钮、看页面</text>
+        </g>
+
+        <!-- 节点 2: 前端 (紫) -->
+        <g>
+          <rect x="240" y="110" width="60" height="60" rx="10" fill="none" stroke="#a78bfa" stroke-width="1.5" />
+          <line x1="252" y1="126" x2="288" y2="126" stroke="#a78bfa" stroke-width="1.5" />
+          <line x1="252" y1="140" x2="278" y2="140" stroke="#a78bfa" stroke-width="1.5" />
+          <line x1="252" y1="154" x2="282" y2="154" stroke="#a78bfa" stroke-width="1.5" />
+          <text class="svg-title" x="270" y="195" text-anchor="middle">前端</text>
+          <text class="svg-sub" x="270" y="213" text-anchor="middle">界面 · 店面菜单</text>
+        </g>
+
+        <!-- 节点 3: 后端 (青) -->
+        <g>
+          <circle cx="490" cy="140" r="30" fill="none" stroke="#22d3ee" stroke-width="1.5" />
+          <circle cx="490" cy="140" r="9" fill="none" stroke="#22d3ee" stroke-width="1.5" />
+          <line x1="490" y1="110" x2="490" y2="122" stroke="#22d3ee" stroke-width="1.5" />
+          <line x1="490" y1="158" x2="490" y2="170" stroke="#22d3ee" stroke-width="1.5" />
+          <line x1="460" y1="140" x2="472" y2="140" stroke="#22d3ee" stroke-width="1.5" />
+          <line x1="508" y1="140" x2="520" y2="140" stroke="#22d3ee" stroke-width="1.5" />
+          <text class="svg-title" x="490" y="195" text-anchor="middle">后端</text>
+          <text class="svg-sub" x="490" y="213" text-anchor="middle">逻辑 · 后厨</text>
+        </g>
+
+        <!-- 节点 4: 数据库 (粉) -->
+        <g>
+          <ellipse cx="710" cy="120" rx="30" ry="9" fill="none" stroke="#f472b6" stroke-width="1.5" />
+          <path d="M680 120 v40 a30 9 0 0 0 60 0 v-40" fill="none" stroke="#f472b6" stroke-width="1.5" />
+          <path d="M680 140 a30 9 0 0 0 60 0" fill="none" stroke="#f472b6" stroke-width="1.5" opacity="0.6" />
+          <text class="svg-title" x="710" y="195" text-anchor="middle">数据库</text>
+          <text class="svg-sub" x="710" y="213" text-anchor="middle">存储 · 仓库冰箱</text>
+        </g>
+
+        <!-- 连线: 用户 <-> 前端 -->
+        <line x1="112" y1="132" x2="236" y2="132" stroke="#8a8a94" stroke-width="1.2" marker-end="url(#ar)" />
+        <line x1="236" y1="150" x2="112" y2="150" stroke="#8a8a94" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#ar)" />
+        <text class="svg-sub" x="174" y="124" text-anchor="middle">操作</text>
+        <text class="svg-sub" x="174" y="167" text-anchor="middle">展示</text>
+
+        <!-- 连线: 前端 <-> 后端 -->
+        <line x1="304" y1="132" x2="456" y2="132" stroke="#8a8a94" stroke-width="1.2" marker-end="url(#ar)" />
+        <line x1="456" y1="150" x2="304" y2="150" stroke="#8a8a94" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#ar)" />
+        <text class="svg-sub" x="380" y="124" text-anchor="middle">API 请求</text>
+        <text class="svg-sub" x="380" y="167" text-anchor="middle">返回结果</text>
+
+        <!-- 连线: 后端 <-> 数据库 -->
+        <line x1="524" y1="132" x2="676" y2="132" stroke="#8a8a94" stroke-width="1.2" marker-end="url(#ar)" />
+        <line x1="676" y1="150" x2="524" y2="150" stroke="#8a8a94" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#ar)" />
+        <text class="svg-sub" x="600" y="124" text-anchor="middle">查询数据</text>
+        <text class="svg-sub" x="600" y="167" text-anchor="middle">返回数据</text>
+
+        <!-- 终端: 开发者入口，画在下方一侧 -->
+        <g>
+          <rect x="408" y="285" width="164" height="56" rx="8" fill="none" stroke="#fbbf24" stroke-width="1.5" />
+          <circle cx="421" cy="297" r="2.5" fill="#fbbf24" />
+          <circle cx="430" cy="297" r="2.5" fill="#fbbf24" opacity="0.6" />
+          <circle cx="439" cy="297" r="2.5" fill="#fbbf24" opacity="0.4" />
+          <text class="svg-mono" x="421" y="322" fill="#fbbf24" font-size="12">$ _</text>
+          <text class="svg-title" x="490" y="322" text-anchor="middle" fill="#fbbf24" font-size="13">终端</text>
+          <text class="svg-sub" x="490" y="358" text-anchor="middle">开发者入口 · 操作台对讲机</text>
+        </g>
+        <!-- 终端连到后端 -->
+        <line x1="490" y1="285" x2="490" y2="172" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.7" marker-end="url(#ar)" />
+        <text class="svg-sub" x="540" y="240" text-anchor="middle" fill="#bda05a">开发者操控</text>
+      </svg>
+      <figcaption>
+        全景图：用户的每次操作，沿着<strong>前端 → 后端 → 数据库</strong>一路传递再原路返回；
+        终端是开发者从侧面进入、操控整套系统的入口。
+      </figcaption>
+    </figure>
+
+    <hr class="rule" />
+
+    <!-- ========== 概念 1：前端 ========== -->
+    <section>
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="14" rx="2" />
+            <line x1="3" y1="8" x2="21" y2="8" />
+            <line x1="9" y1="21" x2="15" y2="21" />
+          </svg>
+        </span>
+        <span class="c-front">前端</span>
+      </h2>
+      <p class="body">
+        <strong>一句话：前端就是你眼睛能看到、手能点的那一层。</strong>
+        网页里的按钮、文字、图片、表单、那个会动的菜单——全是前端。
+      </p>
+      <ul class="c-front">
+        <li><b>负责什么：</b>把界面画出来，接收你的点击和输入，再把结果好看地展示给你。</li>
+        <li><b>生活类比：</b>餐厅的<strong>店面和菜单</strong>。装修、座位、菜单的样子，决定你看到什么、怎么点单。</li>
+        <li><b>怎么连：</b>它直接面对用户；当需要数据（比如"我的订单"）时，它向<span class="c-back">后端</span>发请求，拿到结果后负责展示。前端自己不存数据。</li>
+      </ul>
+    </section>
+
+    <!-- ========== 概念 2：后端 ========== -->
+    <section>
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M12 2 v3 M12 19 v3 M2 12 h3 M19 12 h3 M5 5 l2 2 M17 17 l2 2 M19 5 l-2 2 M7 17 l-2 2" />
+          </svg>
+        </span>
+        <span class="c-back">后端</span>
+      </h2>
+      <p class="body">
+        <strong>一句话：后端是你看不见、却在背后干活的那一层。</strong>
+        判断密码对不对、计算价格、决定能不能下单，这些逻辑都在后端。
+      </p>
+      <ul class="c-back">
+        <li><b>负责什么：</b>处理业务规则、做运算和判断、跟数据库打交道，然后把结果交给前端。</li>
+        <li><b>生活类比：</b>餐厅的<strong>后厨</strong>。你只管点菜，炒菜、配料、出餐的流程顾客看不到，但活儿都在这里。</li>
+        <li>
+          <b>怎么连：</b>前端通过 <code>API</code>（一种约定好的"对接窗口"，让两边能互相喊话）找后端要东西；
+          后端需要数据时去问<span class="c-data">数据库</span>，处理完再原路返回给前端。
+        </li>
+      </ul>
+    </section>
+
+    <!-- ========== 概念 3：数据库 ========== -->
+    <section>
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f472b6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse cx="12" cy="5" rx="8" ry="3" />
+            <path d="M4 5 v14 a8 3 0 0 0 16 0 V5" />
+            <path d="M4 12 a8 3 0 0 0 16 0" />
+          </svg>
+        </span>
+        <span class="c-data">数据库</span>
+      </h2>
+      <p class="body">
+        <strong>一句话：数据库是专门用来长期存放数据的地方。</strong>
+        用户信息、订单记录、商品列表，关机也不会丢，随时能查、能改。
+      </p>
+      <ul class="c-data">
+        <li><b>负责什么：</b>把数据整整齐齐地存起来，并能高效地查找、新增、修改、删除。</li>
+        <li><b>生活类比：</b>餐厅的<strong>仓库和冰箱</strong>。食材、库存、会员名单都码放在这里，要用时按需取。</li>
+        <li>
+          <b>怎么连：</b>它只跟<span class="c-back">后端</span>对话，不直接面对用户。
+          后端用 <code>SQL</code>（一种"跟数据库说话的标准语言"，专门用来查和改数据）去取数据，再把它交给前端展示。
+        </li>
+      </ul>
+    </section>
+
+    <!-- ========== 概念 4：终端 ========== -->
+    <section>
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <path d="M7 9 l3 3 l-3 3 M13 15 h4" />
+          </svg>
+        </span>
+        <span class="c-term">终端</span>
+      </h2>
+      <p class="body">
+        <strong>一句话：终端是开发者敲命令、直接指挥电脑干活的地方。</strong>
+        它没有花哨界面，就是一个黑框，你打一行字、回车，电脑就执行一条指令。
+      </p>
+      <ul class="c-term">
+        <li><b>负责什么：</b>用文字命令来安装工具、启动服务、查看日志、操作文件——不用点鼠标，效率更高、更精确。</li>
+        <li><b>生活类比：</b>厨房里的<strong>操作台兼对讲机</strong>。厨师长不靠菜单点单，而是直接下指令、随时看后厨状态。</li>
+        <li><b>怎么连：</b>它是<strong>开发者的入口</strong>，不属于用户那条链路。前端、后端、数据库都可以从终端被启动、被检查、被操控。</li>
+      </ul>
+
+      <figure class="term">
+        <svg viewBox="0 0 540 200" role="img" aria-label="终端窗口示意：标题栏圆点与命令行" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="1" width="538" height="198" rx="12" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.16)" stroke-width="1" />
+          <!-- 标题栏 -->
+          <line x1="1" y1="40" x2="539" y2="40" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
+          <circle cx="26" cy="20" r="5" fill="#fbbf24" />
+          <circle cx="44" cy="20" r="5" fill="rgba(255,255,255,0.25)" />
+          <circle cx="62" cy="20" r="5" fill="rgba(255,255,255,0.18)" />
+          <text class="svg-mono" x="270" y="25" text-anchor="middle" fill="#8a8a94" font-size="12">终端 — 开发者的操作台</text>
+          <!-- 命令行内容 -->
+          <text class="svg-mono" x="26" y="78"  font-size="14"><tspan fill="#fbbf24">$</tspan><tspan fill="#d4d4d8"> npm run dev</tspan></text>
+          <text class="svg-mono" x="26" y="104" font-size="13" fill="#8a8a94">  正在启动开发服务器 …</text>
+          <text class="svg-mono" x="26" y="130" font-size="13" fill="#8a8a94">  服务已运行：http://localhost:3000</text>
+          <text class="svg-mono" x="26" y="162" font-size="14"><tspan fill="#fbbf24">$</tspan><tspan fill="#d4d4d8"> </tspan><tspan fill="#f5f5f7">▋</tspan></text>
+        </svg>
+        <figcaption>终端就是这样一个"敲命令的黑框"：行首的 <code>$</code> 是提示符，后面跟你要执行的命令。</figcaption>
+      </figure>
+    </section>
+
+    <!-- ========== 收尾：它们如何协作 ========== -->
+    <div class="closing">
+      <h2 style="color:#f5f5f7; margin-bottom:0.4rem;">它们如何协作</h2>
+      <p class="body">
+        把四个角色串起来，一次完整的请求是这样跑的：
+      </p>
+      <p class="flow-line">
+        你点下"提交订单"按钮
+        <span class="arrow">→</span><span class="c-front">前端</span>收到点击，向后端发请求
+        <span class="arrow">→</span><span class="c-back">后端</span>处理逻辑、校验并向数据库要数据
+        <span class="arrow">→</span><span class="c-data">数据库</span>存好/查到记录后返回
+        <span class="arrow">→</span><span class="c-back">后端</span>把结果回传
+        <span class="arrow">→</span><span class="c-front">前端</span>把"下单成功"展示给你。
+      </p>
+      <p class="body">
+        而<span class="c-term"><strong>终端</strong></span>始终在一旁：开发者用它启动这套系统、查看运行状态、排查问题。
+        这四个角色，就是整个开发世界的地基——
+        后面我们学的每一个工具、写的每一行代码，都会落在这张地图的某个位置上。
+      </p>
+    </div>
+  </body>
+</html>

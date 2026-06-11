@@ -5,7 +5,7 @@
       "id": "01-ai-basics",
       "title": "课时 1　AI 基础工具学习",
       "sections": [
-        { "id": "1.1", "title": "用好最强 AI 编程工具", "file": "01-ai-basics/01-tools.html" },
+        { "id": "1.1", "title": "开发世界速览", "file": "01-ai-basics/01-dev-world.html" },
         { "id": "1.2", "title": "国内 AI 编程工具", "file": "01-ai-basics/02-domestic.html" }
       ]
     },
