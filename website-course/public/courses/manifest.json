@@ -1,0 +1,20 @@
+{
+  "title": "AI 编程课程",
+  "chapters": [
+    {
+      "id": "01-ai-basics",
+      "title": "课时 1　AI 基础工具学习",
+      "sections": [
+        { "id": "1.1", "title": "用好最强 AI 编程工具", "file": "01-ai-basics/01-tools.html" },
+        { "id": "1.2", "title": "国内 AI 编程工具", "file": "01-ai-basics/02-domestic.html" }
+      ]
+    },
+    {
+      "id": "02-engineering",
+      "title": "课时 2　AI 应用工程化",
+      "sections": [
+        { "id": "2.1", "title": "设计应用的主题效果", "file": "02-engineering/01-theme.html" }
+      ]
+    }
+  ]
+}
