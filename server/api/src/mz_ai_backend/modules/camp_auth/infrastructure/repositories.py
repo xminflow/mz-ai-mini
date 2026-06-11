@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..application import (
     CampAccountRegistration,
+    CampMembershipSummary,
     CampSessionIssue,
     CampWechatIdentityUpsert,
     CampWechatLoginGrantIssue,
@@ -412,3 +413,30 @@ class SqlAlchemyCampAccountRepository:
             )
         )
         return result.scalar_one_or_none()
+
+    async def get_membership_summary(
+        self,
+        *,
+        account_id: int,
+        now: datetime,
+    ) -> CampMembershipSummary:
+        result = await self._session.execute(
+            select(CampAccountModel).where(
+                CampAccountModel.account_id == account_id,
+                CampAccountModel.is_deleted.is_(False),
+            )
+        )
+        model = result.scalar_one_or_none()
+        if model is None:
+            # 账号缺失时返回 none 摘要而非抛错：/me 已通过 token 校验，仅会员信息缺省。
+            return CampMembershipSummary(tier="none", is_active=False, expires_at=None, remaining_days=0)
+        tier = model.membership_tier or "none"
+        expires_at = model.membership_expires_at
+        is_active = tier != "none" and expires_at is not None and expires_at > now
+        remaining_days = 0 if expires_at is None or expires_at <= now else max(0, (expires_at - now).days)
+        return CampMembershipSummary(
+            tier=tier,
+            is_active=is_active,
+            expires_at=expires_at,
+            remaining_days=remaining_days,
+        )

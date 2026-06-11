@@ -20,6 +20,17 @@ def _serialize_business_id(value: int) -> str:
     return str(value)
 
 
+class CampMembershipResponse(BaseModel):
+    """登录态会员摘要 HTTP 响应。"""
+
+    model_config = ConfigDict(frozen=True)
+
+    tier: str
+    is_active: bool
+    expires_at: datetime | None
+    remaining_days: int
+
+
 class CampAuthAccountResponse(BaseModel):
     """HTTP response payload for one authenticated camp account."""
 
@@ -30,15 +41,27 @@ class CampAuthAccountResponse(BaseModel):
     email: str | None
     status: str
     created_at: datetime
+    membership: CampMembershipResponse | None
 
     @classmethod
     def from_summary(cls, summary: CampAccountSummary) -> "CampAuthAccountResponse":
+        membership = (
+            CampMembershipResponse(
+                tier=summary.membership.tier,
+                is_active=summary.membership.is_active,
+                expires_at=summary.membership.expires_at,
+                remaining_days=summary.membership.remaining_days,
+            )
+            if summary.membership is not None
+            else None
+        )
         return cls(
             account_id=_serialize_business_id(summary.account_id),
             username=summary.username,
             email=summary.email,
             status=summary.status.value,
             created_at=summary.created_at,
+            membership=membership,
         )
 
 

@@ -40,10 +40,15 @@ class GetCurrentCampAccountUseCase:
         account = await self._account_repository.get_account_by_id(session.account_id)
         if account is None or account.status != CampAccountStatus.ACTIVE:
             raise CampAccountDisabledException()
+        membership = await self._account_repository.get_membership_summary(
+            account_id=account.account_id,
+            now=now,
+        )
         return CampAccountSummary(
             account_id=account.account_id,
             username=account.username,
             email=account.email,
             status=account.status,
             created_at=account.created_at,
+            membership=membership,
         )

@@ -17,6 +17,17 @@ def normalize_camp_username(value: str) -> str:
     return value.strip().lower()
 
 
+class CampMembershipSummary(BaseModel):
+    """登录态随账号带回的会员摘要（camp_auth 内自有，避免反向依赖 camp_membership）。"""
+
+    model_config = ConfigDict(frozen=True)
+
+    tier: str
+    is_active: bool
+    expires_at: datetime | None
+    remaining_days: int
+
+
 class CampAccountSummary(BaseModel):
     """Public account summary returned to camp clients."""
 
@@ -27,6 +38,7 @@ class CampAccountSummary(BaseModel):
     email: str | None
     status: CampAccountStatus
     created_at: datetime
+    membership: CampMembershipSummary | None = None
 
 
 class RefreshCampSessionCommand(BaseModel):

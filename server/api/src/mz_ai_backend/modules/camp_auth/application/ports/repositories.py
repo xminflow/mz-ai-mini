@@ -12,6 +12,7 @@ from ...domain import (
 )
 from ..dtos import (
     CampAccountRegistration,
+    CampMembershipSummary,
     CampSessionIssue,
     CampWechatIdentityUpsert,
     CampWechatLoginGrantIssue,
@@ -126,3 +127,11 @@ class CampAccountRepository(Protocol):
         login_session_id: int,
     ) -> CampWechatLoginSession | None:
         """Mark one QR login session as consumed."""
+
+    async def get_membership_summary(
+        self,
+        *,
+        account_id: int,
+        now: datetime,
+    ) -> CampMembershipSummary:
+        """读取账号会员列并返回登录态会员摘要。"""
