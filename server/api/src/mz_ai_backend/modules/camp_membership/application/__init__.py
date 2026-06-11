@@ -10,12 +10,14 @@ from .dtos import (
     HandleCampWechatPayNotifyCommand,
     MyCampMembershipResult,
 )
+from .use_cases.create_camp_membership_order import CreateCampMembershipOrderUseCase
 
 __all__ = [
     "CampMembershipOrderRegistration",
     "CampMembershipOrderStatusResult",
     "CreateCampMembershipOrderCommand",
     "CreateCampMembershipOrderResult",
+    "CreateCampMembershipOrderUseCase",
     "GetCampOrderStatusQuery",
     "GetMyCampMembershipQuery",
     "HandleCampWechatPayNotifyCommand",
