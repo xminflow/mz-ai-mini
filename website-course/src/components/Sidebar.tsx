@@ -25,8 +25,8 @@ export default function Sidebar({ manifest }: Props) {
   }
 
   return (
-    <nav className="p-2">
-      <div className="px-2 py-3 text-lg font-semibold text-gray-800">{manifest.title}</div>
+    <nav className="p-3">
+      <div className="text-gradient px-2 py-4 text-lg font-semibold tracking-tight">{manifest.title}</div>
       {manifest.chapters.map((ch) => {
         const isCollapsed = collapsed.has(ch.id) && ch.id !== chapterId
         return (
@@ -34,20 +34,22 @@ export default function Sidebar({ manifest }: Props) {
             <button
               type="button"
               onClick={() => toggle(ch.id)}
-              className="flex w-full items-center gap-1 rounded px-2 py-1.5 text-left text-sm font-medium text-gray-700 hover:bg-gray-100"
+              className="flex w-full items-center gap-1.5 rounded-lg px-2 py-1.5 text-left text-sm font-medium text-ink-soft transition-colors hover:bg-white/5 hover:text-ink"
             >
-              <span className="inline-block w-4 text-gray-400">{isCollapsed ? '▶' : '▼'}</span>
+              <span className="inline-block w-4 text-muted">{isCollapsed ? '▶' : '▼'}</span>
               {ch.title}
             </button>
             {!isCollapsed && (
-              <ul className="ml-5 border-l border-gray-200">
+              <ul className="ml-[18px] border-l border-hairline">
                 {ch.sections.map((s) => (
                   <li key={s.id}>
                     <NavLink
                       to={`/c/${ch.id}/s/${s.id}`}
                       className={({ isActive }) =>
-                        `block rounded px-3 py-1.5 text-sm ${
-                          isActive ? 'bg-blue-100 font-medium text-blue-700' : 'text-gray-600 hover:bg-gray-100'
+                        `-ml-px block border-l-2 px-3 py-1.5 text-sm transition-colors ${
+                          isActive
+                            ? 'border-accent bg-accent/10 font-medium text-accent'
+                            : 'border-transparent text-muted hover:bg-white/5 hover:text-ink-soft'
                         }`
                       }
                     >

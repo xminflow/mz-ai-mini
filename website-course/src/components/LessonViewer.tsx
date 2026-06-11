@@ -34,41 +34,49 @@ export default function LessonViewer() {
 
   if (!current) {
     return (
-      <div className="flex h-full flex-col items-center justify-center gap-2 text-gray-500">
+      <div className="flex h-full flex-col items-center justify-center gap-3 text-muted">
         <p>未找到该课程</p>
-        <button type="button" className="text-blue-600 underline" onClick={() => navigate('/')}>
+        <button
+          type="button"
+          className="rounded-full border border-hairline px-4 py-1.5 text-sm text-ink transition-colors hover:border-hairline-strong hover:text-accent"
+          onClick={() => navigate('/')}
+        >
           返回目录
         </button>
       </div>
     )
   }
 
+  // 上/下一节胶囊按钮：发丝边框 + hover 紫色微光，禁用态弱化
+  const navBtn =
+    'rounded-full border border-hairline px-4 py-1.5 text-sm text-ink transition-all enabled:hover:border-hairline-strong enabled:hover:text-accent enabled:hover:shadow-[0_6px_20px_-6px_rgba(167,139,250,0.5)] disabled:border-transparent disabled:text-muted/40'
+
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-2">
+    <div className="flex h-full flex-col bg-canvas">
+      <div className="flex items-center justify-between border-b border-hairline bg-canvas/60 px-4 py-2.5 backdrop-blur-xl">
         <button
           type="button"
           disabled={!prev}
           onClick={() => prev && navigate(`/c/${prev.chapterId}/s/${prev.id}`)}
-          className="rounded px-3 py-1 text-sm text-blue-600 enabled:hover:bg-blue-50 disabled:text-gray-300"
+          className={navBtn}
         >
           ← 上一节
         </button>
-        <span className="truncate px-2 text-sm font-medium text-gray-700">
+        <span className="truncate px-3 text-sm font-medium text-ink-soft">
           {current.id} {current.title}
         </span>
         <button
           type="button"
           disabled={!next}
           onClick={() => next && navigate(`/c/${next.chapterId}/s/${next.id}`)}
-          className="rounded px-3 py-1 text-sm text-blue-600 enabled:hover:bg-blue-50 disabled:text-gray-300"
+          className={navBtn}
         >
           下一节 →
         </button>
       </div>
-      <div className="relative flex-1">
+      <div className="relative flex-1 bg-canvas">
         {iframeError ? (
-          <div className="flex h-full items-center justify-center text-red-600">
+          <div className="flex h-full items-center justify-center text-accent-3">
             课程文件缺失：{current.file}
           </div>
         ) : (
@@ -76,7 +84,7 @@ export default function LessonViewer() {
             key={current.file}
             src={`/courses/${current.file}`}
             title={current.title}
-            className="h-full w-full border-0"
+            className="h-full w-full border-0 bg-canvas"
             onError={() => setIframeError(true)}
           />
         )}

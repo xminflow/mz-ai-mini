@@ -7,20 +7,20 @@ export default function Layout() {
   const { manifest, error, loading } = useManifest()
 
   if (loading) {
-    return <div className="flex h-screen items-center justify-center text-gray-500">加载目录中…</div>
+    return <div className="flex h-screen items-center justify-center text-muted">加载目录中…</div>
   }
   if (error || !manifest) {
     return (
-      <div className="flex h-screen flex-col items-center justify-center gap-2 text-red-600">
-        <p className="font-semibold">目录加载失败</p>
-        <p className="text-sm text-red-500">{error ?? 'manifest 为空'}</p>
+      <div className="flex h-screen flex-col items-center justify-center gap-2">
+        <p className="font-semibold text-ink">目录加载失败</p>
+        <p className="text-sm text-accent-3">{error ?? 'manifest 为空'}</p>
       </div>
     )
   }
 
   return (
     <div className="flex h-screen">
-      <aside className="w-72 shrink-0 overflow-y-auto border-r border-gray-200 bg-gray-50">
+      <aside className="scrollbar-thin w-72 shrink-0 overflow-y-auto border-r border-hairline bg-surface/40 backdrop-blur-xl">
         <Sidebar manifest={manifest} />
       </aside>
       <main className="flex-1 overflow-hidden">
