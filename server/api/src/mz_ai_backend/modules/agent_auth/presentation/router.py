@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
+from fastapi import APIRouter, Depends, HTTPException
 
 from mz_ai_backend.core.config import Settings
 from mz_ai_backend.core.dependencies import get_settings_dependency
@@ -18,8 +18,6 @@ from ..application import (
     GetCurrentAgentAccountUseCase,
     GetAgentWechatLoginSessionQuery,
     GetAgentWechatLoginSessionUseCase,
-    HandleAgentWechatCallbackCommand,
-    HandleAgentWechatCallbackUseCase,
     LogoutAgentSessionUseCase,
     RefreshAgentSessionUseCase,
     RequestEmailBindingChallengeUseCase,
@@ -33,14 +31,11 @@ from ..infrastructure import (
     get_exchange_wechat_login_use_case,
     get_get_current_agent_account_use_case,
     get_get_wechat_login_session_use_case,
-    get_handle_wechat_callback_use_case,
     get_logout_agent_session_use_case,
     get_refresh_agent_session_use_case,
     get_request_email_binding_challenge_use_case,
     get_verify_email_binding_challenge_use_case,
 )
-from ..infrastructure.dependencies import get_official_wechat_gateway
-from ..infrastructure.wechat_official import WechatOfficialAccountGateway
 from .schemas import (
     AgentAuthAccountResponse,
     AgentAuthenticationResponse,
@@ -242,53 +237,3 @@ async def dev_fake_login(
     return success_response(data=AgentAuthenticationResponse.from_result(result))
 
 
-@router.get(
-    "/wechat-official/callback",
-    summary="Handle official-account callback verification",
-)
-async def verify_wechat_callback(
-    signature: str | None = Query(default=None),
-    timestamp: str | None = Query(default=None),
-    nonce: str | None = Query(default=None),
-    echostr: str | None = Query(default=None),
-    gateway: Annotated[
-        WechatOfficialAccountGateway,
-        Depends(get_official_wechat_gateway),
-    ] = None,
-) -> Response:
-    if gateway is None:
-        return Response(content="", media_type="text/plain")
-    valid = gateway.verify_callback_signature(
-        signature=signature,
-        timestamp=timestamp,
-        nonce=nonce,
-    )
-    return Response(content=echostr if valid and echostr is not None else "", media_type="text/plain")
-
-
-@router.post(
-    "/wechat-official/callback",
-    summary="Handle official-account login callback events",
-)
-async def handle_wechat_callback(
-    request: Request,
-    use_case: Annotated[
-        HandleAgentWechatCallbackUseCase,
-        Depends(get_handle_wechat_callback_use_case),
-    ],
-    signature: str | None = Query(default=None),
-    msg_signature: str | None = Query(default=None),
-    timestamp: str | None = Query(default=None),
-    nonce: str | None = Query(default=None),
-) -> Response:
-    body = (await request.body()).decode("utf-8")
-    await use_case.execute(
-        HandleAgentWechatCallbackCommand(
-            signature=signature,
-            msg_signature=msg_signature,
-            timestamp=timestamp,
-            nonce=nonce,
-            xml_body=body,
-        )
-    )
-    return Response(content="success", media_type="text/plain")
