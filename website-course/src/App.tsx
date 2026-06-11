@@ -1,3 +1,3 @@
 export default function App() {
-  return <div>website-course 占位首页</div>
+  return <div className="p-6 text-2xl font-bold text-blue-600">Tailwind 已生效</div>
 }
