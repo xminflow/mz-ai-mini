@@ -31,6 +31,15 @@ class CampAccountModel(Base):
         DateTime(timezone=False),
         nullable=True,
     )
+    membership_tier: Mapped[str] = mapped_column(String(16), nullable=False, default="none")
+    membership_started_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=False),
+        nullable=True,
+    )
+    membership_expires_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=False),
+        nullable=True,
+    )
     is_deleted: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=False),

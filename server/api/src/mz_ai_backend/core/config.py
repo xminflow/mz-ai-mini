@@ -46,6 +46,8 @@ class Settings(BaseSettings):
     account_membership_annual_fen: int = Field(default=49900, ge=1)  # 已废弃，保留以兼容旧 .env
     account_membership_normal_fen: int = Field(default=19900, ge=1)
     account_membership_premium_fen: int = Field(default=49900, ge=1)
+    camp_membership_basic_fen: int = Field(default=199900, ge=1)
+    camp_membership_premium_fen: int = Field(default=399900, ge=1)
     account_membership_sweep_enabled: bool = Field(default=True)
     account_membership_sweep_interval_seconds: int = Field(default=60, ge=10, le=3600)
     account_membership_sweep_retry_after_seconds: int = Field(default=60, ge=10, le=3600)
