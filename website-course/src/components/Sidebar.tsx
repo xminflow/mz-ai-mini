@@ -12,6 +12,7 @@ export default function Sidebar({ manifest }: Props) {
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
 
   const toggle = (id: string) => {
+    if (id === chapterId) return // 当前所在章节始终展开，点击其标题不改变折叠状态
     setCollapsed((prev) => {
       const next = new Set(prev)
       if (next.has(id)) {

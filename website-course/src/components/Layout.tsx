@@ -1,5 +1,6 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useOutletContext } from 'react-router-dom'
 import { useManifest } from '../lib/useManifest'
+import type { Manifest } from '../types'
 import Sidebar from './Sidebar'
 
 export default function Layout() {
@@ -27,4 +28,9 @@ export default function Layout() {
       </main>
     </div>
   )
+}
+
+// 供子路由读取 Layout 通过 <Outlet context> 传入的 manifest，集中类型断言到一处
+export function useLayoutManifest(): Manifest {
+  return useOutletContext<Manifest>()
 }

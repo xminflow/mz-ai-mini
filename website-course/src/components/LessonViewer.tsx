@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react'
-import { useParams, useNavigate, useOutletContext } from 'react-router-dom'
-import type { Manifest } from '../types'
+import { useEffect, useMemo, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { useLayoutManifest } from './Layout'
 import { flattenSections, findAdjacent } from '../lib/manifest'
 
 // 右侧课程展示：顶部上/下一节导航条 + iframe 加载完整 HTML 文档
 export default function LessonViewer() {
-  const manifest = useOutletContext<Manifest>()
+  const manifest = useLayoutManifest()
   const { chapterId = '', sectionId = '' } = useParams()
   const navigate = useNavigate()
   const [iframeError, setIframeError] = useState(false)
 
-  const flat = flattenSections(manifest)
+  const flat = useMemo(() => flattenSections(manifest), [manifest])
   const { prev, current, next } = findAdjacent(flat, chapterId, sectionId)
   const currentFile = current?.file
 
