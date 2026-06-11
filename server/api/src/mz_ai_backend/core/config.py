@@ -60,6 +60,10 @@ class Settings(BaseSettings):
     agent_auth_access_token_ttl_seconds: int = Field(default=1800, ge=60)
     agent_auth_refresh_token_ttl_days: int = Field(default=7, ge=1, le=365)
     agent_auth_wechat_login_session_ttl_seconds: int = Field(default=300, ge=60, le=1800)
+    camp_auth_token_pepper: str | None = Field(default=None)
+    camp_auth_access_token_ttl_seconds: int = Field(default=1800, ge=60)
+    camp_auth_refresh_token_ttl_days: int = Field(default=7, ge=1, le=365)
+    camp_auth_wechat_login_session_ttl_seconds: int = Field(default=300, ge=60, le=1800)
     agent_auth_email_smtp_host: str | None = Field(default=None)
     agent_auth_email_smtp_port: int = Field(default=465, ge=1, le=65535)
     agent_auth_email_smtp_username: str | None = Field(default=None)
@@ -74,6 +78,13 @@ class Settings(BaseSettings):
     wechat_official_token: str | None = Field(default=None)
     wechat_official_encoding_aes_key: str | None = Field(default=None)
     wechat_official_qr_expire_seconds: int = Field(default=300, ge=60, le=1800)
+    # 公众号关注自动回复：开发模式下后台自动回复失效，改为 subscribe 事件返回单图文被动回复
+    # （标题=邀请文案、封面=二维码图）。客服接口不可用于关注回复——关注不打开其 48h 窗口。
+    wechat_official_auto_reply_enabled: bool = Field(default=False)
+    wechat_official_auto_reply_subscribe_news_title: str | None = Field(default=None)
+    wechat_official_auto_reply_subscribe_news_description: str | None = Field(default=None)
+    wechat_official_auto_reply_subscribe_news_pic_url: str | None = Field(default=None)
+    wechat_official_auto_reply_subscribe_news_url: str | None = Field(default=None)
     blogger_insight_import_token: str | None = Field(default=None)
     track_analysis_import_token: str | None = Field(default=None)
 
