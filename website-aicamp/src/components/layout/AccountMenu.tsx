@@ -1,6 +1,7 @@
 'use client'
 
 import type { AuthState } from '@/features/auth/types'
+import { MembershipBadge } from '@/features/membership/MembershipBadge'
 
 export function AccountMenu({
   authState,
@@ -15,6 +16,7 @@ export function AccountMenu({
   const label = authState.account.email || authState.account.username || '已登录'
   return (
     <div className="flex items-center gap-2 rounded-full border border-hairline bg-surface px-3 py-1.5">
+      <MembershipBadge account={authState.account} />
       <span className="max-w-[150px] truncate text-[13px] text-ink-soft">{label}</span>
       <button
         type="button"
