@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useNavigate, useOutletContext } from 'react-router-dom'
 import type { Manifest } from '../types'
 import { flattenSections, findAdjacent } from '../lib/manifest'
@@ -12,6 +12,25 @@ export default function LessonViewer() {
 
   const flat = flattenSections(manifest)
   const { prev, current, next } = findAdjacent(flat, chapterId, sectionId)
+  const currentFile = current?.file
+
+  // iframe 的 onError 对跨文档加载不可靠，这里用 HEAD 显式探测课程文件是否存在。
+  // 依赖 currentFile 字符串（而非每次渲染都新建的 current 对象），避免失败态触发无限重渲染循环。
+  useEffect(() => {
+    setIframeError(false)
+    if (!currentFile) return
+    let alive = true
+    fetch(`/courses/${currentFile}`, { method: 'HEAD' })
+      .then((res) => {
+        if (alive && !res.ok) setIframeError(true)
+      })
+      .catch(() => {
+        if (alive) setIframeError(true)
+      })
+    return () => {
+      alive = false
+    }
+  }, [currentFile])
 
   if (!current) {
     return (
