@@ -143,10 +143,41 @@
       }
       .flow-line .arrow { color: #8a8a94; margin: 0 0.35rem; }
 
+      /* ---------- 术语速查 ---------- */
+      .gloss h3 {
+        font-size: 1.02rem;
+        font-weight: 600;
+        letter-spacing: -0.005em;
+        margin: 2rem 0 0;
+        color: #f5f5f7;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+      }
+      .gloss .dot {
+        flex: 0 0 auto;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+        display: inline-block;
+      }
+      dl.terms { margin: 0.4rem 0 0; }
+      dl.terms > div {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 0.3rem 1.6rem;
+        padding: 0.72rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      dl.terms dt { color: #f5f5f7; font-weight: 600; }
+      dl.terms dd { margin: 0; color: #d4d4d8; }
+
       @media (max-width: 600px) {
         body { padding: 48px 22px; }
         h1 { font-size: 1.95rem; }
         h2 { font-size: 1.28rem; }
+        dl.terms > div { grid-template-columns: 1fr; gap: 0.15rem; }
       }
     </style>
   </head>
@@ -412,5 +443,104 @@
         后面我们学的每一个工具、写的每一行代码，都会落在这张地图的某个位置上。
       </p>
     </div>
+
+    <hr class="rule" />
+
+    <!-- ========== 术语速查 ========== -->
+    <section class="gloss">
+      <h2 style="color:#f5f5f7;">你还会遇到的词</h2>
+      <p class="body">
+        下面这些词后面会反复出现。现在不用背——先混个脸熟，遇到了回来查就行。
+        每个词都归到了它所属的角色（颜色对应上面四块），帮你挂到刚才那张地图上。
+      </p>
+
+      <h3><span class="dot c-front"></span>前端家族</h3>
+      <dl class="terms">
+        <div>
+          <dt>HTML / CSS / JS</dt>
+          <dd>网页三件套：<strong>HTML</strong> 搭骨架（内容结构），<strong>CSS</strong> 负责好看（样式排版），<strong>JavaScript</strong> 让页面动起来（交互）。</dd>
+        </div>
+        <div>
+          <dt>框架（React 等）</dt>
+          <dd>别人搭好的"半成品脚手架"，帮你少写重复代码、更快搭出界面。<code>React</code> 是目前最流行的前端框架之一。</dd>
+        </div>
+        <div>
+          <dt>响应式</dt>
+          <dd>同一个页面在电脑和手机上都能自动排好版、都好看。</dd>
+        </div>
+      </dl>
+
+      <h3><span class="dot c-back"></span>后端家族</h3>
+      <dl class="terms">
+        <div>
+          <dt>服务器（Server）</dt>
+          <dd>一台常年开机、专门对外提供服务的电脑；后端程序就跑在它上面。</dd>
+        </div>
+        <div>
+          <dt>API</dt>
+          <dd>程序之间约定好的"对接窗口"，前端按规定格式向后端要数据、发指令。</dd>
+        </div>
+        <div>
+          <dt>后端框架</dt>
+          <dd>帮后端快速搭出"处理请求"骨架的工具，比如 <code>FastAPI</code>、<code>Express</code>，省去大量重复的基础代码。</dd>
+        </div>
+      </dl>
+
+      <h3><span class="dot c-data"></span>数据库家族</h3>
+      <dl class="terms">
+        <div>
+          <dt>SQL</dt>
+          <dd>"跟数据库说话的标准语言"，用来查、增、改、删数据。</dd>
+        </div>
+        <div>
+          <dt>表 / 字段</dt>
+          <dd>数据库里像 Excel 一样的表格：<strong>表</strong>是一整张表，<strong>字段</strong>是表的列（比如"姓名""价格"）。</dd>
+        </div>
+      </dl>
+
+      <h3><span class="dot c-term"></span>终端 &amp; 工具</h3>
+      <dl class="terms">
+        <div>
+          <dt>命令行 / CLI</dt>
+          <dd>用"打字 + 回车"代替点鼠标来操作电脑，就是终端里干的事。</dd>
+        </div>
+        <div>
+          <dt>Git / 仓库 / 版本控制</dt>
+          <dd>给代码存档、记录每次改动、能随时回退；"仓库（Repo）"就是一个项目所有代码的家。</dd>
+        </div>
+        <div>
+          <dt>npm / 包 / 依赖</dt>
+          <dd>别人写好的现成功能模块叫"<strong>包</strong>"；用 <code>npm</code> 这类工具一键装来用，项目用到的这些包就是它的"<strong>依赖</strong>"。</dd>
+        </div>
+        <div>
+          <dt>编辑器 / IDE</dt>
+          <dd>写代码的"工作台"，比如 <code>VS Code</code>：能语法高亮、自动补全、断点调试。</dd>
+        </div>
+      </dl>
+
+      <h3><span class="dot" style="background:#8a8a94;"></span>通用概念</h3>
+      <dl class="terms">
+        <div>
+          <dt>域名 / URL / 网址</dt>
+          <dd>网站的"门牌地址"，比如 <code>example.com</code>，浏览器靠它找到对应的网站。</dd>
+        </div>
+        <div>
+          <dt>开发环境 / 生产环境</dt>
+          <dd>开发环境是你自己电脑上试验的"工地"；生产环境是真正给用户用的"正式场地"。两者分开，免得在用户面前翻车。</dd>
+        </div>
+        <div>
+          <dt>部署 / 上线（Deploy）</dt>
+          <dd>把写好的代码放到服务器上、让所有人都能访问，就叫"上线"。</dd>
+        </div>
+        <div>
+          <dt>Bug / 调试（Debug）</dt>
+          <dd><strong>Bug</strong> 是程序里的毛病；<strong>调试</strong>就是一步步把它找出来、修好。</dd>
+        </div>
+        <div>
+          <dt>全栈</dt>
+          <dd>前端和后端都能独立搞定的人，叫"全栈"。</dd>
+        </div>
+      </dl>
+    </section>
   </body>
 </html>
