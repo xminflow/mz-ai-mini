@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>认识并安装主力工具</title>
+    <style>
+      html { background: #050507; }
+      * { box-sizing: border-box; }
+      body {
+        background: transparent;
+        color: #d4d4d8;
+        font-family: "Inter", "Noto Sans SC", "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 64px 32px;
+        line-height: 1.85;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      /* ---------- 文字层级 ---------- */
+      .eyebrow {
+        font-size: 0.78rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #8a8a94;
+        margin: 0 0 1.1rem;
+      }
+      h1 {
+        font-size: 2.4rem;
+        line-height: 1.25;
+        letter-spacing: -0.02em;
+        margin: 0 0 0.9rem;
+        font-weight: 700;
+        background: linear-gradient(100deg, #a78bfa 0%, #22d3ee 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .lead {
+        font-size: 1.08rem;
+        color: #8a8a94;
+        margin: 0 0 0.4rem;
+        max-width: 62ch;
+      }
+
+      h2 {
+        font-size: 1.45rem;
+        letter-spacing: -0.01em;
+        margin: 0;
+        color: #f5f5f7;
+        font-weight: 650;
+        display: flex;
+        align-items: center;
+        gap: 0.62rem;
+      }
+      h2 .ico { flex: 0 0 auto; display: inline-flex; }
+
+      p { margin: 1.05rem 0 0; }
+      strong { color: #f5f5f7; font-weight: 600; }
+
+      /* 概念色编码 */
+      .c-front { color: #a78bfa; }
+      .c-back  { color: #22d3ee; }
+      .c-data  { color: #f472b6; }
+      .c-term  { color: #fbbf24; }
+
+      ul { margin: 0.9rem 0 0; padding: 0; list-style: none; }
+      li {
+        position: relative;
+        padding-left: 1.3rem;
+        margin: 0.5rem 0;
+      }
+      li::before {
+        content: "";
+        position: absolute;
+        left: 0.1rem;
+        top: 0.78em;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: currentColor;
+        opacity: 0.55;
+      }
+      li b { color: #f5f5f7; font-weight: 600; }
+
+      code {
+        font-family: "SFMono-Regular", "Consolas", "Liberation Mono", Menlo, monospace;
+        font-size: 0.86em;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 4px;
+        padding: 0.1em 0.4em;
+        color: #e7e7ea;
+      }
+
+      /* ---------- 分隔与节奏 ---------- */
+      .rule {
+        height: 1px;
+        border: 0;
+        margin: 3.4rem 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+      }
+      section { margin-top: 2.8rem; }
+      section .body { color: #d4d4d8; }
+
+      /* ---------- 比喻区 ---------- */
+      .analogy {
+        margin-top: 2.4rem;
+        padding: 0 0 0 1.2rem;
+        border-left: 2px solid rgba(167, 139, 250, 0.45);
+      }
+      .analogy p { margin-top: 0.6rem; }
+      .analogy p:first-child { margin-top: 0; }
+
+      /* ---------- 插图通用 ---------- */
+      figure { margin: 2rem 0 0; }
+      figure svg { display: block; width: 100%; height: auto; }
+      figcaption {
+        margin-top: 0.9rem;
+        font-size: 0.84rem;
+        color: #8a8a94;
+        text-align: center;
+      }
+      .svg-label { fill: #d4d4d8; font-size: 13px; }
+      .svg-sub   { fill: #8a8a94; font-size: 11px; }
+      .svg-title { fill: #f5f5f7; font-size: 14px; font-weight: 600; }
+      .svg-mono  { font-family: "SFMono-Regular", "Consolas", monospace; }
+
+      /* ---------- 终端窗口示意 ---------- */
+      .term { max-width: 540px; margin: 2rem auto 0; }
+
+      /* 收尾点题 */
+      .closing {
+        margin-top: 3.4rem;
+        padding-top: 2.2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .flow-line {
+        font-size: 1.02rem;
+        color: #f5f5f7;
+        line-height: 2.1;
+      }
+      .flow-line .arrow { color: #8a8a94; margin: 0 0.35rem; }
+
+      /* ---------- 术语速查 ---------- */
+      .gloss h3 {
+        font-size: 1.02rem;
+        font-weight: 600;
+        letter-spacing: -0.005em;
+        margin: 2rem 0 0;
+        color: #f5f5f7;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+      }
+      .gloss .dot {
+        flex: 0 0 auto;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+        display: inline-block;
+      }
+      dl.terms { margin: 0.4rem 0 0; }
+      dl.terms > div {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 0.3rem 1.6rem;
+        padding: 0.72rem 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      dl.terms dt { color: #f5f5f7; font-weight: 600; }
+      dl.terms dd { margin: 0; color: #d4d4d8; }
+
+      /* ---------- 软件形态：一排线性小图标 ---------- */
+      .forms {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.6rem 2.2rem;
+        margin: 1.8rem 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      .forms li {
+        position: static;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        width: 96px;
+        text-align: center;
+      }
+      .forms li::before { content: none; }
+      .forms .form-ico { display: inline-flex; }
+      .forms .form-name { color: #f5f5f7; font-weight: 600; font-size: 0.92rem; }
+      .forms .form-eg { color: #8a8a94; font-size: 0.78rem; line-height: 1.5; }
+
+      @media (max-width: 600px) {
+        body { padding: 48px 22px; }
+        h1 { font-size: 1.95rem; }
+        h2 { font-size: 1.28rem; }
+        dl.terms > div { grid-template-columns: 1fr; gap: 0.15rem; }
+        .forms { gap: 1.4rem 1.4rem; justify-content: space-between; }
+      }
+
+      /* 本节速览：学习目标 + 目录 + 段落过渡 */
+      .goals { margin: 1.8rem 0 0; }
+      .goals .gh { font-size: 0.8rem; letter-spacing: 0.14em; color: #8a8a94; margin: 0; }
+      .goals ul { margin: 0.6rem 0 0; }
+      .toc { margin: 1.1rem 0 0; font-size: 0.86rem; color: #8a8a94; line-height: 2; }
+      .toc a { color: #d4d4d8; text-decoration: none; border-bottom: 1px solid transparent; }
+      .toc a:hover { color: #a78bfa; border-bottom-color: rgba(167, 139, 250, 0.5); }
+      .bridge { color: #8a8a94; font-size: 0.95rem; margin: 1.8rem 0 0; }
+
+      /* ---------- 新增：命令代码块（沿用既有变量与配色） ---------- */
+      .cmd {
+        margin: 1.1rem 0 0;
+        padding: 0.85rem 1.05rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-left: 2px solid rgba(251, 191, 36, 0.55);
+        border-radius: 8px;
+        font-family: "SFMono-Regular", "Consolas", "Liberation Mono", Menlo, monospace;
+        font-size: 0.86rem;
+        line-height: 1.95;
+        color: #e7e7ea;
+        overflow-x: auto;
+        white-space: pre;
+      }
+      .cmd .c-os {
+        display: block;
+        font-family: "Inter", "Noto Sans SC", system-ui, sans-serif;
+        font-size: 0.74rem;
+        letter-spacing: 0.12em;
+        color: #8a8a94;
+        margin: 0.55rem 0 0.15rem;
+        white-space: normal;
+      }
+      .cmd .c-os:first-child { margin-top: 0; }
+      .cmd .prompt { color: #fbbf24; user-select: none; }
+      .cmd .opt { color: #8a8a94; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <p class="eyebrow">AI 基础工具学习 · 第二节</p>
+      <h1>认识并安装主力工具</h1>
+      <p class="lead">
+        市面上的 AI 编程工具看着一堆，其实<strong>大多是同一类东西</strong>：装进电脑、在终端里跟你对话、帮你干活。
+        这一节带你认全主流的几款、并<strong>挑一个真正装好</strong>——装好一个就能开干。
+        本课程后面会<strong>统一以 Claude Code 作为核心主力</strong>，其余作为备选和了解。
+      </p>
+    </header>
+
+    <section>
+      <div class="goals">
+        <p class="gh">本节你会搞懂</p>
+        <ul>
+          <li>市面上的"AI 编程助手"其实是<strong>同一类东西</strong>，不用都装</li>
+          <li>面对这么多工具<strong>该怎么选</strong>，怎么降低学习负担</li>
+          <li>四种主流方案的<strong>完整安装步骤</strong>，照着敲就行</li>
+          <li>就算<strong>没有 Claude 账号</strong>，也能用国产模型把 Claude Code 跑起来</li>
+          <li>国产大模型生态里还有哪些"知道有就行"的工具</li>
+          <li>装完之后<strong>怎么验证</strong>它真的能用了</li>
+        </ul>
+      </div>
+
+      <nav class="toc">
+        本节速览：
+        <a href="#why">选哪个</a> ·
+        <a href="#overview">四方案速览</a> ·
+        <a href="#install-claude">装 Claude Code</a> ·
+        <a href="#install-codex">装 Codex</a> ·
+        <a href="#install-kimi">装 Kimi CLI</a> ·
+        <a href="#claude-kimi">Kimi 驱动 Claude Code</a> ·
+        <a href="#ecosystem">其他生态</a> ·
+        <a href="#verify">验证装好了</a>
+      </nav>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ========== 选择策略 ========== -->
+    <section id="why">
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3 v6" />
+            <path d="M12 9 l-6 5 M12 9 l6 5" />
+            <circle cx="6" cy="16" r="2.5" />
+            <circle cx="18" cy="16" r="2.5" />
+          </svg>
+        </span>
+        <span class="c-front">工具太多，先想清楚选哪个</span>
+      </h2>
+      <p class="body">
+        刚入门最容易犯的毛病，就是<strong>把时间花在"该装哪个"上反复纠结</strong>——这个看着火、那个听说更强，
+        结果一个都没真正用起来。其实大可不必内耗：这些工具<strong>八九不离十是同一类东西</strong>。
+      </p>
+      <ul class="c-front">
+        <li><b>它们长得像：</b>大多是<strong>"终端里的 AI 编程助手"</strong>——你在那个黑框里用大白话提需求，它读你的文件、帮你写代码改代码。</li>
+        <li><b>用法相通：</b>装法都是"敲一行安装命令"，用法都是"启动后跟它对话"。<strong>学会一个，其余基本都会用</strong>。</li>
+        <li><b>选一个贯穿全程：</b>挑定一个用到底，把它用熟，比浅尝五个都强。其余的<strong>了解即可</strong>，知道有这么回事、需要时再说。</li>
+      </ul>
+      <p class="body">
+        所以这门课替你拿了主意：<strong>后续统一用 Claude Code</strong> 作为主力工具贯穿全程。
+        但为了让你按手头条件灵活选择，下面会把 <strong>4 种主流方案都讲全</strong>——
+        有 Claude 账号的直接用官方，国内或没账号的也有兜底方案。
+      </p>
+      <p class="bridge">↓ 先用一张图把这四个方案的关系理清楚，你就知道它们各是什么、怎么连。</p>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ========== 四方案速览（关系图） ========== -->
+    <section id="overview">
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="9" width="6" height="6" rx="1.5" />
+            <rect x="15" y="3" width="6" height="6" rx="1.5" />
+            <rect x="15" y="15" width="6" height="6" rx="1.5" />
+            <path d="M9 11 l6 -5 M9 13 l6 5" />
+          </svg>
+        </span>
+        四个主流方案，一张图看懂
+      </h2>
+      <p class="body">
+        关键要先建立一个心智：<strong>Claude Code 是一个"壳 / 工具"</strong>——它本身负责跟你对话、读写文件、执行命令，
+        但真正"动脑子"的那个大模型，是可以<strong>换后端</strong>的：可以接<strong>官方 Claude</strong>，也可以接<strong>国产模型（如 Kimi K2）</strong>。
+        另外，<strong>Codex</strong> 和 <strong>Kimi CLI</strong> 是另外两个<strong>同类工具</strong>，自带自己的模型。
+      </p>
+
+      <figure>
+        <svg viewBox="0 0 760 320" role="img" aria-label="Claude Code 作为工具壳可接不同模型后端，Codex 与 Kimi CLI 为同类独立工具" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="ar-ov" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#8a8a94" />
+            </marker>
+          </defs>
+
+          <!-- 中间：Claude Code 壳（紫） -->
+          <g>
+            <rect x="60" y="92" width="170" height="64" rx="10" fill="none" stroke="#a78bfa" stroke-width="1.6" />
+            <text class="svg-mono" x="78" y="118" fill="#a78bfa" font-size="12">$ claude</text>
+            <text class="svg-title" x="145" y="139" text-anchor="middle" fill="#a78bfa" font-size="13">Claude Code</text>
+            <text class="svg-sub" x="145" y="178" text-anchor="middle">工具壳 · 本课程主力</text>
+          </g>
+
+          <!-- 后端 1：官方 Claude（紫） -->
+          <g>
+            <rect x="470" y="48" width="200" height="50" rx="10" fill="none" stroke="#a78bfa" stroke-width="1.5" />
+            <circle cx="492" cy="73" r="6" fill="none" stroke="#a78bfa" stroke-width="1.4" />
+            <text class="svg-label" x="512" y="69" fill="#f5f5f7">Claude（官方）</text>
+            <text class="svg-sub" x="512" y="86">Anthropic 自家模型</text>
+          </g>
+
+          <!-- 后端 2：Kimi K2 / 国产模型（青） -->
+          <g>
+            <rect x="470" y="150" width="200" height="50" rx="10" fill="none" stroke="#22d3ee" stroke-width="1.5" />
+            <circle cx="492" cy="175" r="6" fill="none" stroke="#22d3ee" stroke-width="1.4" />
+            <text class="svg-label" x="512" y="171" fill="#f5f5f7">Kimi K2 / 国产模型</text>
+            <text class="svg-sub" x="512" y="188">换个后端也能跑</text>
+          </g>
+
+          <!-- 壳 -> 两个后端的连线 -->
+          <path d="M230 116 C 350 98, 380 73, 466 73" fill="none" stroke="#8a8a94" stroke-width="1.3" marker-end="url(#ar-ov)" />
+          <path d="M230 138 C 350 158, 380 175, 466 175" fill="none" stroke="#8a8a94" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#ar-ov)" />
+          <text class="svg-sub" x="350" y="84" text-anchor="middle">接官方</text>
+          <text class="svg-sub" x="350" y="168" text-anchor="middle">或换后端</text>
+
+          <!-- 分隔虚线 -->
+          <line x1="40" y1="240" x2="720" y2="240" stroke="rgba(255,255,255,0.12)" stroke-width="1" stroke-dasharray="3 4" />
+          <text class="svg-sub" x="40" y="232" text-anchor="start">—— 另外两个同类独立工具 ——</text>
+
+          <!-- 独立工具 1：Codex（青） -->
+          <g>
+            <rect x="60" y="258" width="300" height="48" rx="10" fill="none" stroke="#22d3ee" stroke-width="1.5" />
+            <text class="svg-mono" x="78" y="282" fill="#22d3ee" font-size="12">$ codex</text>
+            <text class="svg-label" x="150" y="282" fill="#f5f5f7">Codex</text>
+            <text class="svg-sub" x="78" y="298">OpenAI 的同类终端工具，用法相近</text>
+          </g>
+
+          <!-- 独立工具 2：Kimi CLI（琥珀） -->
+          <g>
+            <rect x="400" y="258" width="300" height="48" rx="10" fill="none" stroke="#fbbf24" stroke-width="1.5" />
+            <text class="svg-mono" x="418" y="282" fill="#fbbf24" font-size="12">$ kimi</text>
+            <text class="svg-label" x="478" y="282" fill="#f5f5f7">Kimi CLI</text>
+            <text class="svg-sub" x="418" y="298">国产，直接用 Kimi 账号，门槛低</text>
+          </g>
+        </svg>
+        <figcaption>
+          Claude Code 是"壳"，背后接的模型可换（官方 Claude / 国产 Kimi K2）；Codex、Kimi CLI 则是另外两个同类的独立工具。
+        </figcaption>
+      </figure>
+
+      <p class="body" style="margin-top:2.2rem;">四个方案各一句话定位：</p>
+      <dl class="terms">
+        <div>
+          <dt class="c-front">Claude Code + 官方</dt>
+          <dd>本课程<strong>核心主力</strong>。有 Claude 订阅或 Anthropic API key 就能直接用，体验最完整。</dd>
+        </div>
+        <div>
+          <dt class="c-back">Codex（OpenAI）</dt>
+          <dd>OpenAI 出的同类终端工具，用法跟 Claude Code 很像。有 ChatGPT 套餐可直接登录。</dd>
+        </div>
+        <div>
+          <dt class="c-term">Kimi CLI（国产）</dt>
+          <dd>月之暗面（Moonshot）出的同类工具，<strong>直接用 Kimi 账号</strong>，国内上手门槛最低。</dd>
+        </div>
+        <div>
+          <dt class="c-back">Kimi 驱动 Claude Code</dt>
+          <dd>仍把 Claude Code 当主力，但<strong>模型后端换成 Kimi K2</strong>——没有 Claude 账号时的兜底方案。</dd>
+        </div>
+      </dl>
+      <p class="bridge">↓ 下面挨个给安装步骤。先装核心主力——Claude Code。</p>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ========== 安装 Claude Code ========== -->
+    <section id="install-claude">
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <path d="M7 9 l3 3 l-3 3 M13 15 h4" />
+          </svg>
+        </span>
+        <span class="c-front">安装 Claude Code（核心主力）</span>
+      </h2>
+      <p class="body">
+        别紧张，全程就是<strong>"打开一个黑框、敲一行命令、回车"</strong>，照着做就行。先解决"黑框从哪开"。
+      </p>
+      <ul class="c-front">
+        <li><b>Windows：</b>打开 <strong>PowerShell</strong>（开始菜单搜 "PowerShell" 即可）。建议<strong>先装 Git for Windows</strong>——这几个工具都拿它当底层 shell，到 <code>git-scm.com</code> 下载、一路下一步装好就行。</li>
+        <li><b>Mac：</b>打开<strong>终端 Terminal</strong>（启动台搜"终端"，或在"应用程序 → 实用工具"里）。</li>
+      </ul>
+      <p class="body">黑框打开后，按你的系统敲下面这行<strong>安装命令</strong>（单独成行，可直接复制粘贴回车）：</p>
+      <div class="cmd"><span class="c-os">Windows（PowerShell）</span><span class="prompt">&gt; </span>irm https://claude.ai/install.ps1 | iex
+<span class="c-os">macOS / Linux</span><span class="prompt">$ </span>curl -fsSL https://claude.ai/install.sh | bash
+<span class="c-os">可选：已装好 Node 18+ 的话，也可以用 npm 装</span><span class="prompt">$ </span>npm install -g @anthropic-ai/claude-code</div>
+      <p class="body">
+        <b style="color:#f5f5f7;">登录：</b>装好后，进到你<strong>任意一个项目文件夹</strong>，运行 <code>claude</code>。
+        它会自动<strong>打开浏览器让你登录</strong>——用你的 Claude 订阅账号，或者填 Anthropic 控制台里的 API key 都行。
+      </p>
+      <div class="cmd"><span class="prompt">$ </span>claude</div>
+      <p class="body">
+        <b style="color:#f5f5f7;">验证：</b>运行下面这行，<strong>能打印出版本号就说明装好了</strong>。
+        如果提示"找不到命令 / command not found"，多半是<strong>把终端关掉重开一次</strong>就好（让系统重新认到它）。
+      </p>
+      <div class="cmd"><span class="prompt">$ </span>claude --version</div>
+      <p class="bridge">↓ 这就是核心主力。下面三个方案，有兴趣或有需要再看；没需要直接跳到"验证"也行。</p>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ========== 安装 Codex ========== -->
+    <section id="install-codex">
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <path d="M8 9 l-3 3 l3 3 M16 9 l3 3 l-3 3" />
+          </svg>
+        </span>
+        <span class="c-back">安装 Codex（OpenAI）</span>
+      </h2>
+      <p class="body">
+        Codex 是 OpenAI 的同类终端工具，<strong>用法和 Claude Code 几乎一样</strong>。它通过 npm 安装，需要先有 <strong>Node 22+</strong>。
+      </p>
+      <div class="cmd"><span class="c-os">安装（需 Node 22+）</span><span class="prompt">$ </span>npm install -g @openai/codex</div>
+      <p class="body">
+        <b style="color:#f5f5f7;">登录：</b>运行 <code>codex</code>，首次会按提示登录——
+        有 <strong>ChatGPT 套餐（Plus / Pro 等）可直接登录</strong>、额度已包含在套餐里；或者用环境变量里的 <code>OPENAI_API_KEY</code>。
+      </p>
+      <div class="cmd"><span class="prompt">$ </span>codex
+<span class="c-os">验证</span><span class="prompt">$ </span>codex --version</div>
+      <p class="bridge">↓ 再看一个国产、上手门槛最低的：Kimi CLI。</p>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ========== 安装 Kimi CLI ========== -->
+    <section id="install-kimi">
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M9 8 v8 M9 12 l5 -4 M9 12 l5 4" />
+          </svg>
+        </span>
+        <span class="c-term">安装 Kimi CLI（Moonshot，国产）</span>
+      </h2>
+      <p class="body">
+        Kimi CLI 是月之暗面（Moonshot）的同类工具，最大的好处是<strong>能直接用 Kimi 账号登录</strong>，国内上手最省事。
+        Windows 同样建议<strong>先装好 Git for Windows</strong>。安装命令任选其一：
+      </p>
+      <div class="cmd"><span class="c-os">Windows（PowerShell）</span><span class="prompt">&gt; </span>irm https://code.kimi.com/kimi-code/install.ps1 | iex
+<span class="c-os">macOS / Linux</span><span class="prompt">$ </span>curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash
+<span class="c-os">或用 npm（需 Node 22.19+）</span><span class="prompt">$ </span>npm install -g @moonshot-ai/kimi-code</div>
+      <p class="body">
+        <b style="color:#f5f5f7;">登录：</b>运行 <code>kimi</code> 进去后，输入斜杠命令 <code>/login</code>，
+        可以选<strong>「Kimi Code 扫码 / 设备码登录」</strong>，也可以选<strong>填 platform.kimi 的 API key</strong>。
+      </p>
+      <div class="cmd"><span class="prompt">$ </span>kimi
+<span class="c-os">进去后在对话框里输入</span>/login</div>
+      <p class="bridge">↓ 如果你既想用 Claude Code 这套工作流、又没有 Claude 账号——下面这个组合方案就是为你准备的。</p>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ========== Kimi 驱动 Claude Code ========== -->
+    <section id="claude-kimi">
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="8" width="9" height="8" rx="2" />
+            <rect x="15" y="6" width="7" height="12" rx="2" />
+            <path d="M11 12 h4" stroke-dasharray="2 2" />
+          </svg>
+        </span>
+        <span class="c-back">用 Kimi 驱动 Claude Code（国内 / 无 Claude 账号的兜底）</span>
+      </h2>
+      <p class="body">
+        这个方案的思路是：<strong>仍然把 Claude Code 当主力</strong>，工作流一模一样，
+        只是把背后那个"动脑子的模型"<strong>从官方 Claude 换成 Kimi K2</strong>。适合没有 Claude 账号、或想用国产模型的人。
+      </p>
+      <ul class="c-back">
+        <li><b>① 先装好 Claude Code：</b>就是前面那一步，确保 <code>claude --version</code> 能正常打印版本。</li>
+        <li><b>② 拿一个 Moonshot API key：</b>到 Moonshot 开放平台注册、生成一个 API key（一串密钥）。</li>
+        <li><b>③ 设 3 个环境变量再启动 <code>claude</code>：</b>告诉 Claude Code "改去连 Kimi"。</li>
+      </ul>
+      <p class="body">三个要设的变量，含义是这样：</p>
+      <dl class="terms">
+        <div>
+          <dt><code>ANTHROPIC_BASE_URL</code></dt>
+          <dd>请求改发到哪个地址。国内用 <code>https://api.moonshot.cn/anthropic</code>；海外用 <code>https://api.moonshot.ai/anthropic</code>。</dd>
+        </div>
+        <div>
+          <dt><code>ANTHROPIC_AUTH_TOKEN</code></dt>
+          <dd>填你第 ② 步拿到的 Moonshot API key。</dd>
+        </div>
+        <div>
+          <dt><code>ANTHROPIC_MODEL</code></dt>
+          <dd>用哪个型号，形如 <code>kimi-k2…</code>（<strong>具体型号名会更新</strong>，以官方文档为准）。</dd>
+        </div>
+      </dl>
+      <p class="body">设好变量、再启动 <code>claude</code> 即可。两种系统的写法各一段：</p>
+      <div class="cmd"><span class="c-os">Windows（PowerShell）</span><span class="prompt">&gt; </span>$env:ANTHROPIC_BASE_URL="https://api.moonshot.cn/anthropic"
+<span class="prompt">&gt; </span>$env:ANTHROPIC_AUTH_TOKEN="&lt;你的 Moonshot API key&gt;"
+<span class="prompt">&gt; </span>$env:ANTHROPIC_MODEL="kimi-k2…"
+<span class="prompt">&gt; </span>claude</div>
+      <div class="cmd"><span class="c-os">macOS / Linux</span><span class="prompt">$ </span>export ANTHROPIC_BASE_URL="https://api.moonshot.cn/anthropic"
+<span class="prompt">$ </span>export ANTHROPIC_AUTH_TOKEN="&lt;你的 Moonshot API key&gt;"
+<span class="prompt">$ </span>export ANTHROPIC_MODEL="kimi-k2…"
+<span class="prompt">$ </span>claude</div>
+      <div class="analogy">
+        <p>
+          <strong>重点提示：</strong>上面的<strong>型号名（<code>kimi-k2…</code>）和确切端点地址都会随官方更新而变动</strong>，
+          这里只是示意。真正要配的时候，<strong>一律以 Moonshot / Kimi 官方"在 Claude Code 中使用"的文档为准</strong>，照着它给的最新值填。
+        </p>
+        <p>
+          好处一句话：<strong>没有 Claude 账号、或想用国产模型，也能用上同一套 Claude Code 工作流</strong>——学的还是同一个工具，后面课程照样跟得上。
+        </p>
+      </div>
+      <p class="bridge">↓ 除了上面这几个，国产生态里还有不少同路数的模型。了解一下就好，不用现在装。</p>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ========== 其他生态 ========== -->
+    <section id="ecosystem">
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8a8a94" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="2.5" />
+            <circle cx="5" cy="6" r="2" />
+            <circle cx="19" cy="6" r="2" />
+            <circle cx="5" cy="18" r="2" />
+            <circle cx="19" cy="18" r="2" />
+            <path d="M6.5 7.2 l4 3.4 M17.5 7.2 l-4 3.4 M6.5 16.8 l4 -3.4 M17.5 16.8 l-4 -3.4" />
+          </svg>
+        </span>
+        其他生态（了解即可，不用装）
+      </h2>
+      <p class="body">
+        好消息是：<strong>很多国产大模型都提供了"Anthropic 兼容接口"</strong>。
+        这意味着它们都能像上面的 Kimi 一样配进 Claude Code——
+        把第 9 步里的 <code>ANTHROPIC_BASE_URL</code> 和型号名<strong>换成对应厂商的值</strong>就行（<strong>具体以各家官方文档为准</strong>）。
+        所以你现在<strong>不用挨个折腾</strong>，知道有这么回事即可。
+      </p>
+      <p class="body" style="margin-top:1.8rem;"><strong>能配进 Claude Code 的国产模型（同 Kimi 路数）：</strong></p>
+      <dl class="terms">
+        <div>
+          <dt>GLM（智谱）</dt>
+          <dd>GLM 系列模型，有面向编程的套餐，可像 Kimi 一样配进 Claude Code。</dd>
+        </div>
+        <div>
+          <dt>MiniMax（海螺）</dt>
+          <dd>MiniMax 系列模型，同样提供 Anthropic 兼容接入。</dd>
+        </div>
+        <div>
+          <dt>通义千问 Qwen（阿里）</dt>
+          <dd>阿里的 Qwen 系列，也有 Anthropic 兼容接入方式。</dd>
+        </div>
+      </dl>
+      <p class="body" style="margin-top:1.8rem;"><strong>另外几种形态不同的工具（各一句话，知道即可）：</strong></p>
+      <ul>
+        <li><b>Cursor：</b>一款<strong>AI 代码编辑器</strong>——不是终端黑框，而是带界面的编辑器，AI 直接嵌在里面。</li>
+        <li><b>GitHub Copilot：</b><strong>编辑器里的 AI 补全</strong>——你敲代码它在旁边猜你下一行、自动补上。</li>
+        <li><b>Gemini CLI：</b>Google 出的<strong>终端工具</strong>，路数和 Claude Code、Codex 类似。</li>
+      </ul>
+      <p class="body">
+        再强调一遍：这些<strong>都只是"知道有这么回事"</strong>，不必现在折腾。把核心主力用熟，比收集一堆工具有用得多。
+      </p>
+      <p class="bridge">↓ 不管你装了哪一个，最后都用同一招确认它真的能用了。</p>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ========== 验证 ========== -->
+    <section id="verify">
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M8.5 12 l2.3 2.3 l4.7 -4.9" />
+          </svg>
+        </span>
+        <span class="c-back">验证你装好了</span>
+      </h2>
+      <p class="body">
+        装完<strong>任意一个</strong>之后，做个小测试就知道成没成：
+        进到<strong>任意一个文件夹</strong>，启动它（<code>claude</code> / <code>codex</code> / <code>kimi</code>），
+        然后<strong>给它派件小事</strong>，看它能不能正常回应、动手。比如：
+      </p>
+      <ul class="c-back">
+        <li>让它："<strong>用一句话介绍这个文件夹里有什么</strong>"——看它能不能读懂、答上来。</li>
+        <li>或者让它："<strong>新建一个 hello.txt，里面写一行字</strong>"——看它能不能真的动手建文件。</li>
+      </ul>
+      <p class="body">
+        只要它<strong>正常回应、或真的把活儿干了</strong>，就说明你已经装好、能用了。
+      </p>
+
+      <figure class="term">
+        <svg viewBox="0 0 540 200" role="img" aria-label="终端里给工具派一件小事并得到回应的示意" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="1" width="538" height="198" rx="12" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.16)" stroke-width="1" />
+          <line x1="1" y1="40" x2="539" y2="40" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
+          <circle cx="26" cy="20" r="5" fill="#fbbf24" />
+          <circle cx="44" cy="20" r="5" fill="rgba(255,255,255,0.25)" />
+          <circle cx="62" cy="20" r="5" fill="rgba(255,255,255,0.18)" />
+          <text class="svg-mono" x="270" y="25" text-anchor="middle" fill="#8a8a94" font-size="12">在文件夹里给它派个小活</text>
+          <text class="svg-mono" x="26" y="74"  font-size="13"><tspan fill="#fbbf24">&gt;</tspan><tspan fill="#d4d4d8"> 新建一个 hello.txt，写一行字</tspan></text>
+          <text class="svg-mono" x="26" y="100" font-size="12" fill="#8a8a94">  已创建 hello.txt …</text>
+          <text class="svg-mono" x="26" y="124" font-size="12" fill="#22d3ee">  ✓ 完成</text>
+          <text class="svg-mono" x="26" y="160" font-size="13"><tspan fill="#fbbf24">&gt;</tspan><tspan fill="#d4d4d8"> </tspan><tspan fill="#f5f5f7">▋</tspan></text>
+        </svg>
+        <figcaption>能听懂你的话、把小事办成——那就说明工具装好、可以开干了。</figcaption>
+      </figure>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ========== 小结 ========== -->
+    <div class="closing">
+      <h2 style="margin-bottom:0.4rem;">
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M8.5 12 l2.3 2.3 l4.7 -4.9" />
+          </svg>
+        </span>
+        <span style="color:#f5f5f7;">一句话记住</span>
+      </h2>
+      <p class="flow-line">
+        这些工具<strong>本是同一类</strong>、装法都像、用法相通——<strong>挑一个装好就能开干</strong>，不必都装、不必内耗；
+        <span class="c-front">本课程后续以 <strong>Claude Code</strong> 为主力</span>，
+        国内或没账号就用 <span class="c-term">Kimi 配置方案</span>兜底，其余<strong>了解即可</strong>。
+      </p>
+      <p class="body">
+        装好了、也验证能跑了，你就已经握住了进入开发世界的"那把钥匙"。
+        下一节，我们就<strong>搭建属于你自己的 AI 开发环境</strong>，把这把钥匙真正插进锁孔、开始动手。
+      </p>
+    </div>
+  </body>
+</html>
