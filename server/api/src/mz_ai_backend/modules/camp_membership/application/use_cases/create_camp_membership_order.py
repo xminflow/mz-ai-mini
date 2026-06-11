@@ -111,6 +111,6 @@ class CreateCampMembershipOrderUseCase:
             sku=CampMembershipSku(order.sku),
             amount_fen=order.amount_fen,
             status=CampOrderStatus(order.status),
-            code_url=order.code_url or native_result.code_url,
+            code_url=order.code_url,
             qr_expires_at=qr_expires_at,
         )
