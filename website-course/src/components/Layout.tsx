@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { useManifest } from '../lib/useManifest'
+import Sidebar from './Sidebar'
 
 export default function Layout() {
   const { manifest, error, loading } = useManifest()
@@ -20,7 +21,7 @@ export default function Layout() {
     <div className="flex h-screen">
       {/* Sidebar 在 Task 6 接入，这里先占位以验证布局 */}
       <aside className="w-72 shrink-0 overflow-y-auto border-r border-gray-200 bg-gray-50">
-        <div className="p-4 font-semibold">{manifest.title}</div>
+        <Sidebar manifest={manifest} />
       </aside>
       <main className="flex-1 overflow-hidden">
         <Outlet context={manifest} />
