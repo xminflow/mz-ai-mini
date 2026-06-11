@@ -19,7 +19,6 @@ export default function Layout() {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar 在 Task 6 接入，这里先占位以验证布局 */}
       <aside className="w-72 shrink-0 overflow-y-auto border-r border-gray-200 bg-gray-50">
         <Sidebar manifest={manifest} />
       </aside>
