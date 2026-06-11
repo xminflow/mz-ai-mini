@@ -2,8 +2,8 @@ import type { Manifest, FlatSection } from '../types'
 
 // 严格校验 manifest 结构，非法时抛出明确错误，禁止静默兜底
 export function parseManifest(data: unknown): Manifest {
-  if (!data || typeof data !== 'object') {
-    throw new Error('manifest 必须是对象')
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    throw new Error('manifest 必须是非数组对象')
   }
   const m = data as Record<string, unknown>
   if (typeof m.title !== 'string') {

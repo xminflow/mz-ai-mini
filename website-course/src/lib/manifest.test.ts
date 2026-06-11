@@ -23,6 +23,11 @@ describe('parseManifest', () => {
     expect(() => parseManifest({ title: 'x', chapters: [{ id: 'c', title: 't' }] })).toThrow()
     expect(() => parseManifest(null)).toThrow()
   })
+  it('小节缺少 file 时抛错', () => {
+    expect(() =>
+      parseManifest({ title: 'x', chapters: [{ id: 'c', title: 't', sections: [{ id: 's', title: 't' }] }] }),
+    ).toThrow()
+  })
 })
 
 describe('flattenSections', () => {
