@@ -37,10 +37,11 @@ class CampAccount(BaseModel):
     account_id: int
     username: str
     email: str | None
-    password_hash: str | None
-    password_salt: str | None
-    password_scheme_version: str | None
     status: CampAccountStatus
+    # 报名/会员状态（none/enrolled/expired）；camp 无密码登录，故不含 password 字段
+    enrollment_status: str
+    enrolled_at: datetime | None
+    enrollment_expires_at: datetime | None
     is_deleted: bool
     created_at: datetime
     updated_at: datetime
