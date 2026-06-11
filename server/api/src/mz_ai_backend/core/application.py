@@ -8,6 +8,7 @@ from fastapi import FastAPI
 from ..modules import (
     agent_auth_router,
     camp_auth_router,
+    camp_membership_router,
     wechat_callback_router,
     account_membership_router,
     auth_router,
@@ -88,6 +89,7 @@ def create_app() -> FastAPI:
     register_exception_handlers(app)
     app.include_router(agent_auth_router, prefix=settings.api_prefix)
     app.include_router(camp_auth_router, prefix=settings.api_prefix)
+    app.include_router(camp_membership_router, prefix=settings.api_prefix)
     app.include_router(wechat_callback_router, prefix=settings.api_prefix)
     app.include_router(account_membership_router, prefix=settings.api_prefix)
     app.include_router(auth_router, prefix=settings.api_prefix)
