@@ -205,6 +205,15 @@
         dl.terms > div { grid-template-columns: 1fr; gap: 0.15rem; }
         .forms { gap: 1.4rem 1.4rem; justify-content: space-between; }
       }
+
+      /* 本节速览：学习目标 + 目录 + 段落过渡 */
+      .goals { margin: 1.8rem 0 0; }
+      .goals .gh { font-size: 0.8rem; letter-spacing: 0.14em; color: #8a8a94; margin: 0; }
+      .goals ul { margin: 0.6rem 0 0; }
+      .toc { margin: 1.1rem 0 0; font-size: 0.86rem; color: #8a8a94; line-height: 2; }
+      .toc a { color: #d4d4d8; text-decoration: none; border-bottom: 1px solid transparent; }
+      .toc a:hover { color: #a78bfa; border-bottom-color: rgba(167, 139, 250, 0.5); }
+      .bridge { color: #8a8a94; font-size: 0.95rem; margin: 1.8rem 0 0; }
     </style>
   </head>
   <body>
@@ -212,22 +221,47 @@
       <p class="eyebrow">AI 基础工具学习 · 第一节</p>
       <h1>开发世界速览</h1>
       <p class="lead">
-        用大白话讲清<strong>前端、后端、数据库、终端</strong>这四个词，
-        给后面所有内容打地基。先鸟瞰全貌，再逐个深入。
+        用大白话带你<strong>鸟瞰整个开发世界</strong>：前端、后端、数据库、终端是什么、怎么连，
+        再到东西跑在哪、上网背后发生了什么、用什么造、一个软件怎么从想法做到上线，以及 AI 让这一切变成了什么样——
+        为后面所有内容打地基。
       </p>
     </header>
 
     <section>
       <p class="body">
         欢迎进入开发世界。你可能听过"前端""后端""数据库""终端"这些词，
-        它们听起来像四个互不相干的黑话，其实只是一套系统里分工不同的四个角色。
-        这一节我们不写一行代码，只把这四个角色的<strong>位置、职责、彼此怎么连</strong>讲明白。
-        理解了它们的关系，后面学任何工具、看任何教程，你心里都有一张地图，不会再被术语绕晕。
+        它们听起来像几句互不相干的黑话，其实只是一套系统里分工不同的角色。
+        这一节我们不写一行代码，先把这些角色的<strong>位置、职责、彼此怎么连</strong>讲明白，
+        再顺着延伸到几个能一眼看清全貌的问题。理解了它们，后面学任何工具、看任何教程，你心里都有一张地图，不会再被术语绕晕。
       </p>
+
+      <div class="goals">
+        <p class="gh">本节你会搞懂</p>
+        <ul>
+          <li>前端 / 后端 / 数据库 / 终端各是什么，怎么配合</li>
+          <li>程序到底"跑在哪"：你的设备 vs 远端服务器</li>
+          <li>点开一个网页，背后 1 秒里发生了什么</li>
+          <li>用什么"造"软件，造出来又有哪些"形态"</li>
+          <li>一个软件怎么从想法一步步做到上线</li>
+          <li>AI 把开发变成了什么样、对你意味着什么</li>
+        </ul>
+      </div>
+
+      <nav class="toc">
+        本节速览：
+        <a href="#roles">四个角色</a> ·
+        <a href="#flow">怎么协作</a> ·
+        <a href="#where">跑在哪</a> ·
+        <a href="#network">上网背后</a> ·
+        <a href="#built">用什么造</a> ·
+        <a href="#process">怎么做出来</a> ·
+        <a href="#ai">AI 范式</a> ·
+        <a href="#glossary">术语速查</a>
+      </nav>
     </section>
 
     <!-- ========== 贯穿全节的大比喻 ========== -->
-    <div class="analogy">
+    <div class="analogy" id="roles">
       <p>
         先给你一个能贯穿全节的比喻：<strong>把一个 App 或网站想象成一家餐厅。</strong>
       </p>
@@ -450,8 +484,18 @@
     </section>
 
     <!-- ========== 收尾：它们如何协作 ========== -->
-    <div class="closing">
-      <h2 style="color:#f5f5f7; margin-bottom:0.4rem;">它们如何协作</h2>
+    <div class="closing" id="flow">
+      <h2 style="margin-bottom:0.4rem;">
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8a8a94" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="6" cy="12" r="2.5" />
+            <circle cx="18" cy="6" r="2.5" />
+            <circle cx="18" cy="18" r="2.5" />
+            <path d="M8.2 11 L15.8 7 M8.2 13 L15.8 17" />
+          </svg>
+        </span>
+        <span style="color:#f5f5f7;">它们如何协作</span>
+      </h2>
       <p class="body">
         把四个角色串起来，一次完整的请求是这样跑的：
       </p>
@@ -475,7 +519,7 @@
     <hr class="rule" />
 
     <!-- ========== ① 程序跑在哪：你的设备 vs 远端服务器 ========== -->
-    <section>
+    <section id="where">
       <h2>
         <span class="ico" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -549,12 +593,13 @@
         </svg>
         <figcaption>近的一头管展示和交互，远的一头管存和算；中间隔着一段网络，靠一来一回传消息。</figcaption>
       </figure>
+      <p class="bridge">↓ 既然靠网络一来一回，那这"一来一回"到底怎么跑？下面拿"点开一个网页"放慢看一遍。</p>
     </section>
 
     <hr class="rule" />
 
     <!-- ========== ② 点开一个网页，背后 1 秒发生了什么 ========== -->
-    <section>
+    <section id="network">
       <h2>
         <span class="ico" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -641,12 +686,13 @@
         </svg>
         <figcaption>请求一路送过去，页面一路传回来；转圈，就是这一来一回还没跑完。</figcaption>
       </figure>
+      <p class="bridge">↓ 知道了东西在哪、怎么传，接着看：这些东西到底是用什么"造"出来的，又会以什么"形态"出现在你面前。</p>
     </section>
 
     <hr class="rule" />
 
     <!-- ========== ③ 用什么造、造出来什么样 ========== -->
-    <section>
+    <section id="built">
       <h2>
         <span class="ico" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -754,12 +800,13 @@
         这其实就呼应了前面术语里说的<strong>"客户端 / 网页版 / 小程序"</strong>——
         同一个服务，换个"长相"给你用而已；而最后那个"后台服务"，就是前面那个看不见的<span class="c-back">后端</span>在干的活。
       </p>
+      <p class="bridge">↓ 材料和形态都清楚了，那把它们拼成一个能用的软件，整个过程是怎么走的？</p>
     </section>
 
     <hr class="rule" />
 
     <!-- ========== ④ 软件怎么做出来：从想法到上线 ========== -->
-    <section>
+    <section id="process">
       <h2>
         <span class="ico" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -789,7 +836,7 @@
       </p>
 
       <figure>
-        <svg viewBox="0 0 760 220" role="img" aria-label="软件从需求到迭代的循环步骤流" xmlns="http://www.w3.org/2000/svg">
+        <svg viewBox="0 0 760 236" role="img" aria-label="软件从需求到迭代的循环步骤流" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <marker id="ar-flow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
               <path d="M0 0 L10 5 L0 10 z" fill="#8a8a94" />
@@ -841,19 +888,20 @@
           <line x1="456" y1="70" x2="552" y2="70" stroke="#8a8a94" stroke-width="1.2" marker-end="url(#ar-flow)" />
           <line x1="580" y1="70" x2="676" y2="70" stroke="#8a8a94" stroke-width="1.2" marker-end="url(#ar-flow)" />
 
-          <!-- 迭代 -> 需求 的循环弧线（虚线，紫色） -->
-          <path d="M690 84 C 690 180, 70 180, 70 84" fill="none" stroke="#a78bfa" stroke-width="1.3"
+          <!-- 迭代 -> 需求 的循环弧线（虚线，紫色）：向外侧绕开两端的小字 -->
+          <path d="M690 84 C 758 122, 748 188, 380 188 C 12 188, 62 122, 70 84" fill="none" stroke="#a78bfa" stroke-width="1.3"
                 stroke-dasharray="5 4" opacity="0.85" marker-end="url(#ar-loop)" />
-          <text class="svg-sub" x="380" y="200" text-anchor="middle" fill="#a78bfa">上线不是终点，绕回来继续做下一轮</text>
+          <text class="svg-sub" x="380" y="218" text-anchor="middle" fill="#a78bfa">上线不是终点，绕回来继续做下一轮</text>
         </svg>
         <figcaption>从一个想法到上线，是一群人接力；而上线之后又绕回开头——软件就这么一轮轮转着长大。</figcaption>
       </figure>
+      <p class="bridge">↓ 这一整套流程，今天有了 AI 正在被重新改写——最后看看它把开发变成了什么样。</p>
     </section>
 
     <hr class="rule" />
 
     <!-- ========== ⑤ AI 把开发变成了什么样 ========== -->
-    <section>
+    <section id="ai">
       <h2>
         <span class="ico" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -953,8 +1001,33 @@
 
     <hr class="rule" />
 
+    <!-- ========== 本节小结 ========== -->
+    <div class="closing">
+      <h2 style="margin-bottom:0.4rem;">
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M8.5 12 l2.3 2.3 l4.7 -4.9" />
+          </svg>
+        </span>
+        <span style="color:#f5f5f7;">一句话记住</span>
+      </h2>
+      <p class="flow-line">
+        一套软件 ＝ <span class="c-front">前端</span>看得见的界面 ＋ <span class="c-back">后端</span>背后的逻辑 ＋ <span class="c-data">数据库</span>存的数据，
+        <span class="c-term">终端</span>是开发者的操控台；它们分布在<strong>你的设备</strong>和<strong>远端服务器</strong>上、靠网络一来一回；
+        用各种<strong>语言</strong>造、以网站 / App / 小程序等<strong>形态</strong>示人；
+        由一群人按<strong>「需求 → 设计 → 开发 → 测试 → 上线 → 迭代」</strong>做出来并持续更新——而这一切，<strong>AI</strong> 正帮你把门槛大幅降低。
+      </p>
+      <p class="body">
+        记住这张地图，后面每学一个工具、写一行代码，你都知道它落在哪儿。
+        下一节，我们就动手认识第一批 <strong>AI 编程工具</strong>。
+      </p>
+    </div>
+
+    <hr class="rule" />
+
     <!-- ========== 术语速查 ========== -->
-    <section class="gloss">
+    <section class="gloss" id="glossary">
       <h2 style="color:#f5f5f7;">你常听到的那些词</h2>
       <p class="body">
         这些词你多半在新闻、朋友聊天、产品公告里听过，但未必说得清。
