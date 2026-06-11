@@ -50,7 +50,7 @@ export async function readAuthCookies(): Promise<AuthCookieSnapshot> {
 }
 
 // Next.js 15.5+ 在 Server Component 渲染期间禁止改 cookie；只有 Server Action / Route Handler 可以。
-// getWebsiteAuthState 同时被 layout(Server Component) 和 /api/auth/* (Route Handler) 复用，
+// getCampAuthState 同时被 layout(Server Component) 和 /api/auth/* (Route Handler) 复用，
 // 因此 write/clear 在 layout 路径上需要显式跳过，避免抛错把整个页面打挂。
 // 跳过不是静默兜底：会发出 console.warn，调用方拿到 false 也能据此推断写入是否生效。
 function isReadonlyCookieContextError(error: unknown): boolean {

@@ -10,6 +10,8 @@ import { isProtectedPath } from '@/features/auth/protected-routes'
 import { refreshSession, WebsiteAuthError } from '@/features/auth/server/backend'
 import type { AuthPayload } from '@/features/auth/types'
 
+// 本地复制 cookies.ts 的 isExpired：middleware 跑在 Edge runtime，不能 import 依赖
+// next/headers 的 cookies.ts；两处实现需保持一致，勿在"清理重复"时删除本函数。
 function isExpired(value: string | null | undefined): boolean {
   if (!value) return true
   const t = new Date(value).getTime()
