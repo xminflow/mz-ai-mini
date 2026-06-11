@@ -1,4 +1,4 @@
-import type { AuthAccount, AuthPayload, WechatLoginSession, WechatLoginSessionStatus } from '../types'
+import type { AuthAccount, AuthPayload, CampMembership, WechatLoginSession, WechatLoginSessionStatus } from '../types'
 
 const DEFAULT_DEV_API_BASE_URL = 'http://127.0.0.1:8000/api/v1'
 const DEFAULT_PRODUCTION_API_BASE_URL = 'https://api.weelume.com/api/v1'
@@ -17,6 +17,7 @@ type UpstreamAuthAccount = {
   email?: unknown
   status?: unknown
   created_at?: unknown
+  membership?: unknown
 }
 
 type UpstreamAuthTokens = {
@@ -63,6 +64,28 @@ function asString(value: unknown): string {
   return typeof value === 'string' ? value : ''
 }
 
+type UpstreamCampMembership = {
+  tier?: unknown
+  is_active?: unknown
+  expires_at?: unknown
+  remaining_days?: unknown
+}
+
+function normalizeMembership(raw: unknown): CampMembership | null {
+  if (!raw || typeof raw !== 'object') return null
+  const m = raw as UpstreamCampMembership
+  const tier = m.tier === 'basic' || m.tier === 'premium' ? m.tier : 'none'
+  return {
+    tier,
+    is_active: m.is_active === true,
+    expires_at: typeof m.expires_at === 'string' ? m.expires_at : null,
+    remaining_days:
+      typeof m.remaining_days === 'number' && Number.isFinite(m.remaining_days)
+        ? m.remaining_days
+        : 0,
+  }
+}
+
 function normalizeAccount(raw: UpstreamAuthAccount): AuthAccount {
   return {
     account_id: asString(raw.account_id),
@@ -70,6 +93,7 @@ function normalizeAccount(raw: UpstreamAuthAccount): AuthAccount {
     email: asString(raw.email) || null,
     status: raw.status === 'disabled' ? 'disabled' : 'active',
     created_at: asString(raw.created_at),
+    membership: normalizeMembership(raw.membership),
   }
 }
 

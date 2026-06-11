@@ -1,9 +1,19 @@
+export type CampMembershipTier = 'none' | 'basic' | 'premium'
+
+export type CampMembership = {
+  tier: CampMembershipTier
+  is_active: boolean
+  expires_at: string | null
+  remaining_days: number
+}
+
 export type AuthAccount = {
   account_id: string
   username: string
   email: string | null
   status: 'active' | 'disabled'
   created_at: string
+  membership: CampMembership | null
 }
 
 export type AuthTokenSet = {
