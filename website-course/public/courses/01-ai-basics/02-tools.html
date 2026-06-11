@@ -260,10 +260,12 @@
         <p class="gh">本节你会搞懂</p>
         <ul>
           <li>市面上的"AI 编程助手"其实是<strong>同一类东西</strong>，不用都装</li>
+          <li>它们<strong>不只是写代码</strong>，更是能替你干很多事的"全能智能体"</li>
           <li>面对这么多工具<strong>该怎么选</strong>，怎么降低学习负担</li>
           <li>四种主流方案的<strong>完整安装步骤</strong>，照着敲就行</li>
           <li>就算<strong>没有 Claude 账号</strong>，也能用国产模型把 Claude Code 跑起来</li>
           <li>国产大模型生态里还有哪些"知道有就行"的工具</li>
+          <li>国内网络<strong>装不上 / 连不上</strong>时，有哪些应对办法</li>
           <li>装完之后<strong>怎么验证</strong>它真的能用了</li>
         </ul>
       </div>
@@ -271,11 +273,13 @@
       <nav class="toc">
         本节速览：
         <a href="#why">选哪个</a> ·
+        <a href="#agent">不只是写代码</a> ·
         <a href="#overview">四方案速览</a> ·
         <a href="#install-claude">装 Claude Code</a> ·
         <a href="#install-codex">装 Codex</a> ·
         <a href="#install-kimi">装 Kimi CLI</a> ·
         <a href="#claude-kimi">Kimi 驱动 Claude Code</a> ·
+        <a href="#network-cn">国内网络</a> ·
         <a href="#ecosystem">其他生态</a> ·
         <a href="#verify">验证装好了</a>
       </nav>
@@ -310,7 +314,82 @@
         但为了让你按手头条件灵活选择，下面会把 <strong>4 种主流方案都讲全</strong>——
         有 Claude 账号的直接用官方，国内或没账号的也有兜底方案。
       </p>
-      <p class="bridge">↓ 先用一张图把这四个方案的关系理清楚，你就知道它们各是什么、怎么连。</p>
+      <p class="bridge">↓ 不过在挑工具之前，先纠正一个常见误解——它远不止是个"编程工具"。</p>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ========== 不只是写代码：通用智能体 ========== -->
+    <section id="agent">
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3 l1.8 4.4 L18 9 l-4.2 1.6 L12 15 l-1.8-4.4 L6 9 l4.2-1.6 z" />
+            <path d="M18.5 14 l.8 2 l2 .8 l-2 .8 l-.8 2 l-.8-2 l-2-.8 l2-.8 z" />
+          </svg>
+        </span>
+        <span class="c-front">不只是写代码：它是个"全能智能体"</span>
+      </h2>
+      <p class="body">
+        别被"编程工具"四个字框住了。<strong>Claude Code 这一类工具，本质是"会用工具、能自己动手干活的通用智能体（AI agent）"</strong>——
+        写代码只是它最拿手的一个场景。它也是目前你能用到的<strong>最能干的 AI 助手之一</strong>。
+      </p>
+      <p class="body">
+        和普通聊天 AI 最大的区别是：<strong>聊天 AI 只会"说"，你还得照着自己动手；而它能"真的动手"</strong>——
+        读你电脑里的文件、改文件、上网查、运行命令、看到结果再调整，一条龙把事办完。
+      </p>
+
+      <figure>
+        <svg viewBox="0 0 700 352" role="img" aria-label="一个 AI 智能体可以胜任的多种本领" xmlns="http://www.w3.org/2000/svg">
+          <!-- 连线 -->
+          <line x1="275" y1="196" x2="182" y2="84" stroke="#8a8a94" stroke-width="1.2" />
+          <line x1="275" y1="196" x2="182" y2="196" stroke="#8a8a94" stroke-width="1.2" />
+          <line x1="275" y1="196" x2="182" y2="310" stroke="#8a8a94" stroke-width="1.2" />
+          <line x1="425" y1="196" x2="518" y2="84" stroke="#8a8a94" stroke-width="1.2" />
+          <line x1="425" y1="196" x2="518" y2="196" stroke="#8a8a94" stroke-width="1.2" />
+          <line x1="425" y1="196" x2="518" y2="310" stroke="#8a8a94" stroke-width="1.2" />
+          <circle cx="180" cy="82" r="2.5" fill="#22d3ee" />
+          <circle cx="180" cy="196" r="2.5" fill="#f472b6" />
+          <circle cx="180" cy="310" r="2.5" fill="#fbbf24" />
+          <circle cx="520" cy="82" r="2.5" fill="#a78bfa" />
+          <circle cx="520" cy="196" r="2.5" fill="#34d399" />
+          <circle cx="520" cy="310" r="2.5" fill="#22d3ee" />
+
+          <!-- 中心：智能体 -->
+          <rect x="275" y="168" width="150" height="56" rx="10" fill="none" stroke="#a78bfa" stroke-width="1.6" />
+          <text class="svg-title" x="350" y="190" text-anchor="middle">AI 智能体</text>
+          <text class="svg-sub" x="350" y="210" text-anchor="middle">Claude Code 这类工具</text>
+
+          <!-- 六个本领节点 -->
+          <rect x="30" y="60" width="150" height="44" rx="8" fill="none" stroke="rgba(255,255,255,0.16)" />
+          <text class="svg-label" x="105" y="82" text-anchor="middle" dominant-baseline="central" fill="#22d3ee">整理文件</text>
+          <rect x="30" y="174" width="150" height="44" rx="8" fill="none" stroke="rgba(255,255,255,0.16)" />
+          <text class="svg-label" x="105" y="196" text-anchor="middle" dominant-baseline="central" fill="#f472b6">处理表格 / 数据</text>
+          <rect x="30" y="288" width="150" height="44" rx="8" fill="none" stroke="rgba(255,255,255,0.16)" />
+          <text class="svg-label" x="105" y="310" text-anchor="middle" dominant-baseline="central" fill="#fbbf24">自动化杂活</text>
+          <rect x="520" y="60" width="150" height="44" rx="8" fill="none" stroke="rgba(255,255,255,0.16)" />
+          <text class="svg-label" x="595" y="82" text-anchor="middle" dominant-baseline="central" fill="#a78bfa">查资料 / 写作</text>
+          <rect x="520" y="174" width="150" height="44" rx="8" fill="none" stroke="rgba(255,255,255,0.16)" />
+          <text class="svg-label" x="595" y="196" text-anchor="middle" dominant-baseline="central" fill="#34d399">私人助理 / 老师</text>
+          <rect x="520" y="288" width="150" height="44" rx="8" fill="none" stroke="rgba(255,255,255,0.16)" />
+          <text class="svg-label" x="595" y="310" text-anchor="middle" dominant-baseline="central" fill="#22d3ee">连接更多工具</text>
+        </svg>
+        <figcaption>同一个智能体，能胜任的远不止写代码——下面挨个举例。</figcaption>
+      </figure>
+
+      <ul>
+        <li><b><span class="c-back">整理文件：</span></b>批量重命名、把上百张照片按日期归类、把一堆文件统一转格式——动动嘴它就办了。</li>
+        <li><b><span class="c-data">处理表格 / 数据：</span></b>读 Excel / CSV，帮你汇总、算账、挑出异常、生成报表，甚至画个图。</li>
+        <li><b><span class="c-term">自动化杂活：</span></b>每天机械重复的操作，让它写个小流程，以后一句话一键搞定。</li>
+        <li><b><span class="c-front">查资料 / 写作：</span></b>联网搜资料、读网页、整理成笔记；帮你写文案、邮件、周报、翻译。</li>
+        <li><b style="color:#34d399;">私人助理 / 老师：</b>不懂就问、要做啥跟它说，它边查边干，还顺手把原理讲给你听。</li>
+        <li><b><span class="c-back">连接更多工具：</span></b>它能接上浏览器、数据库、各种软件和服务（业界叫 <code>MCP</code>），本事越扩越大。</li>
+      </ul>
+      <p class="body">
+        所以它更像一个<strong>什么都能搭把手的"数字员工"</strong>：你负责说清楚要什么、把关结果，它负责把活儿干完。
+        正因为这样，<strong>就算你完全不写代码，也值得装一个</strong>——它能成为你工作和生活里最能干的那个助手。
+      </p>
+      <p class="bridge">↓ 回到正题。先用一张图，把下面这四个安装方案的关系理清楚。</p>
     </section>
 
     <hr class="rule" />
@@ -567,7 +646,54 @@
           好处一句话：<strong>没有 Claude 账号、或想用国产模型，也能用上同一套 Claude Code 工作流</strong>——学的还是同一个工具，后面课程照样跟得上。
         </p>
       </div>
-      <p class="bridge">↓ 除了上面这几个，国产生态里还有不少同路数的模型。了解一下就好，不用现在装。</p>
+      <p class="bridge">↓ 装的过程中，国内网络可能会拖后腿。下面专门说说怎么应对。</p>
+    </section>
+
+    <hr class="rule" />
+
+    <!-- ========== 国内网络 ========== -->
+    <section id="network-cn">
+      <h2>
+        <span class="ico" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M3 12 h18 M12 3 a14 14 0 0 1 0 18 M12 3 a14 14 0 0 0 0 18" />
+          </svg>
+        </span>
+        <span class="c-back">国内网络：装不上 / 连不上怎么办</span>
+      </h2>
+      <p class="body">
+        实话实说：上面有些步骤在国内网络下可能会卡——安装脚本下载、<code>npm</code> 下包、
+        以及登录 / 调用<strong>官方 Claude（海外服务）</strong>时，可能很慢甚至连不上。
+        <strong>这不是你装错了，是网络的事</strong>。下面三招按顺序试。
+      </p>
+      <ul class="c-back">
+        <li>
+          <b>首选：用国产方案，从根上绕开。</b>
+          直接用 <strong>Kimi CLI</strong>（国产、用 Kimi 账号），或用前面的 <strong>「Claude Code + Kimi」配置</strong>——
+          它连的是国内端点 <code>api.moonshot.cn</code>，走国内网络、稳定。GLM、MiniMax 同理。这样安装和使用都不依赖海外网络。
+        </li>
+        <li>
+          <b><code>npm</code> 慢 / 失败：换国内镜像。</b>
+          如果用 <code>npm</code> 安装卡住，把下载源换成国内镜像再装，会快很多：
+        </li>
+      </ul>
+      <div class="cmd"><span class="c-os">把 npm 源换成国内镜像</span><span class="prompt">$ </span>npm config set registry https://registry.npmmirror.com
+<span class="c-os">想换回官方源</span><span class="prompt">$ </span>npm config set registry https://registry.npmjs.org</div>
+      <ul class="c-back">
+        <li>
+          <b>要用官方 Claude / Codex：需要稳定的国际网络。</b>
+          它们是海外服务，国内直连常不稳。如果你有<strong>合规的网络代理 / 加速</strong>，让终端走代理后再安装、登录即可；
+          没有的话，就走第 1 招用国产方案——课程后续以 Claude Code 为主力，<strong>用 Kimi 后端照样跟得上</strong>。
+        </li>
+      </ul>
+      <div class="analogy">
+        <p>
+          一句话原则：<strong>能用国产端点就优先用国产端点</strong>——安装走 npm 镜像、模型走国内端点，
+          把"必须连海外"的环节降到最低；实在要用官方服务，再考虑合规代理。
+        </p>
+      </div>
+      <p class="bridge">↓ 除了 Kimi，国产生态里还有不少同路数的模型，了解一下就好，不用现在装。</p>
     </section>
 
     <hr class="rule" />
