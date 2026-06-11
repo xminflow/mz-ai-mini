@@ -22,8 +22,6 @@ from mz_ai_backend.modules.agent_auth.infrastructure.dependencies import (
     get_create_wechat_login_session_use_case,
     get_exchange_wechat_login_use_case,
     get_get_wechat_login_session_use_case,
-    get_handle_wechat_callback_use_case,
-    get_official_wechat_gateway,
     get_request_email_binding_challenge_use_case,
     get_verify_email_binding_challenge_use_case,
 )
@@ -69,19 +67,6 @@ class StubExchangeWechatLoginUseCase:
                 refresh_token_expires_at=datetime.now(UTC) + timedelta(days=30),
             ),
         )
-
-
-class StubHandleWechatCallbackUseCase:
-    def __init__(self) -> None:
-        self.commands: list[object] = []
-
-    async def execute(self, command) -> None:
-        self.commands.append(command)
-
-
-class StubWechatGateway:
-    def verify_callback_signature(self, *, signature, timestamp, nonce) -> bool:
-        return signature == "valid-signature" and timestamp == "1" and nonce == "2"
 
 
 class StubRequestEmailBindingChallengeUseCase:
@@ -131,11 +116,9 @@ def _build_client(
     create_use_case: StubCreateWechatLoginSessionUseCase | None = None,
     status_use_case: StubGetWechatLoginSessionUseCase | None = None,
     exchange_use_case: StubExchangeWechatLoginUseCase | None = None,
-    callback_use_case: StubHandleWechatCallbackUseCase | None = None,
     request_email_binding_use_case: StubRequestEmailBindingChallengeUseCase | None = None,
     verify_email_binding_use_case: StubVerifyEmailBindingChallengeUseCase | None = None,
     change_username_use_case: StubChangeAgentUsernameUseCase | None = None,
-    gateway: StubWechatGateway | None = None,
 ) -> TestClient:
     app = create_app()
     if create_use_case is not None:
@@ -144,8 +127,6 @@ def _build_client(
         app.dependency_overrides[get_get_wechat_login_session_use_case] = lambda: status_use_case
     if exchange_use_case is not None:
         app.dependency_overrides[get_exchange_wechat_login_use_case] = lambda: exchange_use_case
-    if callback_use_case is not None:
-        app.dependency_overrides[get_handle_wechat_callback_use_case] = lambda: callback_use_case
     if request_email_binding_use_case is not None:
         app.dependency_overrides[get_request_email_binding_challenge_use_case] = (
             lambda: request_email_binding_use_case
@@ -156,8 +137,6 @@ def _build_client(
         )
     if change_username_use_case is not None:
         app.dependency_overrides[get_change_agent_username_use_case] = lambda: change_username_use_case
-    if gateway is not None:
-        app.dependency_overrides[get_official_wechat_gateway] = lambda: gateway
     return TestClient(app, raise_server_exceptions=False)
 
 
@@ -194,22 +173,6 @@ def test_agent_auth_router_exchanges_wechat_login_session() -> None:
     assert body["data"]["tokens"]["access_token"] == "access-1"
     assert body["data"]["tokens"]["access_token_expires_at"].endswith("Z")
     assert body["data"]["tokens"]["refresh_token_expires_at"].endswith("Z")
-
-
-def test_agent_auth_router_verifies_wechat_callback() -> None:
-    with _build_client(gateway=StubWechatGateway()) as client:
-        response = client.get(
-            "/api/v1/agent-auth/wechat-official/callback",
-            params={
-                "signature": "valid-signature",
-                "timestamp": "1",
-                "nonce": "2",
-                "echostr": "hello",
-            },
-        )
-
-    assert response.status_code == 200
-    assert response.text == "hello"
 
 
 def test_agent_auth_router_requests_email_binding_challenge() -> None:
@@ -269,22 +232,3 @@ def test_agent_auth_router_change_username_rejects_invalid_format() -> None:
     assert response.status_code == 422
 
 
-def test_agent_auth_router_handles_wechat_callback() -> None:
-    callback_use_case = StubHandleWechatCallbackUseCase()
-    with _build_client(callback_use_case=callback_use_case, gateway=StubWechatGateway()) as client:
-        response = client.post(
-            "/api/v1/agent-auth/wechat-official/callback",
-            params={
-                "signature": "valid-signature",
-                "timestamp": "1",
-                "nonce": "2",
-            },
-            content=(
-                "<xml><FromUserName>openid-1</FromUserName><CreateTime>1</CreateTime>"
-                "<Event>subscribe</Event><EventKey>qrscene_agent-login-1</EventKey></xml>"
-            ),
-        )
-
-    assert response.status_code == 200
-    assert response.text == "success"
-    assert len(callback_use_case.commands) == 1
