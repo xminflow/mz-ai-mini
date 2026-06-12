@@ -12,7 +12,7 @@ export function Figure({
   children,
 }: {
   title?: string
-  caption?: string
+  caption?: ReactNode
   children: ReactNode
 }): React.JSX.Element {
   return (

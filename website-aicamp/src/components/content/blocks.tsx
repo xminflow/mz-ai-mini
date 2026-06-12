@@ -59,6 +59,7 @@ const toneStyles: Record<
 interface CalloutProps {
   tone?: 'analogy' | 'bridge' | 'closing' | 'note'
   label?: string
+  id?: string // 锚点 id（供本节速读等页内跳转）
   children: ReactNode
 }
 
@@ -69,13 +70,14 @@ interface CalloutProps {
  * - closing  → 顶部细线，宽松上边距（原 .closing）
  * - note     → 琥珀左线（通用提示）
  */
-export function Callout({ tone = 'analogy', label, children }: CalloutProps): React.JSX.Element {
+export function Callout({ tone = 'analogy', label, id, children }: CalloutProps): React.JSX.Element {
   const style = toneStyles[tone]
   const displayLabel = label ?? style.label
 
   if (tone === 'closing') {
     return (
       <div
+        id={id}
         className="mt-[3.4rem] pt-[2.2rem]"
         style={{ borderTop: `1px solid ${style.border}` }}
       >
@@ -93,6 +95,7 @@ export function Callout({ tone = 'analogy', label, children }: CalloutProps): Re
     // 用 <div> 而非 <p>：children 为 ReactNode，可能含块级元素，块级套 <p> 是非法 HTML
     return (
       <div
+        id={id}
         className="mt-[1.8rem] text-[0.95rem] text-muted"
         style={{ borderLeft: `2px solid ${style.border}`, paddingLeft: '1rem' }}
       >
@@ -104,6 +107,7 @@ export function Callout({ tone = 'analogy', label, children }: CalloutProps): Re
   // analogy / note — left-border block
   return (
     <div
+      id={id}
       className="mt-[2.4rem]"
       style={{ paddingLeft: '1.2rem', borderLeft: `2px solid ${style.border}` }}
     >
