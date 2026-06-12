@@ -21,6 +21,7 @@ from mz_ai_backend.modules.agent_auth.infrastructure.dependencies import (
 
 from ..application.use_cases import (
     CreateCampWechatLoginSessionUseCase,
+    DevCampFakeLoginUseCase,
     ExchangeCampWechatLoginUseCase,
     GetCurrentCampAccountUseCase,
     GetCampWechatLoginSessionUseCase,
@@ -189,4 +190,27 @@ def get_handle_camp_wechat_callback_use_case(
     return HandleCampWechatCallbackUseCase(
         account_repository=account_repository,
         snowflake_id_generator=snowflake_id_generator,
+    )
+
+
+def get_dev_camp_fake_login_use_case(
+    account_repository: Annotated[
+        SqlAlchemyCampAccountRepository,
+        Depends(get_camp_account_repository),
+    ],
+    token_service: Annotated[Sha256TokenService, Depends(get_camp_token_service)],
+    snowflake_id_generator: Annotated[
+        SnowflakeGenerator,
+        Depends(get_snowflake_id_generator),
+    ],
+    settings: Annotated[Settings, Depends(get_settings_dependency)],
+) -> DevCampFakeLoginUseCase:
+    """Construct the dev-only camp fake login use case (env=production 时路由层 404 拒绝)。"""
+
+    return DevCampFakeLoginUseCase(
+        account_repository=account_repository,
+        token_service=token_service,
+        snowflake_id_generator=snowflake_id_generator,
+        access_token_ttl_seconds=settings.camp_auth_access_token_ttl_seconds,
+        refresh_token_ttl_days=settings.camp_auth_refresh_token_ttl_days,
     )
