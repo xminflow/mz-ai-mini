@@ -9,7 +9,9 @@ from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
 
-from ..dtos import CampAccountRegistration, DevCampFakeLoginCommand
+from mz_ai_backend.shared import SnowflakeGenerator
+
+from ..dtos import CampAccountRegistration, CampAuthenticationResult, DevCampFakeLoginCommand
 from ..ports import CampAccountRepository, TokenService
 from ...domain import CampAccountStatus
 from ._session_tokens import issue_camp_auth_tokens
@@ -25,7 +27,7 @@ class DevCampFakeLoginUseCase:
         *,
         account_repository: CampAccountRepository,
         token_service: TokenService,
-        snowflake_id_generator,
+        snowflake_id_generator: SnowflakeGenerator,
         access_token_ttl_seconds: int,
         refresh_token_ttl_days: int,
     ) -> None:
@@ -35,7 +37,7 @@ class DevCampFakeLoginUseCase:
         self._access_token_ttl_seconds = access_token_ttl_seconds
         self._refresh_token_ttl_days = refresh_token_ttl_days
 
-    async def execute(self, command: DevCampFakeLoginCommand):
+    async def execute(self, command: DevCampFakeLoginCommand) -> CampAuthenticationResult:
         account = await self._account_repository.get_account_by_username(command.username)
         if account is None:
             account = await self._account_repository.create_account(
