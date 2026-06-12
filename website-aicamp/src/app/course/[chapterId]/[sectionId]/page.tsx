@@ -3,10 +3,10 @@ import { notFound, redirect } from 'next/navigation'
 import { getCampAuthState } from '@/features/auth/server/session'
 import { canAccessChapter } from '@/features/course/access'
 import { loadManifest } from '@/features/course/load-manifest'
-import { loadSectionContent } from '@/features/course/load-section-content'
+import { loadLesson } from '@/features/course/load-lesson'
 import { findAdjacent, flattenSections } from '@/features/course/manifest'
 import { LessonViewer } from '@/features/course/components/LessonViewer'
-import type { AdjacentLink, SectionContent } from '@/features/course/types'
+import type { AdjacentLink } from '@/features/course/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,7 +23,6 @@ export default async function LessonPage({ params }: PageProps) {
     notFound()
   }
 
-  // 章级门禁：当前账号等级不满足该章 tier → 跳开通会员
   const authState = await getCampAuthState()
   const account = authState.authenticated ? authState.account : null
   if (!canAccessChapter(account, chapter.tier)) {
@@ -39,15 +38,16 @@ export default async function LessonPage({ params }: PageProps) {
   const prevLink: AdjacentLink | null = prev ? { chapterId: prev.chapterId, sectionId: prev.id } : null
   const nextLink: AdjacentLink | null = next ? { chapterId: next.chapterId, sectionId: next.id } : null
 
-  // 服务端读取并作用域化课程 HTML；文件缺失 → null（视图显示缺失提示并保留导航）
-  const content: SectionContent | null = await loadSectionContent(current.file).catch(() => null)
+  // 按 file 键动态加载课件 TSX 组件；缺失 → 显示缺失提示（保留导航）
+  const Lesson = await loadLesson(current.file)
 
   return (
     <LessonViewer
       current={{ id: current.id, title: current.title, file: current.file }}
       prev={prevLink}
       next={nextLink}
-      content={content}
-    />
+    >
+      {Lesson ? <Lesson /> : <p className="text-accent-3">课件缺失：{current.file}</p>}
+    </LessonViewer>
   )
 }
