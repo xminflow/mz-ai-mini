@@ -1,4 +1,4 @@
-import type { AuthAccount, AuthPayload, CampMembership, WechatLoginSession, WechatLoginSessionStatus } from '../types'
+import type { AuthAccount, AuthPayload, CampMembership, CampMembershipTier, WechatLoginSession, WechatLoginSessionStatus } from '../types'
 
 const DEFAULT_DEV_API_BASE_URL = 'http://127.0.0.1:8000/api/v1'
 const DEFAULT_PRODUCTION_API_BASE_URL = 'https://api.weelume.com/api/v1'
@@ -230,5 +230,20 @@ export async function exchangeWechatLogin(loginSessionId: string): Promise<AuthP
     `/camp-auth/wechat-official/login-sessions/${loginSessionId}/exchange`,
     { method: 'POST', body: JSON.stringify({}) },
   )
+  return normalizeAuthPayload(payload)
+}
+
+// dev-only：直连后端 POST /camp-auth/dev/fake-login 拿 token；后端 env=production 时会 404。
+export async function devFakeLogin(
+  username?: string,
+  tier?: CampMembershipTier,
+): Promise<AuthPayload> {
+  const body: Record<string, string> = {}
+  if (username && username.trim() !== '') body.username = username.trim()
+  if (tier) body.tier = tier
+  const payload = await requestUpstream<UpstreamAuthPayload>('/camp-auth/dev/fake-login', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  })
   return normalizeAuthPayload(payload)
 }
