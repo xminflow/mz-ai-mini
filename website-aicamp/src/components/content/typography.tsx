@@ -122,7 +122,7 @@ export function Summary({
   items: ReactNode[]
 }): React.JSX.Element {
   return (
-    <nav className="mt-[1.1rem] text-[0.86rem] leading-[2] text-muted">
+    <p className="mt-[1.1rem] text-[0.86rem] leading-[2] text-muted">
       {title ?? '本节速览：'}
       {items.map((item, i) => (
         <span key={i}>
@@ -130,7 +130,7 @@ export function Summary({
           {i < items.length - 1 && <span className="mx-[0.35rem] opacity-50">·</span>}
         </span>
       ))}
-    </nav>
+    </p>
   )
 }
 

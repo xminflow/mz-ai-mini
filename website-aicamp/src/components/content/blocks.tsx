@@ -90,13 +90,14 @@ export function Callout({ tone = 'analogy', label, children }: CalloutProps): Re
   }
 
   if (tone === 'bridge') {
+    // 用 <div> 而非 <p>：children 为 ReactNode，可能含块级元素，块级套 <p> 是非法 HTML
     return (
-      <p
+      <div
         className="mt-[1.8rem] text-[0.95rem] text-muted"
         style={{ borderLeft: `2px solid ${style.border}`, paddingLeft: '1rem' }}
       >
         {children}
-      </p>
+      </div>
     )
   }
 
