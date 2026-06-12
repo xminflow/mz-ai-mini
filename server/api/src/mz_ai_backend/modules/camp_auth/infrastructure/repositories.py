@@ -414,6 +414,29 @@ class SqlAlchemyCampAccountRepository:
         )
         return result.scalar_one_or_none()
 
+    async def set_membership(
+        self,
+        *,
+        account_id: int,
+        tier: str,
+        started_at: datetime,
+        expires_at: datetime,
+    ) -> None:
+        # dev-only：直接覆盖写账号会员三列；生产授予走 camp_membership 支付回调。
+        result = await self._session.execute(
+            select(CampAccountModel).where(
+                CampAccountModel.account_id == account_id,
+                CampAccountModel.is_deleted.is_(False),
+            )
+        )
+        model = result.scalar_one_or_none()
+        if model is None:
+            raise ValueError(f"camp account not found for set_membership: {account_id}")
+        model.membership_tier = tier
+        model.membership_started_at = started_at
+        model.membership_expires_at = expires_at
+        await self._session.commit()
+
     async def get_membership_summary(
         self,
         *,

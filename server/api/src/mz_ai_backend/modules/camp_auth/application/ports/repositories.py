@@ -135,3 +135,13 @@ class CampAccountRepository(Protocol):
         now: datetime,
     ) -> CampMembershipSummary:
         """读取账号会员列并返回登录态会员摘要。"""
+
+    async def set_membership(
+        self,
+        *,
+        account_id: int,
+        tier: str,
+        started_at: datetime,
+        expires_at: datetime,
+    ) -> None:
+        """[dev-only] 强制设置账号会员三列；生产授予走 camp_membership 支付回调。"""

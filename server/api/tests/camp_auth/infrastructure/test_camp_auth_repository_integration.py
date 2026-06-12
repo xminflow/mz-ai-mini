@@ -372,3 +372,51 @@ async def test_wechat_identity_unsubscribe_update(db_session: AsyncSession) -> N
     assert fetched is not None
     assert fetched.subscribe_status == CampWechatSubscribeStatus.UNSUBSCRIBED
     assert fetched.unsubscribed_at is not None
+
+
+# ---------------------------------------------------------------------------
+# Test 4 — set_membership 强制写会员三列（dev-only）
+# ---------------------------------------------------------------------------
+
+SET_MEMBERSHIP_ACCOUNT_ID = 930_006_001
+
+
+async def _cleanup_set_membership(session: AsyncSession) -> None:
+    """清理 set_membership 测试专用账号行。"""
+    from sqlalchemy import delete as sa_delete
+    await session.execute(
+        sa_delete(CampAccountModel).where(
+            CampAccountModel.account_id == SET_MEMBERSHIP_ACCOUNT_ID
+        )
+    )
+    await session.commit()
+
+
+async def test_set_membership_writes_account_columns(db_session: AsyncSession) -> None:
+    # 先清理可能遗留的测试数据
+    await _cleanup_set_membership(db_session)
+
+    repo = SqlAlchemyCampAccountRepository(session=db_session)
+
+    account = await repo.create_account(
+        CampAccountRegistration(
+            account_id=SET_MEMBERSHIP_ACCOUNT_ID,
+            username=f"dev_set_member_{SET_MEMBERSHIP_ACCOUNT_ID}",
+            email=None,
+            status=CampAccountStatus.ACTIVE,
+        )
+    )
+    now = _naive_utc_now()
+    await repo.set_membership(
+        account_id=account.account_id,
+        tier="basic",
+        started_at=now,
+        expires_at=now + timedelta(days=365),
+    )
+
+    summary = await repo.get_membership_summary(account_id=account.account_id, now=now)
+    assert summary.tier == "basic"
+    assert summary.is_active is True
+
+    # 清理
+    await _cleanup_set_membership(db_session)
