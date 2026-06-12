@@ -19,7 +19,7 @@ const navBtnDisabled =
 export function LessonViewer({ current, prev, next, children }: Props) {
   return (
     <div className="flex h-full flex-col bg-canvas">
-      <div className="flex items-center justify-between border-b border-hairline bg-canvas/60 px-4 py-2.5 backdrop-blur-xl">
+      <div className="flex items-center justify-between bg-canvas px-4 py-2.5">
         {prev ? (
           <Link href={`/course/${prev.chapterId}/${prev.sectionId}`} className={navBtn}>← 上一节</Link>
         ) : (
@@ -32,9 +32,9 @@ export function LessonViewer({ current, prev, next, children }: Props) {
           <span className={navBtnDisabled}>下一节 →</span>
         )}
       </div>
-      <div className="min-h-0 flex-1 overflow-y-auto">
-        {/* 统一阅读栏：居中、最大宽度、留白（对应原 body 排版） */}
-        <article className="mx-auto w-full max-w-3xl px-6 py-12 sm:px-8">{children}</article>
+      <div data-lesson-scroll className="min-h-0 flex-1 overflow-y-auto">
+        {/* 统一阅读栏：居中、限宽、留白 */}
+        <article className="mx-auto w-full max-w-2xl px-6 py-12 leading-[1.9] sm:px-8">{children}</article>
       </div>
     </div>
   )

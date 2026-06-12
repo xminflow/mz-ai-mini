@@ -4,6 +4,7 @@ import { getCampAuthState } from '@/features/auth/server/session'
 import { requireTier } from '@/features/membership/require-tier'
 import { COURSE_MIN_TIER, canAccessChapter } from '@/features/course/access'
 import { CourseSidebar } from '@/features/course/components/CourseSidebar'
+import { LessonToc } from '@/features/course/components/LessonToc'
 import { loadManifest } from '@/features/course/load-manifest'
 import type { SidebarData } from '@/features/course/types'
 
@@ -37,10 +38,14 @@ export default async function CourseLayout({ children }: { children: React.React
   // 顶栏 sticky 高度 h-14/sm:h-16，课程区占满其下视口，侧栏与正文各自独立滚动
   return (
     <div className="flex h-[calc(100vh-3.5rem)] min-h-0 sm:h-[calc(100vh-4rem)]">
-      <aside className="scrollbar-thin w-72 shrink-0 overflow-y-auto border-r border-hairline bg-surface/40 backdrop-blur-xl">
+      <aside className="scrollbar-thin w-72 shrink-0 overflow-y-auto bg-canvas">
         <CourseSidebar data={sidebar} />
       </aside>
       <div className="min-w-0 flex-1 overflow-hidden">{children}</div>
+      {/* 右栏：本节文章目录，镜像左侧课程栏（窄屏隐藏以保阅读宽度） */}
+      <aside className="scrollbar-thin hidden w-72 shrink-0 overflow-y-auto bg-canvas xl:block">
+        <LessonToc />
+      </aside>
     </div>
   )
 }

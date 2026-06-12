@@ -111,7 +111,7 @@ export function CourseSidebar({ data }: Props) {
                     return (
                       <li key={s.id} className="relative">
                         <span
-                          className={`absolute -left-[3px] top-1/2 h-[6px] w-[6px] -translate-y-1/2 rounded-full ring-2 ring-surface transition-colors ${
+                          className={`absolute -left-[3px] top-1/2 h-[6px] w-[6px] -translate-y-1/2 rounded-full ring-2 ring-canvas transition-colors ${
                             isActive ? 'bg-accent' : 'bg-transparent ring-0'
                           }`}
                           aria-hidden="true"

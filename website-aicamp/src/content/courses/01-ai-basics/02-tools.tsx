@@ -4,7 +4,6 @@ import {
   Lead,
   Section,
   KeyPoints,
-  Summary,
   Rule,
   Callout,
   Terms,
@@ -41,27 +40,12 @@ export default function Lesson(): React.JSX.Element {
             <>市面上的"AI 编程助手"其实是<strong>同一类东西</strong>，不用都装</>,
             <>它们<strong>不只是写代码</strong>，更是能替你干很多事的"全能智能体"</>,
             <>面对这么多工具<strong>该怎么选</strong>，怎么降低学习负担</>,
+            <>没碰过"终端黑框"也不怕——<strong>打开、粘贴、回车</strong>三步就会用</>,
             <>四种主流方案的<strong>完整安装步骤</strong>，照着敲就行</>,
             <>就算<strong>没有 Claude 账号</strong>，也能用国产模型把 Claude Code 跑起来</>,
             <>国产大模型生态里还有哪些"知道有就行"的工具</>,
             <>国内网络<strong>装不上 / 连不上</strong>时，有哪些应对办法</>,
             <>装完之后<strong>怎么验证</strong>它真的能用了</>,
-          ]}
-        />
-
-        <Summary
-          title="本节速览："
-          items={[
-            <a key="why" href="#why" className="text-ink-soft hover:text-accent">选哪个</a>,
-            <a key="agent" href="#agent" className="text-ink-soft hover:text-accent">不只是写代码</a>,
-            <a key="overview" href="#overview" className="text-ink-soft hover:text-accent">四方案速览</a>,
-            <a key="install-claude" href="#install-claude" className="text-ink-soft hover:text-accent">装 Claude Code</a>,
-            <a key="install-codex" href="#install-codex" className="text-ink-soft hover:text-accent">装 Codex</a>,
-            <a key="install-kimi" href="#install-kimi" className="text-ink-soft hover:text-accent">装 Kimi CLI</a>,
-            <a key="claude-kimi" href="#claude-kimi" className="text-ink-soft hover:text-accent">Kimi 驱动 Claude Code</a>,
-            <a key="network-cn" href="#network-cn" className="text-ink-soft hover:text-accent">国内网络</a>,
-            <a key="ecosystem" href="#ecosystem" className="text-ink-soft hover:text-accent">其他生态</a>,
-            <a key="verify" href="#verify" className="text-ink-soft hover:text-accent">验证装好了</a>,
           ]}
         />
       </section>
@@ -85,7 +69,7 @@ export default function Lesson(): React.JSX.Element {
           刚入门最容易犯的毛病，就是<strong className="text-ink">把时间花在"该装哪个"上反复纠结</strong>——这个看着火、那个听说更强，
           结果一个都没真正用起来。其实大可不必内耗：这些工具<strong className="text-ink">八九不离十是同一类东西</strong>。
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#a78bfa]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             <b className="text-ink">它们长得像：</b>大多是<strong className="text-ink">"终端里的 AI 编程助手"</strong>——你在那个黑框里用大白话提需求，它读你的文件、帮你写代码改代码。
           </li>
@@ -292,7 +276,98 @@ export default function Lesson(): React.JSX.Element {
             },
           ]}
         />
-        <Callout tone="bridge">↓ 下面挨个给安装步骤。先装核心主力——Claude Code。</Callout>
+        <Callout tone="bridge">↓ 但在敲第一行命令之前，先花两分钟，把每个工具都要用到的"黑框"本身弄明白。</Callout>
+      </Section>
+
+      <Rule />
+
+      {/* ===== 终端基础：先会用黑框 ===== */}
+      <Section
+        id="terminal"
+        icon={
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <path d="M7 9 l3 3 l-3 3" />
+            <circle cx="15" cy="16" r="0.6" fill="#fbbf24" stroke="none" />
+            <path d="M14 16 h3" />
+          </svg>
+        }
+        title={<span style={{ color: '#fbbf24' }}>先会用"黑框"——两分钟搞懂终端</span>}
+      >
+        <p className="mt-[1.05rem]">
+          <strong className="text-ink">1.1 里我们说过</strong>：终端就是那个"敲一行命令、回车就执行"的黑框。概念你已经有了，这一节只补<strong className="text-ink">真正上手时会卡住的几个操作</strong>——怎么打开它、怎么把命令粘进去、以及一两个让新手懵掉的小细节。把这套弄顺，后面所有安装、登录都不慌。
+        </p>
+
+        <p className="mt-[1.8rem]"><strong className="text-ink">第一步：把它打开。</strong></p>
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
+          <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
+            <b className="text-ink">Windows：</b>点开始菜单，<strong className="text-ink">直接打字搜 "PowerShell"</strong>，点开第一个就是。
+          </li>
+          <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
+            <b className="text-ink">Mac：</b>按 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>⌘ + 空格</code> 打开聚焦搜索，输入<strong className="text-ink">"终端"</strong>回车；也能在"应用程序 → 实用工具"里找到它。
+          </li>
+        </ul>
+
+        <p className="mt-[1.8rem]"><strong className="text-ink">第二步：认清"提示符"，别把它也敲进去。</strong></p>
+        <p className="mt-[1.05rem]">
+          1.1 提过：行首那串是<strong className="text-ink">"提示符"</strong>，意思是"轮到你输入了"。在你电脑上它可能长成 Windows 的 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>{'PS C:\\Users\\你>'}</code>、
+          或 Mac 的 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>你的名字@MacBook ~ %</code>——<strong className="text-ink">这串是系统自己打印的，不用你敲</strong>，你只敲它<strong className="text-ink">后面</strong>那段命令。所以<strong className="text-ink">本课命令框里只给"该敲的部分"</strong>，不带这些前缀，照着复制就行。
+        </p>
+
+        <Figure caption="终端窗口里，灰色提示符是系统自带的、不用动；你只负责后面那段命令，敲完按回车。">
+          <svg viewBox="0 0 540 188" role="img" aria-label="终端窗口示意：区分系统提示符与你要敲的命令" xmlns="http://www.w3.org/2000/svg" style={{ maxWidth: '540px', margin: '0 auto' }}>
+            <rect x="1" y="1" width="538" height="186" rx="12" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.16)" strokeWidth="1" />
+            <line x1="1" y1="38" x2="539" y2="38" stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+            <circle cx="24" cy="19" r="5" fill="#fbbf24" />
+            <circle cx="42" cy="19" r="5" fill="rgba(255,255,255,0.25)" />
+            <circle cx="60" cy="19" r="5" fill="rgba(255,255,255,0.18)" />
+
+            {/* 命令行 */}
+            <text fontFamily="'SFMono-Regular','Consolas',monospace" x="26" y="86" fontSize="13">
+              <tspan fill="#8a8a94">PS C:\Users\你{'>'} </tspan><tspan fill="#f5f5f7">claude --version</tspan>
+            </text>
+
+            {/* 标注：提示符 */}
+            <line x1="82" y1="96" x2="82" y2="122" stroke="#8a8a94" strokeWidth="1" />
+            <circle cx="82" cy="122" r="2" fill="#8a8a94" />
+            <text fontSize="11.5" x="26" y="142" fill="#8a8a94">系统提示符 · 不用敲</text>
+
+            {/* 标注：你敲的部分 */}
+            <line x1="220" y1="96" x2="220" y2="122" stroke="#fbbf24" strokeWidth="1" />
+            <circle cx="220" cy="122" r="2" fill="#fbbf24" />
+            <text fontSize="11.5" x="182" y="142" fill="#fbbf24">这段才是你敲 / 粘贴的</text>
+            <text fontSize="11.5" x="182" y="164" fill="#8a8a94">敲完按一下回车（Enter）执行</text>
+          </svg>
+        </Figure>
+
+        <p className="mt-[1.8rem]"><strong className="text-ink">第三步：把命令粘进去、按回车。</strong></p>
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
+          <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
+            <b className="text-ink">粘贴：</b>本课命令都能复制，不用手敲。<strong className="text-ink">Windows（PowerShell）</strong>在窗口里<strong className="text-ink">点右键</strong>就粘上了（或 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>Ctrl + V</code>）；<strong className="text-ink">Mac（终端）</strong>用 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>⌘ + V</code>（注意 Mac 里右键、<code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>Ctrl + V</code> 通常粘不进去）。
+          </li>
+          <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
+            <b className="text-ink">执行：</b>粘好后按<strong className="text-ink">一下回车（Enter）</strong>，然后<strong className="text-ink">等它自己跑完</strong>——别狂敲键盘、别关窗口。看到光标重新闪、又出现提示符，就是这条跑完了。
+          </li>
+          <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
+            <b className="text-ink">可能让你输密码：</b>装东西有时会要<strong className="text-ink">开机密码</strong>（管理员权限）。Mac 上输密码时<strong className="text-ink">屏幕一个字符都不显示（连圆点也没有）是正常的</strong>，盲打完直接回车即可。
+          </li>
+        </ul>
+
+        <Callout tone="note" label="进阶但常用">
+          <p>
+            后面有些工具要求"<strong className="text-ink">在某个项目文件夹里</strong>"启动。最省事的办法不是去记命令，而是<strong className="text-ink">直接从那个文件夹打开终端</strong>：
+          </p>
+          <p>
+            <strong className="text-ink">Windows：</strong>打开目标文件夹，在空白处<strong className="text-ink">按住 Shift 点右键</strong> →「在此处打开 PowerShell 窗口 / 终端」。
+          </p>
+          <p>
+            <strong className="text-ink">Mac：</strong>在文件夹上<strong className="text-ink">点右键 → 服务 →「新建位于文件夹位置的终端窗口」</strong>（或把文件夹图标直接<strong className="text-ink">拖进</strong>终端窗口）。
+          </p>
+          <p>
+            这样打开的终端，"当前位置"就是那个文件夹，直接启动工具就行，省去记路径的麻烦。
+          </p>
+        </Callout>
+        <Callout tone="bridge">↓ 黑框会用了。下面正式装核心主力——Claude Code。</Callout>
       </Section>
 
       <Rule />
@@ -309,30 +384,34 @@ export default function Lesson(): React.JSX.Element {
         title={<span style={{ color: '#a78bfa' }}>安装 Claude Code（核心主力）</span>}
       >
         <p className="mt-[1.05rem]">
-          别紧张，全程就是<strong className="text-ink">"打开一个黑框、敲一行命令、回车"</strong>，照着做就行。先解决"黑框从哪开"。
+          别紧张，全程就是<strong className="text-ink">"打开终端、粘一行命令、回车"</strong>——终端怎么打开、怎么粘贴，上一节刚讲过。
+          Windows 这边还<strong className="text-ink">建议先装一个 Git for Windows</strong>：这几个工具都拿它当底层 shell，到 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>git-scm.com</code> 下载、一路下一步装好即可（Mac 可跳过）。
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#a78bfa]">
-          <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
-            <b className="text-ink">Windows：</b>打开 <strong className="text-ink">PowerShell</strong>（开始菜单搜 "PowerShell" 即可）。建议<strong className="text-ink">先装 Git for Windows</strong>——这几个工具都拿它当底层 shell，到 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>git-scm.com</code> 下载、一路下一步装好就行。
-          </li>
-          <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
-            <b className="text-ink">Mac：</b>打开<strong className="text-ink">终端 Terminal</strong>（启动台搜"终端"，或在"应用程序 → 实用工具"里）。
-          </li>
-        </ul>
-        <p className="mt-[1.05rem]">黑框打开后，按你的系统敲下面这行<strong className="text-ink">安装命令</strong>（单独成行，可直接复制粘贴回车）：</p>
+        <p className="mt-[1.05rem]">打开终端后，按你的系统把下面对应的<strong className="text-ink">那行安装命令</strong>复制进去、回车：</p>
         <Cmd>
-          {'Windows（PowerShell）\n> irm https://claude.ai/install.ps1 | iex\nmacOS / Linux\n$ curl -fsSL https://claude.ai/install.sh | bash\n可选：已装好 Node 18+ 的话，也可以用 npm 装\n$ npm install -g @anthropic-ai/claude-code'}
+          {'Windows（PowerShell）\nirm https://claude.ai/install.ps1 | iex\n\nmacOS / Linux\ncurl -fsSL https://claude.ai/install.sh | bash\n\n可选：已装好 Node 18+ 的话，也能用 npm 装\nnpm install -g @anthropic-ai/claude-code'}
         </Cmd>
         <p className="mt-[1.05rem]">
-          <b className="text-ink">登录：</b>装好后，进到你<strong className="text-ink">任意一个项目文件夹</strong>，运行 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>claude</code>。
-          它会自动<strong className="text-ink">打开浏览器让你登录</strong>——用你的 Claude 订阅账号，或者填 Anthropic 控制台里的 API key 都行。
+          <b className="text-ink">启动并登录：</b>用上一节"从文件夹打开终端"的办法，进到<strong className="text-ink">任意一个文件夹</strong>，敲 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>claude</code> 回车。
         </p>
-        <Cmd>{'$ claude'}</Cmd>
+        <Cmd>{'claude'}</Cmd>
+        <p className="mt-[1.05rem]"><strong className="text-ink">第一次启动</strong>会有几句英文引导，照着选就行，别被吓到：</p>
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
+          <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
+            先让你挑一个<strong className="text-ink">配色主题</strong>——随便选，回车。
+          </li>
+          <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
+            再问<strong className="text-ink">是否信任当前文件夹</strong>（"Do you trust the files in this folder?"）——选 <strong className="text-ink">Yes</strong> 回车。
+          </li>
+          <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
+            然后它会<strong className="text-ink">自动打开浏览器让你登录</strong>：用 Claude 账号登录、点同意授权；浏览器会显示<strong className="text-ink">一段授权码</strong>，把它<strong className="text-ink">复制、粘回终端、回车</strong>，就登录好了。（也可以改用 Anthropic 控制台里的 API key。）
+          </li>
+        </ul>
         <p className="mt-[1.05rem]">
           <b className="text-ink">验证：</b>运行下面这行，<strong className="text-ink">能打印出版本号就说明装好了</strong>。
           如果提示"找不到命令 / command not found"，多半是<strong className="text-ink">把终端关掉重开一次</strong>就好（让系统重新认到它）。
         </p>
-        <Cmd>{'$ claude --version'}</Cmd>
+        <Cmd>{'claude --version'}</Cmd>
         <Callout tone="bridge">↓ 这就是核心主力。下面三个方案，有兴趣或有需要再看；没需要直接跳到"验证"也行。</Callout>
       </Section>
 
@@ -350,14 +429,20 @@ export default function Lesson(): React.JSX.Element {
         title={<span style={{ color: '#22d3ee' }}>安装 Codex（OpenAI）</span>}
       >
         <p className="mt-[1.05rem]">
-          Codex 是 OpenAI 的同类终端工具，<strong className="text-ink">用法和 Claude Code 几乎一样</strong>。它通过 npm 安装，需要先有 <strong className="text-ink">Node 22+</strong>。
+          Codex 是 OpenAI 的同类终端工具，<strong className="text-ink">用法和 Claude Code 几乎一样</strong>。它通过 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>npm</code> 安装，而 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>npm</code> 是 <strong className="text-ink">Node</strong> 自带的工具，所以得<strong className="text-ink">先有 Node（要 22 以上版本）</strong>。
         </p>
-        <Cmd>{'安装（需 Node 22+）\n$ npm install -g @openai/codex'}</Cmd>
+        <p className="mt-[1.05rem]">
+          <b className="text-ink">先查有没有 Node：</b>在终端敲下面这行。<strong className="text-ink">能打印出 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>v22</code> 或更高就行</strong>；
+          如果提示找不到命令、或版本低于 22，就到 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>nodejs.org</code> 下载 <strong className="text-ink">LTS 版</strong>、一路下一步装好，<strong className="text-ink">重开终端</strong>再继续。
+        </p>
+        <Cmd>{'node --version'}</Cmd>
+        <p className="mt-[1.05rem]">Node 就绪后，安装 Codex：</p>
+        <Cmd>{'npm install -g @openai/codex'}</Cmd>
         <p className="mt-[1.05rem]">
           <b className="text-ink">登录：</b>运行 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>codex</code>，首次会按提示登录——
           有 <strong className="text-ink">ChatGPT 套餐（Plus / Pro 等）可直接登录</strong>、额度已包含在套餐里；或者用环境变量里的 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>OPENAI_API_KEY</code>。
         </p>
-        <Cmd>{'$ codex\n验证\n$ codex --version'}</Cmd>
+        <Cmd>{'codex\n\n验证\ncodex --version'}</Cmd>
         <Callout tone="bridge">↓ 再看一个国产、上手门槛最低的：Kimi CLI。</Callout>
       </Section>
 
@@ -379,13 +464,20 @@ export default function Lesson(): React.JSX.Element {
           Windows 同样建议<strong className="text-ink">先装好 Git for Windows</strong>。安装命令任选其一：
         </p>
         <Cmd>
-          {'Windows（PowerShell）\n> irm https://code.kimi.com/kimi-code/install.ps1 | iex\nmacOS / Linux\n$ curl -fsSL https://code.kimi.com/kimi-code/install.sh | bash\n或用 npm（需 Node 22.19+）\n$ npm install -g @moonshot-ai/kimi-code'}
+          {'Windows（PowerShell）\nirm https://code.kimi.com/kimi-code/install.ps1 | iex\n\nmacOS / Linux\ncurl -fsSL https://code.kimi.com/kimi-code/install.sh | bash\n\n或用 npm（需 Node 22.19+）\nnpm install -g @moonshot-ai/kimi-code'}
         </Cmd>
         <p className="mt-[1.05rem]">
-          <b className="text-ink">登录：</b>运行 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>kimi</code> 进去后，输入斜杠命令 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>/login</code>，
-          可以选<strong className="text-ink">「Kimi Code 扫码 / 设备码登录」</strong>，也可以选<strong className="text-ink">填 platform.kimi 的 API key</strong>。
+          <b className="text-ink">登录：</b>运行 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>kimi</code> 进去后，在对话框里输入斜杠命令 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>/login</code> 回车，会给你两种方式选：
         </p>
-        <Cmd>{'$ kimi\n进去后在对话框里输入\n/login'}</Cmd>
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
+          <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
+            <b className="text-ink">扫码 / 设备码登录（推荐，最省事）：</b>终端会显示<strong className="text-ink">一个网址和一串验证码</strong>，用<strong className="text-ink">手机或电脑浏览器打开那个网址</strong>、登录你的 Kimi 账号、填入验证码确认——和"扫码登录网页"是一个意思，确认完终端就自动登录上了。
+          </li>
+          <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
+            <b className="text-ink">填 API key：</b>到 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>platform.moonshot.cn</code> 控制台生成一个 key，粘进去也行。
+          </li>
+        </ul>
+        <Cmd>{'kimi\n\n进去后在对话框里输入\n/login'}</Cmd>
         <Callout tone="bridge">↓ 如果你既想用 Claude Code 这套工作流、又没有 Claude 账号——下面这个组合方案就是为你准备的。</Callout>
       </Section>
 
@@ -407,15 +499,15 @@ export default function Lesson(): React.JSX.Element {
           这个方案的思路是：<strong className="text-ink">仍然把 Claude Code 当主力</strong>，工作流一模一样，
           只是把背后那个"动脑子的模型"<strong className="text-ink">从官方 Claude 换成 Kimi K2</strong>。适合没有 Claude 账号、或想用国产模型的人。
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#22d3ee]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             <b className="text-ink">① 先装好 Claude Code：</b>就是前面那一步，确保 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>claude --version</code> 能正常打印版本。
           </li>
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
-            <b className="text-ink">② 拿一个 Moonshot API key：</b>到 Moonshot 开放平台注册、生成一个 API key（一串密钥）。
+            <b className="text-ink">② 拿一个 Moonshot API key：</b>到 Moonshot 开放平台 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>platform.moonshot.cn</code> 注册登录，在控制台「API Key」处<strong className="text-ink">新建一个</strong>（一串密钥）。<strong className="text-ink">它一般只完整显示这一次，当场复制保存好</strong>，关掉就看不到了。
           </li>
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
-            <b className="text-ink">③ 设 3 个环境变量再启动 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>claude</code>：</b>告诉 Claude Code "改去连 Kimi"。
+            <b className="text-ink">③ 把这 3 项配置告诉 Claude Code：</b>等于跟它说"别连官方、改去连 Kimi"。下面给两种写法，<strong className="text-ink">推荐第一种（配一次、长期有效）</strong>。
           </li>
         </ul>
         <p className="mt-[1.05rem]">三个要设的变量，含义是这样：</p>
@@ -435,12 +527,33 @@ export default function Lesson(): React.JSX.Element {
             },
           ]}
         />
-        <p className="mt-[1.05rem]">设好变量、再启动 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>claude</code> 即可。两种系统的写法各一段：</p>
+        <p className="mt-[1.8rem]"><strong className="text-ink">写法一（推荐）：写进 Claude Code 的配置文件，配一次、以后一直生效。</strong></p>
+        <p className="mt-[1.05rem]">
+          在你的<strong className="text-ink">用户主目录</strong>下，找到（没有就<strong className="text-ink">新建</strong>）文件 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>.claude/settings.json</code>，填入下面这段。
+          "用户主目录"在 Windows 是 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>C:\Users\你的用户名</code>、Mac 是 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>/Users/你的用户名</code>。
+          Claude Code <strong className="text-ink">每次启动都会自动读它</strong>——以后<strong className="text-ink">照常敲 <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>claude</code> 启动就会走 Kimi</strong>，不用再设变量、也不用重启电脑。
+        </p>
         <Cmd>
-          {'Windows（PowerShell）\n> $env:ANTHROPIC_BASE_URL="https://api.moonshot.cn/anthropic"\n> $env:ANTHROPIC_AUTH_TOKEN="<你的 Moonshot API key>"\n> $env:ANTHROPIC_MODEL="kimi-k2…"\n> claude'}
+          {'文件：~/.claude/settings.json（没有就新建）\n{\n  "env": {\n    "ANTHROPIC_BASE_URL": "https://api.moonshot.cn/anthropic",\n    "ANTHROPIC_AUTH_TOKEN": "你的 Moonshot API key",\n    "ANTHROPIC_MODEL": "kimi-k2…"\n  }\n}'}
+        </Cmd>
+        <Callout tone="note" label="两个小提示">
+          <p>
+            <strong className="text-ink">不想手动建文件？</strong>把 Claude Code 先装好、随便跑起来，直接对它说"<strong className="text-ink">帮我在 ~/.claude/settings.json 里写入这段配置</strong>"，让它替你建——这正是它最擅长的事。
+          </p>
+          <p>
+            这个文件里有你的密钥，是<strong className="text-ink">你电脑上的私人文件</strong>：别外传、别截图发群、别传到网上或提交到代码仓库。
+          </p>
+        </Callout>
+
+        <p className="mt-[1.8rem]"><strong className="text-ink">写法二（临时试一眼）：在终端里临时设，关窗口就失效。</strong></p>
+        <p className="mt-[1.05rem]">
+          只想先<strong className="text-ink">快速验证能不能跑通</strong>，可以临时设、当场启动。<strong className="text-ink">注意这种只在当前终端窗口有效，关掉就没了</strong>，下次还得重设——长期用请走写法一。
+        </p>
+        <Cmd>
+          {'Windows（PowerShell）\n$env:ANTHROPIC_BASE_URL="https://api.moonshot.cn/anthropic"\n$env:ANTHROPIC_AUTH_TOKEN="你的 Moonshot API key"\n$env:ANTHROPIC_MODEL="kimi-k2…"\nclaude'}
         </Cmd>
         <Cmd>
-          {'macOS / Linux\n$ export ANTHROPIC_BASE_URL="https://api.moonshot.cn/anthropic"\n$ export ANTHROPIC_AUTH_TOKEN="<你的 Moonshot API key>"\n$ export ANTHROPIC_MODEL="kimi-k2…"\n$ claude'}
+          {'macOS / Linux\nexport ANTHROPIC_BASE_URL="https://api.moonshot.cn/anthropic"\nexport ANTHROPIC_AUTH_TOKEN="你的 Moonshot API key"\nexport ANTHROPIC_MODEL="kimi-k2…"\nclaude'}
         </Cmd>
         <Callout tone="analogy">
           <p>
@@ -472,7 +585,7 @@ export default function Lesson(): React.JSX.Element {
           以及登录 / 调用<strong className="text-ink">官方 Claude（海外服务）</strong>时，可能很慢甚至连不上。
           <strong className="text-ink">这不是你装错了，是网络的事</strong>。下面三招按顺序试。
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#22d3ee]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             <b className="text-ink">首选：用国产方案，从根上绕开。</b>
             直接用 <strong className="text-ink">Kimi CLI</strong>（国产、用 Kimi 账号），或用前面的 <strong className="text-ink">「Claude Code + Kimi」配置</strong>——
@@ -484,15 +597,29 @@ export default function Lesson(): React.JSX.Element {
           </li>
         </ul>
         <Cmd>
-          {'把 npm 源换成国内镜像\n$ npm config set registry https://registry.npmmirror.com\n想换回官方源\n$ npm config set registry https://registry.npmjs.org'}
+          {'把 npm 源换成国内镜像\nnpm config set registry https://registry.npmmirror.com\n\n想换回官方源\nnpm config set registry https://registry.npmjs.org'}
         </Cmd>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#22d3ee]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             <b className="text-ink">要用官方 Claude / Codex：需要稳定的国际网络。</b>
             它们是海外服务，国内直连常不稳。如果你有<strong className="text-ink">合规的网络代理 / 加速</strong>，让终端走代理后再安装、登录即可；
             没有的话，就走第 1 招用国产方案——课程后续以 Claude Code 为主力，<strong className="text-ink">用 Kimi 后端照样跟得上</strong>。
           </li>
         </ul>
+        <Callout tone="note" label="关于「中转站」的一点忠告">
+          <p>
+            你大概率会刷到一些<strong className="text-ink">"中转站 / 镜像站"</strong>——号称低价就能用上 Claude、Codex。这里给点<strong className="text-ink">个人建议，帮你少踩坑</strong>：
+          </p>
+          <p>
+            <strong className="text-ink">Claude Code：非常不建议买中转。</strong>官方封禁策略很严，市面上的第三方中转<strong className="text-ink">基本都不是"官方满血版"</strong>，多是从 Kiro、Cursor 这类渠道倒腾出来的，<strong className="text-ink">而且很不稳定</strong>，今天能用、明天可能就挂。要用 Claude Code，<strong className="text-ink">要么用官方账号，要么走前面的「Kimi 驱动」国产兜底</strong>，别在中转上花冤枉钱。
+          </p>
+          <p>
+            <strong className="text-ink">Codex：可以考虑中转，但要会挑。</strong>它相对宽松些，不过同样存在<strong className="text-ink">"掺水 / 降配"</strong>的版本（偷偷换成小模型、限速等），<strong className="text-ink">认真挑、看口碑</strong>再买。
+          </p>
+          <p>
+            一句话：<strong className="text-ink">能用官方就用官方</strong>；预算或渠道受限时，<strong className="text-ink">正规的国产方案（如 Kimi）也比来路不明的中转靠谱</strong>。
+          </p>
+        </Callout>
         <Callout tone="analogy">
           <p>
             一句话原则：<strong className="text-ink">能用国产端点就优先用国产端点</strong>——安装走 npm 镜像、模型走国内端点，
@@ -578,7 +705,7 @@ export default function Lesson(): React.JSX.Element {
           进到<strong className="text-ink">任意一个文件夹</strong>，启动它（<code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>claude</code> / <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>codex</code> / <code className="rounded px-[0.4em] py-[0.1em] font-mono text-[0.86em] text-[#e7e7ea]" style={{ background: 'rgba(255,255,255,0.06)' }}>kimi</code>），
           然后<strong className="text-ink">给它派件小事</strong>，看它能不能正常回应、动手。比如：
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#22d3ee]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             让它："<strong className="text-ink">用一句话介绍这个文件夹里有什么</strong>"——看它能不能读懂、答上来。
           </li>
@@ -630,7 +757,7 @@ export default function Lesson(): React.JSX.Element {
         </p>
         <p className="mt-[1.05rem] text-ink-soft">
           装好了、也验证能跑了，你就已经握住了进入开发世界的"那把钥匙"。
-          下一节，我们就<strong className="text-ink">搭建属于你自己的 AI 开发环境</strong>，把这把钥匙真正插进锁孔、开始动手。
+          下一节，我们就动手<strong className="text-ink">设计属于你自己的 AI 编程工作流</strong>——把"提需求 → 看产出 → 读报错 → 再交流"这套节奏跑顺，让它真正替你干活。
         </p>
       </Callout>
     </>

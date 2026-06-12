@@ -4,7 +4,6 @@ import {
   Lead,
   Section,
   KeyPoints,
-  Summary,
   Rule,
   Callout,
   Terms,
@@ -52,19 +51,6 @@ export default function Lesson(): React.JSX.Element {
           ]}
         />
 
-        <Summary
-          title="本节速览："
-          items={[
-            <a key="roles" href="#roles" className="text-ink-soft hover:text-accent">四个角色</a>,
-            <a key="flow" href="#flow" className="text-ink-soft hover:text-accent">怎么协作</a>,
-            <a key="where" href="#where" className="text-ink-soft hover:text-accent">跑在哪</a>,
-            <a key="network" href="#network" className="text-ink-soft hover:text-accent">上网背后</a>,
-            <a key="built" href="#built" className="text-ink-soft hover:text-accent">用什么造</a>,
-            <a key="process" href="#process" className="text-ink-soft hover:text-accent">怎么做出来</a>,
-            <a key="ai" href="#ai" className="text-ink-soft hover:text-accent">AI 范式</a>,
-            <a key="glossary" href="#glossary" className="text-ink-soft hover:text-accent">术语速查</a>,
-          ]}
-        />
       </section>
 
       {/* ===== 贯穿全节的大比喻 ===== */}
@@ -187,7 +173,7 @@ export default function Lesson(): React.JSX.Element {
           <strong className="text-ink">一句话：前端就是你眼睛能看到、手能点的那一层。</strong>
           网页里的按钮、文字、图片、表单、那个会动的菜单——全是前端。
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#a78bfa]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             <b className="text-ink">负责什么：</b>把界面画出来，接收你的点击和输入，再把结果好看地展示给你。
           </li>
@@ -214,7 +200,7 @@ export default function Lesson(): React.JSX.Element {
           <strong className="text-ink">一句话：后端是你看不见、却在背后干活的那一层。</strong>
           判断密码对不对、计算价格、决定能不能下单，这些逻辑都在后端。
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#22d3ee]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             <b className="text-ink">负责什么：</b>处理业务规则、做运算和判断、跟数据库打交道，然后把结果交给前端。
           </li>
@@ -243,7 +229,7 @@ export default function Lesson(): React.JSX.Element {
           <strong className="text-ink">一句话：数据库是专门用来长期存放数据的地方。</strong>
           用户信息、订单记录、商品列表，关机也不会丢，随时能查、能改。
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#f472b6]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             <b className="text-ink">负责什么：</b>把数据整整齐齐地存起来，并能高效地查找、新增、修改、删除。
           </li>
@@ -271,7 +257,7 @@ export default function Lesson(): React.JSX.Element {
           <strong className="text-ink">一句话：终端是开发者敲命令、直接指挥电脑干活的地方。</strong>
           它没有花哨界面，就是一个黑框，你打一行字、回车，电脑就执行一条指令。
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#fbbf24]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             <b className="text-ink">负责什么：</b>用文字命令来安装工具、启动服务、查看日志、操作文件——不用点鼠标，效率更高、更精确。
           </li>
@@ -359,7 +345,7 @@ export default function Lesson(): React.JSX.Element {
           你点开微信、刷抖音、下淘宝单，大量功能都得连上一台<strong className="text-ink">远在机房里的电脑</strong>才能用。
           东西分两头放：一头在<strong className="text-ink">你手里</strong>，一头在<strong className="text-ink">很远的地方</strong>。
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#22d3ee]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             <b className="text-ink">你的设备：</b>手机、电脑、浏览器，负责<strong className="text-ink">展示</strong>给你看、接收你的<strong className="text-ink">点按和输入</strong>。这就是离你最近的那一头。
           </li>
@@ -440,7 +426,7 @@ export default function Lesson(): React.JSX.Element {
         <p className="mt-[1.05rem]">
           你在地址栏敲个网址、回车，零点几秒后页面就出来了。这一眨眼里，其实跑了一个<strong className="text-ink">完整的来回</strong>：
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#a78bfa]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             <b className="text-ink">① 你输入网址：</b>相当于报出对方的"门牌号"，告诉网络你要找哪家。
           </li>
@@ -647,7 +633,7 @@ export default function Lesson(): React.JSX.Element {
           一个软件不是程序员一个人闷头写完的，而是一群人接力干出来的。
           我们拿一个具体例子走一遍：<strong className="text-ink">做一个能点奶茶的小程序</strong>。它大致分六步，每一步都有人专门负责：
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#a78bfa]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             <b className="text-ink">① 需求（产品经理）：</b>先想清楚<strong className="text-ink">要做啥、先做哪个</strong>——能选规格、能下单、能付钱。产出：一份"要做成什么样"的说明。
           </li>
@@ -755,7 +741,7 @@ export default function Lesson(): React.JSX.Element {
           <strong className="text-ink">过去</strong>，想写代码门槛很高：得背一堆语法、动不动翻又厚又难懂的文档、程序一报错只能自己一行行啃，
           很多人卡在这一步就劝退了。<strong className="text-ink">现在 AI 把这堵墙拆掉了一大半。</strong>
         </p>
-        <ul className="mt-[0.9rem] list-none p-0 text-[#a78bfa]">
+        <ul className="mt-[0.9rem] list-none p-0 text-ink-soft">
           <li className="relative mt-[0.5rem] pl-[1.3rem] before:absolute before:left-[0.1rem] before:top-[0.78em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-current before:opacity-55">
             把你的<strong className="text-ink">大白话需求</strong>直接变成代码——你说"做个能记账的小页面"，它就给你写出来。
           </li>

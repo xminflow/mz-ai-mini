@@ -21,8 +21,8 @@ export function Terms({
           key={i}
           className="grid gap-x-[1.6rem] gap-y-[0.3rem] border-t py-[0.72rem]"
           style={{
-            gridTemplateColumns: '180px 1fr',
-            borderTopColor: 'rgba(255,255,255,0.06)',
+            gridTemplateColumns: '232px 1fr',
+            borderTopColor: 'rgba(255,255,255,0.05)',
           }}
         >
           <dt className="font-semibold text-ink">{term}</dt>

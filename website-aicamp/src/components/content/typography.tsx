@@ -173,10 +173,10 @@ export function Highlight({ children }: { children: ReactNode }): React.JSX.Elem
 export function Cmd({ children }: { children: ReactNode }): React.JSX.Element {
   return (
     <pre
-      className="mt-[1.1rem] overflow-x-auto rounded-lg border border-[rgba(255,255,255,0.1)] border-l-2 p-[0.85rem_1.05rem] font-mono text-[0.86rem] leading-[1.95] text-ink"
+      className="mt-[1.1rem] overflow-x-auto rounded-lg border border-[rgba(255,255,255,0.07)] border-l-2 p-[0.85rem_1.05rem] font-mono text-[0.86rem] leading-[1.95] text-ink"
       style={{
-        background: 'rgba(255,255,255,0.03)',
-        borderLeftColor: 'rgba(251,191,36,0.55)',
+        background: 'rgba(255,255,255,0.02)',
+        borderLeftColor: 'rgba(251,191,36,0.4)',
         whiteSpace: 'pre',
       }}
     >
