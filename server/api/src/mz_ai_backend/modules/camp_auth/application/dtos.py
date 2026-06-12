@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, field_validator
 
@@ -212,3 +213,16 @@ class LogoutCampSessionResult(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     revoked: bool
+
+
+# dev-only：本地免微信登录命令。tier 用 Literal，非法值在 FastAPI 边界即被拒。
+DEV_FAKE_LOGIN_DEFAULT_USERNAME = "dev_local"
+
+
+class DevCampFakeLoginCommand(BaseModel):
+    """dev-only 免微信登录命令：按 username find-or-create，并可选设置会员 tier。"""
+
+    model_config = ConfigDict(frozen=True)
+
+    username: str = DEV_FAKE_LOGIN_DEFAULT_USERNAME
+    tier: Literal["none", "basic", "premium"] = "none"
