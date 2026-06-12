@@ -1,0 +1,6 @@
+{
+  "sections": [
+    { "id": "1.1", "title": "开发世界速览", "file": "01-dev-world.html" },
+    { "id": "1.2", "title": "认识并安装主力工具", "file": "02-tools.html" }
+  ]
+}
