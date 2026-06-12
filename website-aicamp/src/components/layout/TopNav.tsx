@@ -62,6 +62,12 @@ export const TopNav = ({ initialAuthState }: { initialAuthState: AuthState }) =>
           </Link>
 
           <div className="flex items-center gap-2">
+            <Link
+              href="/course"
+              className="rounded-full border border-hairline bg-surface px-4 py-1.5 text-[14px] font-medium text-ink transition-all hover:border-hairline-strong sm:text-[15px]"
+            >
+              课程
+            </Link>
             {authState.authenticated ? (
               <AccountMenu authState={authState} loggingOut={loggingOut} onLogout={handleLogout} />
             ) : (
