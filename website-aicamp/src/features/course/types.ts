@@ -48,9 +48,3 @@ export interface AdjacentLink {
   chapterId: string
   sectionId: string
 }
-
-// 服务端提取 + 作用域化后的小节内容：作用域 CSS 与 body 内部 HTML
-export interface SectionContent {
-  css: string
-  html: string
-}
