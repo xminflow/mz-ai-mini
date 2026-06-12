@@ -16,6 +16,8 @@ async function readJson(relativePath: string): Promise<unknown> {
 // 读顶层章节清单（只含 id/title/tier），与各章 sections.json 合并成完整 manifest。
 // 单请求内多次调用（layout + page）复用同一结果，避免重复 fs 读。
 export const loadManifest = cache(async (): Promise<Manifest> => {
+  // 注意：下面这些内联 guard 只为保护"组装阶段"安全访问 c.id / s.file（拼路径要先用到它们），
+  // 不是完整校验。结构合法性的权威校验在末尾的 parseManifest，勿因看到这里有检查而删掉它。
   const top = await readJson('manifest.json')
   if (!top || typeof top !== 'object' || Array.isArray(top)) {
     throw new Error('manifest.json 必须是非数组对象')
