@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
+from mz_ai_backend.core.config import Settings
+from mz_ai_backend.core.dependencies import get_settings_dependency
 from mz_ai_backend.core.protocol import ApiResponse, success_response
 
 from ..application import (
@@ -13,6 +15,7 @@ from ..application import (
 )
 from ..application.use_cases import (
     CreateCampWechatLoginSessionUseCase,
+    DevCampFakeLoginUseCase,
     ExchangeCampWechatLoginUseCase,
     GetCurrentCampAccountUseCase,
     GetCampWechatLoginSessionUseCase,
@@ -22,6 +25,7 @@ from ..application.use_cases import (
 from ..infrastructure import (
     get_create_wechat_login_session_use_case,
     get_current_camp_access_token,
+    get_dev_camp_fake_login_use_case,
     get_exchange_wechat_login_use_case,
     get_get_current_camp_account_use_case,
     get_get_wechat_login_session_use_case,
@@ -33,6 +37,7 @@ from .schemas import (
     CampAuthenticationResponse,
     CampWechatLoginSessionResponse,
     CampWechatLoginSessionStatusResponse,
+    DevCampFakeLoginRequest,
     ExchangeCampWechatLoginRequest,
     LogoutCampSessionRequest,
     LogoutCampSessionResponse,
@@ -138,4 +143,25 @@ async def exchange_wechat_login_session(
     ],
 ) -> ApiResponse[CampAuthenticationResponse]:
     result = await use_case.execute(request.to_command(login_session_id=login_session_id))
+    return success_response(data=CampAuthenticationResponse.from_result(result))
+
+
+@router.post(
+    "/dev/fake-login",
+    response_model=ApiResponse[CampAuthenticationResponse],
+    summary="[dev-only] 跳过微信扫码，按 username 签发 token（可选设置会员 tier）",
+    description="本地联调专用：env=production 时返回 404 拒绝调用。",
+)
+async def dev_fake_login(
+    request: DevCampFakeLoginRequest,
+    settings: Annotated[Settings, Depends(get_settings_dependency)],
+    use_case: Annotated[
+        DevCampFakeLoginUseCase,
+        Depends(get_dev_camp_fake_login_use_case),
+    ],
+) -> ApiResponse[CampAuthenticationResponse]:
+    # 双保险：env=production 直接 404，避免生产暴露 dev 后门
+    if settings.env == "production":
+        raise HTTPException(status_code=404, detail="Not Found")
+    result = await use_case.execute(request.to_command())
     return success_response(data=CampAuthenticationResponse.from_result(result))

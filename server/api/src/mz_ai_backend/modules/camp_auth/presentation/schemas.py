@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
@@ -14,6 +15,7 @@ from ..application import (
     LogoutCampSessionResult,
     RefreshCampSessionCommand,
 )
+from ..application.dtos import DEV_FAKE_LOGIN_DEFAULT_USERNAME, DevCampFakeLoginCommand
 
 
 def _serialize_business_id(value: int) -> str:
@@ -185,3 +187,15 @@ class CampWechatLoginSessionStatusResponse(BaseModel):
             status=result.status.value,
             expires_at=result.expires_at,
         )
+
+
+class DevCampFakeLoginRequest(BaseModel):
+    """dev-only 免微信登录请求体；不传时用默认账号 dev_local、tier=none。"""
+
+    model_config = ConfigDict(frozen=True)
+
+    username: str = DEV_FAKE_LOGIN_DEFAULT_USERNAME
+    tier: Literal["none", "basic", "premium"] = "none"
+
+    def to_command(self) -> DevCampFakeLoginCommand:
+        return DevCampFakeLoginCommand(username=self.username, tier=self.tier)

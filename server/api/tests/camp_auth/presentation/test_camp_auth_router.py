@@ -239,3 +239,51 @@ def test_camp_auth_router_me_returns_current_account() -> None:
     assert body["data"]["account_id"] == "2001"
     assert body["data"]["username"] == "camp_2001"
     assert body["data"]["status"] == "active"
+
+
+def test_dev_fake_login_returns_tokens_in_dev():
+    from mz_ai_backend.modules.camp_auth.infrastructure.dependencies import get_dev_camp_fake_login_use_case
+    from mz_ai_backend.core.dependencies import get_settings_dependency
+
+    class _StubUseCase:
+        async def execute(self, command):
+            now = datetime.now(UTC)
+            return CampAuthenticationResult(
+                account=CampAccountSummary(account_id=3100, username=command.username, email=None,
+                                           status=CampAccountStatus.ACTIVE, created_at=_now()),
+                tokens=CampTokenPair(access_token="a", access_token_expires_at=now,
+                                     refresh_token="r", refresh_token_expires_at=now),
+            )
+
+    class _DevSettings:
+        env = "development"
+
+    app = create_app()
+    app.dependency_overrides[get_dev_camp_fake_login_use_case] = lambda: _StubUseCase()
+    app.dependency_overrides[get_settings_dependency] = lambda: _DevSettings()
+    client = TestClient(app)
+    resp = client.post("/api/v1/camp-auth/dev/fake-login", json={"username": "dev_x", "tier": "basic"})
+    assert resp.status_code == 200
+    assert resp.json()["data"]["account"]["username"] == "dev_x"
+    app.dependency_overrides.clear()
+
+
+def test_dev_fake_login_404_in_production():
+    from mz_ai_backend.modules.camp_auth.infrastructure.dependencies import get_dev_camp_fake_login_use_case
+    from mz_ai_backend.core.dependencies import get_settings_dependency
+
+    class _ProdSettings:
+        env = "production"
+
+    class _StubUseCase:
+        async def execute(self, command):
+            raise AssertionError("should never be called in production")
+
+    app = create_app()
+    # 同时 override use_case，避免 DB 依赖解析失败
+    app.dependency_overrides[get_dev_camp_fake_login_use_case] = lambda: _StubUseCase()
+    app.dependency_overrides[get_settings_dependency] = lambda: _ProdSettings()
+    client = TestClient(app)
+    resp = client.post("/api/v1/camp-auth/dev/fake-login", json={"username": "dev_x"})
+    assert resp.status_code == 404
+    app.dependency_overrides.clear()
