@@ -10,6 +10,7 @@ Development rules:
 
 from ._session_tokens import issue_camp_auth_tokens
 from .create_wechat_login_session import CreateCampWechatLoginSessionUseCase
+from .dev_camp_fake_login import DevCampFakeLoginUseCase
 from .exchange_wechat_login import ExchangeCampWechatLoginUseCase
 from .get_current_camp_account import GetCurrentCampAccountUseCase
 from .get_wechat_login_session import GetCampWechatLoginSessionUseCase
@@ -20,6 +21,7 @@ from .refresh_camp_session import RefreshCampSessionUseCase
 __all__ = [
     "issue_camp_auth_tokens",
     "CreateCampWechatLoginSessionUseCase",
+    "DevCampFakeLoginUseCase",
     "ExchangeCampWechatLoginUseCase",
     "GetCurrentCampAccountUseCase",
     "GetCampWechatLoginSessionUseCase",
