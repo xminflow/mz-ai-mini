@@ -1,36 +1,96 @@
-'use client'
+"use client";
 
-import { GradientText, Reveal } from '../../motion'
-import { INSTRUCTOR_CREDENTIALS, THEMES } from './data'
-import { SectionEyebrow } from './primitives'
+import { GradientText, Reveal } from "../../motion";
+import { INSTRUCTOR_CREDENTIALS, THEMES } from "./data";
+
+/* 「为什么选我们」八大核心：短标题 + 完整描述（描述逐字按用户原话，未改一字）。 */
+type Pitch = { title: string; desc: string };
+const PROMISES: Pitch[] = [
+  {
+    title: "CTO亲授",
+    desc: "专注于做好每一节AI精品课程，基于长期的AI编程教学经验，我们真正了解你的学习卡点，CTO亲自带你从零一步步实操，让你看清每一个AI编程细节",
+  },
+  {
+    title: "AI驱动软件闭环",
+    desc: "AI让我们每个人都可以成为全能战士，从开发到上线全流程，我们教你通过AI的方式真正走完软件全生命周期闭环，不论是创意还是工作，轻松拿捏",
+  },
+  {
+    title: "为结果负责",
+    desc: "学习并不是你一个人的事情，而是我们共同努力的成果，我们将持续跟踪你的掌握进度，并对你的学习成果进行验收",
+  },
+  {
+    title: "AI思维",
+    desc: "传统方式的软件教学以及常规的AI编程思维早已过时，我们是市面上最好最新的纯粹的AI编程课题，真正以AI思维驱动的AI编程与个人技术成长，让你以最轻松最高效的方式掌握AI软件编程",
+  },
+  {
+    title: "核心竞争力",
+    desc: "我们确信未来必定是全民AI编程，任何人都可以学会AI编程，但不同的人有不同的核心竞争力,我们将以最先进的AI学习方法论来挖掘出你的核心竞争力，不论是创业还是职场，你都可以一枝独秀",
+  },
+  {
+    title: "思维骨架",
+    desc: "我们教会你以AI的思维提炼了软件工程中最核心的思维骨架，只需要这一套课程即可悟透软件应用开发领域，我们不仅仅是教你技术，更是需要让你掌握面向未来的AI成长思维",
+  },
+  {
+    title: "AI社区",
+    desc: "在AI时代知识需要不断更新才有价值，于是我们为你打造了持续进化的AI社区，永久开放，终身学习",
+  },
+  {
+    title: "企业实战",
+    desc: "我们准备了真实的企业级实战项目，从零开始使用AI进行完整开发闭环，给你展示每一个AI的使用细节与软件架构设计考量，让你真正具备企业级AI开发能力，同时让你的简历大放异彩",
+  },
+];
 
 export function InstructorSection() {
   return (
     <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
       <Reveal>
-        <div className="flex flex-col gap-4">
-          <SectionEyebrow color="#C4B5FD">讲师介绍</SectionEyebrow>
-          <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
-            <span className="mt-1 block sm:mt-1.5">
-              <GradientText className="font-semibold">12 年产品研发实战 + 4 年 CTO + 2 年 AI 大模型应用教学</GradientText>
-            </span>
-          </h2>
-          <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
-            不是只会讲 PPT 的"AI 老师"——是真正在一线写过、做过、带过团队、踩过坑的工程师。
-          </p>
-        </div>
+        <h2 className="font-serif-zh text-center text-[24px] font-bold leading-[1.3] text-ink sm:text-[30px] lg:text-[34px]">
+          为什么选我们？
+        </h2>
       </Reveal>
 
-      <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-12 sm:gap-6 lg:grid-cols-[1fr_1.55fr]">
-        {/* 讲师名片 */}
-        <Reveal>
+      {/* 左：八大核心卡片网格 / 右：个人简介名片（资历并入） */}
+      <div className="mt-9 grid grid-cols-1 gap-5 sm:mt-12 sm:gap-6 lg:grid-cols-[1.55fr_1fr] lg:items-stretch">
+        {/* 左侧：八大核心 · 无边框中性玻璃卡片（文案逐字按用户原话） */}
+        <div className="grid grid-cols-1 gap-4 text-left sm:grid-cols-2">
+          {PROMISES.map((p, i) => (
+            <Reveal key={p.title} delay={0.06 + i * 0.04}>
+              <div
+                className="group h-full rounded-[20px] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1"
+                style={{
+                  background:
+                    "linear-gradient(150deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.018) 100%)",
+                  boxShadow: "0 14px 36px -22px rgba(0,0,0,0.85)",
+                }}
+              >
+                <span
+                  aria-hidden
+                  className="block h-[3px] w-9 rounded-full transition-all duration-300 group-hover:w-14"
+                  style={{
+                    background: "linear-gradient(90deg, #C4B5FD, #67E8F9)",
+                  }}
+                />
+                <h3 className="mt-4 font-serif-zh text-[18px] font-bold leading-tight sm:text-[20px]">
+                  <GradientText>{p.title}</GradientText>
+                </h3>
+                <p className="mt-2.5 text-[12.5px] leading-[1.8] text-ink-soft sm:text-[13px]">
+                  {p.desc}
+                </p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+
+        {/* 右侧：讲师名片（个人简介，4 项资历以竖线+文字形式并入卡内） */}
+        <Reveal delay={0.1}>
           <div
-            className="relative h-full overflow-hidden rounded-[24px] border p-6 backdrop-blur-xl sm:rounded-[28px] sm:p-8"
+            className="relative h-full overflow-hidden rounded-[24px] border p-6 backdrop-blur-xl sm:rounded-[28px] sm:p-7"
             style={{
-              borderColor: 'rgba(196,181,253,0.32)',
+              borderColor: "rgba(196,181,253,0.32)",
               background:
-                'linear-gradient(140deg, rgba(167,139,250,0.16) 0%, rgba(232,121,249,0.10) 50%, rgba(13,13,18,0.55) 100%)',
-              boxShadow: 'inset 0 0 0 1px rgba(196,181,253,0.06), 0 16px 48px -16px rgba(167,139,250,0.4)',
+                "linear-gradient(140deg, rgba(167,139,250,0.16) 0%, rgba(232,121,249,0.10) 50%, rgba(13,13,18,0.55) 100%)",
+              boxShadow:
+                "inset 0 0 0 1px rgba(196,181,253,0.06), 0 16px 48px -16px rgba(167,139,250,0.4)",
             }}
           >
             {/* 主题色光晕 */}
@@ -38,40 +98,43 @@ export function InstructorSection() {
               aria-hidden
               className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full opacity-70"
               style={{
-                background: 'radial-gradient(circle, rgba(196,181,253,0.5) 0%, transparent 65%)',
+                background:
+                  "radial-gradient(circle, rgba(196,181,253,0.5) 0%, transparent 65%)",
               }}
             />
             <span
               aria-hidden
               className="pointer-events-none absolute -bottom-16 -left-16 h-44 w-44 rounded-full opacity-60"
               style={{
-                background: 'radial-gradient(circle, rgba(232,121,249,0.4) 0%, transparent 65%)',
+                background:
+                  "radial-gradient(circle, rgba(232,121,249,0.4) 0%, transparent 65%)",
               }}
             />
 
             <div className="relative flex h-full flex-col gap-5">
-              {/* 头像占位 */}
+              {/* 头像 + 姓名 */}
               <div className="flex items-center gap-4">
-                <div
-                  className="flex h-16 w-16 flex-none items-center justify-center rounded-2xl font-serif-zh text-[26px] font-bold text-canvas sm:h-20 sm:w-20 sm:text-[32px]"
+                <img
+                  src="https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/instructor/shiyi.jpg"
+                  alt="主讲老师 十一"
+                  loading="lazy"
+                  className="h-16 w-16 flex-none rounded-2xl object-cover object-[50%_22%] sm:h-20 sm:w-20"
                   style={{
-                    background: 'linear-gradient(135deg, #C4B5FD, #A78BFA 50%, #7C3AED)',
-                    boxShadow: '0 12px 28px -8px rgba(167,139,250,0.65), inset 0 0 0 1px rgba(255,255,255,0.2)',
+                    boxShadow:
+                      "0 12px 28px -8px rgba(167,139,250,0.65), inset 0 0 0 1px rgba(255,255,255,0.2)",
                   }}
-                >
-                  行
-                </div>
+                />
                 <div className="flex flex-col gap-1">
                   <span
                     className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.22em]"
-                    style={{ color: '#C4B5FD' }}
+                    style={{ color: "#C4B5FD" }}
                   >
                     主讲老师 · INSTRUCTOR
                   </span>
                   <h3 className="font-serif-zh text-[24px] font-bold leading-none text-ink sm:text-[28px]">
-                    行明
+                    十一
                     <span className="ml-2 align-middle font-mono text-[12px] font-medium text-ink-soft sm:text-[13px]">
-                      XING MING
+                      SHI YI
                     </span>
                   </h3>
                 </div>
@@ -82,114 +145,103 @@ export function InstructorSection() {
                 <span
                   className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] sm:text-[11.5px]"
                   style={{
-                    borderColor: 'rgba(196,181,253,0.45)',
-                    background: 'rgba(167,139,250,0.10)',
-                    color: '#C4B5FD',
+                    borderColor: "rgba(196,181,253,0.45)",
+                    background: "rgba(167,139,250,0.10)",
+                    color: "#C4B5FD",
                   }}
                 >
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: '#C4B5FD' }} />
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ background: "#C4B5FD" }}
+                  />
                   创业公司 CTO
                 </span>
                 <span
                   className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] sm:text-[11.5px]"
                   style={{
-                    borderColor: 'rgba(103,232,249,0.45)',
-                    background: 'rgba(34,211,238,0.10)',
-                    color: '#67E8F9',
+                    borderColor: "rgba(103,232,249,0.45)",
+                    background: "rgba(34,211,238,0.10)",
+                    color: "#67E8F9",
                   }}
                 >
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: '#67E8F9' }} />
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ background: "#67E8F9" }}
+                  />
                   一线工程师
                 </span>
                 <span
                   className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] sm:text-[11.5px]"
                   style={{
-                    borderColor: 'rgba(253,164,175,0.45)',
-                    background: 'rgba(251,113,133,0.10)',
-                    color: '#FDA4AF',
+                    borderColor: "rgba(253,164,175,0.45)",
+                    background: "rgba(251,113,133,0.10)",
+                    color: "#FDA4AF",
                   }}
                 >
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: '#FDA4AF' }} />
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ background: "#FDA4AF" }}
+                  />
                   AI 教学者
                 </span>
               </div>
 
               {/* 短引言 */}
               <p className="text-[13px] leading-[1.85] text-ink-soft sm:text-[13.5px]">
-                「我自己用 AI 编程做完整产品已经做了两年，也用同一套工作流带过零基础学员从 0 跑到上线——这门课讲的就是我自己每天在用的那一套。」
+                「我自己用 AI
+                编程做完整产品已经做了两年，也用同一套工作流带过零基础学员从 0
+                跑到上线——这门课讲的就是我自己每天在用的那一套。」
               </p>
 
-              <div
-                className="mt-auto flex items-center gap-2 rounded-xl border px-3.5 py-2.5 sm:px-4 sm:py-3"
-                style={{
-                  borderColor: 'rgba(196,181,253,0.22)',
-                  background: 'rgba(167,139,250,0.06)',
-                }}
-              >
+              {/* 4 项核心资历（并入名片：竖线主题色 + 数字 + 标题 + 说明） */}
+              <div className="flex flex-col gap-3">
+                {INSTRUCTOR_CREDENTIALS.map((cred) => {
+                  const t = THEMES[cred.theme];
+                  return (
+                    <div
+                      key={cred.label}
+                      className="flex flex-col gap-1 border-l-2 pl-3"
+                      style={{ borderColor: t.hex }}
+                    >
+                      <div className="flex items-baseline gap-2">
+                        <span
+                          className="font-serif-zh text-[15px] font-bold leading-none"
+                          style={{
+                            color: t.hex,
+                            textShadow: `0 0 14px ${t.hex}55`,
+                          }}
+                        >
+                          {cred.metric}
+                        </span>
+                        <span className="text-[12.5px] font-semibold leading-[1.4] text-ink sm:text-[13px]">
+                          {cred.label}
+                        </span>
+                      </div>
+                      <span className="text-[11.5px] leading-[1.65] text-ink-soft">
+                        {cred.detail}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* 底部强调：亲授承诺（不单独成容器，作为一行文字收尾） */}
+              <div className="mt-auto flex items-center gap-2">
                 <span
-                  className="h-1.5 w-1.5 animate-pulse rounded-full"
-                  style={{ background: '#C4B5FD', boxShadow: '0 0 6px rgba(196,181,253,0.8)' }}
+                  className="h-1.5 w-1.5 flex-none animate-pulse rounded-full"
+                  style={{
+                    background: "#C4B5FD",
+                    boxShadow: "0 0 6px rgba(196,181,253,0.8)",
+                  }}
                 />
                 <span className="text-[12.5px] font-medium text-ink sm:text-[13px]">
-                  每期训练营由行明亲自授课、亲自答疑，不外包、不录播充数
+                  每期训练营由十一亲自授课、亲自答疑，不外包、不录播充数
                 </span>
               </div>
             </div>
           </div>
         </Reveal>
-
-        {/* 4 项资历卡片 */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
-          {INSTRUCTOR_CREDENTIALS.map((cred, i) => {
-            const t = THEMES[cred.theme]
-            return (
-              <Reveal key={cred.label} delay={i * 0.06}>
-                <div
-                  className="group relative h-full overflow-hidden rounded-2xl border p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[22px] sm:p-6"
-                  style={{
-                    borderColor: `rgba(${t.rgb}, 0.26)`,
-                    background: `linear-gradient(135deg, rgba(${t.rgb}, 0.12) 0%, rgba(13,13,18,0.55) 65%)`,
-                    boxShadow: `inset 0 0 0 1px rgba(${t.rgb}, 0.06)`,
-                  }}
-                >
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full opacity-50 transition-opacity duration-500 group-hover:opacity-80"
-                    style={{
-                      background: `radial-gradient(circle, ${t.hex}55 0%, transparent 65%)`,
-                    }}
-                  />
-                  <div className="relative flex h-full flex-col gap-3">
-                    <span
-                      className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em]"
-                      style={{ color: t.hex }}
-                    >
-                      CREDENTIAL · {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <div className="flex items-baseline gap-2">
-                      <span
-                        className="font-serif-zh text-[28px] font-bold leading-none tabular sm:text-[34px]"
-                        style={{
-                          color: t.hex,
-                          textShadow: `0 0 18px ${t.hex}66`,
-                        }}
-                      >
-                        {cred.metric}
-                      </span>
-                    </div>
-                    <h4 className="text-[14px] font-semibold leading-[1.4] text-ink sm:text-[15px]">
-                      {cred.label}
-                    </h4>
-                    <p className="text-[12.5px] leading-[1.75] text-ink-soft sm:text-[13px]">
-                      {cred.detail}
-                    </p>
-                  </div>
-                </div>
-              </Reveal>
-            )
-          })}
-        </div>
       </div>
     </section>
-  )
+  );
 }

@@ -69,7 +69,6 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
                 <div className="flex flex-col gap-5 sm:gap-6">
                   {group.lessons.map((lesson, li) => {
                     const t = STAGE2_THEMES[lesson.theme]
-                    const isHoursDraft = lesson.hours === '待确认'
                     return (
                       <Reveal key={lesson.code} delay={Math.min(li, 4) * 0.04}>
                         <article
@@ -124,22 +123,6 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
                                   </h4>
                                 </div>
                               </div>
-                              {/* 课时 chip：待确认时呈暗灰占位 */}
-                              <div className="flex flex-none">
-                                {isHoursDraft ? (
-                                  <DraftTag>课时待确认</DraftTag>
-                                ) : (
-                                  <span
-                                    className="inline-flex items-center rounded-full px-3 py-1 font-mono text-[11px] font-bold tabular text-canvas"
-                                    style={{
-                                      background: `linear-gradient(135deg, ${t.gradientFrom}, ${t.gradientTo})`,
-                                      boxShadow: `0 6px 18px -4px ${t.hex}66`,
-                                    }}
-                                  >
-                                    {lesson.hours}
-                                  </span>
-                                )}
-                              </div>
                             </div>
 
                             {/* 本节目标 */}
@@ -172,28 +155,6 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
                                 </li>
                               ))}
                             </ul>
-
-                            {/* 课后产出 callout */}
-                            <div
-                              className="flex flex-col gap-1.5 rounded-xl border p-4 sm:p-5"
-                              style={{
-                                borderColor: `rgba(${t.rgb}, 0.3)`,
-                                background: `rgba(${t.rgb}, 0.08)`,
-                              }}
-                            >
-                              <div className="flex items-center gap-2">
-                                <span
-                                  className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.18em]"
-                                  style={{ color: t.hex }}
-                                >
-                                  课后产出 · 收获
-                                </span>
-                                {lesson.outputDraft && <DraftTag />}
-                              </div>
-                              <p className="text-[13px] font-medium leading-[1.7] text-ink sm:text-[14px]">
-                                {lesson.output}
-                              </p>
-                            </div>
                           </div>
                         </article>
                       </Reveal>
@@ -431,7 +392,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
 
             {/* 价格条 + 含第一阶段全部内容 pill */}
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-              <PriceChip badge="AI 专家" specialLabel="全包价" price={STAGE2_PRICE.now} onClick={onEnroll} />
+              <PriceChip badge="AI 专家" originalPrice={STAGE2_PRICE.original} specialLabel="限时特价" price={STAGE2_PRICE.now} onClick={onEnroll} />
               <span
                 className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[12px] font-semibold sm:text-[12.5px]"
                 style={{

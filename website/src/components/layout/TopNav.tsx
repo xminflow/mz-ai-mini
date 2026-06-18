@@ -36,6 +36,7 @@ const NAV_LINKS: NavLink[] = [
     ],
   },
   { href: '/membership', label: '会员', matchPrefix: '/membership' },
+  { href: '/ai-coding-camp', label: '训练营', matchPrefix: '/ai-coding-camp' },
   { href: '/consulting', label: '咨询服务' },
   { href: '/about', label: '关于' },
 ]

@@ -1,12 +1,14 @@
-'use client'
+"use client";
 
-import { GradientText, Reveal } from '../../motion'
+import { GradientText, Reveal } from "../../motion";
 import {
   STAGE1_DELIVERABLES as DELIVERABLES,
-  STAGE1_CHAPTERS as CHAPTERS, STAGE1_SERVICE_STAGES as SERVICE_STAGES, THEMES,
+  STAGE1_CHAPTERS as CHAPTERS,
+  STAGE1_SERVICE_STAGES as SERVICE_STAGES,
+  THEMES,
   STAGE1_PRICE,
-} from './data'
-import { SectionEyebrow, PriceChip } from './primitives'
+} from "./data";
+import { SectionEyebrow, PriceChip } from "./primitives";
 
 export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
   return (
@@ -21,7 +23,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
 
         <div className="mt-10 flex flex-col gap-5 sm:mt-12 sm:gap-6">
           {CHAPTERS.map((chapter, i) => {
-            const t = THEMES[chapter.theme]
+            const t = THEMES[chapter.theme];
             return (
               <Reveal key={chapter.index} delay={Math.min(i, 4) * 0.04}>
                 <article
@@ -36,7 +38,9 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                   <span
                     aria-hidden
                     className="pointer-events-none absolute left-0 top-0 h-full w-1.5"
-                    style={{ background: `linear-gradient(to bottom, ${t.gradientFrom}, ${t.gradientTo})` }}
+                    style={{
+                      background: `linear-gradient(to bottom, ${t.gradientFrom}, ${t.gradientTo})`,
+                    }}
                   />
                   {/* 右下角超大半透明课时序号 */}
                   <span
@@ -48,7 +52,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                       WebkitTextStroke: `1px ${t.hex}33`,
                     }}
                   >
-                    {String(chapter.index).padStart(2, '0')}
+                    {String(chapter.index).padStart(2, "0")}
                   </span>
 
                   <div className="relative flex flex-col gap-5">
@@ -62,14 +66,14 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                             boxShadow: `0 6px 18px -4px ${t.hex}66`,
                           }}
                         >
-                          {String(chapter.index).padStart(2, '0')}
+                          {String(chapter.index).padStart(2, "0")}
                         </span>
                         <div className="flex flex-col gap-2">
                           <span
                             className="font-mono text-[10.5px] font-medium uppercase tracking-[0.22em]"
                             style={{ color: t.hex }}
                           >
-                            课时 {chapter.index} · {t.label} · {chapter.hours}
+                            {String(chapter.index).padStart(2, "0")} · {t.label}
                           </span>
                           <h3 className="font-serif-zh text-[19px] font-semibold leading-[1.4] text-ink sm:text-[22px] lg:text-[25px]">
                             {chapter.title}
@@ -130,8 +134,8 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                           key={lesson.code}
                           className="flex items-start gap-3 rounded-xl border p-3.5 transition-colors hover:border-hairline-strong sm:gap-3.5 sm:p-4"
                           style={{
-                            borderColor: 'rgba(255,255,255,0.07)',
-                            background: 'rgba(5,5,7,0.45)',
+                            borderColor: "rgba(255,255,255,0.07)",
+                            background: "rgba(5,5,7,0.45)",
                           }}
                         >
                           <span
@@ -158,7 +162,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                   </div>
                 </article>
               </Reveal>
-            )
+            );
           })}
         </div>
       </section>
@@ -171,18 +175,21 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
             <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
               <span className="block">学完，你手里会有</span>
               <span className="mt-1 block sm:mt-1.5">
-                <GradientText className="font-semibold">4 件你自己亲手做出来的交付成果</GradientText>
+                <GradientText className="font-semibold">
+                  4 件你自己亲手做出来的交付成果
+                </GradientText>
               </span>
             </h2>
             <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
-              不是看老师演示的截图，不是跑一遍 demo——是亲手做出来、能扫码访问、能发给朋友看的产品。
+              不是看老师演示的截图，不是跑一遍
+              demo——是亲手做出来、能在线访问、能发给朋友看的产品。
             </p>
           </div>
         </Reveal>
 
         <div className="mt-10 grid grid-cols-1 gap-4 sm:mt-12 sm:gap-5 lg:grid-cols-2">
           {DELIVERABLES.map((item, i) => {
-            const t = THEMES[item.theme]
+            const t = THEMES[item.theme];
             return (
               <Reveal key={item.code} delay={i * 0.06}>
                 <article
@@ -199,7 +206,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                     className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full opacity-60 transition-opacity duration-500 group-hover:opacity-100"
                     style={{
                       background: `radial-gradient(circle, ${t.hex}55 0%, transparent 65%)`,
-                      filter: 'blur(24px)',
+                      filter: "blur(24px)",
                     }}
                   />
                   {/* 巨大半透明序号 */}
@@ -230,7 +237,10 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                           background: `rgba(${t.rgb}, 0.08)`,
                         }}
                       >
-                        <span className="h-1.5 w-1.5 rounded-full" style={{ background: t.hex }} />
+                        <span
+                          className="h-1.5 w-1.5 rounded-full"
+                          style={{ background: t.hex }}
+                        />
                         交付物 · DELIVERABLE
                       </span>
                     </div>
@@ -266,7 +276,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                   </div>
                 </article>
               </Reveal>
-            )
+            );
           })}
         </div>
       </section>
@@ -279,11 +289,16 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
             <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
               <span className="block">1 个月线上直播 ·</span>
               <span className="mt-1 block sm:mt-1.5">
-                <GradientText className="font-semibold">最长 6 个月持续陪跑</GradientText>
+                <GradientText className="font-semibold">
+                  最长 6 个月持续陪跑
+                </GradientText>
               </span>
             </h2>
             <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
-              用一个月把十节课时系统化课程结构化交付给你，再用最长 6 个月把能力真正稳住——边学边做，结业时 4 件你自己亲手做出来的交付成果同步产出；课程之外的真实问题，6 个月内都可以继续来问。
+              用一个月把系统化课程结构化交付给你，再用最长 6
+              个月把能力真正稳住——边学边做，结业时 4
+              件你自己亲手做出来的交付成果同步产出；课程之外的真实问题，6
+              个月内都可以继续来问。
             </p>
           </div>
         </Reveal>
@@ -291,15 +306,15 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
         {/* 2 大对等阶段：直播 + 6 月陪跑 */}
         <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-12 sm:gap-6 lg:grid-cols-2">
           {SERVICE_STAGES.map((stage, i) => {
-            const t = THEMES[stage.theme]
-            const isCompanion = stage.code === '02'
+            const t = THEMES[stage.theme];
+            const isCompanion = stage.code === "02";
             return (
               <Reveal key={stage.code} delay={i * 0.1}>
                 <article
                   className="group relative h-full overflow-hidden rounded-[24px] border p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[28px] sm:p-8 lg:p-9"
                   style={{
                     borderColor: `rgba(${t.rgb}, ${isCompanion ? 0.4 : 0.28})`,
-                    background: `linear-gradient(135deg, rgba(${t.rgb}, ${isCompanion ? 0.14 : 0.10}) 0%, rgba(13,13,18,0.55) 60%)`,
+                    background: `linear-gradient(135deg, rgba(${t.rgb}, ${isCompanion ? 0.14 : 0.1}) 0%, rgba(13,13,18,0.55) 60%)`,
                     boxShadow: isCompanion
                       ? `inset 0 0 0 1px rgba(${t.rgb}, 0.18), 0 20px 50px -20px ${t.hex}55`
                       : `inset 0 0 0 1px rgba(${t.rgb}, 0.06)`,
@@ -311,7 +326,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                     className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full opacity-60"
                     style={{
                       background: `radial-gradient(circle, ${t.hex}66 0%, transparent 65%)`,
-                      filter: 'blur(28px)',
+                      filter: "blur(28px)",
                     }}
                   />
                   {/* 巨号背景序号 */}
@@ -357,11 +372,15 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                     </p>
 
                     {/* 详细服务清单 */}
-                    <ul className="mt-2 flex flex-col gap-2.5 border-t pt-4 sm:gap-3 sm:pt-5"
+                    <ul
+                      className="mt-2 flex flex-col gap-2.5 border-t pt-4 sm:gap-3 sm:pt-5"
                       style={{ borderColor: `rgba(${t.rgb}, 0.15)` }}
                     >
                       {stage.features.map((f) => (
-                        <li key={f} className="flex items-start gap-2.5 text-[12.5px] leading-[1.6] text-ink-soft sm:text-[13px]">
+                        <li
+                          key={f}
+                          className="flex items-start gap-2.5 text-[12.5px] leading-[1.6] text-ink-soft sm:text-[13px]"
+                        >
                           <span
                             aria-hidden
                             className="mt-1.5 inline-flex h-1.5 w-1.5 flex-none rounded-full"
@@ -384,14 +403,17 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                           color: t.hex,
                         }}
                       >
-                        <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: t.hex }} />
+                        <span
+                          className="h-1.5 w-1.5 animate-pulse rounded-full"
+                          style={{ background: t.hex }}
+                        />
                         训练营独家承诺
                       </div>
                     )}
                   </div>
                 </article>
               </Reveal>
-            )
+            );
           })}
         </div>
 
@@ -400,9 +422,9 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
           <div
             className="relative mt-6 overflow-hidden rounded-2xl border p-5 backdrop-blur-xl sm:mt-8 sm:rounded-[22px] sm:p-6"
             style={{
-              borderColor: 'rgba(167,139,250,0.22)',
+              borderColor: "rgba(167,139,250,0.22)",
               background:
-                'linear-gradient(110deg, rgba(167,139,250,0.10) 0%, rgba(251,113,133,0.08) 50%, rgba(251,191,36,0.10) 100%)',
+                "linear-gradient(110deg, rgba(167,139,250,0.10) 0%, rgba(251,113,133,0.08) 50%, rgba(251,191,36,0.10) 100%)",
             }}
           >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
@@ -417,21 +439,30 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
               <div className="flex items-center gap-2 font-mono text-[11px] tabular text-ink-soft sm:text-[12px]">
                 <span
                   className="rounded-full px-3 py-1.5"
-                  style={{ background: 'rgba(167,139,250,0.18)', color: '#C4B5FD' }}
+                  style={{
+                    background: "rgba(167,139,250,0.18)",
+                    color: "#C4B5FD",
+                  }}
                 >
                   第 1 月 · 直播
                 </span>
                 <span className="text-muted">→</span>
                 <span
                   className="rounded-full px-3 py-1.5"
-                  style={{ background: 'rgba(251,113,133,0.15)', color: '#FDA4AF' }}
+                  style={{
+                    background: "rgba(251,113,133,0.15)",
+                    color: "#FDA4AF",
+                  }}
                 >
                   实操产出
                 </span>
                 <span className="text-muted">→</span>
                 <span
                   className="rounded-full px-3 py-1.5"
-                  style={{ background: 'rgba(251,191,36,0.15)', color: '#FCD34D' }}
+                  style={{
+                    background: "rgba(251,191,36,0.15)",
+                    color: "#FCD34D",
+                  }}
                 >
                   6 月陪跑
                 </span>
@@ -458,5 +489,5 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
         </Reveal>
       </section>
     </div>
-  )
+  );
 }

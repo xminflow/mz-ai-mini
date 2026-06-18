@@ -265,7 +265,7 @@ const STAGE2_CURVE: { title: string; detail: string; theme: Stage2ThemeKey }[] =
   { title: '工程结构设计', detail: '整洁架构 + DDD，代码长期可维护', theme: 'advance' },
   { title: '大模型应用开发 · RAG 与上下文工程', detail: '把私有知识接进模型，搭最小 RAG 应用', theme: 'advance' },
   { title: '大模型应用开发 · 智能体与 harness', detail: '从零搭一个可控、带记忆的智能体', theme: 'advance' },
-  { title: '企业级实战直播 · 智能问数系统', detail: '企业级 Text-to-SQL，可上线带权限', theme: 'enterprise' }, // 合并 上/下
+  { title: '企业级实战直播 · 大数据 AI 智能分析系统', detail: '海量数据智能问数 + AI 出图表洞察，可上线带权限', theme: 'enterprise' }, // 合并 上/下
   { title: '企业级实战直播 · Hermes/Openclaw 智能体系统', detail: '可上线、可运营的智能体系统', theme: 'enterprise' }, // 合并 上/下
   { title: '求职面试专题', detail: '高频面试题 + 个人答案稿', theme: 'career' }, // 合并 一/二
 ]

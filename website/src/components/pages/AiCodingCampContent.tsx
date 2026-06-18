@@ -10,6 +10,7 @@ import { JourneyMap } from "./ai-coding-camp/JourneyMap";
 import { InstructorSection } from "./ai-coding-camp/InstructorSection";
 import { StageOneSection } from "./ai-coding-camp/StageOneSection";
 import { StageTwoSection } from "./ai-coding-camp/StageTwoSection";
+import { UpcomingCoursesSection } from "./ai-coding-camp/UpcomingCoursesSection";
 
 /* ─────────────────────────  主组件  ───────────────────────── */
 
@@ -20,10 +21,10 @@ export function AiCodingCampContent() {
 
   return (
     <div className="relative">
-      {/* 1. Hero：为什么选我们（核心价值） */}
+      {/* 1. Hero：标题 + 副标题 */}
       <Hero />
 
-      {/* 2. 主讲老师：行明（首屏价值区——由谁带你） */}
+      {/* 2. 为什么选我们（左：八大核心 / 右：个人简介名片，资历并入） */}
       <InstructorSection />
 
       {/* 3. 全景学习路径：纵向主线 + 嵌套购买覆盖框（外层 ¥3999 含内层 ¥1999） */}
@@ -54,6 +55,9 @@ export function AiCodingCampContent() {
 
       {/* 第二阶段：收获墙 / 三段 14 课大纲 / 服务拟稿 + ¥3999 报名入口 */}
       <StageTwoSection onEnroll={openContact} />
+
+      {/* 后续课程预告：四套企业级实战系统（敬请期待，轻量线+圆点列表） */}
+      <UpcomingCoursesSection />
 
       <ContactQrCodeModal open={contactOpen} onClose={closeContact} />
     </div>
