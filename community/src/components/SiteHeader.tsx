@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 // 「提问」由右侧 CTA 按钮承载，导航项不再重复列出
 const NAV_LINKS = [
   { label: '首页', to: '/' },
+  { label: 'AI编程', to: '/ai-coding' },
   { label: '标签', to: '/tags' },
 ]
 
@@ -14,11 +15,11 @@ export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-10 border-b border-line bg-bg/70 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-2.5">
-          <span className="bg-fusion glow-amber grid h-8 w-8 place-items-center rounded-xl text-sm font-semibold text-white">
-            知
+        <Link href="/" className="group flex items-center gap-2">
+          <img src="/logo/weiyu-logo-web-light.svg" alt="微域生光" className="h-9 w-9 sm:h-10 sm:w-10" />
+          <span className="font-display text-lg font-medium tracking-tight text-ink transition-opacity group-hover:opacity-80">
+            微域生光
           </span>
-          <span className="font-display text-lg font-medium tracking-tight text-ink">知识汇</span>
         </Link>
         <nav className="flex items-center gap-1">
           {NAV_LINKS.map((link) => {
