@@ -30,5 +30,5 @@ docker build -t weelume-backend .
 ## 本地开发
 
 ```bash
-uv run python -m uvicorn src.main:app --reload --port 8000
+uv run python -m uvicorn main:app --reload --port 8000
 ```

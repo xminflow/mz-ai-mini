@@ -3,7 +3,10 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import os
+import secrets
 import struct
+import time
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -12,7 +15,7 @@ from datetime import UTC, datetime
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 from ..application.ports import (
-    OfficialWechatEvent,
+    OfficialWechatInboundMessage,
     OfficialWechatQrTicket,
     OfficialWechatUserProfile,
 )
@@ -28,6 +31,8 @@ class WechatOfficialAccountGateway:
     )
     _CREATE_QR_URL = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token={access_token}"
     _SHOW_QR_URL = "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket={ticket}"
+    # 微信消息体 PKCS7 填充块大小固定为 32（见公众平台消息加解密规范）
+    _AES_BLOCK_SIZE = 32
     _USER_INFO_URL = (
         "https://api.weixin.qq.com/cgi-bin/user/info"
         "?access_token={access_token}&openid={openid}&lang=zh_CN"
@@ -83,8 +88,12 @@ class WechatOfficialAccountGateway:
         digest = hashlib.sha1("".join(parts).encode("utf-8")).hexdigest()
         return digest == msg_signature
 
-    def parse_callback_event(self, xml_body: str) -> OfficialWechatEvent:
-        """解析回调事件，自动识别安全模式（含 <Encrypt> 节点则解密后再解析）"""
+    def parse_inbound_message(self, xml_body: str) -> OfficialWechatInboundMessage:
+        """解析入站回调消息，自动识别安全模式（含 <Encrypt> 节点则解密后再解析）。
+
+        兼容事件消息（MsgType=event，带 Event）与普通消息（MsgType=text/image/... 无 Event），
+        只要求 MsgType / FromUserName / CreateTime 三个所有消息都有的公共字段。
+        """
         try:
             root = ET.fromstring(xml_body)
         except ET.ParseError as exc:
@@ -102,18 +111,83 @@ class WechatOfficialAccountGateway:
                 ) from exc
 
         values = {child.tag: (child.text or "").strip() for child in root}
-        event_type = values.get("Event")
+        msg_type = values.get("MsgType")
         openid = values.get("FromUserName")
-        event_time_raw = values.get("CreateTime")
-        if not event_type or not openid or not event_time_raw.isdigit():
+        to_user_name = values.get("ToUserName")
+        create_time_raw = values.get("CreateTime")
+        if (
+            not msg_type
+            or not openid
+            or not to_user_name
+            or not create_time_raw
+            or not create_time_raw.isdigit()
+        ):
             raise AgentWechatCallbackInvalidException(message="WeChat callback payload is incomplete.")
-        event_time = datetime.fromtimestamp(int(event_time_raw), UTC).replace(tzinfo=None)
-        return OfficialWechatEvent(
-            event_type=event_type,
+        message_time = datetime.fromtimestamp(int(create_time_raw), UTC).replace(tzinfo=None)
+        return OfficialWechatInboundMessage(
+            msg_type=msg_type,
             official_openid=openid,
+            to_user_name=to_user_name,
+            event_type=values.get("Event") or None,
             event_key=values.get("EventKey") or None,
             ticket=values.get("Ticket") or None,
-            event_time=event_time,
+            content=values.get("Content") or None,
+            message_time=message_time,
+        )
+
+    def build_subscribe_news_reply(
+        self,
+        *,
+        to_user_openid: str,
+        from_user_name: str,
+        title: str,
+        description: str,
+        pic_url: str,
+        url: str,
+    ) -> str:
+        """构造单图文被动回复 XML；安全模式下加密包裹，明文模式直接返回明文。"""
+        create_time = int(time.time())
+        plaintext = _render_news_xml(
+            to_user=to_user_openid,
+            from_user=from_user_name,
+            create_time=create_time,
+            title=title,
+            description=description,
+            pic_url=pic_url,
+            url=url,
+        )
+        if self._aes_key is None:
+            return plaintext
+        return self._encrypt_reply(plaintext, timestamp=str(create_time), nonce=secrets.token_hex(8))
+
+    def _encrypt_reply(self, plaintext: str, *, timestamp: str, nonce: str) -> str:
+        """AES-256-CBC 加密被动回复消息体，并生成 msg_signature 外层包裹（安全模式）。
+
+        明文结构与解密侧对齐：random(16) + 4字节大端长度 + 消息体 + appid，PKCS7(块=32) 填充。
+        """
+        if self._aes_key is None:
+            raise AgentWechatCallbackInvalidException(
+                message="WeChat encoding AES key is not configured."
+            )
+        key = self._aes_key
+        iv = key[:16]
+        msg = plaintext.encode("utf-8")
+        raw = os.urandom(16) + struct.pack(">I", len(msg)) + msg + self._appid.encode("utf-8")
+        pad_len = self._AES_BLOCK_SIZE - (len(raw) % self._AES_BLOCK_SIZE)
+        pad_len = pad_len or self._AES_BLOCK_SIZE
+        raw += bytes([pad_len]) * pad_len
+        cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
+        encryptor = cipher.encryptor()
+        encrypt = base64.b64encode(encryptor.update(raw) + encryptor.finalize()).decode("utf-8")
+        parts = sorted([self._token, timestamp, nonce, encrypt])
+        signature = hashlib.sha1("".join(parts).encode("utf-8")).hexdigest()
+        return (
+            "<xml>"
+            f"<Encrypt><![CDATA[{encrypt}]]></Encrypt>"
+            f"<MsgSignature><![CDATA[{signature}]]></MsgSignature>"
+            f"<TimeStamp>{timestamp}</TimeStamp>"
+            f"<Nonce><![CDATA[{nonce}]]></Nonce>"
+            "</xml>"
         )
 
     def _decrypt_message(self, encrypted: str) -> str:
@@ -206,6 +280,34 @@ class WechatOfficialAccountGateway:
         with urllib.request.urlopen(request, timeout=15) as response:
             body = json.loads(response.read().decode("utf-8"))
         return _validate_wechat_response(body)
+
+
+def _render_news_xml(
+    *,
+    to_user: str,
+    from_user: str,
+    create_time: int,
+    title: str,
+    description: str,
+    pic_url: str,
+    url: str,
+) -> str:
+    """渲染单图文被动回复明文 XML（CDATA 包裹文本字段，避免特殊字符破坏 XML）。"""
+    return (
+        "<xml>"
+        f"<ToUserName><![CDATA[{to_user}]]></ToUserName>"
+        f"<FromUserName><![CDATA[{from_user}]]></FromUserName>"
+        f"<CreateTime>{create_time}</CreateTime>"
+        "<MsgType><![CDATA[news]]></MsgType>"
+        "<ArticleCount>1</ArticleCount>"
+        "<Articles><item>"
+        f"<Title><![CDATA[{title}]]></Title>"
+        f"<Description><![CDATA[{description}]]></Description>"
+        f"<PicUrl><![CDATA[{pic_url}]]></PicUrl>"
+        f"<Url><![CDATA[{url}]]></Url>"
+        "</item></Articles>"
+        "</xml>"
+    )
 
 
 def _extract_encrypt_content(xml_body: str) -> str | None:

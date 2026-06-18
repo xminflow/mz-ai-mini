@@ -42,20 +42,28 @@ class OfficialWechatUserProfile(BaseModel):
     subscribed: bool
 
 
-class OfficialWechatEvent(BaseModel):
-    """Normalized official account callback event."""
+class OfficialWechatInboundMessage(BaseModel):
+    """Normalized official account inbound callback message.
+
+    覆盖两类入站消息：事件消息（subscribe/SCAN/unsubscribe 等，MsgType=event）与
+    普通消息（文本/图片等，MsgType=text/image/...）。event_type 仅在事件消息时有值。
+    """
 
     model_config = ConfigDict(frozen=True)
 
-    event_type: str
+    msg_type: str
     official_openid: str
+    # 入站 XML 的 ToUserName，即公众号自身的原始 ID（gh_xxx），被动回复时用作 FromUserName
+    to_user_name: str
+    event_type: str | None
     event_key: str | None
     ticket: str | None
-    event_time: datetime
+    content: str | None
+    message_time: datetime
 
 
 class OfficialWechatGateway(Protocol):
-    """Gateway contract for official account QR and event operations."""
+    """Gateway contract for official account QR, event and passive-reply operations."""
 
     def verify_callback_signature(
         self,
@@ -66,8 +74,24 @@ class OfficialWechatGateway(Protocol):
     ) -> bool:
         """Return whether the callback signature is valid."""
 
-    def parse_callback_event(self, xml_body: str) -> OfficialWechatEvent:
-        """Parse one official account callback XML body."""
+    def parse_inbound_message(self, xml_body: str) -> OfficialWechatInboundMessage:
+        """Parse one official account inbound callback XML body (event or user message)."""
+
+    def build_subscribe_news_reply(
+        self,
+        *,
+        to_user_openid: str,
+        from_user_name: str,
+        title: str,
+        description: str,
+        pic_url: str,
+        url: str,
+    ) -> str:
+        """Build the passive-reply XML for one single-article news message.
+
+        安全模式下返回加密包裹（含 Encrypt/MsgSignature/TimeStamp/Nonce）；明文模式返回明文 XML。
+        被动回复对 subscribe 事件无 48h 客服窗口限制，是开发模式下关注自动回复的可靠通道。
+        """
 
     async def create_temporary_qr_ticket(
         self,

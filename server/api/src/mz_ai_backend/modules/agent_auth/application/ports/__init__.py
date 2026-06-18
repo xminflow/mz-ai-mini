@@ -11,7 +11,7 @@ Development rules:
 from .repositories import AgentAccountRepository
 from .services import (
     EmailVerificationDeliveryGateway,
-    OfficialWechatEvent,
+    OfficialWechatInboundMessage,
     OfficialWechatQrTicket,
     OfficialWechatUserProfile,
     OfficialWechatGateway,
@@ -21,7 +21,7 @@ from .services import (
 __all__ = [
     "AgentAccountRepository",
     "EmailVerificationDeliveryGateway",
-    "OfficialWechatEvent",
+    "OfficialWechatInboundMessage",
     "OfficialWechatGateway",
     "OfficialWechatQrTicket",
     "OfficialWechatUserProfile",
