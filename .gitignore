@@ -90,3 +90,17 @@ ua-agent/.uvcache/
 ua-agent/.uvcache-indextts/
 ua-agent/.venvs/
 ua-agent/checkpoints/
+
+# Build / deploy artifacts (非代码产物，禁止入库)
+*.tar
+*.tsbuildinfo
+/checkpoints/
+/.local/
+/website/*.log
+/website-aicamp/*.tar
+/website-aicamp/*.tsbuildinfo
+/research-kit/screenshots/
+/research-kit/.claude/scheduled_tasks.lock
+.local-screenshots/
+/website/_*.txt
+/website/resp-*.txt
