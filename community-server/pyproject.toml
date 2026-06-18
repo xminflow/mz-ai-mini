@@ -1,0 +1,24 @@
+[project]
+name = "community-backend"
+version = "0.1.0"
+description = "Backend service for the 知识汇 · Community Q&A platform."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "asyncpg>=0.30.0,<1.0.0",
+    "fastapi>=0.116.1,<1.0.0",
+    "pydantic-settings>=2.11.0,<3.0.0",
+    "sqlalchemy>=2.0.44,<3.0.0",
+    "uvicorn>=0.35.0,<1.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1,<1.0.0",
+    "pytest>=8.4.2,<9.0.0",
+    "pytest-asyncio>=1.2.0,<2.0.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["api/tests"]
