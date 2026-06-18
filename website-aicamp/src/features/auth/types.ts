@@ -37,7 +37,9 @@ export type AuthState =
     }
   | {
       authenticated: false
-      reason: 'missing_session' | 'expired' | 'revoked'
+      // needs_refresh：access 过期/被拒但 refresh 仍有效，且当前处于只读渲染上下文无法轮换；
+      // 由可写上下文（客户端自动续签 POST /api/auth/refresh，或 SSR 自愈 GET 跳转）完成续签。
+      reason: 'missing_session' | 'expired' | 'revoked' | 'needs_refresh'
     }
 
 export type ApiErrorPayload = {

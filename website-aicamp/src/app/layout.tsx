@@ -17,7 +17,9 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const authState = await getCampAuthState()
+  // 只读渲染上下文：禁止轮换一次性 token（无法落盘会掉线）。顶栏登录态按现有 cookie 尽力展示，
+  // access 过期时由 middleware（文档导航）或客户端续签在可写上下文里刷新，下次渲染即恢复。
+  const authState = await getCampAuthState({ readonly: true })
   return (
     <html lang="zh-CN" className="scroll-smooth">
       <body className="relative min-h-screen bg-canvas font-sans text-ink">

@@ -17,24 +17,34 @@ function isSessionRevocationError(error: unknown): boolean {
   )
 }
 
-export async function getCampAuthState(): Promise<AuthState> {
+// readonly：用于 Server Component 渲染上下文（layout/page）。Next 15.5 禁止在渲染期写 Cookie，
+// 而 camp 的 refresh token 是一次性的：若在渲染期调用 refreshSession 轮换，新 token 无法落盘 →
+// 旧 token 被后端作废 → 下次请求即掉线。故 readonly 模式严禁轮换，仅用现有 access 读账户；
+// 需要续签时返回 reason='needs_refresh'，交由可写上下文处理（客户端自动续签 / SSR 自愈跳转）。
+// 非 readonly（Route Handler）保持原有「过期即轮换并落盘」行为。
+export async function getCampAuthState(
+  options?: { readonly?: boolean },
+): Promise<AuthState> {
+  const readonly = options?.readonly === true
   const snapshot = await readAuthCookies()
   if (!snapshot.refreshToken) {
     return { authenticated: false, reason: 'missing_session' }
   }
 
   if (isExpired(snapshot.refreshTokenExpiresAt)) {
-    await clearAuthCookies()
+    if (!readonly) await clearAuthCookies()
     return { authenticated: false, reason: 'expired' }
   }
 
-  let accessToken = snapshot.accessToken
+  const accessToken = snapshot.accessToken
 
   if (!accessToken || isExpired(snapshot.accessTokenExpiresAt)) {
+    if (readonly) {
+      return { authenticated: false, reason: 'needs_refresh' }
+    }
     try {
       const refreshed = await refreshSession(snapshot.refreshToken)
       await writeAuthCookies(refreshed)
-      accessToken = refreshed.tokens.access_token
       return toAuthenticatedState(refreshed)
     } catch (error) {
       if (isSessionRevocationError(error)) {
@@ -57,6 +67,10 @@ export async function getCampAuthState(): Promise<AuthState> {
   } catch (error) {
     if (!(error instanceof WebsiteAuthError) || !snapshot.refreshToken) {
       throw error
+    }
+    // access 被后端拒绝（撤销/时钟偏移等）。readonly 不能轮换，交给可写上下文续签。
+    if (readonly) {
+      return { authenticated: false, reason: 'needs_refresh' }
     }
   }
 

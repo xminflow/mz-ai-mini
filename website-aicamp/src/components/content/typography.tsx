@@ -167,20 +167,69 @@ export function Highlight({ children }: { children: ReactNode }): React.JSX.Elem
 }
 
 /**
- * 命令/行内代码样式（对应 code + .cmd 逻辑）
- * 块级命令盒子，左侧黄色强调线
+ * 命令盒子（块级，左侧强调线）
+ * - tone='default' 琥珀线：你该敲的真实命令
+ * - tone='muted'  灰线 + 更淡：AI 在背后跑的命令（读者不用敲），常配 label 说明
+ * - label 在框上方加一行小标签
  */
-export function Cmd({ children }: { children: ReactNode }): React.JSX.Element {
+export function Cmd({
+  children,
+  label,
+  tone = 'default',
+}: {
+  children: ReactNode
+  label?: string
+  tone?: 'default' | 'muted'
+}): React.JSX.Element {
+  const muted = tone === 'muted'
   return (
-    <pre
-      className="mt-[1.1rem] overflow-x-auto rounded-lg border border-[rgba(255,255,255,0.07)] border-l-2 p-[0.85rem_1.05rem] font-mono text-[0.86rem] leading-[1.95] text-ink"
+    <div className="mt-[1.1rem]">
+      {label && (
+        <p className="mb-[0.35rem] text-[0.72rem] uppercase tracking-[0.14em] text-muted">{label}</p>
+      )}
+      <pre
+        className={`overflow-x-auto rounded-lg border border-[rgba(255,255,255,0.07)] border-l-2 p-[0.85rem_1.05rem] font-mono text-[0.86rem] leading-[1.95] ${
+          muted ? 'text-muted' : 'text-ink'
+        }`}
+        style={{
+          background: 'rgba(255,255,255,0.02)',
+          borderLeftColor: muted ? 'rgba(255,255,255,0.2)' : 'rgba(251,191,36,0.4)',
+          whiteSpace: 'pre',
+        }}
+      >
+        {children}
+      </pre>
+    </div>
+  )
+}
+
+/**
+ * 提示词块（你对 AI 说的话）—— 对话行"你 ›"风，与命令框区分开
+ * 紫色 speaker 标记 + 柔白正文 + 淡紫细框/左线；内容为自然语言，非等宽。
+ */
+export function Prompt({
+  speaker = '你',
+  children,
+}: {
+  speaker?: string
+  children: ReactNode
+}): React.JSX.Element {
+  return (
+    <div
+      className="mt-[1.1rem] flex gap-[0.7rem] rounded-lg border border-l-2 p-[0.75rem_1rem]"
       style={{
-        background: 'rgba(255,255,255,0.02)',
-        borderLeftColor: 'rgba(251,191,36,0.4)',
-        whiteSpace: 'pre',
+        background: 'rgba(167,139,250,0.05)',
+        borderColor: 'rgba(167,139,250,0.18)',
+        borderLeftColor: 'rgba(167,139,250,0.5)',
       }}
     >
-      {children}
-    </pre>
+      <span
+        className="flex-none select-none pt-[0.05rem] font-mono text-[0.9rem] font-semibold"
+        style={{ color: '#a78bfa' }}
+      >
+        {speaker} ›
+      </span>
+      <div className="text-[0.95rem] leading-[1.85] text-ink-soft">{children}</div>
+    </div>
   )
 }

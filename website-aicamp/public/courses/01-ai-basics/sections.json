@@ -1,6 +1,8 @@
 {
   "sections": [
     { "id": "1.1", "title": "开发世界速览", "file": "01-dev-world" },
-    { "id": "1.2", "title": "认识并安装主力工具", "file": "02-tools" }
+    { "id": "1.2", "title": "认识并安装主力工具", "file": "02-tools" },
+    { "id": "1.3", "title": "设计自己的 AI 编程工作流", "file": "03-workflow" },
+    { "id": "1.4", "title": "用 AI 做出第一版能本地打开的网页", "file": "04-first-page" }
   ]
 }

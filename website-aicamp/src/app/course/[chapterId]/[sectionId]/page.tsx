@@ -23,7 +23,12 @@ export default async function LessonPage({ params }: PageProps) {
     notFound()
   }
 
-  const authState = await getCampAuthState()
+  // 只读渲染上下文：禁止轮换一次性 token。access 过期时跳到可写续签端点自愈并跳回本节，绝不在此处轮换丢失。
+  const authState = await getCampAuthState({ readonly: true })
+  // 'reason' in 收窄到未登录分支（tsconfig strict:false 下负向收窄不可靠，用 in 守卫）
+  if ('reason' in authState && authState.reason === 'needs_refresh') {
+    redirect(`/api/auth/refresh?next=${encodeURIComponent(`/course/${chapterId}/${sectionId}`)}`)
+  }
   const account = authState.authenticated ? authState.account : null
   if (!canAccessChapter(account, chapter.tier)) {
     redirect('/membership')

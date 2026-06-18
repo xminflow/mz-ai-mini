@@ -748,7 +748,7 @@ export default function Lesson(): React.JSX.Element {
               <path d="M8.5 12 l2.3 2.3 l4.7 -4.9" />
             </svg>
           </span>
-          一句话记住
+          总结
         </h2>
         <p className="text-[1.02rem] text-ink leading-[2.1]">
           这些工具<strong className="text-ink">本是同一类</strong>、装法都像、用法相通——<strong className="text-ink">挑一个装好就能开干</strong>，不必都装、不必内耗；

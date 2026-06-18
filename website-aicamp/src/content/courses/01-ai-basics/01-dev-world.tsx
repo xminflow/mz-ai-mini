@@ -841,7 +841,7 @@ export default function Lesson(): React.JSX.Element {
               <path d="M8.5 12 l2.3 2.3 l4.7 -4.9" />
             </svg>
           </span>
-          一句话记住
+          总结
         </h2>
         <p className="text-[1.02rem] text-ink leading-[2.1]">
           一套软件 ＝ <span style={{ color: '#a78bfa' }}>前端</span>看得见的界面 ＋ <span style={{ color: '#22d3ee' }}>后端</span>背后的逻辑 ＋ <span style={{ color: '#f472b6' }}>数据库</span>存的数据，

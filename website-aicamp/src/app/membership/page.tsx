@@ -11,7 +11,9 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function MembershipPage() {
-  const authState = await getCampAuthState()
+  // 只读渲染上下文：禁止轮换一次性 token（无法落盘会掉线）；access 过期时按未登录态展示，
+  // 由 middleware / 客户端续签在可写上下文刷新后下次渲染恢复。
+  const authState = await getCampAuthState({ readonly: true })
   // 登录态里已含 membership（camp_auth /me 带回），直接用，避免再发一次请求。
   const membership: MyCampMembershipResponse | null = authState.authenticated
     ? authState.account.membership
