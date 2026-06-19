@@ -8,7 +8,7 @@ export default function NotFound() {
         页面暂未上线
       </h1>
       <p className="max-w-md text-sm leading-[1.85] text-muted sm:text-[15px]">
-        你访问的路径不存在，或内容尚未公开。可以从首页或信息库开始浏览。
+        你访问的路径不存在，或内容尚未公开。可以回到训练营首页继续浏览。
       </p>
       <div className="mt-1 flex gap-3 sm:mt-2">
         <Link
@@ -18,10 +18,10 @@ export default function NotFound() {
           回到首页
         </Link>
         <Link
-          href="/library"
+          href="/product"
           className="inline-flex items-center rounded-full border border-hairline bg-surface/60 px-4 py-2 text-[13px] font-medium text-ink transition-colors hover:border-hairline-strong sm:px-5 sm:text-sm"
         >
-          浏览信息库
+          了解产品
         </Link>
       </div>
     </section>

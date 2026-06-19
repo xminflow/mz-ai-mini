@@ -21,7 +21,7 @@ export const SiteFooter = () => {
       <div className="pointer-events-none absolute inset-x-0 -top-px h-px hairline-divider" />
       <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-14">
         <div className="grid grid-cols-1 gap-8 sm:gap-10 md:grid-cols-[2fr_1fr]">
-          <div className="col-span-2 flex flex-col gap-3 md:col-span-1">
+          <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
               <img
                 src="/logo/weiyu-logo-web-light.svg"
