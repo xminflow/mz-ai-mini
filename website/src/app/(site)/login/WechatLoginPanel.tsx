@@ -47,8 +47,8 @@ export function WechatLoginPanel({ onSuccess }: WechatLoginPanelProps) {
   const [sessionKey, setSessionKey] = useState(0)
   const [panelState, setPanelState] = useState<PanelState>({ phase: 'loading' })
   // 使用惰性初始化读取 UA，避免在 effect 体内同步调用 setState。
-  // 'use client' 组件保证此函数仅在客户端执行，navigator 可用。
-  const [isMobile] = useState(() => /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent))
+  // SSR 环境 navigator 未定义，守卫返回 false，客户端 hydration 后同步为真实值。
+  const [isMobile] = useState(() => typeof navigator !== 'undefined' && /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent))
 
   const onSuccessRef = useRef(onSuccess)
   // 每次渲染后同步最新回调，确保 effect 内调用时始终拿到最新引用，避免闭包过期。
