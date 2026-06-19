@@ -7,27 +7,8 @@ const FOOTER_GROUPS: Array<{
   {
     title: "浏览",
     links: [
-      { label: "首页", href: "/" },
-      { label: "信息库", href: "/library" },
-      { label: "咨询服务", href: "/consulting" },
-      { label: "关于", href: "/about" },
-    ],
-  },
-  {
-    title: "信息库",
-    links: [
-      { label: "爆款拆解", href: "/library?type=breakdown" },
-      { label: "博主洞察", href: "/bloggers" },
-      { label: "赛道分析", href: "/tracks" },
-      { label: "百万粉博主运营方法论精炼", href: "/playbook" },
-    ],
-  },
-  {
-    title: "联系",
-    links: [
-      { label: "咨询", href: "/consulting" },
-      { label: "了解会员", href: "/membership" },
-      { label: "联系订阅", href: "/membership" },
+      { label: "训练营", href: "/" },
+      { label: "产品", href: "/product" },
     ],
   },
 ];
@@ -51,9 +32,6 @@ export const SiteFooter = () => {
                 微域生光
               </span>
             </div>
-            <p className="max-w-sm text-[13px] leading-[1.8] text-muted">
-              AI 时代，真实的案例才更有价值。内容是内核，AI 是生产工具——我们拆解爆款、追踪博主、读懂赛道，把研究的部分做到位。
-            </p>
           </div>
           {FOOTER_GROUPS.map((group) => (
             <div key={group.title} className="flex flex-col gap-3">
