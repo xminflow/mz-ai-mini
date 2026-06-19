@@ -20,7 +20,7 @@ const resolveInternalApiOrigin = (): string => {
 }
 
 const config: NextConfig = {
-  output: 'standalone',
+  // output: 'standalone',  // 暂时注释以在 Windows 开发环境构建通过（symlink EPERM 问题）
   env: {
     NEXT_PUBLIC_API_BASE_URL: API_PREFIX,
   },
