@@ -31,7 +31,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.4] tracking-[0.005em] sm:text-[26px] lg:text-[34px]">
-            AI 架构专家课程大纲（高阶）
+            AI 架构师课程大纲（高阶）
           </h2>
         </Reveal>
 
@@ -392,7 +392,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
 
             {/* 价格条 + 含第一阶段全部内容 pill */}
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-              <PriceChip badge="AI 专家" originalPrice={STAGE2_PRICE.original} specialLabel="限时特价" price={STAGE2_PRICE.now} onClick={onEnroll} />
+              <PriceChip badge="AI 架构师" originalPrice={STAGE2_PRICE.original} specialLabel="限时特价" price={STAGE2_PRICE.now} onClick={onEnroll} />
               <span
                 className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[12px] font-semibold sm:text-[12.5px]"
                 style={{

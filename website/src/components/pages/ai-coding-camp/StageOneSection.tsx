@@ -17,7 +17,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.4] tracking-[0.005em] sm:text-[26px] lg:text-[34px]">
-            零基础 AI 编程课程大纲（初阶）
+            AI 编程入门课程大纲（初阶）
           </h2>
         </Reveal>
 

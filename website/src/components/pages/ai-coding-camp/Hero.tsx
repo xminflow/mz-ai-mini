@@ -8,7 +8,7 @@ export function Hero() {
       <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center px-4 pb-12 pt-20 text-center sm:px-6 sm:pb-16 sm:pt-28 lg:pt-32">
         <Reveal delay={0.08}>
           <h1 className="font-serif-zh mt-7 max-w-4xl text-balance text-[30px] font-bold leading-[1.32] tracking-[-0.005em] text-ink sm:mt-8 sm:text-[46px] sm:leading-[1.22] lg:text-[58px] lg:leading-[1.15]">
-            AI 编程实战训练营
+            AI架构师训练营
           </h1>
         </Reveal>
         <Reveal delay={0.16}>

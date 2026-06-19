@@ -7,7 +7,7 @@ const FOOTER_GROUPS: Array<{
   {
     title: "浏览",
     links: [
-      { label: "训练营", href: "/" },
+      { label: "AI架构师训练营", href: "/" },
       { label: "产品", href: "/product" },
     ],
   },
