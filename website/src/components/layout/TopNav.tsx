@@ -23,6 +23,7 @@ type NavLink = {
 
 const NAV_LINKS: NavLink[] = [
   { href: '/', label: 'AI架构师训练营', exact: true },
+  { href: '/course', label: '课程', matchPrefix: '/course' },
   { href: '/product', label: '产品', matchPrefix: '/product' },
 ]
 
