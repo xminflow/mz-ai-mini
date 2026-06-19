@@ -40,13 +40,20 @@ export function BloggerCardStream({
   const requestSeq = useRef(0)
 
   // 当筛选/搜索条件变化导致服务端给出新的首批数据时，重置流式状态。
-  useEffect(() => {
+  // 使用渲染阶段 setState（React 官方推荐的 derived-state 写法），避免在 effect 体内同步 setState。
+  const [prevInitial, setPrevInitial] = useState({ items: initialItems, cursor: initialCursor })
+  if (prevInitial.items !== initialItems || prevInitial.cursor !== initialCursor) {
+    setPrevInitial({ items: initialItems, cursor: initialCursor })
     setItems(initialItems)
     setCursor(initialCursor)
     setError(null)
     setLoading(false)
+  }
+
+  // ref 写操作只允许在 effect / 事件处理器中进行；筛选重置后递增序号以丢弃过期异步结果。
+  useEffect(() => {
     requestSeq.current += 1
-  }, [initialItems, initialCursor])
+  }, [prevInitial])
 
   const fetchMore = useCallback(async () => {
     if (loading || !cursor) return

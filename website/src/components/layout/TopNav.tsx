@@ -35,7 +35,9 @@ export const TopNav = ({ initialAuthState }: TopNavProps) => {
   const [scrolled, setScrolled] = useState(false)
   const [contactOpen, setContactOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
-  const [authState, setAuthState] = useState<AuthState>(initialAuthState)
+  // 追踪本地登出覆盖：记录覆盖时对应的 prop 引用，当服务端刷新传入新 prop 时自动放弃覆盖。
+  const [authOverride, setAuthOverride] = useState<{ forProp: AuthState; value: AuthState } | null>(null)
+  const authState = authOverride?.forProp === initialAuthState ? authOverride.value : initialAuthState
   const [loggingOut, setLoggingOut] = useState(false)
   const closeTimer = useRef<number | null>(null)
 
@@ -45,12 +47,6 @@ export const TopNav = ({ initialAuthState }: TopNavProps) => {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-
-  // 同步服务端最新 authState：router.refresh() 后 layout 会重新拉取并把新对象传进来，
-  // 这里把它写回本地 state，使登录、用户名修改等场景无需手动刷新即可生效。
-  useEffect(() => {
-    setAuthState(initialAuthState)
-  }, [initialAuthState])
 
   const isActive = (link: NavLink) => {
     if (link.exact) return pathname === link.href
@@ -80,7 +76,7 @@ export const TopNav = ({ initialAuthState }: TopNavProps) => {
     setLoggingOut(true)
     try {
       await fetch('/api/auth/logout', { method: 'POST' })
-      setAuthState({ authenticated: false, reason: 'missing_session' })
+      setAuthOverride({ forProp: initialAuthState, value: { authenticated: false, reason: 'missing_session' } })
     } finally {
       setLoggingOut(false)
     }

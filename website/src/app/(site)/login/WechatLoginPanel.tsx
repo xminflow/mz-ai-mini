@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import type {
   ApiErrorPayload,
@@ -46,14 +46,15 @@ type WechatLoginPanelProps = {
 export function WechatLoginPanel({ onSuccess }: WechatLoginPanelProps) {
   const [sessionKey, setSessionKey] = useState(0)
   const [panelState, setPanelState] = useState<PanelState>({ phase: 'loading' })
-  const [isMobile, setIsMobile] = useState(false)
+  // 使用惰性初始化读取 UA，避免在 effect 体内同步调用 setState。
+  // 'use client' 组件保证此函数仅在客户端执行，navigator 可用。
+  const [isMobile] = useState(() => /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent))
 
   const onSuccessRef = useRef(onSuccess)
-  onSuccessRef.current = onSuccess
-
-  useEffect(() => {
-    setIsMobile(/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent))
-  }, [])
+  // 每次渲染后同步最新回调，确保 effect 内调用时始终拿到最新引用，避免闭包过期。
+  useLayoutEffect(() => {
+    onSuccessRef.current = onSuccess
+  })
 
   // 每次 sessionKey 变化时启动一个新会话（含首次挂载）
   useEffect(() => {

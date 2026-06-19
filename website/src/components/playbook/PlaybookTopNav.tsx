@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -8,13 +8,10 @@ import type { AuthState } from '@/features/auth/types'
 
 export function PlaybookTopNav({ initialAuthState }: { initialAuthState: AuthState }) {
   const pathname = usePathname()
-  const [authState, setAuthState] = useState<AuthState>(initialAuthState)
+  // 追踪本地登出覆盖：记录覆盖时对应的 prop 引用，当服务端刷新传入新 prop 时自动放弃覆盖。
+  const [authOverride, setAuthOverride] = useState<{ forProp: AuthState; value: AuthState } | null>(null)
+  const authState = authOverride?.forProp === initialAuthState ? authOverride.value : initialAuthState
   const [loggingOut, setLoggingOut] = useState(false)
-
-  // 同步服务端最新 authState：router.refresh() 后 layout 会重新拉取并把新对象传进来
-  useEffect(() => {
-    setAuthState(initialAuthState)
-  }, [initialAuthState])
 
   const isMainPage = pathname === '/playbook'
 
@@ -29,7 +26,7 @@ export function PlaybookTopNav({ initialAuthState }: { initialAuthState: AuthSta
     setLoggingOut(true)
     try {
       await fetch('/api/auth/logout', { method: 'POST' })
-      setAuthState({ authenticated: false, reason: 'missing_session' })
+      setAuthOverride({ forProp: initialAuthState, value: { authenticated: false, reason: 'missing_session' } })
     } finally {
       setLoggingOut(false)
     }
