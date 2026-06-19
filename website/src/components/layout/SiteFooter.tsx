@@ -20,7 +20,7 @@ export const SiteFooter = () => {
     <footer className="relative mt-16 border-t border-hairline bg-canvas sm:mt-24">
       <div className="pointer-events-none absolute inset-x-0 -top-px h-px hairline-divider" />
       <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 sm:py-14">
-        <div className="grid grid-cols-2 gap-8 sm:gap-10 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+        <div className="grid grid-cols-1 gap-8 sm:gap-10 md:grid-cols-[2fr_1fr]">
           <div className="col-span-2 flex flex-col gap-3 md:col-span-1">
             <div className="flex items-center gap-2">
               <img
