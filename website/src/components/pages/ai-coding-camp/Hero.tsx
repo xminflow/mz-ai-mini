@@ -7,8 +7,15 @@ export function Hero() {
     <section className="relative overflow-hidden">
       <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center px-4 pb-12 pt-20 text-center sm:px-6 sm:pb-16 sm:pt-28 lg:pt-32">
         <Reveal delay={0.08}>
-          <h1 className="font-serif-zh mt-7 max-w-4xl text-balance text-[30px] font-bold leading-[1.32] tracking-[-0.005em] text-ink sm:mt-8 sm:text-[46px] sm:leading-[1.22] lg:text-[58px] lg:leading-[1.15]">
-            市面上最好的AI架构师训练营
+          <h1 className="font-serif-zh mt-7 max-w-4xl text-balance leading-[1.32] tracking-[-0.005em] text-ink sm:mt-8 sm:leading-[1.22] lg:leading-[1.15]">
+            {/* 次：市场定位修饰语，小字弱化 */}
+            <span className="mb-2 block text-[15px] font-medium tracking-[0.1em] text-muted sm:mb-2.5 sm:text-[18px] lg:text-[20px]">
+              市面上最好的
+            </span>
+            {/* 主：训练营名称，大字加粗 */}
+            <span className="block text-[30px] font-bold sm:text-[46px] lg:text-[58px]">
+              AI架构师训练营
+            </span>
           </h1>
         </Reveal>
         <Reveal delay={0.16}>
