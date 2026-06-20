@@ -405,11 +405,15 @@ def cmd_arch_video(
     backend: str = typer.Option(
         "indextts", "--backend", help="TTS 后端（indextts / placeholder）"
     ),
+    portrait: bool = typer.Option(
+        False, "--portrait", is_flag=True, help="竖版 1080×1920（默认横版 1920×1080）"
+    ),
     force: bool = typer.Option(False, "--force", is_flag=True, help="强制重跑所有步骤"),
     log_level: str = typer.Option("INFO", "--log-level"),
 ) -> None:
-    """架构图音色讲解视频：TTS → 图片片段 → ffmpeg 合成 → final.mp4 (1920×1080)。
+    """架构图音色讲解视频：TTS → 图片片段 → ffmpeg 合成 → final.mp4。
 
+    默认横版 1920×1080；加 --portrait 出竖版 1080×1920。
     script.json 由 arch-diagram-narration skill 在用户确认后写出，本命令只校验+渲染。
     """
     configure_logging(log_level)
@@ -427,6 +431,7 @@ def cmd_arch_video(
             voice_sample=voice_sample.resolve() if voice_sample else None,
             backend=backend,
             force=force,
+            portrait=portrait,
         )
     except Exception as e:
         err_console.print(f"[red]arch-video 失败：{e}[/red]")

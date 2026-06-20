@@ -7,6 +7,7 @@ from pathlib import Path
 
 from studio_kit.core.contracts import ArchVideoDoc
 from studio_kit.core.logging import get_logger
+from studio_kit.render.video_format import VideoFormat, HORIZONTAL
 
 logger = get_logger(__name__)
 
@@ -33,7 +34,7 @@ def build_ffmpeg_clip_cmd(
 
 def render_segment_clips(
     doc: ArchVideoDoc, audio_dir: Path, clips_dir: Path, work_dir: Path,
-    *, force: bool = False,
+    *, fmt: VideoFormat = HORIZONTAL, force: bool = False,
 ) -> list[Path]:
     clips_dir.mkdir(parents=True, exist_ok=True)
     results: list[Path] = []
@@ -51,7 +52,7 @@ def render_segment_clips(
         if not meta.exists():
             raise FileNotFoundError(f"缺少 {meta}（请先运行 TTS）")
         duration_s = float(json.loads(meta.read_text(encoding="utf-8"))["duration_ms"]) / 1000.0
-        cmd = build_ffmpeg_clip_cmd(png, out_mp4, duration_s)
+        cmd = build_ffmpeg_clip_cmd(png, out_mp4, duration_s, width=fmt.width, height=fmt.height)
         result = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
         if result.returncode != 0:
             raise RuntimeError(f"ffmpeg 生成片段失败（{idx}）：\n{result.stderr}")

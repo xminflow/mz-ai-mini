@@ -331,10 +331,13 @@ def compose_arch(
     clips_dir: Path,
     out_mp4: Path,
     *,
+    fmt: VideoFormat = HORIZONTAL,
     force: bool = False,
 ) -> None:
-    """把 clips/NN.mp4（无音轨）+ audio/NN.wav 合成横版 final.mp4（1920×1080）。
+    """把 clips/NN.mp4（无音轨）+ audio/NN.wav 合成 final.mp4。
 
+    分辨率由片段实际尺寸决定（横版 1920×1080 或竖版 1080×1920），
+    字幕规格由 fmt 驱动（PlayRes/字号/边距）。
     复用竖屏同款 helper：逐段合并音轨 → concat → 烧 ASS 字幕。
     缺片段视频或音频时显式 raise FileNotFoundError，不静默兜底。
     """
@@ -370,11 +373,11 @@ def compose_arch(
     concat_txt = work_dir / "concat.txt"
     _write_concat_txt(av_paths, concat_txt)
 
-    # 生成横版 ASS 字幕（1920×1080，字号/边距由 HORIZONTAL 驱动）
+    # 生成 ASS 字幕（PlayRes/字号/边距由 fmt 驱动）
     ass_path = work_dir / "subtitles.ass"
-    _generate_ass([(s.index, s.narration) for s in doc.segments], audio_dir, ass_path, HORIZONTAL)
+    _generate_ass([(s.index, s.narration) for s in doc.segments], audio_dir, ass_path, fmt)
 
     # concat + 烧入字幕 → final.mp4
     _concat_with_subtitles(concat_txt, ass_path, out_mp4)
 
-    logger.info("横版 final.mp4 合成完成：%s", out_mp4)
+    logger.info("final.mp4 合成完成（%dx%d）：%s", fmt.width, fmt.height, out_mp4)
