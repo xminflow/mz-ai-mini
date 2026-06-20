@@ -35,128 +35,119 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
           </h2>
         </Reveal>
 
-        <div className="mt-10 flex flex-col gap-12 sm:mt-12 sm:gap-16">
+        <div className="mt-10 flex flex-col gap-14 sm:mt-12 sm:gap-16">
           {STAGE2_GROUPS.map((group) => {
             const gt = STAGE2_THEMES[group.key]
             return (
-              <div key={group.key} className="flex flex-col gap-5 sm:gap-6">
-                {/* 分组小标题 */}
+              <div key={group.key} className="flex flex-col">
+                {/* 分组标题：扁平区块 + 渐变下划线，非卡片 */}
                 <Reveal>
-                  <div
-                    className="relative flex flex-col gap-1.5 overflow-hidden rounded-2xl border px-5 py-4 backdrop-blur-xl sm:px-6 sm:py-5"
-                    style={{
-                      borderColor: `rgba(${gt.rgb}, 0.28)`,
-                      background: `linear-gradient(110deg, rgba(${gt.rgb}, 0.12) 0%, rgba(13,13,18,0.5) 70%)`,
-                      boxShadow: `inset 2px 0 0 0 rgba(${gt.rgb}, 0.6)`,
-                    }}
-                  >
+                  <div className="flex flex-col gap-1.5">
                     <span
                       className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.22em]"
                       style={{ color: gt.hex }}
                     >
                       {gt.label}
                     </span>
-                    <h3 className="font-serif-zh text-[20px] font-semibold leading-[1.35] text-ink sm:text-[24px]">
+                    <h3 className="font-serif-zh text-[21px] font-semibold leading-[1.35] text-ink sm:text-[25px]">
                       {group.title}
                     </h3>
                     <p className="text-[12.5px] leading-[1.7] text-ink-soft sm:text-[13.5px]">
                       {group.subtitle}
                     </p>
+                    <span
+                      aria-hidden
+                      className="mt-1.5 block h-[2px] w-12 rounded-full"
+                      style={{
+                        background: `linear-gradient(90deg, ${gt.gradientFrom}, ${gt.gradientTo})`,
+                      }}
+                    />
                   </div>
                 </Reveal>
 
-                {/* 该分组课程卡片 */}
-                <div className="flex flex-col gap-5 sm:gap-6">
+                {/* 该分组课程：扁平区块清单（线 + 渐变发光序号 + 文字） */}
+                <div className="mt-8 flex flex-col sm:mt-10">
                   {group.lessons.map((lesson, li) => {
                     const t = STAGE2_THEMES[lesson.theme]
                     return (
-                      <Reveal key={lesson.code} delay={Math.min(li, 4) * 0.04}>
-                        <article
-                          className="group relative overflow-hidden rounded-[22px] border p-5 backdrop-blur-xl transition-all duration-500 sm:rounded-[28px] sm:p-7 lg:p-8"
-                          style={{
-                            borderColor: `rgba(${t.rgb}, 0.22)`,
-                            background: `linear-gradient(120deg, rgba(${t.rgb}, 0.08) 0%, rgba(13,13,18,0.55) 60%)`,
-                            boxShadow: `inset 1px 0 0 0 rgba(${t.rgb}, 0.5), inset 0 0 0 1px rgba(${t.rgb}, 0.04)`,
-                          }}
-                        >
-                          {/* 左侧主题色光晕条 */}
+                      <Reveal
+                        key={lesson.code}
+                        delay={Math.min(li, 4) * 0.06}
+                        y={28}
+                        className={
+                          li > 0 ? "mt-8 border-t border-hairline pt-8 sm:mt-10 sm:pt-10" : ""
+                        }
+                      >
+                        <div className="relative flex flex-col gap-5">
+                          {/* 序号旁柔光：非卡片，给区块加色彩深度 */}
                           <span
                             aria-hidden
-                            className="pointer-events-none absolute left-0 top-0 h-full w-1.5"
-                            style={{ background: `linear-gradient(to bottom, ${t.gradientFrom}, ${t.gradientTo})` }}
-                          />
-                          {/* 右下角超大半透明课号 */}
-                          <span
-                            aria-hidden
-                            className="pointer-events-none absolute -bottom-4 -right-2 select-none font-mono text-[100px] font-black leading-none tabular sm:-bottom-6 sm:-right-4 sm:text-[150px] lg:text-[180px]"
+                            className="pointer-events-none absolute -left-5 -top-7 h-28 w-28 rounded-full opacity-40"
                             style={{
-                              color: t.hex,
-                              opacity: 0.06,
-                              WebkitTextStroke: `1px ${t.hex}33`,
+                              background: `radial-gradient(circle, ${t.hex}55 0%, transparent 70%)`,
+                              filter: "blur(34px)",
                             }}
-                          >
-                            {lesson.code}
-                          </span>
+                          />
+                          <div className="relative flex items-baseline gap-4 sm:gap-5">
+                            <span
+                              className="font-mono text-[20px] font-bold leading-none tabular sm:text-[26px]"
+                              style={{
+                                backgroundImage: `linear-gradient(135deg, ${t.gradientFrom}, ${t.gradientTo})`,
+                                WebkitBackgroundClip: "text",
+                                backgroundClip: "text",
+                                color: "transparent",
+                                filter: `drop-shadow(0 0 12px ${t.hex}66)`,
+                              }}
+                            >
+                              {lesson.code}
+                            </span>
+                            <div className="flex flex-col gap-1.5">
+                              <span
+                                className="font-mono text-[10.5px] font-medium uppercase tracking-[0.22em]"
+                                style={{ color: t.hex }}
+                              >
+                                {t.label}
+                              </span>
+                              <h4 className="font-serif-zh text-[18px] font-semibold leading-[1.4] text-ink sm:text-[21px] lg:text-[23px]">
+                                {lesson.title}
+                              </h4>
+                              <span
+                                aria-hidden
+                                className="mt-1 block h-[2px] w-10 rounded-full"
+                                style={{
+                                  background: `linear-gradient(90deg, ${t.gradientFrom}, ${t.gradientTo})`,
+                                }}
+                              />
+                            </div>
+                          </div>
 
-                          <div className="relative flex flex-col gap-5">
-                            {/* 顶部：课号徽标 + 课时 chip + 标题 + 主题标签 */}
-                            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
-                              <div className="flex items-start gap-4 sm:gap-5">
+                          {/* 本节目标 */}
+                          <p className="max-w-3xl text-[13px] leading-[1.85] text-ink-soft sm:pl-[3.5rem] sm:text-[13.5px]">
+                            {lesson.goal}
+                          </p>
+
+                          {/* 子条目：线 + 渐变发光点 + 文字 */}
+                          <ul className="flex flex-col sm:pl-[3.5rem]">
+                            {lesson.points.map((point) => (
+                              <li
+                                key={point}
+                                className="group/p flex items-start gap-3 border-t border-hairline py-3 transition-colors hover:border-white/25"
+                              >
                                 <span
-                                  className="flex h-12 min-w-[3.5rem] flex-none items-center justify-center rounded-xl px-2 font-mono text-[13px] font-bold text-canvas sm:h-14 sm:text-[15px]"
+                                  aria-hidden
+                                  className="mt-[7px] inline-flex h-1.5 w-1.5 flex-none rounded-full"
                                   style={{
                                     background: `linear-gradient(135deg, ${t.gradientFrom}, ${t.gradientTo})`,
-                                    boxShadow: `0 6px 18px -4px ${t.hex}66`,
+                                    boxShadow: `0 0 8px ${t.hex}88`,
                                   }}
-                                >
-                                  {lesson.code}
+                                />
+                                <span className="text-[12.5px] leading-[1.75] text-muted transition-colors group-hover/p:text-ink-soft sm:text-[13px]">
+                                  {point}
                                 </span>
-                                <div className="flex flex-col gap-2">
-                                  <span
-                                    className="font-mono text-[10.5px] font-medium uppercase tracking-[0.22em]"
-                                    style={{ color: t.hex }}
-                                  >
-                                    {t.label}
-                                  </span>
-                                  <h4 className="font-serif-zh text-[18px] font-semibold leading-[1.4] text-ink sm:text-[21px] lg:text-[23px]">
-                                    {lesson.title}
-                                  </h4>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* 本节目标 */}
-                            <p className="text-[13px] leading-[1.85] text-ink-soft sm:text-[13.5px]">
-                              {lesson.goal}
-                            </p>
-
-                            {/* 子条目列表 */}
-                            <ul className="grid grid-cols-1 gap-2.5 sm:gap-3 md:grid-cols-2">
-                              {lesson.points.map((point) => (
-                                <li
-                                  key={point}
-                                  className="flex items-start gap-3 rounded-xl border p-3.5 transition-colors hover:border-hairline-strong sm:gap-3.5 sm:p-4"
-                                  style={{
-                                    borderColor: 'rgba(255,255,255,0.07)',
-                                    background: 'rgba(5,5,7,0.45)',
-                                  }}
-                                >
-                                  <span
-                                    aria-hidden
-                                    className="mt-1.5 inline-flex h-1.5 w-1.5 flex-none rounded-full"
-                                    style={{
-                                      background: `linear-gradient(135deg, ${t.gradientFrom}, ${t.gradientTo})`,
-                                      boxShadow: `0 0 8px ${t.hex}88`,
-                                    }}
-                                  />
-                                  <span className="text-[12.5px] leading-[1.75] text-ink-soft sm:text-[13px]">
-                                    {point}
-                                  </span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </article>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </Reveal>
                     )
                   })}

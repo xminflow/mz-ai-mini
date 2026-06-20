@@ -34,11 +34,26 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                 }
               >
                 {/* 区块式（非卡片）：大序号 + 主题标签，内容靠分隔线与留白组织 */}
-                <div className="flex flex-col gap-6">
-                  <div className="flex items-baseline gap-4 sm:gap-5">
+                <div className="relative flex flex-col gap-6">
+                  {/* 序号旁柔光：给区块加色彩深度，非卡片、不加边框 */}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute -left-5 -top-7 h-28 w-28 rounded-full opacity-45"
+                    style={{
+                      background: `radial-gradient(circle, ${t.hex}55 0%, transparent 70%)`,
+                      filter: "blur(34px)",
+                    }}
+                  />
+                  <div className="relative flex items-baseline gap-4 sm:gap-5">
                     <span
-                      className="font-mono text-[30px] font-bold leading-none tabular sm:text-[40px]"
-                      style={{ color: t.hex }}
+                      className="font-mono text-[32px] font-bold leading-none tabular sm:text-[44px]"
+                      style={{
+                        backgroundImage: `linear-gradient(135deg, ${t.gradientFrom}, ${t.gradientTo})`,
+                        WebkitBackgroundClip: "text",
+                        backgroundClip: "text",
+                        color: "transparent",
+                        filter: `drop-shadow(0 0 14px ${t.hex}66)`,
+                      }}
                     >
                       {String(chapter.index).padStart(2, "0")}
                     </span>
@@ -52,6 +67,13 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                       <h3 className="font-serif-zh text-[20px] font-semibold leading-[1.35] text-ink sm:text-[24px] lg:text-[27px]">
                         {chapter.title}
                       </h3>
+                      <span
+                        aria-hidden
+                        className="mt-1 block h-[2px] w-10 rounded-full"
+                        style={{
+                          background: `linear-gradient(90deg, ${t.gradientFrom}, ${t.gradientTo})`,
+                        }}
+                      />
                     </div>
                   </div>
 
@@ -94,11 +116,16 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                     {chapter.lessons.map((lesson) => (
                       <li
                         key={lesson.code}
-                        className="flex items-start gap-3.5 border-t border-hairline py-3.5"
+                        className="group/lesson flex items-start gap-3.5 border-t border-hairline py-3.5 transition-colors hover:border-white/25"
                       >
                         <span
                           className="font-mono text-[12px] font-semibold leading-[1.5] tabular"
-                          style={{ color: t.hex }}
+                          style={{
+                            backgroundImage: `linear-gradient(135deg, ${t.gradientFrom}, ${t.gradientTo})`,
+                            WebkitBackgroundClip: "text",
+                            backgroundClip: "text",
+                            color: "transparent",
+                          }}
                         >
                           {lesson.code}
                         </span>
@@ -106,7 +133,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                           <span className="text-[13px] font-semibold text-ink sm:text-[13.5px]">
                             {lesson.title}
                           </span>
-                          <span className="text-[12px] leading-[1.7] text-muted sm:text-[12.5px]">
+                          <span className="text-[12px] leading-[1.7] text-muted transition-colors group-hover/lesson:text-ink-soft sm:text-[12.5px]">
                             {lesson.brief}
                           </span>
                         </div>
