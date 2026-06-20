@@ -15,5 +15,5 @@ class VideoFormat:
 
 VERTICAL = VideoFormat(1080, 1920, 80, 480)     # 现有竖屏口播（底部字幕）
 HORIZONTAL = VideoFormat(1920, 1080, 52, 64)    # 架构讲解横版（底部字幕）
-# 架构讲解竖版：CTA 钩子走顶栏，字幕走底部留白带（图上下各留一条带，互不遮挡）
-ARCH_PORTRAIT = VideoFormat(1080, 1920, 52, 110, sub_alignment=2)
+# 架构讲解竖版：CTA 钩子走顶栏，字幕走底部留白带偏上（字号更大、不贴底、不压图）
+ARCH_PORTRAIT = VideoFormat(1080, 1920, 64, 210, sub_alignment=2)
