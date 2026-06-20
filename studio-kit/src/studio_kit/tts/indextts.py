@@ -149,6 +149,8 @@ def _run_batch(
         stdout=subprocess.PIPE,
         stderr=None,
         text=True,
+        encoding="utf-8",   # worker 打印中文 UTF-8，避免 Windows 默认 gbk 解码崩溃
+        errors="replace",
         cwd=str(_INDEXTTS_REPO),
         env=env,
     )
