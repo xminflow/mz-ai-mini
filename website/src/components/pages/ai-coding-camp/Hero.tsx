@@ -22,8 +22,8 @@ export function Hero() {
           <div className="mt-6 max-w-3xl sm:mt-7">
             <p className="text-balance text-[15px] font-medium leading-[1.75] text-ink-soft sm:text-[18px] lg:text-[20px]">
               <span className="block">
-                <span className="font-semibold text-ink">教你真正的AI编程架构和思维模式</span>
-                {" · "}面向企业真实要求针对性学习
+                <span className="font-semibold text-ink">实操教你真正的AI架构思维</span>
+                {" · "}成为企业抢着要的AI专业人才
               </span>
             </p>
           </div>
