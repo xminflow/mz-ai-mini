@@ -393,6 +393,49 @@ def cmd_render_xhs(
 
 
 # ════════════════════════════════════════════════════════════════════
+# arch-video  （架构图音色讲解视频，1920×1080）
+# ════════════════════════════════════════════════════════════════════
+
+@app.command("arch-video")
+def cmd_arch_video(
+    script_path: Path = typer.Option(..., "--script", help="arch script.json 路径"),
+    voice_sample: Optional[Path] = typer.Option(
+        None, "--voice-sample", help="音色样本 wav（默认 chenchangzhang-desktop.wav）"
+    ),
+    backend: str = typer.Option(
+        "indextts", "--backend", help="TTS 后端（indextts / placeholder）"
+    ),
+    force: bool = typer.Option(False, "--force", is_flag=True, help="强制重跑所有步骤"),
+    log_level: str = typer.Option("INFO", "--log-level"),
+) -> None:
+    """架构图音色讲解视频：TTS → 分段高亮录屏 → ffmpeg 合成 → final.mp4 (1920×1080)。
+
+    script.json 由 arch-diagram-narration skill 在用户确认后写出，本命令只校验+渲染。
+    """
+    configure_logging(log_level)
+
+    script_path = script_path.resolve()
+    if not script_path.exists():
+        err_console.print(f"[red]script.json 不存在：{script_path}[/red]")
+        raise typer.Exit(1)
+
+    from studio_kit.arch.build import run_arch_build
+
+    try:
+        final_mp4 = run_arch_build(
+            script_path,
+            voice_sample=voice_sample.resolve() if voice_sample else None,
+            backend=backend,
+            force=force,
+        )
+    except Exception as e:
+        err_console.print(f"[red]arch-video 失败：{e}[/red]")
+        raise typer.Exit(1)
+
+    console.print(f"[green]final.mp4 已生成：{final_mp4}[/green]")
+
+
+# ════════════════════════════════════════════════════════════════════
 # version
 # ════════════════════════════════════════════════════════════════════
 
