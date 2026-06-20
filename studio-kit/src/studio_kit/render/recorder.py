@@ -54,6 +54,7 @@ async def _record(
             raise RuntimeError(f"录屏失败：无 video 对象，html={html_path}")
 
         webm_path = Path(await video.path())
+        await browser.close()
 
     logger.debug("webm 录制完成：%s，开始转 mp4", webm_path)
 
