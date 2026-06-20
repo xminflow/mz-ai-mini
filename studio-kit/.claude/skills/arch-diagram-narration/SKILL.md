@@ -162,6 +162,34 @@ workspace 子目录：
    ```
 3. **禁止出现**：`weelume`、任何域名、任何英文品牌名——包括图内文本、标题、注释。
 
+### 字号规范（硬约束，竖版 1080×1920）
+
+字号要够大、手机上清晰可读。架构图按以下标准（已验证）：
+
+| 元素 | fontSize | 说明 |
+|------|----------|------|
+| 图标题 | **54** | 顶部白字加粗居中 |
+| 节点主标题 | **28~30** 加粗 | 节点框主文案 |
+| 节点括号说明 | **19** 小灰字 | 长说明用「主+副两级」HTML，避免溢出（见下） |
+| 层标签（竖排 strip） | **24** | 左侧竖排层名 |
+| 辅助标注（如被测边界） | **22** | |
+| 顶栏 CTA / 品牌角标 | **26 / 22** 加粗 | 见下「顶栏与字幕约定」 |
+
+**长文本节点用「主+副两级」HTML value**（主标题大、括号说明小，防溢出）。例：
+```xml
+<mxCell id="cN" value="&lt;b style=&quot;font-size:30px&quot;&gt;任务配置&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size:19px;color:#A9B4C2&quot;&gt;选知识库 · 评测集 · 指标&lt;/span&gt;"
+  style="rounded=1;html=1;whiteSpace=wrap;fillColor=#283142;strokeColor=#4DA3FF;strokeWidth=1.5;fontColor=#EAEEF5;" .../>
+```
+短标题节点直接 `fontSize=28`。务必 `html=1` 才能渲染 HTML value。
+
+### 顶栏与字幕约定（竖版讲解视频）
+
+- **满画布背景矩形**：每张图第一个 cell 放 `fillColor=#12141C;strokeColor=none;` 的 0,0→1080×1920 矩形，强制 draw.io 按页面尺寸导出（否则按内容包围盒裁切，比例错乱）。
+- **顶栏（y≈44）**：左侧亮橙 CTA `评论区扣 666 · 进群免费领 AI 编程与 AI 大模型学习资料`（`fontColor=#FBBF77;fontStyle=1;fontSize=26;align=left;`），右侧亮蓝品牌 `微域生光 | 十一AI编程`（`fontColor=#9DC8FF;fontStyle=1;fontSize=22;align=right;`），两段不重叠。
+- **内容区 y≈230~1650；底部 y≈1660~1920 留空给字幕**（CLI 用 `ARCH_PORTRAIT`：字幕底部居中、字号 64、距底 210，落在留白带不压图）。
+- 渲染竖版加 `--portrait`：`uv run studio-kit arch-video --script <...> --portrait`。
+- 封面用爆款风（标签 pill + 「评论区扣 666」旋转贴纸 + 数字徽章 + 大字阴影）。
+
 ### 高亮变体规则
 
 高亮变体用于把讲解焦点落到特定区域，其余区域压暗，实现视觉聚焦：
