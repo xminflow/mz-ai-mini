@@ -125,9 +125,19 @@ def _run_batch(
 
     logger.info("IndexTTS-2 启动（%d 段，fp16=%s）…", len(tasks), use_fp16)
 
-    # 从 IndexTTS repo 根目录运行，使 infer_v2.py 的 ./checkpoints/hf_cache 路径正确
-    _INDEXTTS_REPO = Path(r"C:\Users\xmin\AppData\Roaming\ua-agent\oral-models\index-tts")
+    # 从 IndexTTS repo 根目录运行，使 infer_v2.py 的 ./checkpoints/hf_cache 路径正确。
+    # 默认随 studio-kit 安装在 model/index-tts，可用环境变量 INDEXTTS_REPO 覆盖。
+    _INDEXTTS_REPO = Path(
+        os.environ.get("INDEXTTS_REPO", r"D:\code\weelume-base\studio-kit\model\index-tts")
+    )
+    if not _INDEXTTS_REPO.exists():
+        raise RuntimeError(
+            f"IndexTTS-2 repo 目录不存在：{_INDEXTTS_REPO}\n"
+            "请确认已安装 IndexTTS-2（model/index-tts），或用环境变量 INDEXTTS_REPO 指定。"
+        )
     env = os.environ.copy()
+    # worker 用同一个 repo 路径
+    env["INDEXTTS_REPO"] = str(_INDEXTTS_REPO)
     # 覆盖系统级 HF_ENDPOINT（hf-mirror.com 在国内也不稳定），改用代理访问真实 HF
     env["HF_ENDPOINT"] = "https://huggingface.co"
     env["HTTPS_PROXY"] = "http://192.168.32.1:7078"

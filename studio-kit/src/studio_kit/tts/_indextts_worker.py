@@ -18,7 +18,11 @@ import sys
 import wave
 from pathlib import Path
 
-_INDEXTTS_REPO = r"C:\Users\xmin\AppData\Roaming\ua-agent\oral-models\index-tts"
+# IndexTTS-2 repo 根目录（含 indextts/infer_v2.py 与 checkpoints/）。
+# 默认随 studio-kit 安装在 model/index-tts，可用环境变量 INDEXTTS_REPO 覆盖。
+_INDEXTTS_REPO = os.environ.get(
+    "INDEXTTS_REPO", r"D:\code\weelume-base\studio-kit\model\index-tts"
+)
 _MODEL_DIR = os.path.join(_INDEXTTS_REPO, "checkpoints")
 
 # infer_v2.py 在 import 时会将 HF_HUB_CACHE 覆盖为 ./checkpoints/hf_cache
