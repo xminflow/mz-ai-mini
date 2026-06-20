@@ -21,146 +21,99 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
           </h2>
         </Reveal>
 
-        <div className="mt-10 flex flex-col gap-5 sm:mt-12 sm:gap-6">
+        <div className="mt-10 flex flex-col sm:mt-12">
           {CHAPTERS.map((chapter, i) => {
             const t = THEMES[chapter.theme];
             return (
-              <Reveal key={chapter.index} delay={Math.min(i, 4) * 0.04}>
-                <article
-                  className="group relative overflow-hidden rounded-[22px] border p-5 backdrop-blur-xl transition-all duration-500 sm:rounded-[28px] sm:p-7 lg:p-8"
-                  style={{
-                    borderColor: `rgba(${t.rgb}, 0.22)`,
-                    background: `linear-gradient(120deg, rgba(${t.rgb}, 0.08) 0%, rgba(13,13,18,0.55) 60%)`,
-                    boxShadow: `inset 1px 0 0 0 rgba(${t.rgb}, 0.5), inset 0 0 0 1px rgba(${t.rgb}, 0.04)`,
-                  }}
-                >
-                  {/* 左侧主题色光晕条 */}
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute left-0 top-0 h-full w-1.5"
-                    style={{
-                      background: `linear-gradient(to bottom, ${t.gradientFrom}, ${t.gradientTo})`,
-                    }}
-                  />
-                  {/* 右下角超大半透明课时序号 */}
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute -bottom-4 -right-2 select-none font-mono text-[120px] font-black leading-none tabular sm:-bottom-6 sm:-right-4 sm:text-[180px] lg:text-[220px]"
-                    style={{
-                      color: t.hex,
-                      opacity: 0.06,
-                      WebkitTextStroke: `1px ${t.hex}33`,
-                    }}
-                  >
-                    {String(chapter.index).padStart(2, "0")}
-                  </span>
-
-                  <div className="relative flex flex-col gap-5">
-                    {/* 顶部：课时序号 + 标题 + 主题标签 */}
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
-                      <div className="flex items-start gap-4 sm:gap-5">
-                        <span
-                          className="flex h-12 w-12 flex-none items-center justify-center rounded-xl font-mono text-[15px] font-bold text-canvas sm:h-14 sm:w-14 sm:text-[17px]"
-                          style={{
-                            background: `linear-gradient(135deg, ${t.gradientFrom}, ${t.gradientTo})`,
-                            boxShadow: `0 6px 18px -4px ${t.hex}66`,
-                          }}
-                        >
-                          {String(chapter.index).padStart(2, "0")}
-                        </span>
-                        <div className="flex flex-col gap-2">
-                          <span
-                            className="font-mono text-[10.5px] font-medium uppercase tracking-[0.22em]"
-                            style={{ color: t.hex }}
-                          >
-                            {String(chapter.index).padStart(2, "0")} · {t.label}
-                          </span>
-                          <h3 className="font-serif-zh text-[19px] font-semibold leading-[1.4] text-ink sm:text-[22px] lg:text-[25px]">
-                            {chapter.title}
-                          </h3>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 交付物 + 引言 */}
-                    <div
-                      className="flex flex-col gap-3 rounded-xl border p-4 sm:p-5"
-                      style={{
-                        borderColor: `rgba(${t.rgb}, 0.18)`,
-                        background: `linear-gradient(135deg, rgba(${t.rgb}, 0.06) 0%, rgba(5,5,7,0.5) 100%)`,
-                      }}
+              <Reveal
+                key={chapter.index}
+                delay={Math.min(i, 4) * 0.06}
+                y={28}
+                className={
+                  i > 0 ? "mt-10 border-t border-hairline pt-10 sm:mt-12 sm:pt-12" : ""
+                }
+              >
+                {/* 区块式（非卡片）：大序号 + 主题标签，内容靠分隔线与留白组织 */}
+                <div className="flex flex-col gap-6">
+                  <div className="flex items-baseline gap-4 sm:gap-5">
+                    <span
+                      className="font-mono text-[30px] font-bold leading-none tabular sm:text-[40px]"
+                      style={{ color: t.hex }}
                     >
-                      <div className="flex flex-col gap-1.5">
-                        <span
-                          className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.18em]"
-                          style={{ color: t.hex }}
-                        >
-                          交付物
-                        </span>
-                        <p className="text-[13.5px] font-medium leading-[1.7] text-ink sm:text-[14.5px]">
-                          {chapter.deliverable}
-                        </p>
-                      </div>
-                      <p className="text-[12.5px] leading-[1.85] text-ink-soft sm:text-[13.5px]">
-                        {chapter.intro}
+                      {String(chapter.index).padStart(2, "0")}
+                    </span>
+                    <div className="flex flex-col gap-1.5">
+                      <span
+                        className="font-mono text-[10.5px] font-medium uppercase tracking-[0.22em]"
+                        style={{ color: t.hex }}
+                      >
+                        {t.label} · {chapter.hours}
+                      </span>
+                      <h3 className="font-serif-zh text-[20px] font-semibold leading-[1.35] text-ink sm:text-[24px] lg:text-[27px]">
+                        {chapter.title}
+                      </h3>
+                    </div>
+                  </div>
+
+                  {/* 引言 + 交付物：纯文本，无盒；左缩进与标题对齐 */}
+                  <div className="flex flex-col gap-2.5 sm:pl-[3.75rem]">
+                    <p className="max-w-3xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
+                      {chapter.intro}
+                    </p>
+                    <p className="text-[13px] sm:text-[13.5px]">
+                      <span
+                        className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.18em]"
+                        style={{ color: t.hex }}
+                      >
+                        交付物
+                      </span>
+                      <span className="ml-3 font-medium text-ink">{chapter.deliverable}</span>
+                    </p>
+                  </div>
+
+                  {/* 提示：左竖线 + 文本，无盒 */}
+                  {chapter.warning && (
+                    <div
+                      className="border-l-2 pl-4 sm:ml-[3.75rem]"
+                      style={{ borderColor: t.hex }}
+                    >
+                      <span
+                        className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.2em]"
+                        style={{ color: t.hex }}
+                      >
+                        {chapter.warning.label}
+                      </span>
+                      <p className="mt-1 max-w-3xl text-[12.5px] leading-[1.85] text-ink-soft sm:text-[13px]">
+                        {chapter.warning.body}
                       </p>
                     </div>
+                  )}
 
-                    {/* 提示色块 */}
-                    {chapter.warning && (
-                      <div
-                        className="flex flex-col gap-1.5 rounded-xl border p-4 sm:p-5"
-                        style={{
-                          borderColor: `rgba(${t.rgb}, 0.35)`,
-                          background: `rgba(${t.rgb}, 0.08)`,
-                        }}
+                  {/* 子课时：线 + 序号 + 文字 的清单，两列，无盒 */}
+                  <ul className="grid grid-cols-1 gap-x-10 sm:pl-[3.75rem] md:grid-cols-2">
+                    {chapter.lessons.map((lesson) => (
+                      <li
+                        key={lesson.code}
+                        className="flex items-start gap-3.5 border-t border-hairline py-3.5"
                       >
                         <span
-                          className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.22em]"
+                          className="font-mono text-[12px] font-semibold leading-[1.5] tabular"
                           style={{ color: t.hex }}
                         >
-                          {chapter.warning.label}
+                          {lesson.code}
                         </span>
-                        <p className="text-[12.5px] leading-[1.85] text-ink-soft sm:text-[13px]">
-                          {chapter.warning.body}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* 子条目列表 */}
-                    <ul className="grid grid-cols-1 gap-2.5 sm:gap-3 md:grid-cols-2">
-                      {chapter.lessons.map((lesson) => (
-                        <li
-                          key={lesson.code}
-                          className="flex items-start gap-3 rounded-xl border p-3.5 transition-colors hover:border-hairline-strong sm:gap-3.5 sm:p-4"
-                          style={{
-                            borderColor: "rgba(255,255,255,0.07)",
-                            background: "rgba(5,5,7,0.45)",
-                          }}
-                        >
-                          <span
-                            className="flex h-7 min-w-[2.5rem] flex-none items-center justify-center rounded-md px-2 font-mono text-[11px] font-semibold tabular sm:h-8 sm:text-[11.5px]"
-                            style={{
-                              background: `linear-gradient(135deg, rgba(${t.rgb}, 0.18), rgba(${t.rgb}, 0.08))`,
-                              border: `1px solid rgba(${t.rgb}, 0.22)`,
-                              color: t.hex,
-                            }}
-                          >
-                            {lesson.code}
+                        <div className="flex flex-col gap-0.5">
+                          <span className="text-[13px] font-semibold text-ink sm:text-[13.5px]">
+                            {lesson.title}
                           </span>
-                          <div className="flex flex-col gap-1">
-                            <span className="text-[13px] font-semibold text-ink sm:text-[13.5px]">
-                              {lesson.title}
-                            </span>
-                            <span className="text-[12px] leading-[1.75] text-muted sm:text-[12.5px]">
-                              {lesson.brief}
-                            </span>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </article>
+                          <span className="text-[12px] leading-[1.7] text-muted sm:text-[12.5px]">
+                            {lesson.brief}
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </Reveal>
             );
           })}
