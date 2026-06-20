@@ -465,6 +465,17 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
               price={STAGE1_PRICE.now}
               onClick={onEnroll}
             />
+
+            {/* 邀请返学费提示 */}
+            <p className="flex items-center gap-2 text-[12.5px] leading-[1.6] text-ink-soft sm:text-[13px]">
+              <span aria-hidden className="h-1.5 w-1.5 rounded-full" style={{ background: "#FDA4AF" }} />
+              <span>
+                <span className="font-semibold" style={{ color: "#FDA4AF" }}>
+                  邀请返学费
+                </span>
+                　每邀请一位学员，退还 <span className="font-semibold text-ink">¥500</span> 学费
+              </span>
+            </p>
           </div>
         </Reveal>
       </section>

@@ -398,6 +398,16 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
               </span>
             </div>
 
+            {/* 邀请返学费提示 */}
+            <p className="flex items-center gap-2 text-[12.5px] leading-[1.6] text-ink-soft sm:text-[13px]">
+              <span aria-hidden className="h-1.5 w-1.5 rounded-full" style={{ background: advance.hex }} />
+              <span>
+                <span className="font-semibold" style={{ color: advance.hex }}>
+                  邀请返学费
+                </span>
+                　每邀请一位学员，退回 <span className="font-semibold text-ink">¥1000</span> 学费
+              </span>
+            </p>
           </div>
         </Reveal>
       </section>
