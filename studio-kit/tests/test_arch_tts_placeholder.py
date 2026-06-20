@@ -1,18 +1,15 @@
 import json
 from pathlib import Path
-from studio_kit.core.contracts import ArchDoc
+from studio_kit.core.contracts import ArchVideoDoc
 from studio_kit.arch.tts import run_arch_tts
 
 
-def _doc() -> ArchDoc:
-    return ArchDoc.model_validate({
+def _doc() -> ArchVideoDoc:
+    return ArchVideoDoc.model_validate({
         "slug": "im", "run_id": "r1", "title": "T",
-        "diagram": {"layers": [
-            {"id": "a", "title": "A层", "accent": "#4DA3FF",
-             "nodes": [{"id": "a.x", "title": "X"}]}]},
         "segments": [
-            {"index": 0, "narration": "第一段讲解", "highlight": "all"},
-            {"index": 1, "narration": "第二段讲解", "highlight": "a"},
+            {"index": 0, "narration": "第一段讲解", "image": "images/a.png"},
+            {"index": 1, "narration": "第二段讲解", "image": "images/b.png"},
         ],
     })
 

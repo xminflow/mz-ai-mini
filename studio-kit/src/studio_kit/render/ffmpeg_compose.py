@@ -15,7 +15,7 @@ from typing import Any
 
 import ffmpeg
 
-from studio_kit.core.contracts import ArchDoc, ScriptDoc, SlideItem
+from studio_kit.core.contracts import ArchVideoDoc, ScriptDoc, SlideItem
 from studio_kit.core.logging import get_logger
 from studio_kit.render.video_format import HORIZONTAL, VideoFormat, VERTICAL
 
@@ -326,7 +326,7 @@ def _concat_with_subtitles(
 
 
 def compose_arch(
-    doc: ArchDoc,
+    doc: ArchVideoDoc,
     audio_dir: Path,
     clips_dir: Path,
     out_mp4: Path,

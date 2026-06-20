@@ -4,7 +4,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from studio_kit.core.audio import write_audio_meta
-from studio_kit.core.contracts import ArchDoc
+from studio_kit.core.contracts import ArchVideoDoc
 from studio_kit.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -15,7 +15,7 @@ def _idx(i: int) -> str:
 
 
 def run_arch_tts(
-    doc: ArchDoc,
+    doc: ArchVideoDoc,
     audio_dir: Path,
     *,
     backend: str,

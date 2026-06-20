@@ -1,12 +1,12 @@
-"""arch-video 串行编排：校验 → TTS → 渲染 → 合成。产物落 script.json 同级目录。"""
+"""arch-video 串行编排：校验 → TTS → 渲染图片片段 → 合成。产物落 script.json 同级目录。"""
 from __future__ import annotations
 
 from pathlib import Path
 
 from studio_kit.arch.tts import run_arch_tts
-from studio_kit.core.contracts import ArchDoc
+from studio_kit.core.contracts import ArchVideoDoc
 from studio_kit.core.logging import get_logger
-from studio_kit.render.arch_renderer import render_all_segments
+from studio_kit.render.image_clip import render_segment_clips
 from studio_kit.render.ffmpeg_compose import compose_arch
 
 logger = get_logger(__name__)
@@ -24,7 +24,7 @@ def run_arch_build(
     backend: str,
     force: bool,
 ) -> Path:
-    """串行执行 校验 → TTS → 渲染片段 → ffmpeg 合成，返回 final.mp4 路径。
+    """串行执行 校验 → TTS → 渲染图片片段 → ffmpeg 合成，返回 final.mp4 路径。
 
     产物目录与 script.json 同级：
       audio/     — NN.wav + NN.meta.json
@@ -33,8 +33,8 @@ def run_arch_build(
 
     backend='indextts' 且 voice 文件不存在时 raise FileNotFoundError（不静默兜底）。
     """
-    # 校验 ArchDoc
-    doc = ArchDoc.model_validate_json(script_path.read_text(encoding="utf-8"))
+    # 校验 ArchVideoDoc
+    doc = ArchVideoDoc.model_validate_json(script_path.read_text(encoding="utf-8"))
 
     work_dir = script_path.parent
     audio_dir = work_dir / "audio"
@@ -53,8 +53,8 @@ def run_arch_build(
     logger.info("[1/3] TTS（%s）→ %s", backend, audio_dir)
     run_arch_tts(doc, audio_dir, backend=backend, voice_sample=voice, force=force)
 
-    logger.info("[2/3] 渲染片段 → %s", clips_dir)
-    render_all_segments(doc, audio_dir, clips_dir, force=force)
+    logger.info("[2/3] 渲染图片片段 → %s", clips_dir)
+    render_segment_clips(doc, audio_dir, clips_dir, work_dir, force=force)
 
     logger.info("[3/3] 合成 → %s", final_mp4)
     compose_arch(doc, audio_dir, clips_dir, final_mp4, force=force)
