@@ -1,0 +1,47 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="arch-base" name="架构总览">
+    <mxGraphModel dx="1400" dy="900" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="800" math="0" shadow="0" background="#12141C">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ============ 标题 ============ -->
+        <mxCell id="title" value="两层架构示意" style="text;html=1;fontColor=#FFFFFF;fontSize=24;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1320" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ============ 客户端层 ============ -->
+        <mxCell id="band_client" value="" style="rounded=1;html=1;fillColor=#1B2130;strokeColor=#4DA3FF;strokeWidth=2;arcSize=3;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="1320" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="strip_client" value="客户端层&#10;Client" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#4DA3FF;strokeColor=none;fontColor=#0B0E14;fontStyle=1;fontSize=15;horizontal=0;arcSize=14;" vertex="1" parent="1">
+          <mxGeometry x="54" y="120" width="62" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="client_box" value="&lt;b&gt;用户终端&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:11px'&gt;App / Web / 桌面端&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#283142;strokeColor=#4DA3FF;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=13;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="200" y="160" width="340" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- ============ 业务逻辑层 ============ -->
+        <mxCell id="band_logic" value="" style="rounded=1;html=1;fillColor=#1B2130;strokeColor=#A78BFA;strokeWidth=2;arcSize=3;" vertex="1" parent="1">
+          <mxGeometry x="40" y="380" width="1320" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="strip_logic" value="业务逻辑层&#10;Logic Services" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#A78BFA;strokeColor=none;fontColor=#0B0E14;fontStyle=1;fontSize=15;horizontal=0;arcSize=14;" vertex="1" parent="1">
+          <mxGeometry x="54" y="400" width="62" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="logic_box" value="&lt;b&gt;核心服务&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:11px'&gt;API · 业务逻辑 · 数据处理&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#2E2742;strokeColor=#A78BFA;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=13;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="200" y="440" width="340" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- ============ 连接箭头 ============ -->
+        <mxCell id="arrow1" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;strokeColor=#8FA0B5;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="client_box" target="logic_box" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ 品牌角标 ============ -->
+        <mxCell id="brand" value="微域生光 | 十一AI编程" style="text;html=1;fontColor=#8FA0B5;fontSize=12;align=right;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="740" width="300" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
