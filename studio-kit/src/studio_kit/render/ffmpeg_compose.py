@@ -15,9 +15,9 @@ from typing import Any
 
 import ffmpeg
 
-from studio_kit.core.contracts import ScriptDoc, SlideItem
+from studio_kit.core.contracts import ArchDoc, ScriptDoc, SlideItem
 from studio_kit.core.logging import get_logger
-from studio_kit.render.video_format import VideoFormat, VERTICAL
+from studio_kit.render.video_format import HORIZONTAL, VideoFormat, VERTICAL
 
 logger = get_logger(__name__)
 
@@ -323,3 +323,58 @@ def _concat_with_subtitles(
             f"ffmpeg 合成失败（返回码 {result.returncode}）。"
             f"详细日志：{log_path}"
         )
+
+
+def compose_arch(
+    doc: ArchDoc,
+    audio_dir: Path,
+    clips_dir: Path,
+    out_mp4: Path,
+    *,
+    force: bool = False,
+) -> None:
+    """把 clips/NN.mp4（无音轨）+ audio/NN.wav 合成横版 final.mp4（1920×1080）。
+
+    复用竖屏同款 helper：逐段合并音轨 → concat → 烧 ASS 字幕。
+    缺片段视频或音频时显式 raise FileNotFoundError，不静默兜底。
+    """
+    if out_mp4.exists() and not force:
+        logger.info("final.mp4 已存在，跳过（--force 强制重生）")
+        return
+
+    work_dir = out_mp4.parent
+    clip_av_dir = work_dir / "clip_av"
+    clip_av_dir.mkdir(parents=True, exist_ok=True)
+
+    av_paths: list[Path] = []
+
+    # 逐段合并音轨
+    for seg in doc.segments:
+        idx_str = _slide_index_str(seg.index)
+        clip_mp4 = clips_dir / f"{idx_str}.mp4"
+        audio_wav = audio_dir / f"{idx_str}.wav"
+
+        if not clip_mp4.exists():
+            raise FileNotFoundError(f"片段视频不存在：{clip_mp4}")
+        if not audio_wav.exists():
+            raise FileNotFoundError(f"音频不存在：{audio_wav}")
+
+        out_av = clip_av_dir / f"{idx_str}.mp4"
+        _merge_slide_av(clip_mp4, audio_wav, out_av)
+        av_paths.append(out_av)
+
+    if not av_paths:
+        raise ValueError("没有可合成的片段")
+
+    # 写 concat.txt
+    concat_txt = work_dir / "concat.txt"
+    _write_concat_txt(av_paths, concat_txt)
+
+    # 生成横版 ASS 字幕（1920×1080，字号/边距由 HORIZONTAL 驱动）
+    ass_path = work_dir / "subtitles.ass"
+    _generate_ass([(s.index, s.narration) for s in doc.segments], audio_dir, ass_path, HORIZONTAL)
+
+    # concat + 烧入字幕 → final.mp4
+    _concat_with_subtitles(concat_txt, ass_path, out_mp4)
+
+    logger.info("横版 final.mp4 合成完成：%s", out_mp4)
