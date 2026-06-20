@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import { CourseMarkdown } from '@/features/course/components/CourseMarkdown'
 import { loadSection } from '@/features/course/load-section'
+import { resolveCourseImages } from '@/features/course/markdown-images'
 
 interface Params {
   params: Promise<{ chapterId: string; sectionId: string }>
@@ -17,10 +18,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 export default async function SectionPage({ params }: Params) {
   const { chapterId, sectionId } = await params
   const { content, prev, next } = await loadSection(chapterId, sectionId)
+  // 把 ![[...]] 维基嵌入与相对图片路径解析为 /courses/<chapterId>/... 站点绝对路径
+  const source = resolveCourseImages(content, chapterId)
 
   return (
     <div className="mx-auto max-w-[800px] px-6">
-      <CourseMarkdown source={content} />
+      <CourseMarkdown source={source} />
       <nav className="mb-16 grid gap-3 border-t border-hairline pt-6 sm:grid-cols-2">
         {prev ? (
           <Link
