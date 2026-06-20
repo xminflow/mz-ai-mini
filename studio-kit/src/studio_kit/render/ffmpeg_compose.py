@@ -17,6 +17,7 @@ import ffmpeg
 
 from studio_kit.core.contracts import ScriptDoc, SlideItem
 from studio_kit.core.logging import get_logger
+from studio_kit.render.video_format import VideoFormat, VERTICAL
 
 logger = get_logger(__name__)
 
@@ -107,22 +108,21 @@ def _chunk_narration(narration: str, max_chars: int = 12) -> list[str]:
 
 
 def _generate_ass(
-    script: ScriptDoc,
+    segments: list[tuple[int, str]],
     audio_dir: Path,
     out_ass: Path,
+    fmt: VideoFormat = VERTICAL,
 ) -> None:
-    """
-    生成 ASS 字幕文件。
+    """生成 ASS 字幕文件，按 VideoFormat 参数化分辨率与字号。
 
-    PlayResX/PlayResY = 1080×1920，与视频分辨率 1:1 匹配，FontSize 单位即像素。
-    旁白按每段 18 字切分，在幻灯片时长内均分显示，避免大段文字堆满屏幕。
+    segments: [(index, narration), ...] 顺序列表。
+    竖屏默认值（fmt=VERTICAL）保持与历史行为完全一致：PlayRes 1080×1920，字号 80，MarginV 480。
     """
-    # ASS 文件头：脚本分辨率与视频一致，字体大小即真实像素
     header = (
         "[Script Info]\n"
         "ScriptType: v4.00+\n"
-        "PlayResX: 1080\n"
-        "PlayResY: 1920\n"
+        f"PlayResX: {fmt.width}\n"
+        f"PlayResY: {fmt.height}\n"
         "ScaledBorderAndShadow: yes\n"
         "WrapStyle: 1\n"
         "\n"
@@ -131,10 +131,9 @@ def _generate_ass(
         "OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, "
         "ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, "
         "Alignment, MarginL, MarginR, MarginV, Encoding\n"
-        # FontSize=80px, 白字黑描边3px, 底部居中, 距底边480px（约屏幕高1/4处）
-        "Style: Default,Microsoft YaHei,80,"
+        f"Style: Default,Microsoft YaHei,{fmt.sub_fontsize},"
         "&H00FFFFFF,&H000000FF,&H00000000,&H00000000,"
-        "-1,0,0,0,100,100,0,0,1,3,0,2,40,40,480,1\n"
+        f"-1,0,0,0,100,100,0,0,1,3,0,2,40,40,{fmt.sub_margin_v},1\n"
         "\n"
         "[Events]\n"
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
@@ -143,24 +142,25 @@ def _generate_ass(
     dialogue_lines: list[str] = []
     current_s: float = 0.0
 
-    for slide in script.slides:
-        idx_str = _slide_index_str(slide.index)
+    for index, narration in segments:
+        idx_str = _slide_index_str(index)
         meta_path = audio_dir / f"{idx_str}.meta.json"
 
-        duration_s = slide.duration_estimate_s if slide.duration_estimate_s > 0 else 3.0
+        # 无 meta 文件时默认 3 秒（与竖屏原逻辑一致）
+        duration_s = 3.0
         if meta_path.exists():
             try:
                 meta: dict[str, Any] = json.loads(meta_path.read_text(encoding="utf-8"))
                 duration_s = meta.get("duration_ms", duration_s * 1000) / 1000.0
             except Exception as e:
-                logger.warning("读取 audio meta 失败，使用估算时长：%s", e)
+                logger.warning("读取 audio meta 失败，使用默认时长：%s", e)
 
-        chunks = _chunk_narration(slide.narration)
+        chunks = _chunk_narration(narration)
         if not chunks:
             current_s += duration_s
             continue
 
-        # 每个短句均分幻灯片时长
+        # 每个短句均分当前段时长
         chunk_dur = duration_s / len(chunks)
         for i, chunk in enumerate(chunks):
             t_start = current_s + i * chunk_dur
@@ -263,9 +263,10 @@ def compose(
     concat_txt = work_dir / "concat.txt"
     _write_concat_txt(av_paths, concat_txt)
 
-    # 步骤 3：生成 ASS 字幕（PlayResX/Y=1080×1920，FontSize 单位=像素）
+    # 步骤 3：生成 ASS 字幕（竖屏 1080×1920，由 VERTICAL 常量保证字号/边距不变）
     ass_path = work_dir / "subtitles.ass"
-    _generate_ass(script, audio_dir, ass_path)
+    segments = [(s.index, s.narration) for s in script.slides]
+    _generate_ass(segments, audio_dir, ass_path, VERTICAL)
 
     # 步骤 4：concat + 烧入字幕 → final.mp4
     _concat_with_subtitles(concat_txt, ass_path, out_mp4)
