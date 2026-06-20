@@ -8,7 +8,7 @@ from studio_kit.core.contracts import ArchVideoDoc
 from studio_kit.core.logging import get_logger
 from studio_kit.render.image_clip import render_segment_clips
 from studio_kit.render.ffmpeg_compose import compose_arch
-from studio_kit.render.video_format import HORIZONTAL, VERTICAL
+from studio_kit.render.video_format import HORIZONTAL, ARCH_PORTRAIT
 
 logger = get_logger(__name__)
 
@@ -35,8 +35,8 @@ def run_arch_build(
 
     backend='indextts' 且 voice 文件不存在时 raise FileNotFoundError（不静默兜底）。
     """
-    # 竖版/横版规格：复用既有 VideoFormat 常量
-    fmt = VERTICAL if portrait else HORIZONTAL
+    # 竖版用 ARCH_PORTRAIT（字幕走顶部带），横版用 HORIZONTAL（字幕底部）
+    fmt = ARCH_PORTRAIT if portrait else HORIZONTAL
 
     # 校验 ArchVideoDoc
     doc = ArchVideoDoc.model_validate_json(script_path.read_text(encoding="utf-8"))
