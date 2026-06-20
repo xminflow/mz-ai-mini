@@ -289,3 +289,45 @@ class ArchDoc(BaseModel):
         if not self.segments:
             raise ValueError("segments 至少 1 段")
         return self
+
+
+# ════════════════════════════════════════════════════════════════════
+# 图片驱动的架构讲解视频 schema（drawio 导出 PNG → 视频）
+# ════════════════════════════════════════════════════════════════════
+class ArchVideoSegment(BaseModel):
+    """一段讲解：文案 + 要显示的 PNG（相对工作区路径）。"""
+    index: int
+    narration: str
+    image: str
+
+    @field_validator("narration")
+    @classmethod
+    def _narration_not_empty(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("ArchVideoSegment.narration 不能为空")
+        return v
+
+    @field_validator("image")
+    @classmethod
+    def _image_not_empty(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("ArchVideoSegment.image 不能为空")
+        return v
+
+
+class ArchVideoDoc(BaseModel):
+    """arch 讲解视频 script.json（skill 写，CLI 只校验）。"""
+    slug: str
+    run_id: str
+    title: str
+    subtitle: str = ""
+    segments: list[ArchVideoSegment]
+
+    @model_validator(mode="after")
+    def _check(self) -> "ArchVideoDoc":
+        if not self.segments:
+            raise ValueError("segments 至少 1 段")
+        for i, seg in enumerate(self.segments):
+            if seg.index != i:
+                raise ValueError(f"segments[{i}].index 必须为 {i}，实际 {seg.index}")
+        return self
