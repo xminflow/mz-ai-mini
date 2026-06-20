@@ -408,7 +408,7 @@ def cmd_arch_video(
     force: bool = typer.Option(False, "--force", is_flag=True, help="强制重跑所有步骤"),
     log_level: str = typer.Option("INFO", "--log-level"),
 ) -> None:
-    """架构图音色讲解视频：TTS → 分段高亮录屏 → ffmpeg 合成 → final.mp4 (1920×1080)。
+    """架构图音色讲解视频：TTS → 图片片段 → ffmpeg 合成 → final.mp4 (1920×1080)。
 
     script.json 由 arch-diagram-narration skill 在用户确认后写出，本命令只校验+渲染。
     """
