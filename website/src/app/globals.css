@@ -126,6 +126,23 @@ samp,
   color: transparent;
 }
 
+@utility hero-shine {
+  background-image: linear-gradient(
+    100deg,
+    #a78bfa 0%,
+    #22d3ee 30%,
+    #f472b6 55%,
+    #a78bfa 80%,
+    #22d3ee 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmerText 3.5s linear infinite;
+  filter: drop-shadow(0 0 16px rgba(167, 139, 250, 0.5));
+}
+
 @utility glass {
   background: rgba(13, 13, 18, 0.55);
   backdrop-filter: saturate(160%) blur(18px);

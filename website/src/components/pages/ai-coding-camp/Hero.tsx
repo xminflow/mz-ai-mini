@@ -8,8 +8,8 @@ export function Hero() {
       <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center px-4 pb-12 pt-20 text-center sm:px-6 sm:pb-16 sm:pt-28 lg:pt-32">
         <Reveal delay={0.08}>
           <h1 className="font-serif-zh mt-7 max-w-4xl text-balance leading-[1.32] tracking-[-0.005em] text-ink sm:mt-8 sm:leading-[1.22] lg:leading-[1.15]">
-            {/* 次：市场定位修饰语，小字弱化 */}
-            <span className="mb-2 block text-[15px] font-medium tracking-[0.1em] text-muted sm:mb-2.5 sm:text-[18px] lg:text-[20px]">
+            {/* 次：市场定位修饰语，渐变流光 + 辉光，炫酷但不抢主标题 */}
+            <span className="hero-shine mb-2 block text-[18px] font-bold tracking-[0.18em] sm:mb-2.5 sm:text-[22px] lg:text-[26px]">
               市面上最好的
             </span>
             {/* 主：训练营名称，大字加粗 */}
