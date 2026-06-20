@@ -436,6 +436,29 @@ def cmd_arch_video(
 
 
 # ════════════════════════════════════════════════════════════════════
+# drawio-export  （批量把 .drawio 导出为 PNG，使用 draw.io Desktop CLI）
+# ════════════════════════════════════════════════════════════════════
+
+@app.command("drawio-export")
+def cmd_drawio_export(
+    src: Path = typer.Option(..., "--src", help="含 .drawio 的源目录"),
+    out: Path = typer.Option(..., "--out", help="PNG 输出目录"),
+    scale: int = typer.Option(2, "--scale", help="导出倍率"),
+    force: bool = typer.Option(False, "--force", is_flag=True, help="覆盖已有 PNG"),
+    log_level: str = typer.Option("INFO", "--log-level"),
+) -> None:
+    """用 draw.io Desktop 批量把 src/*.drawio 导出为 PNG 到 out/。"""
+    configure_logging(log_level)
+    from studio_kit.render.drawio_export import export_dir
+    try:
+        pngs = export_dir(src.resolve(), out.resolve(), scale=scale, force=force)
+    except Exception as e:
+        err_console.print(f"[red]drawio-export 失败：{e}[/red]")
+        raise typer.Exit(1)
+    console.print(f"[green]drawio-export 完成：{len(pngs)} 张 PNG → {out}[/green]")
+
+
+# ════════════════════════════════════════════════════════════════════
 # version
 # ════════════════════════════════════════════════════════════════════
 
