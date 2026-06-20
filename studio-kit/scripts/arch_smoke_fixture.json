@@ -1,0 +1,15 @@
+{
+  "slug": "smoke", "run_id": "t1", "title": "冒烟架构",
+  "subtitle": "端到端校验",
+  "diagram": { "layers": [
+    { "id": "client", "title": "客户端层", "accent": "#4DA3FF",
+      "nodes": [ { "id": "client.app", "title": "App", "sub": "本地库" } ] },
+    { "id": "logic", "title": "业务逻辑层", "accent": "#A78BFA",
+      "nodes": [ { "id": "logic.msg", "title": "消息服务" },
+                 { "id": "logic.user", "title": "用户服务" } ] }
+  ] },
+  "segments": [
+    { "index": 0, "narration": "这是一套用于冒烟测试的两层架构。", "highlight": "all" },
+    { "index": 1, "narration": "重点看消息服务这个框。", "highlight": ["logic.msg"] }
+  ]
+}
