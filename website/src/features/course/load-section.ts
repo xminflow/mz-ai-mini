@@ -6,7 +6,7 @@ import { loadManifest } from './load-manifest'
 import { flattenSections, findAdjacent } from './manifest'
 import type { FlatSection, SidebarData } from './types'
 
-const COURSES_DIR = path.join(process.cwd(), 'public', 'courses')
+const PUBLIC_DIR = path.join(process.cwd(), 'public')
 
 export interface SectionPayload {
   current: FlatSection
@@ -16,18 +16,20 @@ export interface SectionPayload {
 }
 
 // 读取单节：先在 manifest（受信来源）中定位 current，再用其 file 字段读取 MD。
+// contentDir 为 public 下内容目录名（courses / community 等）。
 // chapterId/sectionId 仅用于查表，不直接拼进文件路径，避免路径穿越。
 export async function loadSection(
+  contentDir: string,
   chapterId: string,
   sectionId: string,
 ): Promise<SectionPayload> {
-  const manifest = await loadManifest()
+  const manifest = await loadManifest(contentDir)
   const flat = flattenSections(manifest)
   const { prev, current, next } = findAdjacent(flat, chapterId, sectionId)
   if (!current) {
     notFound()
   }
-  const abs = path.join(COURSES_DIR, current.file)
+  const abs = path.join(PUBLIC_DIR, contentDir, current.file)
   let content: string
   try {
     content = await readFile(abs, 'utf-8')
@@ -39,8 +41,8 @@ export async function loadSection(
 }
 
 // 侧栏数据：章节 + 小节（id/title），不下发文件路径
-export async function loadSidebar(): Promise<SidebarData> {
-  const manifest = await loadManifest()
+export async function loadSidebar(contentDir: string): Promise<SidebarData> {
+  const manifest = await loadManifest(contentDir)
   return {
     title: manifest.title,
     chapters: manifest.chapters.map((ch) => ({

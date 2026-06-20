@@ -8,12 +8,14 @@ import type { SidebarData } from '../types'
 
 interface Props {
   data: SidebarData
+  // 路由前缀，如 '/course'（VIP课程）或 '/community'（AI学习社区）
+  basePath: string
 }
 
-// 从 /course/<chapterId>/<sectionId> 解析当前定位
-function useCurrentLocation(): { chapterId: string | null; sectionPath: string } {
+// 从 <basePath>/<chapterId>/<sectionId> 解析当前定位
+function useCurrentLocation(basePath: string): { chapterId: string | null; sectionPath: string } {
   const pathname = usePathname()
-  const m = pathname.match(/^\/course\/([^/]+)\/([^/]+)/)
+  const m = pathname.match(new RegExp(`^${basePath}/([^/]+)/([^/]+)`))
   return { chapterId: m?.[1] ?? null, sectionPath: pathname }
 }
 
@@ -35,8 +37,8 @@ function Chevron({ open }: { open: boolean }) {
   )
 }
 
-export function CourseSidebar({ data }: Props) {
-  const { chapterId: currentChapterId, sectionPath } = useCurrentLocation()
+export function CourseSidebar({ data, basePath }: Props) {
+  const { chapterId: currentChapterId, sectionPath } = useCurrentLocation(basePath)
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
 
   const toggle = (id: string) => {
@@ -73,7 +75,7 @@ export function CourseSidebar({ data }: Props) {
                 // 单条引导线 + 当前小节用实心圆点标在线上
                 <ul className="mb-1.5 ml-[15px] mt-0.5 border-l border-hairline">
                   {ch.sections.map((s) => {
-                    const href = `/course/${ch.id}/${s.id}`
+                    const href = `${basePath}/${ch.id}/${s.id}`
                     const isActive = sectionPath === href
                     return (
                       <li key={s.id} className="relative">
