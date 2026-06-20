@@ -20,3 +20,4 @@ def test_vertical_ass_unchanged(tmp_path: Path):
     assert "PlayResX: 1080" in txt
     assert "PlayResY: 1920" in txt
     assert ",80," in txt           # 竖屏字号仍 80（回归）
+    assert ",480," in txt          # 竖屏 MarginV 仍 480（回归）
