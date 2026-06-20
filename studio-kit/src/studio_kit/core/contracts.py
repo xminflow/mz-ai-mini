@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, model_validator
 
 
 class BloggerStats(BaseModel):
@@ -176,3 +176,116 @@ class XhsDoc(BaseModel):
             if c.index != i:
                 raise ValueError(f"xhs cards[{i}].index 必须为 {i}，实际 {c.index}")
         return v
+
+
+# ════════════════════════════════════════════════════════════════════
+# 架构图讲解视频（arch）独立 schema —— 与 ScriptDoc / XhsDoc 解耦
+# ════════════════════════════════════════════════════════════════════
+
+
+class ArchNode(BaseModel):
+    """架构图中的一个框（一个组件/服务）。"""
+    id: str            # 层内唯一，约定形如 "<layerId>.<name>"
+    title: str
+    sub: str = ""      # 副标题，可空
+    accent: str = ""   # 可空：覆盖所属层强调色
+
+    @field_validator("id", "title")
+    @classmethod
+    def _not_blank(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("ArchNode.id / title 不能为空")
+        return v
+
+
+class ArchLayer(BaseModel):
+    """架构图中的一层（含若干框）。"""
+    id: str
+    title: str
+    accent: str        # 十六进制色，如 "#4DA3FF"
+    nodes: list[ArchNode]
+
+    @field_validator("id", "title", "accent")
+    @classmethod
+    def _not_blank(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("ArchLayer.id / title / accent 不能为空")
+        return v
+
+    @field_validator("nodes")
+    @classmethod
+    def _nodes_non_empty(cls, v: list[ArchNode]) -> list[ArchNode]:
+        if not v:
+            raise ValueError("ArchLayer.nodes 至少 1 个")
+        return v
+
+
+class ArchDiagram(BaseModel):
+    layers: list[ArchLayer]
+
+    @field_validator("layers")
+    @classmethod
+    def _layers_non_empty(cls, v: list[ArchLayer]) -> list[ArchLayer]:
+        if not v:
+            raise ValueError("ArchDiagram.layers 至少 1 层")
+        return v
+
+
+class ArchSegment(BaseModel):
+    """一段讲解：文本 + 高亮目标。"""
+    index: int
+    narration: str
+    highlight: str | list[str]  # "all" | "<layerId>" | ["<layerId|nodeId>", ...]
+
+    @field_validator("narration")
+    @classmethod
+    def _narration_not_empty(cls, v: str) -> str:
+        if not v.strip():
+            raise ValueError("ArchSegment.narration 不能为空")
+        return v
+
+
+class ArchDoc(BaseModel):
+    """arch script.json（由 Claude skill 写，CLI 只校验）。"""
+    slug: str
+    run_id: str
+    title: str
+    subtitle: str = ""
+    diagram: ArchDiagram
+    segments: list[ArchSegment]
+
+    def layer_ids(self) -> set[str]:
+        return {layer.id for layer in self.diagram.layers}
+
+    def node_ids(self) -> set[str]:
+        return {node.id for layer in self.diagram.layers for node in layer.nodes}
+
+    def resolve_highlight(self, seg: "ArchSegment") -> set[str]:
+        """把 segment.highlight 归一为集合。'all' 原样返回 {'all'}。"""
+        if isinstance(seg.highlight, str):
+            if seg.highlight == "all":
+                return {"all"}
+            return {seg.highlight}
+        return set(seg.highlight)
+
+    @model_validator(mode="after")
+    def _check_integrity(self) -> "ArchDoc":
+        # 层 id 唯一
+        lids = [layer.id for layer in self.diagram.layers]
+        if len(lids) != len(set(lids)):
+            raise ValueError("diagram.layers 存在重复 layer id")
+        # 框 id 全局唯一
+        nids = [n.id for layer in self.diagram.layers for n in layer.nodes]
+        if len(nids) != len(set(nids)):
+            raise ValueError("diagram 存在重复 node id")
+        valid = {"all"} | set(lids) | set(nids)
+        # segment.index 从 0 连续
+        for i, seg in enumerate(self.segments):
+            if seg.index != i:
+                raise ValueError(f"segments[{i}].index 必须为 {i}，实际 {seg.index}")
+            for ref in self.resolve_highlight(seg):
+                if ref not in valid:
+                    raise ValueError(f"segment {i} 的 highlight 引用了不存在的 id：{ref}")
+        if not self.segments:
+            raise ValueError("segments 至少 1 段")
+        return self
