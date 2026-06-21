@@ -56,7 +56,7 @@ export function InstructorSection() {
           {PROMISES.map((p, i) => (
             <Reveal key={p.title} delay={0.06 + i * 0.04}>
               <div
-                className="group h-full rounded-[20px] p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1"
+                className="group h-full rounded-md p-5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1"
                 style={{
                   background:
                     "linear-gradient(150deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.018) 100%)",
@@ -84,7 +84,7 @@ export function InstructorSection() {
         {/* 右侧：讲师名片（个人简介，4 项资历以竖线+文字形式并入卡内） */}
         <Reveal delay={0.1}>
           <div
-            className="relative h-full overflow-hidden rounded-[24px] p-6 backdrop-blur-xl sm:rounded-[28px] sm:p-7"
+            className="relative h-full overflow-hidden rounded-md p-6 backdrop-blur-xl sm:p-7"
             style={{
               background:
                 "linear-gradient(150deg, rgba(0,153,255,0.16) 0%, rgba(0,153,255,0.05) 100%)",
@@ -117,7 +117,7 @@ export function InstructorSection() {
                   src="https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/instructor/shiyi.jpg"
                   alt="主讲老师 十一"
                   loading="lazy"
-                  className="h-16 w-16 flex-none rounded-2xl object-cover object-[50%_22%] sm:h-20 sm:w-20"
+                  className="h-16 w-16 flex-none rounded-md object-cover object-[50%_22%] sm:h-20 sm:w-20"
                   style={{
                     boxShadow:
                       "0 12px 28px -8px rgba(0,153,255,0.65), inset 0 0 0 1px rgba(255,255,255,0.2)",

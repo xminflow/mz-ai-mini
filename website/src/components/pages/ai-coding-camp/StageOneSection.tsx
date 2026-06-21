@@ -173,7 +173,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
             return (
               <Reveal key={item.code} delay={i * 0.06}>
                 <article
-                  className="group relative h-full overflow-hidden rounded-[30px] p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[36px] sm:p-7"
+                  className="group relative h-full overflow-hidden rounded-md p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:p-7"
                   style={{
                     background: `linear-gradient(150deg, rgba(${t.rgb}, 0.16) 0%, rgba(${t.rgb}, 0.05) 100%)`,
                     boxShadow: `0 14px 36px -22px rgba(0,0,0,0.85)`,
@@ -290,7 +290,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
             return (
               <Reveal key={stage.code} delay={i * 0.1}>
                 <article
-                  className="group relative h-full overflow-hidden rounded-[32px] p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[36px] sm:p-8 lg:p-9"
+                  className="group relative h-full overflow-hidden rounded-md p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:p-8 lg:p-9"
                   style={{
                     background: `linear-gradient(150deg, rgba(${t.rgb}, 0.16) 0%, rgba(${t.rgb}, 0.05) 100%)`,
                     boxShadow: isCompanion
@@ -398,7 +398,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
         {/* 时间轴条 */}
         <Reveal delay={0.18}>
           <div
-            className="relative mt-6 overflow-hidden rounded-2xl p-5 backdrop-blur-xl sm:mt-8 sm:rounded-[22px] sm:p-6"
+            className="relative mt-6 overflow-hidden rounded-md p-5 backdrop-blur-xl sm:mt-8 sm:p-6"
             style={{
               background:
                 "linear-gradient(110deg, rgba(0,153,255,0.10) 0%, rgba(212,38,114,0.08) 50%, rgba(248,236,29,0.10) 100%)",
