@@ -8,15 +8,22 @@ export const ArrowRight = () => (
   </svg>
 )
 
-export const SectionEyebrow = ({ children, color = '#0099ff' }: { children: React.ReactNode; color?: string }) => (
-  <span className="flex items-center gap-2.5 font-mono text-[15px] font-medium uppercase tracking-[0.24em] text-muted sm:text-[16px]">
-    <span
-      className="h-px w-5 sm:w-6"
-      style={{ background: `linear-gradient(to right, transparent, ${color}99)` }}
-    />
-    {children}
-  </span>
-)
+export const SectionEyebrow = ({ children, color = '#0099ff', index }: { children: React.ReactNode; color?: string; index?: number }) => {
+  // 编号小节:Forgeflow 招牌的 01/02 序号,序号色循环四色,正文沿用 muted
+  const seqColors = ['#0099ff', '#01aef0', '#bafa77', '#d42672']
+  const seq = typeof index === 'number' ? String(index).padStart(2, '0') : null
+  return (
+    <span className="flex items-center gap-2.5 font-mono text-[15px] font-medium uppercase tracking-[0.24em] text-muted sm:text-[16px]">
+      {seq && (
+        <span className="tabular font-semibold" style={{ color: seqColors[(index! - 1) % 4] }}>
+          {seq}
+        </span>
+      )}
+      <span className="h-px w-5 sm:w-6" style={{ background: `linear-gradient(to right, transparent, ${color}99)` }} />
+      {children}
+    </span>
+  )
+}
 
 /* ─────────────────────────  共享报名按钮 / 价格条  ───────────────────────── */
 

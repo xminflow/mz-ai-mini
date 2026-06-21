@@ -16,7 +16,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
       {/* 6. 课时大纲：差异化主题色 + 超大背景序号 */}
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
-          <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.4] tracking-[0.005em] sm:text-[26px] lg:text-[34px]">
+          <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.4] tracking-[-0.02em] sm:text-[26px] lg:text-[34px]">
             AI 编程入门课程大纲（初阶）
           </h2>
         </Reveal>
@@ -151,8 +151,8 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <div className="flex flex-col gap-4">
-            <SectionEyebrow color="#ff52b7">你将拿到</SectionEyebrow>
-            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
+            <SectionEyebrow color="#ff52b7" index={1}>你将拿到</SectionEyebrow>
+            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[-0.02em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
               <span className="block">学完，你手里会有</span>
               <span className="mt-1 block sm:mt-1.5">
                 <GradientText className="font-semibold">
@@ -173,7 +173,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
             return (
               <Reveal key={item.code} delay={i * 0.06}>
                 <article
-                  className="group relative h-full overflow-hidden rounded-[22px] border p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[26px] sm:p-7"
+                  className="group relative h-full overflow-hidden rounded-[30px] border border-dashed p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[36px] sm:p-7"
                   style={{
                     borderColor: `rgba(${t.rgb}, 0.28)`,
                     background: `linear-gradient(135deg, rgba(${t.rgb}, 0.12) 0%, rgba(13,13,18,0.6) 60%)`,
@@ -265,8 +265,8 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <div className="flex flex-col gap-4">
-            <SectionEyebrow color="#fff652">服务模式</SectionEyebrow>
-            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
+            <SectionEyebrow color="#fff652" index={2}>服务模式</SectionEyebrow>
+            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[-0.02em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
               <span className="block">1 个月线上直播 ·</span>
               <span className="mt-1 block sm:mt-1.5">
                 <GradientText className="font-semibold">
@@ -291,7 +291,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
             return (
               <Reveal key={stage.code} delay={i * 0.1}>
                 <article
-                  className="group relative h-full overflow-hidden rounded-[24px] border p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[28px] sm:p-8 lg:p-9"
+                  className="group relative h-full overflow-hidden rounded-[32px] border border-dashed p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[36px] sm:p-8 lg:p-9"
                   style={{
                     borderColor: `rgba(${t.rgb}, ${isCompanion ? 0.4 : 0.28})`,
                     background: `linear-gradient(135deg, rgba(${t.rgb}, ${isCompanion ? 0.14 : 0.1}) 0%, rgba(13,13,18,0.55) 60%)`,
@@ -456,7 +456,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <div className="flex flex-col items-center gap-6 text-center">
-            <SectionEyebrow color="#ff52b7">本阶段报名</SectionEyebrow>
+            <SectionEyebrow color="#ff52b7" index={3}>本阶段报名</SectionEyebrow>
 
             {/* 价格条本身可点击报名（点击打开扫码报名弹窗） */}
             <PriceChip

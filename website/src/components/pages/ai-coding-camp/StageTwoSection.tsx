@@ -30,7 +30,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
       {/* 三段分组课程大纲：能力进阶 / 企业实战直播 / 求职冲刺 */}
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
-          <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.4] tracking-[0.005em] sm:text-[26px] lg:text-[34px]">
+          <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.4] tracking-[-0.02em] sm:text-[26px] lg:text-[34px]">
             AI 架构师课程大纲（高阶）
           </h2>
         </Reveal>
@@ -162,8 +162,8 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <div className="flex flex-col gap-4">
-            <SectionEyebrow color={advance.hex}>第二阶段收获</SectionEyebrow>
-            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
+            <SectionEyebrow color={advance.hex} index={1}>第二阶段收获</SectionEyebrow>
+            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[-0.02em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
               <span className="block">学完，你手里会多出</span>
               <span className="mt-1 block sm:mt-1.5">
                 <GradientText className="font-semibold">5 项专家级硬核成果</GradientText>
@@ -180,7 +180,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
             return (
               <Reveal key={item.code} delay={i * 0.06}>
                 <article
-                  className={`group relative h-full overflow-hidden rounded-[22px] border p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[26px] sm:p-7 ${isLast ? 'lg:col-span-2' : ''}`}
+                  className={`group relative h-full overflow-hidden rounded-[30px] border border-dashed p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[36px] sm:p-7 ${isLast ? 'lg:col-span-2' : ''}`}
                   style={{
                     borderColor: `rgba(${t.rgb}, 0.28)`,
                     background: `linear-gradient(135deg, rgba(${t.rgb}, 0.12) 0%, rgba(13,13,18,0.6) 60%)`,
@@ -269,8 +269,8 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <div className="flex flex-col gap-4">
-            <SectionEyebrow color={STAGE2_THEMES.enterprise.hex}>服务模式</SectionEyebrow>
-            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
+            <SectionEyebrow color={STAGE2_THEMES.enterprise.hex} index={2}>服务模式</SectionEyebrow>
+            <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[-0.02em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
               <span className="block">企业级实战直播 ·</span>
               <span className="mt-1 block sm:mt-1.5">
                 <GradientText className="font-semibold">课程外问题长期陪跑</GradientText>
@@ -281,7 +281,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
 
         <Reveal delay={0.08}>
           <article
-            className="group relative mt-10 overflow-hidden rounded-[24px] border p-6 backdrop-blur-xl sm:mt-12 sm:rounded-[28px] sm:p-8 lg:p-9"
+            className="group relative mt-10 overflow-hidden rounded-[32px] border border-dashed p-6 backdrop-blur-xl sm:mt-12 sm:rounded-[36px] sm:p-8 lg:p-9"
             style={{
               borderColor: `rgba(${STAGE2_THEMES.enterprise.rgb}, 0.32)`,
               background: `linear-gradient(135deg, rgba(${STAGE2_THEMES.enterprise.rgb}, 0.12) 0%, rgba(13,13,18,0.55) 60%)`,
@@ -379,7 +379,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <div className="flex flex-col items-center gap-6 text-center">
-            <SectionEyebrow color={advance.hex}>本阶段报名</SectionEyebrow>
+            <SectionEyebrow color={advance.hex} index={3}>本阶段报名</SectionEyebrow>
 
             {/* 价格条 + 含第一阶段全部内容 pill */}
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
