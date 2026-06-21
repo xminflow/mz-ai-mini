@@ -132,8 +132,9 @@ def _generate_ass(
         "ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, "
         "Alignment, MarginL, MarginR, MarginV, Encoding\n"
         f"Style: Default,Microsoft YaHei,{fmt.sub_fontsize},"
-        "&H00FFFFFF,&H000000FF,&H00000000,&H00000000,"
-        f"-1,0,0,0,100,100,0,0,1,3,0,{fmt.sub_alignment},40,40,{fmt.sub_margin_v},1\n"
+        f"{fmt.sub_primary},&H000000FF,&H00000000,&H00000000,"
+        f"-1,0,0,0,100,100,0,0,1,{fmt.sub_outline_w},{fmt.sub_shadow},"
+        f"{fmt.sub_alignment},40,40,{fmt.sub_margin_v},1\n"
         "\n"
         "[Events]\n"
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n"
@@ -155,10 +156,16 @@ def _generate_ass(
             except Exception as e:
                 logger.warning("读取 audio meta 失败，使用默认时长：%s", e)
 
-        chunks = _chunk_narration(narration)
+        chunks = _chunk_narration(narration, max_chars=fmt.sub_max_chars)
         if not chunks:
             current_s += duration_s
             continue
+
+        # 大字报动画：淡入 + 从 62% 弹到 108% 再回落 100%（轻微过冲弹跳）
+        anim_prefix = (
+            r"{\fad(90,0)\fscx62\fscy62\t(0,150,\fscx108\fscy108)\t(150,230,\fscx100\fscy100)}"
+            if fmt.sub_animate else ""
+        )
 
         # 每个短句均分当前段时长
         chunk_dur = duration_s / len(chunks)
@@ -167,7 +174,7 @@ def _generate_ass(
             t_end = t_start + chunk_dur
             dialogue_lines.append(
                 f"Dialogue: 0,{_seconds_to_ass_time(t_start)},{_seconds_to_ass_time(t_end)},"
-                f"Default,,0,0,0,,{chunk}"
+                f"Default,,0,0,0,,{anim_prefix}{chunk}"
             )
 
         current_s += duration_s
@@ -325,6 +332,43 @@ def _concat_with_subtitles(
         )
 
 
+def _concat_plain(
+    concat_txt: Path,
+    out_mp4: Path,
+) -> None:
+    """用 ffmpeg concat 拼接片段，不烧任何字幕（字幕由用户后期添加）。"""
+    cmd: list[str] = [
+        "ffmpeg",
+        "-y",
+        "-f", "concat",
+        "-safe", "0",
+        "-i", str(concat_txt),
+        "-af", "asetpts=PTS-STARTPTS",  # 拼接后重置音频 PTS，消除时间戳累积漂移
+        "-c:v", "libx264",
+        "-preset", "fast",
+        "-crf", "23",
+        "-pix_fmt", "yuv420p",
+        "-r", "30",
+        "-c:a", "aac",
+        "-b:a", "192k",
+        "-movflags", "+faststart",
+        str(out_mp4),
+    ]
+    logger.debug("执行 ffmpeg concat（无字幕）命令：%s", " ".join(cmd))
+    result = subprocess.run(
+        cmd, capture_output=True, text=True, encoding="utf-8", errors="replace",
+    )
+    if result.returncode != 0:
+        log_path = out_mp4.parent / "compose.log"
+        log_path.write_text(
+            f"STDOUT:\n{result.stdout}\n\nSTDERR:\n{result.stderr}",
+            encoding="utf-8",
+        )
+        raise RuntimeError(
+            f"ffmpeg 合成失败（返回码 {result.returncode}）。详细日志：{log_path}"
+        )
+
+
 def compose_arch(
     doc: ArchVideoDoc,
     audio_dir: Path,
@@ -373,11 +417,7 @@ def compose_arch(
     concat_txt = work_dir / "concat.txt"
     _write_concat_txt(av_paths, concat_txt)
 
-    # 生成 ASS 字幕（PlayRes/字号/边距由 fmt 驱动）
-    ass_path = work_dir / "subtitles.ass"
-    _generate_ass([(s.index, s.narration) for s in doc.segments], audio_dir, ass_path, fmt)
+    # 直接 concat 拼接（不烧字幕；字幕由用户后期自行添加）
+    _concat_plain(concat_txt, out_mp4)
 
-    # concat + 烧入字幕 → final.mp4
-    _concat_with_subtitles(concat_txt, ass_path, out_mp4)
-
-    logger.info("final.mp4 合成完成（%dx%d）：%s", fmt.width, fmt.height, out_mp4)
+    logger.info("final.mp4 合成完成（%dx%d，无字幕）：%s", fmt.width, fmt.height, out_mp4)

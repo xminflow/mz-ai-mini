@@ -1,5 +1,5 @@
 from pathlib import Path
-from studio_kit.render.video_format import VERTICAL, HORIZONTAL, ARCH_PORTRAIT
+from studio_kit.render.video_format import VERTICAL, HORIZONTAL
 from studio_kit.render.ffmpeg_compose import _generate_ass
 
 
@@ -23,16 +23,5 @@ def test_vertical_ass_unchanged(tmp_path: Path):
     assert ",480," in txt          # 竖屏 MarginV 仍 480（回归）
     assert ",3,0,2,40,40," in txt  # 口播仍底部居中 Alignment=2（回归）
 
-
-def test_arch_portrait_dazibao_style(tmp_path: Path):
-    # 架构竖版大字报：亮黄字 + 粗描边6 + 阴影2 + 底部居中 + 弹入动画
-    out = tmp_path / "ap.ass"
-    _generate_ass([(0, "你好。世界。")], tmp_path, out, ARCH_PORTRAIT)
-    txt = out.read_text(encoding="utf-8")
-    assert "PlayResX: 1080" in txt
-    assert "PlayResY: 1920" in txt
-    assert ",80," in txt                 # 字号 80
-    assert "&H0000FFFF" in txt           # 亮黄主色
-    assert ",6,2,2,40,40,230," in txt    # 描边6 阴影2 Alignment=2 MarginV=230
-    assert "\\fad(90,0)" in txt          # 淡入
-    assert "\\fscx62" in txt and "\\t(0,150" in txt  # 弹入缩放动画
+# 注：架构讲解视频已永久去掉烧字幕（compose_arch 改为 _concat_plain），
+# ARCH_PORTRAIT 仅保留分辨率用途，其字幕样式不再渲染，故不再测试。
