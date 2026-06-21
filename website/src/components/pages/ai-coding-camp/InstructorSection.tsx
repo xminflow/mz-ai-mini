@@ -67,7 +67,7 @@ export function InstructorSection() {
                   aria-hidden
                   className="block h-[3px] w-9 rounded-full transition-all duration-300 group-hover:w-14"
                   style={{
-                    background: "linear-gradient(90deg, #C4B5FD, #67E8F9)",
+                    background: "linear-gradient(90deg, #57beff, #01aef0)",
                   }}
                 />
                 <h3 className="mt-4 font-serif-zh text-[18px] font-bold leading-tight sm:text-[20px]">
@@ -86,11 +86,11 @@ export function InstructorSection() {
           <div
             className="relative h-full overflow-hidden rounded-[24px] border p-6 backdrop-blur-xl sm:rounded-[28px] sm:p-7"
             style={{
-              borderColor: "rgba(196,181,253,0.32)",
+              borderColor: "rgba(87,190,255,0.32)",
               background:
-                "linear-gradient(140deg, rgba(167,139,250,0.16) 0%, rgba(232,121,249,0.10) 50%, rgba(13,13,18,0.55) 100%)",
+                "linear-gradient(140deg, rgba(0,153,255,0.16) 0%, rgba(212,38,114,0.10) 50%, rgba(13,13,18,0.55) 100%)",
               boxShadow:
-                "inset 0 0 0 1px rgba(196,181,253,0.06), 0 16px 48px -16px rgba(167,139,250,0.4)",
+                "inset 0 0 0 1px rgba(87,190,255,0.06), 0 16px 48px -16px rgba(0,153,255,0.4)",
             }}
           >
             {/* 主题色光晕 */}
@@ -99,7 +99,7 @@ export function InstructorSection() {
               className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full opacity-70"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(196,181,253,0.5) 0%, transparent 65%)",
+                  "radial-gradient(circle, rgba(87,190,255,0.5) 0%, transparent 65%)",
               }}
             />
             <span
@@ -107,7 +107,7 @@ export function InstructorSection() {
               className="pointer-events-none absolute -bottom-16 -left-16 h-44 w-44 rounded-full opacity-60"
               style={{
                 background:
-                  "radial-gradient(circle, rgba(232,121,249,0.4) 0%, transparent 65%)",
+                  "radial-gradient(circle, rgba(212,38,114,0.4) 0%, transparent 65%)",
               }}
             />
 
@@ -121,13 +121,13 @@ export function InstructorSection() {
                   className="h-16 w-16 flex-none rounded-2xl object-cover object-[50%_22%] sm:h-20 sm:w-20"
                   style={{
                     boxShadow:
-                      "0 12px 28px -8px rgba(167,139,250,0.65), inset 0 0 0 1px rgba(255,255,255,0.2)",
+                      "0 12px 28px -8px rgba(0,153,255,0.65), inset 0 0 0 1px rgba(255,255,255,0.2)",
                   }}
                 />
                 <div className="flex flex-col gap-1">
                   <span
                     className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.22em]"
-                    style={{ color: "#C4B5FD" }}
+                    style={{ color: "#57beff" }}
                   >
                     主讲老师 · INSTRUCTOR
                   </span>
@@ -145,42 +145,42 @@ export function InstructorSection() {
                 <span
                   className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] sm:text-[11.5px]"
                   style={{
-                    borderColor: "rgba(196,181,253,0.45)",
-                    background: "rgba(167,139,250,0.10)",
-                    color: "#C4B5FD",
+                    borderColor: "rgba(87,190,255,0.45)",
+                    background: "rgba(0,153,255,0.10)",
+                    color: "#57beff",
                   }}
                 >
                   <span
                     className="h-1.5 w-1.5 rounded-full"
-                    style={{ background: "#C4B5FD" }}
+                    style={{ background: "#57beff" }}
                   />
                   创业公司 CTO
                 </span>
                 <span
                   className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] sm:text-[11.5px]"
                   style={{
-                    borderColor: "rgba(103,232,249,0.45)",
-                    background: "rgba(34,211,238,0.10)",
-                    color: "#67E8F9",
+                    borderColor: "rgba(1,174,240,0.45)",
+                    background: "rgba(1,174,240,0.10)",
+                    color: "#01aef0",
                   }}
                 >
                   <span
                     className="h-1.5 w-1.5 rounded-full"
-                    style={{ background: "#67E8F9" }}
+                    style={{ background: "#01aef0" }}
                   />
                   一线工程师
                 </span>
                 <span
                   className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] sm:text-[11.5px]"
                   style={{
-                    borderColor: "rgba(253,164,175,0.45)",
-                    background: "rgba(251,113,133,0.10)",
-                    color: "#FDA4AF",
+                    borderColor: "rgba(255,82,183,0.45)",
+                    background: "rgba(212,38,114,0.10)",
+                    color: "#ff52b7",
                   }}
                 >
                   <span
                     className="h-1.5 w-1.5 rounded-full"
-                    style={{ background: "#FDA4AF" }}
+                    style={{ background: "#ff52b7" }}
                   />
                   AI 教学者
                 </span>
@@ -230,8 +230,8 @@ export function InstructorSection() {
                 <span
                   className="h-1.5 w-1.5 flex-none animate-pulse rounded-full"
                   style={{
-                    background: "#C4B5FD",
-                    boxShadow: "0 0 6px rgba(196,181,253,0.8)",
+                    background: "#57beff",
+                    boxShadow: "0 0 6px rgba(87,190,255,0.8)",
                   }}
                 />
                 <span className="text-[12.5px] font-medium text-ink sm:text-[13px]">

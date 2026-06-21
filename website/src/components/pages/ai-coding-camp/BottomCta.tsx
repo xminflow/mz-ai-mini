@@ -11,7 +11,7 @@ export function BottomCta({ onContact }: { onContact: () => void }) {
       <Reveal>
         <div className="relative overflow-hidden rounded-[24px] border p-7 text-center sm:rounded-[32px] sm:p-12 lg:p-16"
           style={{
-            borderColor: 'rgba(167,139,250,0.32)',
+            borderColor: 'rgba(0,153,255,0.32)',
             background: 'rgba(5,5,7,0.65)',
           }}
         >
@@ -21,7 +21,7 @@ export function BottomCta({ onContact }: { onContact: () => void }) {
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                'radial-gradient(ellipse 40% 55% at 0% 0%, rgba(167,139,250,0.36), transparent 60%), radial-gradient(ellipse 40% 55% at 100% 0%, rgba(34,211,238,0.28), transparent 60%), radial-gradient(ellipse 40% 55% at 100% 100%, rgba(251,191,36,0.26), transparent 60%), radial-gradient(ellipse 40% 55% at 0% 100%, rgba(232,121,249,0.24), transparent 60%)',
+                'radial-gradient(ellipse 40% 55% at 0% 0%, rgba(0,153,255,0.36), transparent 60%), radial-gradient(ellipse 40% 55% at 100% 0%, rgba(1,174,240,0.28), transparent 60%), radial-gradient(ellipse 40% 55% at 100% 100%, rgba(248,236,29,0.26), transparent 60%), radial-gradient(ellipse 40% 55% at 0% 100%, rgba(212,38,114,0.24), transparent 60%)',
             }}
           />
           {/* 中心通透层：让标题/CTA 干净浮起 */}
@@ -37,28 +37,28 @@ export function BottomCta({ onContact }: { onContact: () => void }) {
           <motion.span
             aria-hidden
             className="pointer-events-none absolute left-[8%] top-[18%] h-16 w-16 rounded-full sm:h-20 sm:w-20"
-            style={{ background: 'radial-gradient(circle, rgba(167,139,250,0.62) 0%, transparent 58%)' }}
+            style={{ background: 'radial-gradient(circle, rgba(0,153,255,0.62) 0%, transparent 58%)' }}
             animate={{ y: [0, -16, 0], opacity: [0.85, 1, 0.85] }}
             transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.span
             aria-hidden
             className="pointer-events-none absolute right-[10%] bottom-[16%] h-14 w-14 rounded-full sm:h-16 sm:w-16"
-            style={{ background: 'radial-gradient(circle, rgba(251,191,36,0.55) 0%, transparent 58%)' }}
+            style={{ background: 'radial-gradient(circle, rgba(248,236,29,0.55) 0%, transparent 58%)' }}
             animate={{ y: [0, 14, 0], opacity: [0.85, 1, 0.85] }}
             transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
           />
           <motion.span
             aria-hidden
             className="pointer-events-none absolute right-[16%] top-[24%] h-10 w-10 rounded-full"
-            style={{ background: 'radial-gradient(circle, rgba(34,211,238,0.55) 0%, transparent 60%)' }}
+            style={{ background: 'radial-gradient(circle, rgba(1,174,240,0.55) 0%, transparent 60%)' }}
             animate={{ y: [0, -12, 0], opacity: [0.8, 1, 0.8] }}
             transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
           />
           <motion.span
             aria-hidden
             className="pointer-events-none absolute left-[14%] bottom-[22%] h-9 w-9 rounded-full"
-            style={{ background: 'radial-gradient(circle, rgba(232,121,249,0.55) 0%, transparent 60%)' }}
+            style={{ background: 'radial-gradient(circle, rgba(212,38,114,0.55) 0%, transparent 60%)' }}
             animate={{ y: [0, 12, 0], opacity: [0.8, 1, 0.8] }}
             transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.6 }}
           />
