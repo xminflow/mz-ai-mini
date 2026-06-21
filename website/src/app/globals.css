@@ -1,18 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #F5F5F7;
-  --color-ink-soft: #D4D4D8;
-  --color-muted: #8A8A94;
-  --color-canvas: #000000;
-  --color-surface: #0D0D12;
-  --color-surface-2: #141420;
-  --color-hairline: rgb(255 255 255 / 0.08);
-  --color-hairline-strong: rgb(255 255 255 / 0.16);
+  --color-ink: #f0f0f0;
+  --color-ink-soft: #dddddf;
+  --color-muted: #757575;
+  --color-canvas: #050505;
+  --color-surface: #121212;
+  --color-surface-2: #1c1b1b;
+  --color-hairline: rgb(255 255 255 / 0.1);
+  --color-hairline-strong: rgb(255 255 255 / 0.18);
 
-  --color-accent: #A78BFA;
-  --color-accent-2: #22D3EE;
-  --color-accent-3: #F472B6;
+  --color-accent: #0099ff;   /* Forgeflow 电光蓝,主功能色 */
+  --color-accent-2: #01aef0;  /* 青 */
+  --color-accent-3: #d42672;  /* 品红 */
+  --color-accent-lime: #bafa77;
+  --color-accent-yellow: #f8ec1d;
 
   --font-sans: "Inter", "Noto Sans SC", "HarmonyOS Sans SC", "PingFang SC",
     "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont,
@@ -77,7 +79,7 @@ samp,
 }
 
 ::selection {
-  background-color: rgba(167, 139, 250, 0.35);
+  background-color: rgba(0, 153, 255, 0.35);
   color: #fff;
 }
 
@@ -115,10 +117,10 @@ samp,
 @utility text-gradient {
   background: linear-gradient(
     120deg,
-    #F5F5F7 0%,
-    #A78BFA 40%,
-    #22D3EE 70%,
-    #F5F5F7 100%
+    #f0f0f0 0%,
+    #0099ff 40%,
+    #01aef0 70%,
+    #f0f0f0 100%
   );
   background-size: 200% 200%;
   -webkit-background-clip: text;
@@ -129,18 +131,18 @@ samp,
 @utility hero-shine {
   background-image: linear-gradient(
     100deg,
-    #a78bfa 0%,
-    #22d3ee 30%,
-    #f472b6 55%,
-    #a78bfa 80%,
-    #22d3ee 100%
+    #0099ff 0%,
+    #01aef0 30%,
+    #bafa77 55%,
+    #d42672 80%,
+    #0099ff 100%
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   animation: shimmerText 3.5s linear infinite;
-  filter: drop-shadow(0 0 16px rgba(167, 139, 250, 0.5));
+  filter: drop-shadow(0 0 16px rgba(0, 153, 255, 0.5));
 }
 
 @utility glass {
