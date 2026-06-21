@@ -146,10 +146,10 @@ samp,
 }
 
 @utility glass {
-  background: rgba(13, 13, 18, 0.55);
+  background: rgba(18, 18, 18, 0.55);
   backdrop-filter: saturate(160%) blur(18px);
   -webkit-backdrop-filter: saturate(160%) blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 @utility scrollbar-hide {
