@@ -23,8 +23,12 @@
     "Microsoft YaHei", system-ui, sans-serif;
   --font-serif: "Noto Serif SC", "Source Han Serif SC", "STSong",
     "Songti SC", "Noto Serif", Georgia, serif;
+  /* 中文字形回退到与正文一致的 CJK 字体:JetBrains Mono 无中文字形,
+     不补 CJK 会让 font-mono 的中文标签(如「前端 · 视觉 · 5–6 课时」)
+     掉到系统默认等宽字体,与全站正文字体明显不一致。拉丁/数字仍走 JetBrains Mono。 */
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
-    Consolas, "Liberation Mono", "Courier New", monospace;
+    Consolas, "Liberation Mono", "Courier New", "Noto Sans SC",
+    "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", monospace;
   --radius-pill: 9999px;
 }
 
