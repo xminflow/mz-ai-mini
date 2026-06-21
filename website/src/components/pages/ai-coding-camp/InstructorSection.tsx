@@ -84,13 +84,12 @@ export function InstructorSection() {
         {/* 右侧：讲师名片（个人简介，4 项资历以竖线+文字形式并入卡内） */}
         <Reveal delay={0.1}>
           <div
-            className="relative h-full overflow-hidden rounded-[24px] border p-6 backdrop-blur-xl sm:rounded-[28px] sm:p-7"
+            className="relative h-full overflow-hidden rounded-[24px] p-6 backdrop-blur-xl sm:rounded-[28px] sm:p-7"
             style={{
-              borderColor: "rgba(87,190,255,0.32)",
               background:
-                "linear-gradient(140deg, rgba(0,153,255,0.16) 0%, rgba(212,38,114,0.10) 50%, rgba(13,13,18,0.55) 100%)",
+                "linear-gradient(150deg, rgba(0,153,255,0.16) 0%, rgba(0,153,255,0.05) 100%)",
               boxShadow:
-                "inset 0 0 0 1px rgba(87,190,255,0.06), 0 16px 48px -16px rgba(0,153,255,0.4)",
+                "0 16px 48px -16px rgba(0,153,255,0.4)",
             }}
           >
             {/* 主题色光晕 */}

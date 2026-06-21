@@ -180,11 +180,10 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
             return (
               <Reveal key={item.code} delay={i * 0.06}>
                 <article
-                  className={`group relative h-full overflow-hidden rounded-[30px] border border-dashed p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[36px] sm:p-7 ${isLast ? 'lg:col-span-2' : ''}`}
+                  className={`group relative h-full overflow-hidden rounded-[30px] p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[36px] sm:p-7 ${isLast ? 'lg:col-span-2' : ''}`}
                   style={{
-                    borderColor: `rgba(${t.rgb}, 0.28)`,
-                    background: `linear-gradient(135deg, rgba(${t.rgb}, 0.12) 0%, rgba(13,13,18,0.6) 60%)`,
-                    boxShadow: `inset 0 0 0 1px rgba(${t.rgb}, 0.06)`,
+                    background: `linear-gradient(150deg, rgba(${t.rgb}, 0.16) 0%, rgba(${t.rgb}, 0.05) 100%)`,
+                    boxShadow: `0 14px 36px -22px rgba(0,0,0,0.85)`,
                   }}
                 >
                   {/* 主题色光晕 */}
@@ -281,11 +280,10 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
 
         <Reveal delay={0.08}>
           <article
-            className="group relative mt-10 overflow-hidden rounded-[32px] border border-dashed p-6 backdrop-blur-xl sm:mt-12 sm:rounded-[36px] sm:p-8 lg:p-9"
+            className="group relative mt-10 overflow-hidden rounded-[32px] p-6 backdrop-blur-xl sm:mt-12 sm:rounded-[36px] sm:p-8 lg:p-9"
             style={{
-              borderColor: `rgba(${STAGE2_THEMES.enterprise.rgb}, 0.32)`,
-              background: `linear-gradient(135deg, rgba(${STAGE2_THEMES.enterprise.rgb}, 0.12) 0%, rgba(13,13,18,0.55) 60%)`,
-              boxShadow: `inset 0 0 0 1px rgba(${STAGE2_THEMES.enterprise.rgb}, 0.08)`,
+              background: `linear-gradient(150deg, rgba(${STAGE2_THEMES.enterprise.rgb}, 0.16) 0%, rgba(${STAGE2_THEMES.enterprise.rgb}, 0.05) 100%)`,
+              boxShadow: `0 14px 36px -22px rgba(0,0,0,0.85)`,
             }}
           >
             {/* 主题色光晕 */}

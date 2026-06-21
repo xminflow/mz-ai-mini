@@ -173,11 +173,10 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
             return (
               <Reveal key={item.code} delay={i * 0.06}>
                 <article
-                  className="group relative h-full overflow-hidden rounded-[30px] border border-dashed p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[36px] sm:p-7"
+                  className="group relative h-full overflow-hidden rounded-[30px] p-5 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[36px] sm:p-7"
                   style={{
-                    borderColor: `rgba(${t.rgb}, 0.28)`,
-                    background: `linear-gradient(135deg, rgba(${t.rgb}, 0.12) 0%, rgba(13,13,18,0.6) 60%)`,
-                    boxShadow: `inset 0 0 0 1px rgba(${t.rgb}, 0.06)`,
+                    background: `linear-gradient(150deg, rgba(${t.rgb}, 0.16) 0%, rgba(${t.rgb}, 0.05) 100%)`,
+                    boxShadow: `0 14px 36px -22px rgba(0,0,0,0.85)`,
                   }}
                 >
                   {/* 主题色光晕 */}
@@ -291,13 +290,12 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
             return (
               <Reveal key={stage.code} delay={i * 0.1}>
                 <article
-                  className="group relative h-full overflow-hidden rounded-[32px] border border-dashed p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[36px] sm:p-8 lg:p-9"
+                  className="group relative h-full overflow-hidden rounded-[32px] p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 sm:rounded-[36px] sm:p-8 lg:p-9"
                   style={{
-                    borderColor: `rgba(${t.rgb}, ${isCompanion ? 0.4 : 0.28})`,
-                    background: `linear-gradient(135deg, rgba(${t.rgb}, ${isCompanion ? 0.14 : 0.1}) 0%, rgba(13,13,18,0.55) 60%)`,
+                    background: `linear-gradient(150deg, rgba(${t.rgb}, 0.16) 0%, rgba(${t.rgb}, 0.05) 100%)`,
                     boxShadow: isCompanion
-                      ? `inset 0 0 0 1px rgba(${t.rgb}, 0.18), 0 20px 50px -20px ${t.hex}55`
-                      : `inset 0 0 0 1px rgba(${t.rgb}, 0.06)`,
+                      ? `0 20px 50px -20px ${t.hex}55`
+                      : `0 14px 36px -22px rgba(0,0,0,0.85)`,
                   }}
                 >
                   {/* 主题色光晕 */}
@@ -400,11 +398,11 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
         {/* 时间轴条 */}
         <Reveal delay={0.18}>
           <div
-            className="relative mt-6 overflow-hidden rounded-2xl border p-5 backdrop-blur-xl sm:mt-8 sm:rounded-[22px] sm:p-6"
+            className="relative mt-6 overflow-hidden rounded-2xl p-5 backdrop-blur-xl sm:mt-8 sm:rounded-[22px] sm:p-6"
             style={{
-              borderColor: "rgba(0,153,255,0.22)",
               background:
                 "linear-gradient(110deg, rgba(0,153,255,0.10) 0%, rgba(212,38,114,0.08) 50%, rgba(248,236,29,0.10) 100%)",
+              boxShadow: "0 14px 36px -22px rgba(0,0,0,0.85)",
             }}
           >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">

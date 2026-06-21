@@ -9,10 +9,10 @@ export function BottomCta({ onContact }: { onContact: () => void }) {
   return (
     <section className="relative mx-auto w-full max-w-6xl px-4 pb-24 sm:px-6 sm:pb-28 lg:pb-32">
       <Reveal>
-        <div className="relative overflow-hidden rounded-[24px] border p-7 text-center sm:rounded-[32px] sm:p-12 lg:p-16"
+        <div className="relative overflow-hidden rounded-[24px] p-7 text-center sm:rounded-[32px] sm:p-12 lg:p-16"
           style={{
-            borderColor: 'rgba(0,153,255,0.32)',
             background: 'rgba(5,5,7,0.65)',
+            boxShadow: '0 14px 36px -22px rgba(0,0,0,0.85)',
           }}
         >
           {/* 4 角彩色高亮（紫青琥珀玫红） */}
