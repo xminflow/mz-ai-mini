@@ -12,6 +12,7 @@ dependencies = [
     "beautifulsoup4>=4.12",
     "patchright>=1.40",
     "ffmpeg-python>=0.2",
+    "python-pptx>=1.0.2",
 ]
 
 [project.scripts]

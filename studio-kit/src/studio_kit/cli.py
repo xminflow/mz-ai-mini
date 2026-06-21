@@ -464,6 +464,41 @@ def cmd_drawio_export(
 
 
 # ════════════════════════════════════════════════════════════════════
+# arch-ppt  （把图片序列组装成横版 16:9 PPT，文案进演讲者备注）
+# ════════════════════════════════════════════════════════════════════
+
+@app.command("arch-ppt")
+def cmd_arch_ppt(
+    script_path: Path = typer.Option(..., "--script", help="script.json 路径（与视频共用）"),
+    out: Optional[Path] = typer.Option(None, "--out", help="输出 .pptx 路径（默认 script 同级 <slug>.pptx）"),
+    no_notes: bool = typer.Option(False, "--no-notes", is_flag=True, help="不把文案写入演讲者备注"),
+    log_level: str = typer.Option("INFO", "--log-level"),
+) -> None:
+    """把 script.json 引用的图片组装成横版 16:9 PPT（每图铺满一页，文案进备注）。
+
+    注意：横版 PPT 需用横版（1920×1080）图；竖版图会上下留白。
+    """
+    configure_logging(log_level)
+    script_path = script_path.resolve()
+    if not script_path.exists():
+        err_console.print(f"[red]script.json 不存在：{script_path}[/red]")
+        raise typer.Exit(1)
+
+    from studio_kit.core.contracts import ArchVideoDoc
+    from studio_kit.render.pptx_build import build_pptx
+
+    try:
+        doc = ArchVideoDoc.model_validate_json(script_path.read_text(encoding="utf-8"))
+        out_pptx = (out.resolve() if out else script_path.parent / f"{doc.slug}.pptx")
+        build_pptx(doc, script_path.parent, out_pptx, notes=not no_notes)
+    except Exception as e:
+        err_console.print(f"[red]arch-ppt 失败：{e}[/red]")
+        raise typer.Exit(1)
+
+    console.print(f"[green]PPT 已生成（{len(doc.segments)} 页）：{out_pptx}[/green]")
+
+
+# ════════════════════════════════════════════════════════════════════
 # version
 # ════════════════════════════════════════════════════════════════════
 
