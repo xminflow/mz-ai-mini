@@ -490,12 +490,14 @@ def cmd_arch_ppt(
     try:
         doc = ArchVideoDoc.model_validate_json(script_path.read_text(encoding="utf-8"))
         out_pptx = (out.resolve() if out else script_path.parent / f"{doc.slug}.pptx")
-        build_pptx(doc, script_path.parent, out_pptx, notes=not no_notes)
+        saved = build_pptx(doc, script_path.parent, out_pptx, notes=not no_notes)
     except Exception as e:
         err_console.print(f"[red]arch-ppt 失败：{e}[/red]")
         raise typer.Exit(1)
 
-    console.print(f"[green]PPT 已生成（{len(doc.segments)} 页）：{out_pptx}[/green]")
+    if saved != out_pptx:
+        console.print(f"[yellow]原文件被占用，已另存：{saved}[/yellow]")
+    console.print(f"[green]PPT 已生成（{len(doc.segments)} 页）：{saved}[/green]")
 
 
 # ════════════════════════════════════════════════════════════════════

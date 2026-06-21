@@ -44,6 +44,27 @@ def test_build_pptx_slides_and_notes(tmp_path: Path):
         assert any(sh.shape_type == 13 for sh in s.shapes)  # 13 = PICTURE
 
 
+def test_build_pptx_fallback_when_locked(tmp_path: Path, monkeypatch):
+    # 目标被占用（PermissionError）→ 自动另存 <名>-2.pptx，返回实际路径
+    _make_png(tmp_path / "images" / "a.png", 1920, 1080)
+    _make_png(tmp_path / "images" / "b.png", 1920, 1080)
+    out = tmp_path / "demo.pptx"
+
+    import pptx.presentation as _pp
+    real_save = _pp.Presentation.save
+    locked = {str(out)}
+
+    def fake_save(self, path):
+        if str(path) in locked:
+            raise PermissionError(13, "in use")
+        return real_save(self, path)
+
+    monkeypatch.setattr(_pp.Presentation, "save", fake_save)
+    saved = build_pptx(_doc(), tmp_path, out)
+    assert saved == tmp_path / "demo-2.pptx"
+    assert saved.exists()
+
+
 def test_build_pptx_missing_image_raises(tmp_path: Path):
     import pytest
     # 只建第一张，第二张缺失 → raise

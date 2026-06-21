@@ -55,6 +55,26 @@ def build_pptx(
             slide.notes_slide.notes_text_frame.text = seg.narration
 
     out_pptx.parent.mkdir(parents=True, exist_ok=True)
-    prs.save(str(out_pptx))
-    logger.info("PPT 已生成（%d 页）：%s", len(doc.segments), out_pptx)
-    return out_pptx
+    saved = _save_with_fallback(prs, out_pptx)
+    logger.info("PPT 已生成（%d 页）：%s", len(doc.segments), saved)
+    return saved
+
+
+def _save_with_fallback(prs, out_pptx: Path) -> Path:
+    """保存 PPT；若目标被占用（PowerPoint 正打开 → PermissionError），
+    自动换成 <名>-2.pptx / -3.pptx … 写出，返回实际保存路径，绝不静默失败。"""
+    try:
+        prs.save(str(out_pptx))
+        return out_pptx
+    except PermissionError:
+        for n in range(2, 100):
+            alt = out_pptx.with_name(f"{out_pptx.stem}-{n}{out_pptx.suffix}")
+            try:
+                prs.save(str(alt))
+                logger.warning("目标文件被占用（可能正在打开），已另存为：%s", alt)
+                return alt
+            except PermissionError:
+                continue
+        raise RuntimeError(
+            f"目标文件被占用，且 {out_pptx.stem}-2…99 也都无法写入，请关闭已打开的 PPT 后重试。"
+        )
