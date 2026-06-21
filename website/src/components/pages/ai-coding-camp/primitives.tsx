@@ -35,7 +35,7 @@ export function EnrollButton({ label, onClick }: { label: string; onClick: () =>
       onClick={onClick}
       className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full px-7 py-3 text-[13px] font-semibold text-canvas transition-transform hover:-translate-y-0.5 sm:px-8 sm:py-3.5 sm:text-sm"
       style={{
-        background: '#F5F5F7',
+        background: '#f0f0f0',
         boxShadow: '0 12px 40px -8px rgba(0,153,255,0.55)',
       }}
     >
@@ -87,7 +87,7 @@ export function PriceChip({
         className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 font-mono text-[10.5px] font-bold uppercase tracking-[0.18em] sm:text-[11px]"
         style={{
           background: 'linear-gradient(135deg, #ff52b7, #d1157a)',
-          color: '#F5F5F7',
+          color: '#f0f0f0',
           boxShadow: '0 4px 14px -2px rgba(212,38,114,0.65)',
         }}
       >
