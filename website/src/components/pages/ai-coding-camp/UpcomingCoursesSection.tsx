@@ -67,7 +67,7 @@ export function UpcomingCoursesSection() {
     <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-32">
       <Reveal>
         <div className="flex flex-col gap-4">
-          <SectionEyebrow color="#FBBF24">后续课程预告</SectionEyebrow>
+          <SectionEyebrow color="#f8ec1d">后续课程预告</SectionEyebrow>
           <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
             <span className="mt-1 block sm:mt-1.5">
               <GradientText className="font-semibold">三套企业级实战系统，正在路上</GradientText>

@@ -135,7 +135,7 @@ function GrowthCurve({
                 <g key={node.key} filter={`url(#${idPrefix}-glow)`}>
                   <circle cx={x} cy={y} r="16" fill={`url(#${idPrefix}-node-${i})`} opacity="0.55" />
                   <circle cx={x} cy={y} r="8" fill={node.theme.hex} />
-                  <circle cx={x} cy={y} r="3.6" fill="#F5F5F7" />
+                  <circle cx={x} cy={y} r="3.6" fill="#f0f0f0" />
                 </g>
               )
             })}
@@ -233,7 +233,7 @@ function StageHead({
           <span className="font-serif-zh text-[16px] font-bold text-ink sm:text-[18px]">{name}</span>
           {originalPrice && <span className="font-mono text-[11px] text-muted line-through tabular">原价 {originalPrice}</span>}
           {price && (
-            <span className="font-serif-zh text-[19px] font-bold tabular sm:text-[21px]" style={{ color: full ? '#FECDD3' : accent, textShadow: `0 0 14px ${accent}55` }}>
+            <span className="font-serif-zh text-[19px] font-bold tabular sm:text-[21px]" style={{ color: full ? '#ffd6ec' : accent, textShadow: `0 0 14px ${accent}55` }}>
               {price}
             </span>
           )}

@@ -12,12 +12,12 @@ const DraftTag = ({ children }: { children?: React.ReactNode }) => (
   <span
     className="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-mono text-[10px] tracking-[0.06em]"
     style={{
-      borderColor: 'rgba(148,163,184,0.28)',
-      background: 'rgba(148,163,184,0.08)',
-      color: 'rgba(148,163,184,0.85)',
+      borderColor: 'rgba(117,117,117,0.28)',
+      background: 'rgba(117,117,117,0.08)',
+      color: 'rgba(117,117,117,0.85)',
     }}
   >
-    <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'rgba(148,163,184,0.7)' }} />
+    <span className="h-1.5 w-1.5 rounded-full" style={{ background: 'rgba(117,117,117,0.7)' }} />
     {children ?? '待确认'}
   </span>
 )

@@ -151,7 +151,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <div className="flex flex-col gap-4">
-            <SectionEyebrow color="#FDA4AF">你将拿到</SectionEyebrow>
+            <SectionEyebrow color="#ff52b7">你将拿到</SectionEyebrow>
             <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
               <span className="block">学完，你手里会有</span>
               <span className="mt-1 block sm:mt-1.5">
@@ -265,7 +265,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <div className="flex flex-col gap-4">
-            <SectionEyebrow color="#FCD34D">服务模式</SectionEyebrow>
+            <SectionEyebrow color="#fff652">服务模式</SectionEyebrow>
             <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[36px] lg:leading-[1.25]">
               <span className="block">1 个月线上直播 ·</span>
               <span className="mt-1 block sm:mt-1.5">
@@ -402,9 +402,9 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
           <div
             className="relative mt-6 overflow-hidden rounded-2xl border p-5 backdrop-blur-xl sm:mt-8 sm:rounded-[22px] sm:p-6"
             style={{
-              borderColor: "rgba(167,139,250,0.22)",
+              borderColor: "rgba(0,153,255,0.22)",
               background:
-                "linear-gradient(110deg, rgba(167,139,250,0.10) 0%, rgba(251,113,133,0.08) 50%, rgba(251,191,36,0.10) 100%)",
+                "linear-gradient(110deg, rgba(0,153,255,0.10) 0%, rgba(212,38,114,0.08) 50%, rgba(248,236,29,0.10) 100%)",
             }}
           >
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
@@ -420,8 +420,8 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                 <span
                   className="rounded-full px-3 py-1.5"
                   style={{
-                    background: "rgba(167,139,250,0.18)",
-                    color: "#C4B5FD",
+                    background: "rgba(0,153,255,0.18)",
+                    color: "#57beff",
                   }}
                 >
                   第 1 月 · 直播
@@ -430,8 +430,8 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                 <span
                   className="rounded-full px-3 py-1.5"
                   style={{
-                    background: "rgba(251,113,133,0.15)",
-                    color: "#FDA4AF",
+                    background: "rgba(212,38,114,0.15)",
+                    color: "#ff52b7",
                   }}
                 >
                   实操产出
@@ -440,8 +440,8 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
                 <span
                   className="rounded-full px-3 py-1.5"
                   style={{
-                    background: "rgba(251,191,36,0.15)",
-                    color: "#FCD34D",
+                    background: "rgba(248,236,29,0.15)",
+                    color: "#fff652",
                   }}
                 >
                   6 月陪跑
@@ -456,7 +456,7 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <div className="flex flex-col items-center gap-6 text-center">
-            <SectionEyebrow color="#FDA4AF">本阶段报名</SectionEyebrow>
+            <SectionEyebrow color="#ff52b7">本阶段报名</SectionEyebrow>
 
             {/* 价格条本身可点击报名（点击打开扫码报名弹窗） */}
             <PriceChip
@@ -468,9 +468,9 @@ export function StageOneSection({ onEnroll }: { onEnroll: () => void }) {
 
             {/* 邀请返学费提示 */}
             <p className="flex items-center gap-2 text-[12.5px] leading-[1.6] text-ink-soft sm:text-[13px]">
-              <span aria-hidden className="h-1.5 w-1.5 rounded-full" style={{ background: "#FDA4AF" }} />
+              <span aria-hidden className="h-1.5 w-1.5 rounded-full" style={{ background: "#ff52b7" }} />
               <span>
-                <span className="font-semibold" style={{ color: "#FDA4AF" }}>
+                <span className="font-semibold" style={{ color: "#ff52b7" }}>
                   邀请返学费
                 </span>
                 　每邀请一位学员，退还 <span className="font-semibold text-ink">¥500</span> 学费
