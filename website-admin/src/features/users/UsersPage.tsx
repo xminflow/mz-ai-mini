@@ -15,6 +15,7 @@ const PAGE_SIZE = 20
 export function UsersPage() {
   const { token, logout } = useAuth()
   const [keyword, setKeyword] = useState('')
+  const [appliedKeyword, setAppliedKeyword] = useState('')
   const [status, setStatus] = useState<AccountStatus | ''>('')
   const [page, setPage] = useState(1)
   const [rows, setRows] = useState<CampAccountAdmin[]>([])
@@ -25,7 +26,7 @@ export function UsersPage() {
     if (!token) return
     setError(null)
     try {
-      const data = await usersApi.list({ keyword, status, page, pageSize: PAGE_SIZE, token })
+      const data = await usersApi.list({ keyword: appliedKeyword, status, page, pageSize: PAGE_SIZE, token })
       setRows(data.items)
       setTotal(data.total)
     } catch (err) {
@@ -35,11 +36,18 @@ export function UsersPage() {
       }
       setError('加载失败')
     }
-  }, [token, keyword, status, page, logout])
+  }, [token, appliedKeyword, status, page, logout])
 
   useEffect(() => {
     void load()
   }, [load])
+
+  // 提交搜索：将草稿关键词应用为生效过滤条件，并重置到第一页；
+  // 仅通过 state 变化触发上面的 effect 重新拉取，禁止在此手动调用 load()
+  const applySearch = () => {
+    setAppliedKeyword(keyword.trim())
+    setPage(1)
+  }
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
 
@@ -55,7 +63,7 @@ export function UsersPage() {
           placeholder="搜索用户名 / 邮箱"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') { setPage(1); void load() } }}
+          onKeyDown={(e) => { if (e.key === 'Enter') { applySearch() } }}
           className="max-w-xs"
         />
         <select
@@ -67,7 +75,7 @@ export function UsersPage() {
           <option value="active">正常</option>
           <option value="disabled">已禁用</option>
         </select>
-        <Button onClick={() => { setPage(1); void load() }}>搜索</Button>
+        <Button onClick={applySearch}>搜索</Button>
       </div>
 
       {error && <p className="text-sm text-red-500">{error}</p>}
