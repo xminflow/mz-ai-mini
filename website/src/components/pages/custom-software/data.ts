@@ -132,24 +132,29 @@ export type Advantage = {
 
 export const ADVANTAGES: Advantage[] = [
   {
-    title: "AI 原生全栈自研",
-    body: "自己写代码、自己交付，不做外包转包的二传手，问题第一时间闭环。",
+    title: "11 年上市公司 / 国央企架构师经验",
+    body: "大规模系统怎么设计、怎么踩坑，见过真实的复杂业务场景，不是纸上谈兵。",
     theme: "cognition",
   },
   {
-    title: "软件 + 内容一起交付",
-    body: "独有的自媒体获客闭环——软件做出来，还帮你想清楚怎么被客户看见。",
-    theme: "career",
+    title: "4 年创业公司 CTO，SaaS 赛道实战",
+    body: "从 0 到 1 带过团队、扛过增长压力，懂初创公司真正要什么、卡在哪。",
+    theme: "backend",
   },
   {
-    title: "真实可交付、可运维",
-    body: "交付即上线，不是 demo；上线之后遇到问题，找得到人、改得动代码。",
-    theme: "launch",
-  },
-  {
-    title: "长期陪跑",
-    body: "不是做完就走，业务在变、系统也要跟着迭代升级。",
+    title: "深耕 AI 行业",
+    body: "站在技术最前沿，把 AI 真正用进产品里解决问题，不是简单套个壳。",
     theme: "agent",
+  },
+  {
+    title: "设计到交互全流程闭环",
+    body: "从界面设计、交互体验到功能实现，一个团队全程把关，不会走样、不来回甩锅。",
+    theme: "frontend",
+  },
+  {
+    title: "高效高质量交付",
+    body: "该快的时候快，该稳的时候稳，工期和质量两头都不将就。",
+    theme: "launch",
   },
 ];
 
@@ -165,7 +170,6 @@ export const PROCESS_STEPS: ProcessStep[] = [
   { code: "02", title: "出方案报价", body: "给一份看得懂的方案和明确报价，没有隐藏收费。", theme: "frontend" },
   { code: "03", title: "敏捷开发", body: "分阶段推进，随时可看进度，不做黑箱交付。", theme: "backend" },
   { code: "04", title: "验收交付", body: "对照方案逐项验收，确认没问题再上线。", theme: "agent" },
-  { code: "05", title: "持续运维", body: "上线只是开始，后续迭代与维护持续跟进。", theme: "launch" },
 ];
 
 export const TECH_STACK: string[] = [

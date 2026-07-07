@@ -22,7 +22,7 @@ export function Hero({ onContact }: { onContact: () => void }) {
           <div className="mt-6 max-w-3xl sm:mt-7">
             <p className="text-balance text-[15px] font-medium leading-[1.75] text-ink-soft sm:text-[18px] lg:text-[20px]">
               官网、企业系统、小程序、AI 智能体——
-              <span className="font-semibold text-ink">AI 原生全栈自研，真实交付、可长期运维</span>
+              <span className="font-semibold text-ink">AI 原生全栈自研，设计到交互全流程闭环，高效高质量交付</span>
             </p>
           </div>
         </Reveal>

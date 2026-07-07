@@ -12,7 +12,7 @@ export function ProcessSection() {
           <SectionEyebrow color="#f8ec1d">合作流程</SectionEyebrow>
           <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
             <span className="mt-1 block sm:mt-1.5">
-              <GradientText className="font-semibold">5 步，从聊需求到持续运维</GradientText>
+              <GradientText className="font-semibold">4 步，从聊需求到验收交付</GradientText>
             </span>
           </h2>
         </div>
