@@ -1015,7 +1015,7 @@ export const STAGE2_SERVICE_DRAFT = {
 };
 
 export const STAGE1_PRICE = { now: "¥1999", original: "¥2999" };
-export const STAGE2_PRICE = { now: "¥3999", original: "¥4999", includes: "含第一阶段全部内容" };
+export const STAGE2_PRICE = { now: "¥4999", includes: "含第一阶段全部内容" };
 
 // 适合人群(拟稿待确认)
 export const AUDIENCES = {
@@ -1027,7 +1027,7 @@ export const AUDIENCES = {
   },
   stage2: {
     name: "AI 架构师",
-    price: "¥3999",
+    price: "¥4999",
     coverage: "第一阶段 + 第二阶段 · 全部课程",
     fit: "已有基础、想进阶到企业级 AI 工程并拿下求职 offer",
   },

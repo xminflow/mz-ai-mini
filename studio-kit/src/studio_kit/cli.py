@@ -4,6 +4,7 @@
     extract    解析博主拆解 HTML 报告 → outline.json
     script     校验 script.json 字数约束
     tts        为每张幻灯片生成语音 WAV
+    cosyvoice  用 DashScope 百炼 CosyVoice 生成单段语音 WAV
     render     用 Patchright 录制每张幻灯片 mp4
     compose    ffmpeg concat + 字幕烧入 → final.mp4
     build      串行调用上面全部步骤
@@ -202,6 +203,77 @@ def cmd_tts(
         raise typer.Exit(1)
 
     console.print(f"[green]TTS 完成：{len(script.slides)} 个 WAV → {audio_dir}[/green]")
+
+
+# ════════════════════════════════════════════════════════════════════
+# cosyvoice（DashScope 百炼单段语音生成）
+# ════════════════════════════════════════════════════════════════════
+
+@app.command("cosyvoice")
+def cmd_cosyvoice(
+    text: str = typer.Argument(..., help="要合成的文本"),
+    output: Path = typer.Option(..., "-o", "--output", help="输出 WAV 路径"),
+    model: str = typer.Option("cosyvoice-v2", "--model", help="CosyVoice 模型"),
+    voice: str = typer.Option("longxiaochun_v2", "--voice", help="预置音色名（未用克隆时生效）"),
+    ref_url: Optional[str] = typer.Option(None, "--ref-url", help="克隆参考音频公网 URL（10-20s/≥16kHz/单声道）"),
+    design_prompt: Optional[str] = typer.Option(None, "--design-prompt", help="音色设计：用文字描述生成音色（需 v3/v3.5 模型）"),
+    prefix: Optional[str] = typer.Option(None, "--prefix", help="克隆/设计音色前缀名（仅字母数字，≤10 字符）"),
+    voice_id: Optional[str] = typer.Option(None, "--voice-id", help="复用已建好的克隆/设计音色 voice_id"),
+    instruction: Optional[str] = typer.Option(None, "--instruction", help="Instruct 情感/风格指令（仅部分 v3/v3.5 音色支持，如 longanyang）"),
+    log_level: str = typer.Option("INFO", "--log-level"),
+) -> None:
+    """用 DashScope 百炼 CosyVoice 生成单段语音 WAV。
+
+    四选一音色来源：
+      默认            使用 --voice 预置音色；
+      --ref-url       配合 --prefix 先克隆音色再合成（结束打印 voice_id 便于复用）；
+      --design-prompt 配合 --prefix 先按文字描述设计音色再合成（需 v3/v3.5 模型）；
+      --voice-id      直接复用已建好的克隆/设计音色。
+    可选 --instruction 用自然语言控制情感/语气（仅支持 Instruct 的音色生效）。
+    需设置环境变量 DASHSCOPE_API_KEY。
+    """
+    configure_logging(log_level)
+
+    # 参数互斥校验：--ref-url / --design-prompt / --voice-id 三者只能用其一。
+    sources = [bool(ref_url), bool(design_prompt), bool(voice_id)]
+    if sum(sources) > 1:
+        err_console.print("[red]--ref-url / --design-prompt / --voice-id 三者互斥，只能用其一[/red]")
+        raise typer.Exit(1)
+    if (ref_url or design_prompt) and not prefix:
+        err_console.print("[red]克隆/设计模式必须同时提供 --prefix[/red]")
+        raise typer.Exit(1)
+    # 音色设计/克隆只支持 v3/v3.5 模型（v2 不支持设计），显式校验避免无意义的云端报错。
+    if design_prompt and not model.startswith("cosyvoice-v3"):
+        err_console.print(
+            f"[red]音色设计需 v3/v3.5 模型，当前 --model={model}；请用 --model cosyvoice-v3.5-plus[/red]"
+        )
+        raise typer.Exit(1)
+
+    from studio_kit.tts import cosyvoice
+
+    output = output.resolve()
+    try:
+        if ref_url:
+            assert prefix is not None  # 上面已校验
+            synth_voice = cosyvoice.create_clone_voice(ref_url, prefix, model=model)
+            console.print(f"[cyan]克隆音色已创建：voice_id={synth_voice}[/cyan]")
+        elif design_prompt:
+            assert prefix is not None  # 上面已校验
+            synth_voice = cosyvoice.design_voice(design_prompt, prefix, model=model)
+            console.print(f"[cyan]设计音色已创建：voice_id={synth_voice}[/cyan]")
+        elif voice_id:
+            synth_voice = voice_id
+        else:
+            synth_voice = voice
+
+        duration = cosyvoice.synthesize(
+            text, output, model=model, voice=synth_voice, instruction=instruction
+        )
+    except Exception as e:
+        err_console.print(f"[red]CosyVoice 合成失败：{e}[/red]")
+        raise typer.Exit(1)
+
+    console.print(f"[green]合成完成：{duration:.2f}s → {output}[/green]")
 
 
 # ════════════════════════════════════════════════════════════════════
@@ -498,6 +570,59 @@ def cmd_arch_ppt(
     if saved != out_pptx:
         console.print(f"[yellow]原文件被占用，已另存：{saved}[/yellow]")
     console.print(f"[green]PPT 已生成（{len(doc.segments)} 页）：{saved}[/green]")
+
+
+# ════════════════════════════════════════════════════════════════════
+# slide-render  （HTML 幻灯片 → 1920×1080 PNG，配合 arch-ppt 出 PPT）
+# ════════════════════════════════════════════════════════════════════
+
+@app.command("slide-render")
+def cmd_slide_render(
+    html_dir: Path = typer.Option(..., "--html-dir", help="含 *.html 幻灯片的源目录"),
+    out_dir: Optional[Path] = typer.Option(
+        None, "--out-dir", help="PNG 输出目录（默认 html-dir 同级 images/）"
+    ),
+    only: Optional[list[str]] = typer.Option(
+        None, "--only", help="只渲染指定页名（不带 .html，可多次指定）"
+    ),
+    width: int = typer.Option(1920, "--width", help="渲染宽度（横版 1920，竖版 1080）"),
+    height: int = typer.Option(1080, "--height", help="渲染高度（横版 1080，竖版 1920）"),
+    log_level: str = typer.Option("INFO", "--log-level", help="日志级别"),
+) -> None:
+    """把 HTML 幻灯片用无头 Chrome 渲成 PNG（默认 1920×1080，竖版传 --width 1080 --height 1920）。
+
+    产物为每页一张 width×height PNG（跳过以 `_` 开头的辅助文件），
+    可直接配合 arch-ppt 命令组装成横版 16:9 PPT。
+    Chrome 路径取环境变量 CHROME_PATH，未设置时用默认安装路径。
+    """
+    configure_logging(log_level)
+
+    html_dir = html_dir.resolve()
+    if not html_dir.is_dir():
+        err_console.print(f"[red]HTML 源目录不存在：{html_dir}[/red]")
+        raise typer.Exit(1)
+
+    from studio_kit.render.html_render import render_dir, resolve_chrome_path
+
+    resolved_out = (out_dir.resolve() if out_dir else html_dir.parent / "images")
+    chrome_path = resolve_chrome_path()
+
+    try:
+        pngs = render_dir(
+            html_dir,
+            resolved_out,
+            chrome_path=chrome_path,
+            only=only or None,
+            width=width,
+            height=height,
+        )
+    except Exception as e:
+        err_console.print(f"[red]slide-render 失败：{e}[/red]")
+        raise typer.Exit(1)
+
+    console.print(
+        f"[green]slide-render 完成：{len(pngs)} 张 {width}×{height} PNG → {resolved_out}[/green]"
+    )
 
 
 # ════════════════════════════════════════════════════════════════════

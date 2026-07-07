@@ -27,7 +27,7 @@ export function AiCodingCampContent() {
       {/* 2. 为什么选我们（左：八大核心 / 右：个人简介名片，资历并入） */}
       <InstructorSection />
 
-      {/* 3. 全景学习路径：纵向主线 + 嵌套购买覆盖框（外层 ¥3999 含内层 ¥1999） */}
+      {/* 3. 全景学习路径：纵向主线 + 嵌套购买覆盖框（外层 ¥4999 含内层 ¥1999） */}
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-32">
         <Reveal>
           <div className="flex flex-col gap-4">
@@ -53,7 +53,7 @@ export function AiCodingCampContent() {
       {/* 第一阶段：课程大纲 / 四大成果 / 服务模式 + ¥1999 报名入口 */}
       <StageOneSection onEnroll={openContact} />
 
-      {/* 第二阶段：收获墙 / 三段 14 课大纲 / 服务拟稿 + ¥3999 报名入口 */}
+      {/* 第二阶段：收获墙 / 三段 14 课大纲 / 服务拟稿 + ¥4999 报名入口 */}
       <StageTwoSection onEnroll={openContact} />
 
       {/* 后续课程预告：四套企业级实战系统（敬请期待，轻量线+圆点列表） */}

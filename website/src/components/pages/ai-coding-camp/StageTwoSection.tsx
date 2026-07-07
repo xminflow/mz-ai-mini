@@ -381,7 +381,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
 
             {/* 价格条 + 含第一阶段全部内容 pill */}
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-              <PriceChip badge="AI 架构师" originalPrice={STAGE2_PRICE.original} specialLabel="限时特价" price={STAGE2_PRICE.now} onClick={onEnroll} />
+              <PriceChip badge="AI 架构师" specialLabel="报名价" price={STAGE2_PRICE.now} onClick={onEnroll} />
               <span
                 className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[12px] font-semibold sm:text-[12.5px]"
                 style={{

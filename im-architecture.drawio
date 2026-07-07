@@ -1,0 +1,190 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="im-arch" name="分布式IM架构">
+    <mxGraphModel dx="1400" dy="900" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1120" math="0" shadow="0" background="#12141C">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ============ 标题 ============ -->
+        <mxCell id="title" value="大规模分布式 IM 系统架构" style="text;html=1;fontColor=#FFFFFF;fontSize=26;fontStyle=1;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="18" width="1320" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="千万级在线 · 亿级日消息 · 低延迟 / 高可靠 / 多端强一致　｜　设计原则:连接与逻辑分离 · 读写分离 · 同步转异步 · 状态外置 · 分片打散热点" style="text;html=1;fontColor=#8FA0B5;fontSize=13;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="40" y="58" width="1320" height="24" as="geometry" />
+        </mxCell>
+
+        <!-- ============ L1 客户端层 ============ -->
+        <mxCell id="band1" value="" style="rounded=1;html=1;fillColor=#1B2130;strokeColor=#4DA3FF;strokeWidth=2;arcSize=3;" vertex="1" parent="1">
+          <mxGeometry x="40" y="92" width="1320" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="strip1" value="客户端层&#10;Client" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#4DA3FF;strokeColor=none;fontColor=#0B0E14;fontStyle=1;fontSize=15;horizontal=0;arcSize=14;" vertex="1" parent="1">
+          <mxGeometry x="54" y="104" width="62" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="c1a" value="&lt;b&gt;iOS / Android&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;原生 App · SQLite 本地库&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#283142;strokeColor=#4DA3FF;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="170" y="116" width="270" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="c1b" value="&lt;b&gt;Web&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;WebSocket 长连接&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#283142;strokeColor=#4DA3FF;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="464" y="116" width="270" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="c1c" value="&lt;b&gt;PC 桌面端&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;Electron&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#283142;strokeColor=#4DA3FF;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="758" y="116" width="270" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="c1d" value="&lt;b&gt;开放平台&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;OpenAPI · 机器人 · 回调&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#283142;strokeColor=#4DA3FF;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="1052" y="116" width="270" height="72" as="geometry" />
+        </mxCell>
+
+        <!-- ============ L2 接入层 ============ -->
+        <mxCell id="band2" value="" style="rounded=1;html=1;fillColor=#1B2130;strokeColor=#2DD4BF;strokeWidth=2;arcSize=3;" vertex="1" parent="1">
+          <mxGeometry x="40" y="252" width="1320" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="strip2" value="接入层&#10;Access / Gateway" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#2DD4BF;strokeColor=none;fontColor=#0B0E14;fontStyle=1;fontSize=15;horizontal=0;arcSize=14;" vertex="1" parent="1">
+          <mxGeometry x="54" y="264" width="62" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="c2a" value="&lt;b&gt;LB / DNS 调度&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;LVS + Nginx · 地域就近&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#283142;strokeColor=#2DD4BF;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="170" y="276" width="270" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="c2b" value="&lt;b&gt;连接网关 Connection GW&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;长连接保活 · 编解码 · 无状态&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#283142;strokeColor=#2DD4BF;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="464" y="276" width="270" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="c2c" value="&lt;b&gt;API 网关&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;鉴权 · 限流 · 路由&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#283142;strokeColor=#2DD4BF;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="758" y="276" width="270" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="c2d" value="&lt;b&gt;会话路由 Session Mgr&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;uid→网关 映射 (Redis)&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#283142;strokeColor=#2DD4BF;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="1052" y="276" width="270" height="72" as="geometry" />
+        </mxCell>
+
+        <!-- ============ L3 业务逻辑层 ============ -->
+        <mxCell id="band3" value="" style="rounded=1;html=1;fillColor=#1B2130;strokeColor=#A78BFA;strokeWidth=2;arcSize=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="412" width="1320" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="strip3" value="业务逻辑层&#10;Logic Services (微服务 / gRPC)" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#A78BFA;strokeColor=none;fontColor=#0B0E14;fontStyle=1;fontSize=15;horizontal=0;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="54" y="424" width="62" height="176" as="geometry" />
+        </mxCell>
+        <mxCell id="c3a" value="&lt;b&gt;消息服务 Message&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;seq · 去重 · 可靠投递 · 落库&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#2E2742;strokeColor=#A78BFA;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="170" y="430" width="270" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="c3b" value="&lt;b&gt;单聊 / 群聊服务&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;会话 · 读/写扩散策略&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#2E2742;strokeColor=#A78BFA;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="464" y="430" width="270" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="c3c" value="&lt;b&gt;用户 / 关系服务&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;账号 · 好友 · 黑名单 · 群组&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#2E2742;strokeColor=#A78BFA;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="758" y="430" width="270" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="c3d" value="&lt;b&gt;在线状态 Presence&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;在线 · 输入中 · 最后活跃&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#2E2742;strokeColor=#A78BFA;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="1052" y="430" width="270" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="c3e" value="&lt;b&gt;推送服务 Push&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;APNs · FCM · 华为/小米通道&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#2E2742;strokeColor=#A78BFA;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="170" y="520" width="270" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="c3f" value="&lt;b&gt;同步服务 Sync&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;多端漫游 · seq diff 增量&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#2E2742;strokeColor=#A78BFA;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="464" y="520" width="270" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="c3g" value="&lt;b&gt;媒体服务 Media&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;上传 · 转码 · 缩略图 · CDN&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#2E2742;strokeColor=#A78BFA;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="758" y="520" width="270" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="c3h" value="&lt;b&gt;内容安全 / 风控&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;敏感词 · 反垃圾 · 频控 · 审计&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#2E2742;strokeColor=#A78BFA;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="1052" y="520" width="270" height="74" as="geometry" />
+        </mxCell>
+
+        <!-- ============ L4 消息队列层 ============ -->
+        <mxCell id="band4" value="" style="rounded=1;html=1;fillColor=#1B2130;strokeColor=#FB923C;strokeWidth=2;arcSize=3;" vertex="1" parent="1">
+          <mxGeometry x="40" y="652" width="1320" height="118" as="geometry" />
+        </mxCell>
+        <mxCell id="strip4" value="消息队列层&#10;Message Queue" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#FB923C;strokeColor=none;fontColor=#0B0E14;fontStyle=1;fontSize=15;horizontal=0;arcSize=14;" vertex="1" parent="1">
+          <mxGeometry x="54" y="664" width="62" height="94" as="geometry" />
+        </mxCell>
+        <mxCell id="c4a" value="&lt;b&gt;Kafka / RocketMQ&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;投递落库解耦 · 削峰 · 大群扩散&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#33291C;strokeColor=#FB923C;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="225" y="676" width="320" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="c4b" value="&lt;b&gt;推送任务队列&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;离线推送 · 批量通知(与实时隔离)&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#33291C;strokeColor=#FB923C;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="585" y="676" width="320" height="72" as="geometry" />
+        </mxCell>
+        <mxCell id="c4c" value="&lt;b&gt;事件总线&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;已读回执 · 状态变更 · 审计日志&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#33291C;strokeColor=#FB923C;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=12;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="945" y="676" width="320" height="72" as="geometry" />
+        </mxCell>
+
+        <!-- ============ L5 存储层 ============ -->
+        <mxCell id="band5" value="" style="rounded=1;html=1;fillColor=#1B2130;strokeColor=#34D399;strokeWidth=2;arcSize=3;" vertex="1" parent="1">
+          <mxGeometry x="40" y="810" width="1320" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="strip5" value="存储层&#10;Storage (冷热分离 · 分片)" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#34D399;strokeColor=none;fontColor=#0B0E14;fontStyle=1;fontSize=15;horizontal=0;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="54" y="822" width="62" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="c5a" value="&lt;b&gt;Redis 集群&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;在线态 · 路由 · seq · 热缓存&lt;/font&gt;" style="shape=cylinder3;html=1;whiteSpace=wrap;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#1F3A30;strokeColor=#34D399;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="170" y="830" width="216" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="c5b" value="&lt;b&gt;消息存储&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;HBase / Cassandra&lt;br&gt;按 uid 分片&lt;/font&gt;" style="shape=cylinder3;html=1;whiteSpace=wrap;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#1F3A30;strokeColor=#34D399;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="406" y="830" width="216" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="c5c" value="&lt;b&gt;关系型 DB&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;MySQL 分库分表&lt;br&gt;强一致 · 事务&lt;/font&gt;" style="shape=cylinder3;html=1;whiteSpace=wrap;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#1F3A30;strokeColor=#34D399;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="642" y="830" width="216" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="c5d" value="&lt;b&gt;对象存储 + CDN&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;OSS / S3&lt;br&gt;媒体就近分发&lt;/font&gt;" style="shape=cylinder3;html=1;whiteSpace=wrap;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#1F3A30;strokeColor=#34D399;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="878" y="830" width="216" height="96" as="geometry" />
+        </mxCell>
+        <mxCell id="c5e" value="&lt;b&gt;搜索引擎&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;Elasticsearch&lt;br&gt;全文检索 · 联系人&lt;/font&gt;" style="shape=cylinder3;html=1;whiteSpace=wrap;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#1F3A30;strokeColor=#34D399;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1114" y="830" width="216" height="96" as="geometry" />
+        </mxCell>
+
+        <!-- ============ L6 基础设施(横切) ============ -->
+        <mxCell id="band6" value="" style="rounded=1;html=1;fillColor=#181C26;strokeColor=#94A3B8;strokeWidth=2;dashed=1;dashPattern=8 4;arcSize=3;" vertex="1" parent="1">
+          <mxGeometry x="40" y="990" width="1320" height="116" as="geometry" />
+        </mxCell>
+        <mxCell id="strip6" value="基础设施&#10;Infrastructure · 横切支撑(贯穿各层)" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#94A3B8;strokeColor=none;fontColor=#0B0E14;fontStyle=1;fontSize=14;horizontal=0;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="54" y="1002" width="62" height="92" as="geometry" />
+        </mxCell>
+        <mxCell id="c6a" value="&lt;b&gt;服务注册发现&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;Nacos / Consul / etcd&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#232833;strokeColor=#94A3B8;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=11;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="170" y="1014" width="216" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="c6b" value="&lt;b&gt;配置中心&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;Apollo / Nacos Config&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#232833;strokeColor=#94A3B8;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=11;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="406" y="1014" width="216" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="c6c" value="&lt;b&gt;监控告警&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;Prometheus + Grafana&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#232833;strokeColor=#94A3B8;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=11;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="642" y="1014" width="216" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="c6d" value="&lt;b&gt;链路追踪 / 日志&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;SkyWalking + ELK&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#232833;strokeColor=#94A3B8;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=11;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="878" y="1014" width="216" height="68" as="geometry" />
+        </mxCell>
+        <mxCell id="c6e" value="&lt;b&gt;容器编排&lt;/b&gt;&lt;br&gt;&lt;font color='#90A0B5' style='font-size:10px'&gt;Kubernetes + Docker&lt;/font&gt;" style="rounded=1;html=1;whiteSpace=wrap;fillColor=#232833;strokeColor=#94A3B8;strokeWidth=1.5;fontColor=#EAEEF5;fontSize=11;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="1114" y="1014" width="216" height="68" as="geometry" />
+        </mxCell>
+
+        <!-- ============ 层间数据流箭头 ============ -->
+        <mxCell id="e12" value="长连接 WS/TCP · Protobuf" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#8A97AC;strokeWidth=2.5;fontColor=#FFFFFF;fontStyle=1;fontSize=11;rounded=0;labelBackgroundColor=#283142;labelBorderColor=#8A97AC;" edge="1" parent="1" source="band1" target="band2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="212" as="sourcePoint" />
+            <mxPoint x="700" y="252" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e23" value="gRPC RPC" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#8A97AC;strokeWidth=2.5;fontColor=#FFFFFF;fontStyle=1;fontSize=11;rounded=0;labelBackgroundColor=#283142;labelBorderColor=#8A97AC;" edge="1" parent="1" source="band2" target="band3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="372" as="sourcePoint" />
+            <mxPoint x="700" y="412" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e34" value="异步解耦 · 削峰 · 扩散" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#8A97AC;strokeWidth=2.5;fontColor=#FFFFFF;fontStyle=1;fontSize=11;rounded=0;labelBackgroundColor=#283142;labelBorderColor=#8A97AC;" edge="1" parent="1" source="band3" target="band4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="612" as="sourcePoint" />
+            <mxPoint x="700" y="652" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e45" value="落库 · 事件流" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#8A97AC;strokeWidth=2.5;fontColor=#FFFFFF;fontStyle=1;fontSize=11;rounded=0;labelBackgroundColor=#283142;labelBorderColor=#8A97AC;" edge="1" parent="1" source="band4" target="band5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="700" y="770" as="sourcePoint" />
+            <mxPoint x="700" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e35" value="读写存储" style="endArrow=classic;startArrow=classic;html=1;strokeColor=#5A6675;strokeWidth=2;fontColor=#FFFFFF;fontStyle=1;fontSize=10;rounded=1;exitX=1;exitY=1;entryX=1;entryY=0;dashed=1;dashPattern=6 4;labelBackgroundColor=#232833;labelBorderColor=#5A6675;" edge="1" parent="1" source="band3" target="band5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1380" y="610" as="sourcePoint" />
+            <mxPoint x="1380" y="810" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1385" y="700" />
+              <mxPoint x="1385" y="790" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

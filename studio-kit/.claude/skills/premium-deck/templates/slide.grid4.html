@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- 2×2 概念格。高亮某格：给该 .cell 加 on（浮起玻璃卡 + 放大），其余加 off（变暗）。
+     不高亮时四格都用 class="cell" / "cell r"（右列）。竖版换 style.portrait.css -->
+<html lang="zh"><head><meta charset="utf-8">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="style.landscape.css"></head>
+<body>
+  <div class="slide">
+    <div class="light"></div><div class="grid"></div><div class="grain"></div>
+    <div class="wrap">
+      <div class="pill">第 N 件 · 当前重点</div>
+      <div class="title">章节大标题</div>
+      <div class="grid4">
+        <div class="vline"></div><div class="hline"></div>
+        <div class="cell off"><div class="num">01</div><div class="h">要点一</div><div class="p">说明文字，<br>可换行</div></div>
+        <div class="cell r on"><div class="num">02</div><div class="h">要点二</div><div class="p">高亮这一格，<br>玻璃卡浮起</div></div>
+        <div class="cell off"><div class="num">03</div><div class="h">要点三</div><div class="p">说明文字，<br>可换行</div></div>
+        <div class="cell r off"><div class="num">04</div><div class="h">要点四</div><div class="p">说明文字，<br>可换行</div></div>
+      </div>
+      <div class="foot"><div class="cta">看简介免费领取最新 AI 编程学习资料，助你升职加薪</div><div class="brand">微域生光 | 十一AI编程</div></div>
+    </div>
+  </div>
+</body></html>

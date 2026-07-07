@@ -1,0 +1,6 @@
+# 复制为 sync-content.config.ps1（已被 gitignore），填好后即可直接跑 ./sync-content.ps1 免参数。
+# 用 if (-not $X) 守卫，命令行显式传参仍然优先。
+if (-not $DeployHost) { $DeployHost = 'deploy@weelume.com' }
+if (-not $Dest)       { $Dest = '/home/deploy/workspace/website/md' }
+if (-not $Port)       { $Port = 22 }
+# if (-not $Identity)   { $Identity = "$HOME\.ssh\id_ed25519" }

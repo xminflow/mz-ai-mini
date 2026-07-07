@@ -6,6 +6,12 @@ Thumbs.db
 .idea/
 .vscode/
 .zed/
+.obsidian/
+
+# 课件同步/部署本地配置（含主机/私钥，不入库）
+/website/scripts/sync-content.env
+/website/scripts/sync-content.config.ps1
+/website/scripts/deploy.env
 
 specs
 
@@ -90,6 +96,9 @@ ua-agent/.uvcache/
 ua-agent/.uvcache-indextts/
 ua-agent/.venvs/
 ua-agent/checkpoints/
+
+# studio-kit 本地模型检出（含内嵌 git 仓库，体积巨大，禁止入库）
+/studio-kit/model/
 
 # Build / deploy artifacts (非代码产物，禁止入库)
 *.tar

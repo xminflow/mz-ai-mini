@@ -45,3 +45,4 @@ function greet(name: string): string {
 $$
 \int_0^1 x^2 \, dx = \frac{1}{3}
 $$
+![[Pasted image 20260620094552.png]]

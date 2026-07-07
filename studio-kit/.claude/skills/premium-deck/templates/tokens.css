@@ -1,0 +1,55 @@
+/* ============================================================
+   premium-deck · tokens.css —— 跨横竖唯一真源（品牌 + 质感）
+   只放横竖完全一致的东西：配色 token、字体、颗粒、毛玻璃/高亮质感常量、
+   语义分类色、强调色。几何与字号在 style.landscape.css / style.portrait.css。
+   改品牌色 / 玻璃质感只改这里一处，横竖同步生效，杜绝两份漂移。
+   ============================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+:root{
+  /* —— 配色 —— */
+  --bg:#05060b;
+  --ink:#f1f2f5;                  /* 标题/主文字（中性白） */
+  --muted:rgba(255,255,255,0.62); /* 正文/次要 */
+  --gblue:#5a9cff;
+  --gred:#ff6a5c;
+  --gyellow:#ffce54;
+  --ggreen:#4ad6a0;
+  --accent:#5a9cff;               /* 主强调：Google 蓝 */
+  --hair:rgba(255,255,255,0.12);
+  --font:"Inter","Microsoft YaHei","PingFang SC","Segoe UI",sans-serif;
+  /* —— 毛玻璃卡片质感（cols3 .card / 通用卡） —— */
+  --glass-bg:rgba(255,255,255,0.05);
+  --glass-border:rgba(255,255,255,0.12);
+  --glass-blur:blur(26px) saturate(120%);
+  --glass-shadow:inset 0 1px 0 rgba(255,255,255,0.14), 0 18px 44px rgba(0,0,0,0.4);
+  /* —— 高亮块（grid4 .cell.on 浮起玻璃卡） —— */
+  --hl-bg:rgba(255,255,255,0.06);
+  --hl-border:rgba(255,255,255,0.16);
+  --hl-blur:blur(30px) saturate(125%);
+  --hl-shadow:inset 0 1px 0 rgba(255,255,255,0.16), 0 26px 64px rgba(0,0,0,0.55);
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+.slide{ position:relative; background:var(--bg); font-family:var(--font); overflow:hidden; }
+
+/* 胶片颗粒（横竖一致） */
+.grain{ position:absolute; inset:0; opacity:0.045; mix-blend-mode:overlay; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+.accent{ color:var(--accent); }
+
+/* 语义分类色（横竖一致） */
+.tag.cool{ color:var(--gblue); border:1px solid rgba(90,156,255,0.5); }
+.tag.warm{ color:var(--gyellow); border:1px solid rgba(255,206,84,0.5); }
+.tag.violet{ color:var(--gred); border:1px solid rgba(255,106,92,0.5); }
+.card.g-blue .k{ color:var(--gblue); }
+.card.g-red .k{ color:var(--gred); }
+.card.g-yellow .k{ color:var(--gyellow); }
+
+/* 高亮块的"提亮 + 玻璃质感 + 取色"（几何在 orientation 层叠加） */
+.cell.off{ opacity:0.32; }
+.cell.on{ transform-origin:center;
+  background:var(--hl-bg); border:1px solid var(--hl-border);
+  box-shadow:var(--hl-shadow);
+  backdrop-filter:var(--hl-blur); -webkit-backdrop-filter:var(--hl-blur); }
+.cell.on .num{ color:var(--accent); }
+.cell.on .h{ color:#fff; }

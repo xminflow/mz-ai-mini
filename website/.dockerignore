@@ -5,6 +5,11 @@ dist
 dist-ssr
 out
 
+# 本地缓存 / 归档 / 截图，绝不应进入构建上下文（曾导致 ~2GB 上下文传输）
+.pnpm-store
+.local-screenshots
+*.tar
+
 # Version control
 .git
 .gitignore
@@ -40,3 +45,8 @@ Dockerfile
 .dockerignore
 README.md
 *.local
+
+# pnpm-workspace.yaml 仅用于本地 pnpm 10/11 的构建脚本审批（onlyBuiltDependencies）；
+# 镜像使用 pnpm 9.15.4，会把它当作 monorepo 清单并因缺少 packages 字段而报错
+# "packages field missing or empty"，故排除，避免污染构建上下文
+pnpm-workspace.yaml

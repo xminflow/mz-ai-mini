@@ -33,20 +33,22 @@ export function LessonToc(): React.JSX.Element | null {
   const [activeId, setActiveId] = useState<string>('')
 
   // 1) 从文章 DOM 提取 h2/h3 标题（随路由切换重扫）
+  // 统一在末尾单次 setItems：文章不存在时 collected 为空数组，等价于清空目录
   useEffect(() => {
     const article = document.querySelector('article.typora-md')
-    if (!article) {
-      setItems([])
-      return
-    }
     const collected: TocItem[] = []
-    article.querySelectorAll('h2, h3').forEach((node, i) => {
-      const h = node as HTMLElement
-      const text = (h.textContent || '').trim()
-      if (!text) return
-      if (!h.id) h.id = slugify(text, i)
-      collected.push({ id: h.id, text, level: Number(h.tagName.slice(1)) })
-    })
+    if (article) {
+      article.querySelectorAll('h2, h3').forEach((node, i) => {
+        const h = node as HTMLElement
+        const text = (h.textContent || '').trim()
+        if (!text) return
+        if (!h.id) h.id = slugify(text, i)
+        collected.push({ id: h.id, text, level: Number(h.tagName.slice(1)) })
+      })
+    }
+    // 目录源自「已渲染文章 DOM」，render 阶段无法获得，必须在 effect 中读取后 setState。
+    // 此处无 render 期替代方案，故就地关闭 set-state-in-effect 规则
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setItems(collected)
   }, [pathname])
 
