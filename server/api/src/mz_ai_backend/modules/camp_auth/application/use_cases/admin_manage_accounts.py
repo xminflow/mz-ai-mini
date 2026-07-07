@@ -45,7 +45,7 @@ class GetCampAccountUseCase:
 
     async def execute(self, query: GetCampAccountQuery) -> CampAccountAdminView:
         view = await self._repository.get_admin_account_by_id(query.account_id)
-        if view is None:
+        if view is None or view.is_deleted:
             raise NotFoundException(message="Camp account not found.")
         return view
 
@@ -80,6 +80,7 @@ class UpdateCampAccountMembershipUseCase:
         if existing is None or existing.is_deleted:
             raise NotFoundException(message="Camp account not found.")
 
+        # tier=none 清空会员起止时间；非 none 时必须给到期时间，起始时间续期时保留原值、首次开通用当前时间
         if command.tier == "none":
             started_at: datetime | None = None
             expires_at: datetime | None = None

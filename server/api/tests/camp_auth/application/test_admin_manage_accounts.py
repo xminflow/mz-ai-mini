@@ -112,6 +112,14 @@ async def test_get_missing_raises_not_found() -> None:
 
 
 @pytest.mark.asyncio
+async def test_get_deleted_account_raises_not_found() -> None:
+    repo = FakeAdminRepository([_view(1, is_deleted=True)])
+    use_case = GetCampAccountUseCase(repository=repo)
+    with pytest.raises(NotFoundException):
+        await use_case.execute(GetCampAccountQuery(account_id=1))
+
+
+@pytest.mark.asyncio
 async def test_update_status_toggles_disabled() -> None:
     repo = FakeAdminRepository([_view(1)])
     use_case = UpdateCampAccountStatusUseCase(repository=repo)
@@ -146,6 +154,17 @@ async def test_update_membership_none_clears_dates() -> None:
     assert updated.membership_tier == "none"
     assert updated.membership_started_at is None
     assert updated.membership_expires_at is None
+
+
+@pytest.mark.asyncio
+async def test_update_membership_preserves_existing_started_at() -> None:
+    original_started = datetime(2026, 1, 1)
+    repo = FakeAdminRepository([_view(1, membership_started_at=original_started)])
+    use_case = UpdateCampAccountMembershipUseCase(repository=repo)
+    updated = await use_case.execute(
+        UpdateCampAccountMembershipCommand(account_id=1, tier="basic", expires_at=_now() + timedelta(days=30))
+    )
+    assert updated.membership_started_at == original_started
 
 
 @pytest.mark.asyncio
