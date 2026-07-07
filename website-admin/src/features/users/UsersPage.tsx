@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { ApiError } from '@/lib/apiClient'
 import { useAuth } from '@/features/auth/AuthContext'
 import { usersApi } from './api'
+import { UserDetailDialog } from './UserDetailDialog'
 import type { AccountStatus, CampAccountAdmin } from './types'
 
 const PAGE_SIZE = 20
@@ -21,6 +22,7 @@ export function UsersPage() {
   const [rows, setRows] = useState<CampAccountAdmin[]>([])
   const [total, setTotal] = useState(0)
   const [error, setError] = useState<string | null>(null)
+  const [selected, setSelected] = useState<CampAccountAdmin | null>(null)
 
   const load = useCallback(async () => {
     if (!token) return
@@ -89,6 +91,7 @@ export function UsersPage() {
             <TableHead>会员</TableHead>
             <TableHead>会员到期</TableHead>
             <TableHead>注册时间</TableHead>
+            <TableHead>操作</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -104,10 +107,13 @@ export function UsersPage() {
               <TableCell>{r.membership_tier}</TableCell>
               <TableCell>{r.membership_expires_at?.slice(0, 10) ?? '—'}</TableCell>
               <TableCell>{r.created_at.slice(0, 10)}</TableCell>
+              <TableCell>
+                <Button size="sm" variant="outline" onClick={() => setSelected(r)}>管理</Button>
+              </TableCell>
             </TableRow>
           ))}
           {rows.length === 0 && (
-            <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground">暂无数据</TableCell></TableRow>
+            <TableRow><TableCell colSpan={7} className="text-center text-muted-foreground">暂无数据</TableCell></TableRow>
           )}
         </TableBody>
       </Table>
@@ -117,6 +123,15 @@ export function UsersPage() {
         <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}>上一页</Button>
         <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}>下一页</Button>
       </div>
+
+      {selected && (
+        <UserDetailDialog
+          account={selected}
+          onClose={() => setSelected(null)}
+          onChanged={() => { setSelected(null); void load() }}
+          onDeleted={() => { setSelected(null); void load() }}
+        />
+      )}
     </div>
   )
 }
