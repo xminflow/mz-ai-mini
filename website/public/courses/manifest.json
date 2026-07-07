@@ -1,6 +1,7 @@
 {
   "title": "课程",
   "chapters": [
-    { "id": "01-demo", "title": "示例章节" }
+    { "id": "01-demo", "title": "示例章节" },
+    { "id": "s2-01-claude-code-codex", "title": "S2-1 · Claude Code 与 Codex 进阶" }
   ]
 }
