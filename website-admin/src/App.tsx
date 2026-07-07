@@ -2,10 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from '@/features/auth/AuthContext'
 import { RequireAuth } from '@/features/auth/RequireAuth'
 import { LoginPage } from '@/features/auth/LoginPage'
-
-function UsersPlaceholder() {
-  return <div className="p-8 text-xl font-semibold">用户管理（待实现）</div>
-}
+import { UsersPage } from '@/features/users/UsersPage'
 
 export default function App() {
   return (
@@ -17,7 +14,7 @@ export default function App() {
             path="/users"
             element={
               <RequireAuth>
-                <UsersPlaceholder />
+                <UsersPage />
               </RequireAuth>
             }
           />
