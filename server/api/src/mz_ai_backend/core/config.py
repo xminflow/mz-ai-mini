@@ -89,6 +89,13 @@ class Settings(BaseSettings):
     wechat_official_auto_reply_subscribe_news_url: str | None = Field(default=None)
     blogger_insight_import_token: str | None = Field(default=None)
     track_analysis_import_token: str | None = Field(default=None)
+    # 管理端：配置写死的单管理员账号 + 无状态 HMAC 令牌；缺省为空表示未启用管理端。
+    admin_username: str | None = Field(default=None)
+    admin_password: str | None = Field(default=None)
+    admin_token_secret: str | None = Field(default=None)
+    admin_token_ttl_minutes: int = Field(default=720, ge=5, le=10080)
+    # 逗号分隔的允许跨域来源；为空表示不放开任何跨域。
+    admin_cors_origins: str = Field(default="")
 
     @model_validator(mode="after")
     def apply_development_defaults(self) -> "Settings":
