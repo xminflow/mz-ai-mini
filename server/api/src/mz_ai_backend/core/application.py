@@ -4,8 +4,10 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from ..modules import (
+    admin_auth_router,
     agent_auth_router,
     camp_auth_router,
     camp_membership_router,
@@ -86,7 +88,18 @@ def create_app() -> FastAPI:
         lifespan=_lifespan,
     )
     register_middlewares(app)
+    _admin_origins = [o.strip() for o in (settings.admin_cors_origins or "").split(",") if o.strip()]
+    if _admin_origins:
+        # 管理端用 Bearer 头鉴权（非 cookie），故 allow_credentials=False
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=_admin_origins,
+            allow_credentials=False,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
     register_exception_handlers(app)
+    app.include_router(admin_auth_router, prefix=settings.api_prefix)
     app.include_router(agent_auth_router, prefix=settings.api_prefix)
     app.include_router(camp_auth_router, prefix=settings.api_prefix)
     app.include_router(camp_membership_router, prefix=settings.api_prefix)
