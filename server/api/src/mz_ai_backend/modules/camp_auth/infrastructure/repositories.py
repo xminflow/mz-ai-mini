@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from sqlalchemy import delete, select
+from sqlalchemy import delete, func, or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -14,6 +14,7 @@ from ..application import (
     CampWechatLoginGrantIssue,
     CampWechatLoginSessionCreate,
 )
+from ..application.admin_dtos import CampAccountAdminFilter, CampAccountAdminView
 from ..domain import (
     CampAccessTokenRecord,
     CampAccount,
@@ -43,6 +44,22 @@ def _to_camp_account(model: CampAccountModel) -> CampAccount:
         enrollment_status=model.enrollment_status,
         enrolled_at=model.enrolled_at,
         enrollment_expires_at=model.enrollment_expires_at,
+        is_deleted=model.is_deleted,
+        created_at=model.created_at,
+        updated_at=model.updated_at,
+    )
+
+
+def _to_admin_view(model: CampAccountModel) -> CampAccountAdminView:
+    """管理端视图映射：读取真正生效的 membership_* 列。"""
+    return CampAccountAdminView(
+        account_id=model.account_id,
+        username=model.username,
+        email=model.email,
+        status=CampAccountStatus(model.status),
+        membership_tier=model.membership_tier or "none",
+        membership_started_at=model.membership_started_at,
+        membership_expires_at=model.membership_expires_at,
         is_deleted=model.is_deleted,
         created_at=model.created_at,
         updated_at=model.updated_at,
@@ -463,3 +480,93 @@ class SqlAlchemyCampAccountRepository:
             expires_at=expires_at,
             remaining_days=remaining_days,
         )
+
+    # -----------------------------------------------------------------
+    # Admin 账号管理（列表/详情/状态/会员/软删除）
+    # -----------------------------------------------------------------
+
+    def _apply_admin_filters(self, stmt, filter_: CampAccountAdminFilter):
+        if not filter_.include_deleted:
+            stmt = stmt.where(CampAccountModel.is_deleted.is_(False))
+        if filter_.status is not None:
+            stmt = stmt.where(CampAccountModel.status == filter_.status.value)
+        if filter_.keyword:
+            like = f"%{filter_.keyword.strip()}%"
+            stmt = stmt.where(
+                or_(
+                    CampAccountModel.username.ilike(like),
+                    CampAccountModel.email.ilike(like),
+                )
+            )
+        return stmt
+
+    async def list_admin_accounts(
+        self, *, filter_: CampAccountAdminFilter, offset: int, limit: int
+    ) -> list[CampAccountAdminView]:
+        stmt = self._apply_admin_filters(select(CampAccountModel), filter_)
+        stmt = stmt.order_by(CampAccountModel.created_at.desc()).offset(offset).limit(limit)
+        result = await self._session.execute(stmt)
+        return [_to_admin_view(model) for model in result.scalars().all()]
+
+    async def count_admin_accounts(self, *, filter_: CampAccountAdminFilter) -> int:
+        stmt = self._apply_admin_filters(
+            select(func.count()).select_from(CampAccountModel), filter_
+        )
+        result = await self._session.execute(stmt)
+        return int(result.scalar_one())
+
+    async def get_admin_account_by_id(self, account_id: int) -> CampAccountAdminView | None:
+        result = await self._session.execute(
+            select(CampAccountModel).where(CampAccountModel.account_id == account_id)
+        )
+        model = result.scalar_one_or_none()
+        return None if model is None else _to_admin_view(model)
+
+    async def update_account_status(
+        self, *, account_id: int, status: CampAccountStatus
+    ) -> CampAccountAdminView | None:
+        model = await self._load_active_account(account_id=account_id)
+        if model is None:
+            return None
+        model.status = status.value
+        model.updated_at = datetime.now(UTC).replace(tzinfo=None)
+        await self._session.commit()
+        await self._session.refresh(model)
+        return _to_admin_view(model)
+
+    async def update_account_membership(
+        self,
+        *,
+        account_id: int,
+        tier: str,
+        started_at: datetime | None,
+        expires_at: datetime | None,
+    ) -> CampAccountAdminView | None:
+        model = await self._load_active_account(account_id=account_id)
+        if model is None:
+            return None
+        model.membership_tier = tier
+        model.membership_started_at = _to_naive_utc(started_at)
+        model.membership_expires_at = _to_naive_utc(expires_at)
+        model.updated_at = datetime.now(UTC).replace(tzinfo=None)
+        await self._session.commit()
+        await self._session.refresh(model)
+        return _to_admin_view(model)
+
+    async def soft_delete_account(self, *, account_id: int) -> bool:
+        model = await self._load_active_account(account_id=account_id)
+        if model is None:
+            return False
+        model.is_deleted = True
+        model.updated_at = datetime.now(UTC).replace(tzinfo=None)
+        await self._session.commit()
+        return True
+
+    async def _load_active_account(self, *, account_id: int) -> CampAccountModel | None:
+        result = await self._session.execute(
+            select(CampAccountModel).where(
+                CampAccountModel.account_id == account_id,
+                CampAccountModel.is_deleted.is_(False),
+            )
+        )
+        return result.scalar_one_or_none()
