@@ -52,6 +52,12 @@ def test_verify_rejects_malformed_token() -> None:
         service.verify(token="not-a-valid-token", now=_now())
 
 
+def test_verify_rejects_non_ascii_token() -> None:
+    service = HmacAdminTokenService(secret="s3cret-value")
+    with pytest.raises(UnauthorizedException):
+        service.verify(token="é.deadbeef", now=_now())
+
+
 def test_credential_verifier_matches_exact_pair() -> None:
     verifier = ConfigAdminCredentialVerifier(username="root", password="pw")
     assert verifier.verify(username="root", password="pw") is True

@@ -51,7 +51,7 @@ class HmacAdminTokenService:
         parts = token.split(".", 1)
         if len(parts) != 2:
             raise self._unauthorized("Invalid admin token.")
-        payload_b64 = parts[0].encode("ascii")
+        payload_b64 = parts[0].encode("utf-8")
         if not hmac.compare_digest(self._sign(payload_b64), parts[1]):
             raise self._unauthorized("Invalid admin token.")
         try:
