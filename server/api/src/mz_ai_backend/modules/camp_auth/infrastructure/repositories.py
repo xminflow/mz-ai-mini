@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from typing import Any
 
-from sqlalchemy import delete, func, or_, select
+from sqlalchemy import Select, delete, func, or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -485,7 +486,9 @@ class SqlAlchemyCampAccountRepository:
     # Admin 账号管理（列表/详情/状态/会员/软删除）
     # -----------------------------------------------------------------
 
-    def _apply_admin_filters(self, stmt, filter_: CampAccountAdminFilter):
+    def _apply_admin_filters(
+        self, stmt: Select[Any], filter_: CampAccountAdminFilter
+    ) -> Select[Any]:
         if not filter_.include_deleted:
             stmt = stmt.where(CampAccountModel.is_deleted.is_(False))
         if filter_.status is not None:

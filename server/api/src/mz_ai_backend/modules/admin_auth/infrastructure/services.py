@@ -48,6 +48,8 @@ class HmacAdminTokenService:
         return AdminTokenResult(token=token, expires_at=expires_at)
 
     def verify(self, *, token: str, now: datetime) -> AdminIdentity:
+        if not token.isascii():
+            raise self._unauthorized("Invalid admin token.")
         parts = token.split(".", 1)
         if len(parts) != 2:
             raise self._unauthorized("Invalid admin token.")

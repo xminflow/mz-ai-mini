@@ -58,6 +58,13 @@ def test_verify_rejects_non_ascii_token() -> None:
         service.verify(token="é.deadbeef", now=_now())
 
 
+def test_verify_rejects_non_ascii_signature_segment() -> None:
+    service = HmacAdminTokenService(secret="s3cret-value")
+    # 合法的 base64url payload 段 + 非 ASCII 签名段：不得抛 TypeError，须统一 401
+    with pytest.raises(UnauthorizedException):
+        service.verify(token="eyJzdWIiOiJyb290In0=.é", now=_now())
+
+
 def test_credential_verifier_matches_exact_pair() -> None:
     verifier = ConfigAdminCredentialVerifier(username="root", password="pw")
     assert verifier.verify(username="root", password="pw") is True
