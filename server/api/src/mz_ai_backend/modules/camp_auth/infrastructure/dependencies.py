@@ -21,13 +21,18 @@ from mz_ai_backend.modules.agent_auth.infrastructure.dependencies import (
 
 from ..application.use_cases import (
     CreateCampWechatLoginSessionUseCase,
+    DeleteCampAccountUseCase,
     DevCampFakeLoginUseCase,
     ExchangeCampWechatLoginUseCase,
+    GetCampAccountUseCase,
     GetCurrentCampAccountUseCase,
     GetCampWechatLoginSessionUseCase,
     HandleCampWechatCallbackUseCase,
+    ListCampAccountsUseCase,
     LogoutCampSessionUseCase,
     RefreshCampSessionUseCase,
+    UpdateCampAccountMembershipUseCase,
+    UpdateCampAccountStatusUseCase,
 )
 from ..domain import CampAccessTokenExpiredException
 from .repositories import SqlAlchemyCampAccountRepository
@@ -214,3 +219,53 @@ def get_dev_camp_fake_login_use_case(
         access_token_ttl_seconds=settings.camp_auth_access_token_ttl_seconds,
         refresh_token_ttl_days=settings.camp_auth_refresh_token_ttl_days,
     )
+
+
+def get_list_camp_accounts_use_case(
+    account_repository: Annotated[
+        SqlAlchemyCampAccountRepository, Depends(get_camp_account_repository)
+    ],
+) -> ListCampAccountsUseCase:
+    """Construct the admin list camp accounts use case."""
+
+    return ListCampAccountsUseCase(repository=account_repository)
+
+
+def get_get_camp_account_use_case(
+    account_repository: Annotated[
+        SqlAlchemyCampAccountRepository, Depends(get_camp_account_repository)
+    ],
+) -> GetCampAccountUseCase:
+    """Construct the admin get camp account use case."""
+
+    return GetCampAccountUseCase(repository=account_repository)
+
+
+def get_update_camp_account_status_use_case(
+    account_repository: Annotated[
+        SqlAlchemyCampAccountRepository, Depends(get_camp_account_repository)
+    ],
+) -> UpdateCampAccountStatusUseCase:
+    """Construct the admin update camp account status use case."""
+
+    return UpdateCampAccountStatusUseCase(repository=account_repository)
+
+
+def get_update_camp_account_membership_use_case(
+    account_repository: Annotated[
+        SqlAlchemyCampAccountRepository, Depends(get_camp_account_repository)
+    ],
+) -> UpdateCampAccountMembershipUseCase:
+    """Construct the admin update camp account membership use case."""
+
+    return UpdateCampAccountMembershipUseCase(repository=account_repository)
+
+
+def get_delete_camp_account_use_case(
+    account_repository: Annotated[
+        SqlAlchemyCampAccountRepository, Depends(get_camp_account_repository)
+    ],
+) -> DeleteCampAccountUseCase:
+    """Construct the admin delete (soft-delete) camp account use case."""
+
+    return DeleteCampAccountUseCase(repository=account_repository)

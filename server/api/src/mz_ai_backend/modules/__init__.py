@@ -11,6 +11,7 @@ Development rules:
 from .auth import router as auth_router
 from .admin_auth import router as admin_auth_router
 from .agent_auth import router as agent_auth_router
+from .camp_auth import admin_router as camp_admin_router
 from .camp_auth import router as camp_auth_router
 from .camp_membership import router as camp_membership_router
 from .wechat_callback import router as wechat_callback_router
@@ -27,6 +28,7 @@ from .track_analyses import router as track_analyses_router
 __all__ = [
     "admin_auth_router",
     "agent_auth_router",
+    "camp_admin_router",
     "camp_auth_router",
     "camp_membership_router",
     "wechat_callback_router",

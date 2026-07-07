@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from ..modules import (
     admin_auth_router,
     agent_auth_router,
+    camp_admin_router,
     camp_auth_router,
     camp_membership_router,
     wechat_callback_router,
@@ -102,6 +103,7 @@ def create_app() -> FastAPI:
     app.include_router(admin_auth_router, prefix=settings.api_prefix)
     app.include_router(agent_auth_router, prefix=settings.api_prefix)
     app.include_router(camp_auth_router, prefix=settings.api_prefix)
+    app.include_router(camp_admin_router, prefix=settings.api_prefix)
     app.include_router(camp_membership_router, prefix=settings.api_prefix)
     app.include_router(wechat_callback_router, prefix=settings.api_prefix)
     app.include_router(account_membership_router, prefix=settings.api_prefix)
