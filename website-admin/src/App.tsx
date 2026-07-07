@@ -1,17 +1,29 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { AuthProvider } from '@/features/auth/AuthContext'
+import { RequireAuth } from '@/features/auth/RequireAuth'
+import { LoginPage } from '@/features/auth/LoginPage'
 
-function Placeholder({ title }: { title: string }) {
-  return <div className="p-8 text-xl font-semibold">{title}</div>
+function UsersPlaceholder() {
+  return <div className="p-8 text-xl font-semibold">用户管理（待实现）</div>
 }
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Placeholder title="登录" />} />
-        <Route path="/users" element={<Placeholder title="用户管理" />} />
-        <Route path="*" element={<Navigate to="/users" replace />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/users"
+            element={
+              <RequireAuth>
+                <UsersPlaceholder />
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<Navigate to="/users" replace />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
