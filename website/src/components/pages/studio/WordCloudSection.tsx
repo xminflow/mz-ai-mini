@@ -3,8 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import cloud from 'd3-cloud'
 
-import { GradientText, Reveal } from '../../motion'
-import { SectionEyebrow } from '../ai-coding-camp/primitives'
+import { Reveal } from '../../motion'
 import { THEMES } from '../ai-coding-camp/data'
 import type { ThemeKey } from '../ai-coding-camp/data'
 import { CLOUD_WORDS } from './data'
@@ -57,18 +56,6 @@ export function WordCloudSection() {
   return (
     <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
       <Reveal>
-        <div className="flex flex-col gap-4">
-          <SectionEyebrow color="#d42672">硬核关键词</SectionEyebrow>
-          <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[-0.02em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
-            <span className="block">项目优势与课程价值，</span>
-            <span className="mt-1 block sm:mt-1.5">
-              <GradientText className="font-semibold">一眼看完这套课程的分量</GradientText>
-            </span>
-          </h2>
-        </div>
-      </Reveal>
-
-      <Reveal delay={0.08}>
         <div ref={containerRef} className="relative mt-10 w-full sm:mt-12" style={{ height: dims.height }}>
           <svg width="100%" height="100%" viewBox={`0 0 ${dims.width} ${dims.height}`}>
             <g transform={`translate(${dims.width / 2}, ${dims.height / 2})`}>
