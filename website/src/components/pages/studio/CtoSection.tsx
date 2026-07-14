@@ -5,11 +5,11 @@ import { CTO_PROFILE } from './data'
 
 export function CtoSection() {
   return (
-    <section className="relative mx-auto w-full max-w-6xl px-4 pt-16 sm:px-6 sm:pt-20 lg:pt-24">
+    <section className="relative mx-auto w-full max-w-6xl px-4 pt-6 sm:px-6 sm:pt-8 lg:pt-8">
       <Reveal>
-        <div className="flex flex-col items-center gap-6 text-center">
+        <div className="flex flex-col items-center gap-3 text-center">
           <div
-            className="relative w-full max-w-md overflow-hidden rounded-md p-6 backdrop-blur-xl sm:p-7"
+            className="relative w-full max-w-md overflow-hidden rounded-md p-4 backdrop-blur-xl sm:p-5"
             style={{
               background:
                 'linear-gradient(150deg, rgba(0,153,255,0.16) 0%, rgba(0,153,255,0.05) 100%)',
@@ -29,7 +29,7 @@ export function CtoSection() {
                 src={CTO_PROFILE.avatarUrl}
                 alt={`CTO ${CTO_PROFILE.name}`}
                 loading="lazy"
-                className="h-20 w-20 flex-none rounded-md object-cover sm:h-24 sm:w-24"
+                className="h-16 w-16 flex-none rounded-md object-cover sm:h-[72px] sm:w-[72px]"
                 style={{
                   objectPosition: CTO_PROFILE.avatarPosition,
                   boxShadow:
@@ -71,7 +71,7 @@ export function CtoSection() {
           <div className="flex flex-col items-center">
             <span
               aria-hidden
-              className="h-10 w-px sm:h-12"
+              className="h-4 w-px sm:h-5"
               style={{
                 background: 'linear-gradient(to bottom, rgba(87,190,255,0.7), transparent)',
               }}
