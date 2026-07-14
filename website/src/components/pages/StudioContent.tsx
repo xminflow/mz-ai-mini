@@ -4,9 +4,10 @@
 import { useState } from 'react'
 
 import { ContactQrCodeModal } from '../layout'
-import { CtoSection } from './studio/CtoSection'
+import { IntroSection } from './studio/IntroSection'
 import { ProjectShowcase } from './studio/ProjectShowcase'
 import { CourseOutline } from './studio/CourseOutline'
+import { FoundationBasics } from './studio/FoundationBasics'
 
 export function StudioContent() {
   const [contactOpen, setContactOpen] = useState(false)
@@ -15,14 +16,17 @@ export function StudioContent() {
 
   return (
     <div className="relative">
-      {/* 1. CTO 组织顶点：完整个人简介（复用训练营页讲师资历） */}
-      <CtoSection />
+      {/* 1. 左：课程核心价值(招聘视角三亮点) / 右：CTO 个人简介 */}
+      <IntroSection />
 
       {/* 2. 实战项目库：20 个课程项目，按难度分三档 */}
       <ProjectShowcase />
 
       {/* 3. 赠送课程大纲：往期课程可展开层级树 + 报名 CTA */}
       <CourseOutline onEnroll={openContact} />
+
+      {/* 4. 基础巩固：做 20 个项目前必学的 6 块地基（放在页面最底部） */}
+      <FoundationBasics />
 
       <ContactQrCodeModal open={contactOpen} onClose={closeContact} />
     </div>

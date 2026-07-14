@@ -578,3 +578,64 @@ export const COURSE_OUTLINE: CourseNode[] = [
     ],
   },
 ]
+
+// 基础巩固：从 AI架构师训练营课程中提炼、合并出的应届生/专科生必学地基
+// (不含企业实战直播/求职冲刺等项目或面试导向内容)，6 组，做 20 个实战项目前建议先补齐
+export type FoundationGroup = {
+  code: string
+  title: string
+  merged: string[]
+  reason: string
+  theme: ThemeKey
+}
+
+export const FOUNDATION_GROUPS: FoundationGroup[] = [
+  {
+    code: 'A',
+    title: 'AI协作与开发工具基础',
+    merged: ['AI基础工具学习', 'AI编程工具进阶技巧', 'Claude Code与Codex进阶'],
+    reason:
+      '20 个项目全靠和 AI 一起写代码完成，从认识开发世界、装好工具，到把 Claude Code / Codex 用出深度，这是动手前必须先跨过的第一道门槛。',
+    theme: 'cognition',
+  },
+  {
+    code: 'B',
+    title: '前端能力基础',
+    merged: ['制作美观的AI应用', 'AI应用工程化进阶'],
+    reason:
+      '20 个项目里大部分都要交付一个能给别人看的界面，先掌握基础审美和前端工程规范，做出来的东西才不会"能跑但很丑、还没法维护"。',
+    theme: 'frontend',
+  },
+  {
+    code: 'C',
+    title: '后端与数据库基础',
+    merged: ['搭建自己的后端服务', 'AI后端服务工程化进阶'],
+    reason:
+      'OA 审批、CRM、订单中台这类系统项目全都要接数据库、写接口，没有后端基本功，连"系统项目"这条线都摸不到门。',
+    theme: 'backend',
+  },
+  {
+    code: 'D',
+    title: '全栈技术选型与工程结构',
+    merged: ['AI全栈工程', '工程结构设计', '工程思想：长期稳定维护软件应用'],
+    reason:
+      '20 个项目技术栈各不相同，要先有一张全栈技术地图知道怎么选型，再懂一点分层架构，做完项目的代码才经得起翻看，不是写一个丢一个。',
+    theme: 'mindset',
+  },
+  {
+    code: 'E',
+    title: '部署上线与多端发布',
+    merged: ['如何上线自己的应用', '开发自己的微信小程序'],
+    reason:
+      '项目做完只在本地能跑等于没做完，先学会把应用部署到公网、需要时再发布成小程序，交付才算真正完整。',
+    theme: 'launch',
+  },
+  {
+    code: 'F',
+    title: 'AI应用与智能体基础',
+    merged: ['开发自己的智能体', 'RAG与上下文工程', '智能体与harness'],
+    reason:
+      '20 个项目里将近一半是 AI 项目，从最基础的智能体结构，到 RAG 检索增强，再到复杂智能体的工具调用与记忆管理，这条主线不打好，AI 类选题都做不动。',
+    theme: 'agent',
+  },
+]
