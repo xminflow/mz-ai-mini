@@ -637,3 +637,30 @@ export const FOUNDATION_GROUPS: FoundationGroup[] = [
     theme: 'agent',
   },
 ]
+
+// 词云：结合项目优势与课程价值提炼的关键词，weight 越大字号越大(1-4)
+export type CloudWord = { text: string; weight: 1 | 2 | 3 | 4 }
+
+export const CLOUD_WORDS: CloudWord[] = [
+  { text: 'AI企业项目实战', weight: 4 },
+  { text: '20个真实项目', weight: 4 },
+  { text: '写入简历', weight: 4 },
+  { text: '背调背书', weight: 4 },
+  { text: '系统架构', weight: 3 },
+  { text: 'RAG', weight: 3 },
+  { text: '智能体', weight: 3 },
+  { text: '精准匹配岗位', weight: 3 },
+  { text: '真实企业订单', weight: 3 },
+  { text: '由浅入深', weight: 2 },
+  { text: '面试题材', weight: 2 },
+  { text: '十多年经验', weight: 2 },
+  { text: '全栈开发', weight: 2 },
+  { text: '高并发', weight: 1 },
+  { text: '秒杀系统', weight: 1 },
+  { text: '工程结构', weight: 1 },
+  { text: '上线部署', weight: 1 },
+  { text: '数据库', weight: 1 },
+  { text: '招聘要求', weight: 1 },
+  { text: '求职', weight: 1 },
+  { text: '企业级', weight: 1 },
+]
