@@ -6,11 +6,9 @@ import type { ThemeKey } from '../ai-coding-camp/data'
 export const CTO_PROFILE = {
   name: '十一',
   nameEn: 'SHI YI',
-  title: '创业公司 CTO',
   avatarUrl:
     'https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/instructor/shiyi.jpg',
   avatarPosition: '50% 22%',
-  quote: '这里的每个部门，我都会亲自参与关键决策。',
 }
 
 export type ProjectTierKey = 'basic' | 'medium' | 'advanced'

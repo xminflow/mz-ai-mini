@@ -9,7 +9,7 @@ const FOOTER_GROUPS: Array<{
     links: [
       { label: "AI架构师训练营", href: "/" },
       { label: "软件定制", href: "/custom" },
-      { label: "研发团队", href: "/studio" },
+      { label: "AI企业项目实战", href: "/studio" },
       { label: "产品", href: "/product" },
     ],
   },

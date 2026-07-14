@@ -26,7 +26,7 @@ const NAV_LINKS: NavLink[] = [
   { href: '/course', label: 'VIP课程', matchPrefix: '/course' },
   { href: '/community', label: 'AI学习社区', matchPrefix: '/community' },
   { href: '/custom', label: '软件定制', matchPrefix: '/custom' },
-  { href: '/studio', label: '研发团队', matchPrefix: '/studio' },
+  { href: '/studio', label: 'AI企业项目实战', matchPrefix: '/studio' },
   { href: '/product', label: '产品', matchPrefix: '/product' },
 ]
 
