@@ -1,16 +1,16 @@
 import type { Metadata } from 'next'
-import { AiCodingCampContent } from '@/components/pages/AiCodingCampContent'
+import { StudioContent } from '@/components/pages/StudioContent'
 
 export const metadata: Metadata = {
-  title: 'AI架构师训练营 · 零基础入门 + AI 架构师',
+  title: 'AI企业项目实战',
   description:
-    '两门课覆盖两类人群:AI 编程入门(¥1999)带你从零做出能上线的网页与小程序;AI 架构师(¥4999,含第一阶段全部)带你打通企业级 AI 工程、两套实战系统与求职面试。',
+    '20 个真实企业级项目由浅入深，挑选你需要的直接写入简历；报名即赠往期课程全套录播视频 + 针对性答疑。',
   openGraph: {
-    title: 'AI架构师训练营 · 微域生光',
-    description: '零基础入门 + AI 架构师,两门课各得其所,完整学习路径与收获一目了然。',
+    title: 'AI企业项目实战 · 微域生光',
+    description: '20 个真实企业级项目由浅入深，挑选你需要的直接写入简历。',
   },
 }
 
 export default function HomePage() {
-  return <AiCodingCampContent />
+  return <StudioContent />
 }
