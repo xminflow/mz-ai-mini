@@ -22,6 +22,16 @@ const HIGHLIGHTS: Highlight[] = [
     body: '分析上百家公司的招聘要求，让你精准匹配岗位要求，把每一分学习都花在刀刃上。',
     theme: 'agent',
   },
+  {
+    title: '背调背书保障',
+    body: '我们直接给你背书，应对入职背调，让你学到的项目经历真实有效。',
+    theme: 'launch',
+  },
+  {
+    title: '真实订单分成',
+    body: '我们也在不断接入真实企业订单，优秀毕业成员有机会直接参与接单、参与分钱。',
+    theme: 'mindset',
+  },
 ]
 
 export function CourseHighlights() {
