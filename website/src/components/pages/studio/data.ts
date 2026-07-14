@@ -665,4 +665,12 @@ export const CLOUD_WORDS: CloudWord[] = [
   { text: '风控审核', weight: 1 },
   { text: '引用溯源', weight: 1 },
   { text: '数据脱敏', weight: 1 },
+  { text: '系统架构', weight: 3 },
+  { text: '智能体', weight: 3 },
+  { text: '全栈开发', weight: 2 },
+  { text: '工程结构', weight: 2 },
+  { text: '企业级', weight: 2 },
+  { text: '岗位匹配', weight: 2 },
+  { text: '面试题材', weight: 2 },
+  { text: '求职', weight: 1 },
 ]

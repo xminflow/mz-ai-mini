@@ -13,7 +13,7 @@ const TITLE_BADGES = [
     border: "rgba(87,190,255,0.45)",
   },
   {
-    label: "一线工程师",
+    label: "资深架构师",
     color: "#01aef0",
     bg: "rgba(1,174,240,0.10)",
     border: "rgba(1,174,240,0.45)",
