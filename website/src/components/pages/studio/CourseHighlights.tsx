@@ -8,11 +8,6 @@ type Highlight = { title: string; body: string; theme: ThemeKey }
 
 const HIGHLIGHTS: Highlight[] = [
   {
-    title: '专属学习计划',
-    body: '根据你的实际情况定制专属学习计划，不是一套课件套用给所有人。',
-    theme: 'cognition',
-  },
-  {
     title: '十多年经验浓缩',
     body: '总结浓缩十多年研发经验，补全你最需要的能力，不做无关的知识堆砌。',
     theme: 'frontend',
