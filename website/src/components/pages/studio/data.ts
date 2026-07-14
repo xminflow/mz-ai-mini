@@ -242,3 +242,339 @@ export const PROJECTS: Project[] = [
       '高并发交易经验是后端招聘金字塔的上层——瞬时洪峰下的库存准确性、削峰限流、状态管理，配上真实压测数据，这是所有高流量业务（电商、出行、票务、游戏）通用的核心能力凭证。',
   },
 ]
+
+// 赠送课程（往期课程）大纲：手写层级树，无第三方思维导图库依赖
+export type CourseNode = {
+  title: string
+  children?: CourseNode[]
+}
+
+export const COURSE_OUTLINE_TITLE = 'AI全栈技术专家训练营（往期课程）'
+
+export const COURSE_OUTLINE: CourseNode[] = [
+  {
+    title: 'AI全栈技术入门基础',
+    children: [
+      {
+        title: 'AI时代下的市场、产品以及计算机能力培养方向分析',
+        children: [
+          { title: 'AI市场前景分析' },
+          { title: 'AI产品与项目方向分析' },
+          { title: 'AI时代下技术栈学习规划' },
+          { title: 'AI技术基础认识学习' },
+        ],
+      },
+      {
+        title: 'AI大模型应用开发基础认知',
+        children: [
+          { title: '提示词/上下文工程掌握' },
+          { title: 'AI大模型核心技术概念理解' },
+          { title: 'AI大模型基础核心API学习' },
+          { title: 'AI大模型原生SDK开发' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'LangChain、LangGraph大模型应用框架精通',
+    children: [
+      {
+        title: 'LangChain基础能力应用',
+        children: [
+          { title: '多模型适配接入与基础对话' },
+          { title: 'Prompt管理' },
+          { title: 'AI会话记忆管理' },
+          { title: '工具调用/Function calling' },
+          { title: '结构化输出' },
+          { title: 'LCEL表达式详解' },
+        ],
+      },
+      {
+        title: 'LangChain之RAG与Embedding技术详解',
+        children: [
+          { title: 'RAG与上下文工程基础认知学习' },
+          { title: 'Embedding模型使用与原理学习' },
+          { title: '基于LangChain的RAG系统构建' },
+          { title: '基于LangChain的ReRank精排技术讲解' },
+        ],
+      },
+      {
+        title: 'LangGraph基础能力应用',
+        children: [
+          { title: 'LangGraph核心结构详解' },
+          { title: 'LangGraph工作流构建详解' },
+          { title: 'LangGraph状态管理' },
+        ],
+      },
+      {
+        title: 'LangGraph应用模式进阶',
+        children: [
+          { title: 'LangGraph智能体构建' },
+          { title: 'LangGraph记忆管理' },
+          { title: 'LangGraph checkpointer机制详解与状态回溯' },
+          { title: 'LangGraph人机协同模式（Human In The Loop）' },
+        ],
+      },
+      { title: '实战训练 - 基于LangChain/LangGraph的基础客服系统实战' },
+    ],
+  },
+  {
+    title: 'LLamaIndex核心能力学习',
+    children: [
+      {
+        title: 'LlamaIndex基础能力应用',
+        children: [
+          { title: 'LlamaIndex优劣势与场景分析' },
+          { title: 'LlamaIndex基础结构与应用' },
+          { title: 'LlamaIndex数据解析与存储详解' },
+          { title: 'LlamaIndex基础索引构建' },
+        ],
+      },
+      {
+        title: 'LlamaIndex构建高级RAG系统与索引机制详解',
+        children: [
+          { title: 'LlamaIndex高阶索引与知识图谱构建' },
+          { title: 'LlamaIndex查询与会话引擎详解' },
+          { title: 'LlamaIndex会话与记忆系统详解' },
+          { title: 'LlamaIndex后置处理与ReRank技术' },
+          { title: 'LlamaIndex混合检索技术' },
+        ],
+      },
+      {
+        title: 'LlamaIndex智能体、工作流、评估器详解',
+        children: [
+          { title: 'LlamaIndex智能体应用构建' },
+          { title: 'LlamaIndex工作流与人机交互技术(Human In The Loop)' },
+          { title: 'LlamaIndex系统评估器应用' },
+          { title: 'LlamaIndex系统观测' },
+        ],
+      },
+      { title: '课后实战训练 - 基于LlamaIndex的知识库系统实战' },
+    ],
+  },
+  {
+    title: 'RAG与上下文工程',
+    children: [
+      {
+        title: 'RAG技术进阶与向量数据库选型',
+        children: [
+          { title: 'Embedding技术原理解析' },
+          { title: 'Embedding模型选型与开源模型应用' },
+          { title: 'ReRank模型选型与开源模型应用' },
+          { title: '向量数据库选型分析' },
+        ],
+      },
+      {
+        title: 'RAG知识图谱技术详解',
+        children: [
+          { title: '知识图谱技术基础认知' },
+          { title: 'GraphRAG系统构建与优化' },
+          { title: 'Rag知识图谱索引构建' },
+          { title: 'GraphRag原理源码分析' },
+        ],
+      },
+      {
+        title: '优秀RAG项目分析学习',
+        children: [
+          { title: 'LightRAG轻量级知识图谱技术详解' },
+          { title: '非标准格式数据解析与提取技术分析' },
+          { title: 'RagFlow可视化RAG系统学习' },
+        ],
+      },
+      {
+        title: 'RAG系统评估与优化方案专题',
+        children: [
+          { title: 'Ragas评估系统详解' },
+          { title: 'DeepEval评估系统详解' },
+          { title: 'RAG系统优化分析' },
+          { title: '数据集构建与数据合成技术分析' },
+        ],
+      },
+      {
+        title: 'AI大模型应用记忆管理方案专题',
+        children: [
+          { title: '记忆方案方案对比与优劣势分析' },
+          { title: '基于知识图谱和向量检索的混合记忆管理' },
+          { title: '最新记忆管理方案与技术框架分析' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'VIbeCoding全栈开发能力进阶',
+    children: [
+      {
+        title: 'VibeCoding基础与工具应用',
+        children: [
+          { title: 'VibeCoding基础认知' },
+          { title: 'Claude Code/Codex工具全解' },
+          { title: 'Agent Skill与Command设计' },
+          { title: 'VibeCoding规范驱动开发设计' },
+        ],
+      },
+      {
+        title: 'VIbeCoding之前端开发能力掌握',
+        children: [
+          { title: '前端基础知识掌握' },
+          { title: '前端基础框架应用' },
+          { title: '前端代码工程规范掌握' },
+          { title: '前端工程构建与部署' },
+        ],
+      },
+      {
+        title: 'VibeCoding之Python后端开发能力掌握',
+        children: [
+          { title: 'Python生态基础开发框架' },
+          { title: '后端代码与工程规范学习' },
+          { title: 'Python与AI应用生态掌握' },
+          { title: '后端工程构建与部署' },
+        ],
+      },
+      {
+        title: 'VibeCoding之Java后端开发能力掌握',
+        children: [
+          { title: 'Java后端开发基础' },
+          { title: 'Java应用开发生态学习' },
+          { title: 'Java工程规范学习' },
+          { title: 'Java工程构建与部署' },
+        ],
+      },
+      { title: '课后实战训练 - VibeCoding全栈工程基础实战' },
+    ],
+  },
+  {
+    title: 'AI大模型微调、量化与部署',
+    children: [
+      {
+        title: '大模型微调技术解析',
+        children: [
+          { title: '大模型微调原理分析' },
+          { title: '基于PEFT-Lora的微调技术分析与应用' },
+          { title: '医疗行业数据集微调实践' },
+          { title: 'Embedding模型微调技术运用' },
+          { title: 'ReRank模型微调技术运用' },
+        ],
+      },
+      {
+        title: '模型量化与企业级AI模型部署方案解析',
+        children: [
+          { title: '模型量化原理分析' },
+          { title: '大模型量化技术实践' },
+          { title: '轻量级部署方案Ollama详解' },
+          { title: '基于llama.cpp的模型量化与部署分析' },
+          { title: 'vllm企业级部署方案实践' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'Java AI大模型生态开发进阶(录播)',
+    children: [
+      {
+        title: 'LangChain4j核心能力学习',
+        children: [
+          { title: 'LangChain4j功能完整性与场景分析' },
+          { title: 'LangChain4j核心能力详解' },
+          { title: '基于LangChain4j的RAG系统构建' },
+          { title: 'LangChain4j源码结构分析' },
+        ],
+      },
+      {
+        title: 'SpringAI核心能力掌握',
+        children: [
+          { title: 'SpringAI功能完整性与场景分析' },
+          { title: 'SpringAI核心能力掌握' },
+          { title: 'SpringAI Rag系统构建' },
+          { title: 'SpringAI alibaba 功能对比学习' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'AI大模型应用生态掌握（录播）',
+    children: [
+      {
+        title: 'MCP技术专题讲解与应用',
+        children: [
+          { title: 'Mcp应用场景分析' },
+          { title: 'Mcp核心结构分析' },
+          { title: 'Mcp能力接入与Mcp服务开发' },
+          { title: '大规模Mcp工具管理与优化' },
+        ],
+      },
+      {
+        title: '开源AI大模型产品技术分析',
+        children: [
+          { title: 'AI大模型产品对比分析' },
+          { title: 'Coze开源版原理源码分析部署' },
+          { title: 'Dify源码分析与二次开发部署' },
+          { title: 'N8n源码分析与二次开发部署' },
+        ],
+      },
+    ],
+  },
+  {
+    title: 'AI智能体协作技术（录播）',
+    children: [
+      {
+        title: '多智能体协作框架详解',
+        children: [
+          { title: '智能体协作技术分析' },
+          { title: 'CrewAI智能体协作技术详解' },
+          { title: 'AutoGen智能体协作基础' },
+          { title: 'AutoGen多智能协作团队模式详解' },
+          { title: 'AutoGen自定义智能体技术进阶' },
+        ],
+      },
+      {
+        title: '复杂智能体设计模式解析',
+        children: [
+          { title: 'Plan-and-Execute模式' },
+          { title: 'ReAct模式' },
+          { title: 'ReWOO模式' },
+          { title: 'Self-Reflection模式' },
+          { title: 'Self-Ask模式' },
+          { title: 'Self-Discover模式' },
+          { title: 'OpenManus源码分析' },
+        ],
+      },
+      { title: '课后实战训练 - 容器化多智能体协作平台' },
+    ],
+  },
+  {
+    title: '类阿里析言GBI数据分析系统企业级实战（Text2SQL）',
+    children: [
+      { title: 'AI数据分析系统核心难点分析与工程架构设计' },
+      { title: 'Text2SQL以及AI数据分析核心实现详解' },
+      { title: 'AI数据分析系统优化与扩展方案详解' },
+      { title: '全栈混合技术实现与企业级分布式部署' },
+    ],
+  },
+  {
+    title: '类阿里通义晓蜜企业级智能客服系统实战',
+    children: [
+      { title: '智能客服系统核心难点分析与工程架构设计' },
+      { title: '复杂数据集清洗与整合技术实现' },
+      { title: '综合性高准确率RAG系统核心实现' },
+      { title: '全栈技术实现与企业级分布式部署设计' },
+    ],
+  },
+  {
+    title: '类Dify/Coze全栈AI大模型集成与应用产品企业级实战',
+    children: [
+      { title: '全栈AI通用产品框架设计' },
+      { title: '全栈AI工作流系统设计' },
+      { title: '知识库系统设计' },
+      { title: '插件与工具系统设计' },
+    ],
+  },
+  {
+    title: '多模态客户端智能体开发实战-微信智能体',
+    children: [
+      { title: '基于electron前端多端编译架构设计' },
+      { title: '通用知识库系统设计' },
+      { title: '多模态以及专用视觉模型应用' },
+      { title: '全栈多端架构设计与部署' },
+    ],
+  },
+]
