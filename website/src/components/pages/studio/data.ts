@@ -466,7 +466,7 @@ export const COURSE_OUTLINE: CourseNode[] = [
     ],
   },
   {
-    title: 'Java AI大模型生态开发进阶(录播)',
+    title: 'Java AI大模型生态开发进阶',
     children: [
       {
         title: 'LangChain4j核心能力学习',
@@ -489,7 +489,7 @@ export const COURSE_OUTLINE: CourseNode[] = [
     ],
   },
   {
-    title: 'AI大模型应用生态掌握（录播）',
+    title: 'AI大模型应用生态掌握',
     children: [
       {
         title: 'MCP技术专题讲解与应用',
@@ -512,7 +512,7 @@ export const COURSE_OUTLINE: CourseNode[] = [
     ],
   },
   {
-    title: 'AI智能体协作技术（录播）',
+    title: 'AI智能体协作技术',
     children: [
       {
         title: '多智能体协作框架详解',
