@@ -24,11 +24,13 @@ export const SectionHeading = ({
           {eyebrow}
         </span>
       )}
-      <h2 className="max-w-[24ch] text-[clamp(1.75rem,3.6vw,2.75rem)] font-semibold leading-[1.18] tracking-[-0.02em] text-graphite">
+      {/* 宽度上限用 em 而非 ch：ch 是数字「0」的宽度（约 0.55em），
+          对全角汉字严重低估，会让本该一行的中文标题折行并甩出孤字。 */}
+      <h2 className="max-w-[22em] text-[clamp(1.75rem,3.6vw,2.75rem)] font-semibold leading-[1.18] tracking-[-0.02em] text-graphite">
         {title}
       </h2>
       {description && (
-        <p className="mt-4 max-w-[46ch] text-[15px] leading-[1.75] text-graphite-soft">
+        <p className="mt-4 max-w-[30em] text-[15px] leading-[1.75] text-graphite-soft">
           {description}
         </p>
       )}

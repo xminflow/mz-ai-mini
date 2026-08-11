@@ -7,6 +7,8 @@ import { ContactModal } from './ContactModal'
 import { Hero } from './Hero'
 import { HomeFooter } from './HomeFooter'
 import { HomeNav } from './HomeNav'
+import { IndustryStrip } from './IndustryStrip'
+import { ServiceGrid } from './ServiceGrid'
 
 export const HomeContent = () => {
   const [contactOpen, setContactOpen] = useState(false)
@@ -19,6 +21,8 @@ export const HomeContent = () => {
       <main className="flex-1">
         <Hero onContact={openContact} />
         <CapabilityBar />
+        <ServiceGrid />
+        <IndustryStrip onContact={openContact} />
       </main>
       <HomeFooter />
       <ContactModal open={contactOpen} onClose={closeContact} />
