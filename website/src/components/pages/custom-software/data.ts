@@ -36,6 +36,23 @@ export const THEMES: Record<ThemeKey, Theme> = {
   career: { label: "内容 · AIGC", hex: "#16b364", rgb: "22, 179, 100", gradientFrom: "#bafa77", gradientTo: "#0f766e" },
 };
 
+// 行业/场景清单：面向客户的「主」视角。客户按行业自我识别，避免「按软件类型切分」把
+// 需求不在列表里的客户（如供应链）劝退。末尾「+ 您的行业」在 UI 层作为兜底 CTA 呈现。
+export const INDUSTRIES: string[] = [
+  "供应链",
+  "物流",
+  "制造",
+  "外贸",
+  "电商",
+  "零售",
+  "餐饮连锁",
+  "医疗健康",
+  "教育培训",
+  "金融",
+  "企业服务",
+  "政务",
+];
+
 export type ServiceItem = {
   code: string;
   title: string;
@@ -62,7 +79,7 @@ export const SERVICES: ServiceItem[] = [
   {
     code: "03",
     title: "小程序 & 移动应用",
-    hook: "客户在哪，你的入口就在哪",
+    hook: "客户在哪，您的入口就在哪",
     points: ["微信小程序 / H5", "原生 / 跨端 App", "复用已有后端，快速上线"],
     theme: "frontend",
   },
@@ -122,6 +139,13 @@ export const SERVICES: ServiceItem[] = [
     points: ["自动化内容生产", "营销素材批量生成", "呼应自媒体获客场景"],
     theme: "career",
   },
+  {
+    code: "12",
+    title: "企业业务 AI 化改造",
+    hook: "不推翻现有系统，一段段把 AI 接进去",
+    points: ["先诊断哪些环节值得上 AI", "在现有系统上接入，不另起一套", "按环节分批改造，业务不停"],
+    theme: "agent",
+  },
 ];
 
 export type Advantage = {
@@ -132,28 +156,28 @@ export type Advantage = {
 
 export const ADVANTAGES: Advantage[] = [
   {
-    title: "11 年上市公司 / 国央企架构师经验",
-    body: "大规模系统怎么设计、怎么踩坑，见过真实的复杂业务场景，不是纸上谈兵。",
+    title: "上市公司 / 国央企架构经验",
+    body: "团队核心成员具备 11 年大型企业与国央企架构经验，熟悉复杂系统的设计与演进。您的系统从底层即按可长期扩展的标准构建，规模增长也能稳定支撑。",
     theme: "cognition",
   },
   {
-    title: "4 年创业公司 CTO，SaaS 赛道实战",
-    body: "从 0 到 1 带过团队、扛过增长压力，懂初创公司真正要什么、卡在哪。",
+    title: "SaaS 赛道从 0 到 1 实战",
+    body: "创始人拥有连续创业与 CTO 经历，主导过成功商业化的产品。既能落地技术，也懂业务与产品，帮您把想法打磨成可持续运营的业务。",
     theme: "backend",
   },
   {
-    title: "深耕 AI 行业",
-    body: "站在技术最前沿，把 AI 真正用进产品里解决问题，不是简单套个壳。",
+    title: "持续深耕 AI",
+    body: "我们持续深耕 AI 应用，清楚哪些环节能真正提升效率、降低成本，并将其稳妥落地到您的业务场景。",
     theme: "agent",
   },
   {
     title: "设计到交互全流程闭环",
-    body: "从界面设计、交互体验到功能实现，一个团队全程把关，不会走样、不来回甩锅。",
+    body: "从产品设计到开发上线，由同一支团队完整交付。对接高效、职责清晰，最终成品高度贴合您的预期。",
     theme: "frontend",
   },
   {
     title: "高效高质量交付",
-    body: "该快的时候快，该稳的时候稳，工期和质量两头都不将就。",
+    body: "严格把控进度与质量，按约定周期交付，确保系统稳定可靠、经得起长期使用。",
     theme: "launch",
   },
 ];
@@ -166,7 +190,7 @@ export type ProcessStep = {
 };
 
 export const PROCESS_STEPS: ProcessStep[] = [
-  { code: "01", title: "聊需求", body: "先搞清楚你要解决什么问题，而不是急着报价。", theme: "cognition" },
+  { code: "01", title: "聊需求", body: "先搞清楚您要解决什么问题，而不是急着报价。", theme: "cognition" },
   { code: "02", title: "出方案报价", body: "给一份看得懂的方案和明确报价，没有隐藏收费。", theme: "frontend" },
   { code: "03", title: "敏捷开发", body: "分阶段推进，随时可看进度，不做黑箱交付。", theme: "backend" },
   { code: "04", title: "验收交付", body: "对照方案逐项验收，确认没问题再上线。", theme: "agent" },

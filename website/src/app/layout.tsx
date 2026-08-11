@@ -95,7 +95,7 @@ const ORGANIZATION_JSON_LD = {
   logo: `${SITE_URL.replace(/\/+$/, '')}/logo/weiyu-logo-inverted.png`,
   image: OG_IMAGE_ABSOLUTE,
   description: SITE_DESCRIPTION,
-  slogan: '把你的生意，做成一套自己的系统',
+  slogan: '把软件定制，做成您的专属贵宾服务',
 }
 
 const WEBSITE_JSON_LD = {

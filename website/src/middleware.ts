@@ -8,7 +8,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 //      （续签实现保留在 features/auth/server/backend.ts，受保护路由判断保留在
 //       features/auth/protected-routes.ts，两者都未删除）
 //   3. 同步更新 app/sitemap.ts 的路径清单与 (site)/layout.tsx 的导航渲染
-const PUBLIC_PATH_PREFIXES: string[] = ['/', '/service-models']
+const PUBLIC_PATH_PREFIXES: string[] = ['/', '/cases']
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATH_PREFIXES.some((prefix) => {

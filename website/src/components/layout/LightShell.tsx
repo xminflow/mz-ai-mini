@@ -3,7 +3,6 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react'
 
 import { ContactContext } from './contact-context'
-import { LightBottomCta } from './LightBottomCta'
 import { LightContactModal } from './LightContactModal'
 import { LightFooter } from './LightFooter'
 import { LightNav } from './LightNav'
@@ -24,11 +23,7 @@ export const LightShell = ({ children }: LightShellProps) => {
     <ContactContext.Provider value={contactValue}>
       <div className="flex min-h-screen flex-col bg-paper text-graphite">
         <LightNav />
-        <main className="flex-1">
-          {children}
-          {/* 底部 CTA 放在外壳里：每个页面都该以同一个联系入口收尾，不该由页面各自决定 */}
-          <LightBottomCta />
-        </main>
+        <main className="flex-1">{children}</main>
         <LightFooter />
         <LightContactModal open={contactOpen} onClose={closeContact} />
       </div>

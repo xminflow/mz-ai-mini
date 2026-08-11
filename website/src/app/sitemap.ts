@@ -9,20 +9,12 @@ const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://weelume.c
 )
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date()
-
   return [
     {
       url: `${SITE_URL}/`,
-      lastModified,
+      lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1.0,
-    },
-    {
-      url: `${SITE_URL}/service-models`,
-      lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.8,
     },
   ]
 }

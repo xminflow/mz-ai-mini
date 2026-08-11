@@ -40,33 +40,30 @@ const QuoteDiagram = ({ className }: DiagramProps) => (
   </svg>
 )
 
-/** 03 签合同建群：一份带签名的合同，右边是拉起来的项目群 */
+/** 03 法律合同：一份带签名的合同，右下角一枚落章 */
 const ContractDiagram = ({ className }: DiagramProps) => (
   <svg {...SVG_PROPS} className={className}>
-    <path d="M22 14h62l20 20v84H22z" />
-    <path d="M84 14v20h20" />
-    <path d="M36 50h46M36 64h34" />
-    <path d="M36 88c8-8 14 8 22 0s14 8 22 0" />
-    <circle cx="152" cy="38" r="10" />
-    <circle cx="132" cy="76" r="10" />
-    <circle cx="172" cy="76" r="10" />
-    <path d="M152 48v18M141 72l-1-2M143 70l16-8M145 84h14" />
+    <path d="M40 12h64l24 24v84H40z" />
+    <path d="M104 12v24h24" />
+    <path d="M56 52h56M56 66h40" />
+    <path d="M56 92c9-9 16 9 25 0s16 9 25 0" />
+    <circle cx="146" cy="94" r="22" />
+    <circle cx="146" cy="94" r="15" />
+    <path d="M138 94l6 6 11-12" />
   </svg>
 )
 
-/** 04 每周交可试版本：四周依次交付，最后一周已落到可打开的界面上 */
-const WeeklyDiagram = ({ className }: DiagramProps) => (
+/** 04 持续反馈：专属沟通渠道，每周一次进展汇报 */
+const FeedbackDiagram = ({ className }: DiagramProps) => (
   <svg {...SVG_PROPS} className={className}>
-    <rect x="30" y="16" width="26" height="18" rx="4" />
-    <rect x="66" y="16" width="26" height="18" rx="4" />
-    <rect x="102" y="16" width="26" height="18" rx="4" />
-    <rect x="138" y="16" width="26" height="18" rx="4" strokeWidth={2.5} />
-    <path d="M151 34v14" />
-    <rect x="30" y="52" width="140" height="64" rx="8" />
-    <path d="M30 70h140" />
-    <circle cx="44" cy="61" r="2" fill="currentColor" stroke="none" />
-    <circle cx="54" cy="61" r="2" fill="currentColor" stroke="none" />
-    <path d="M50 86h60M50 100h34" />
+    <path d="M28 20h96a8 8 0 0 1 8 8v40a8 8 0 0 1-8 8H58l-16 13V76H28a8 8 0 0 1-8-8V28a8 8 0 0 1 8-8Z" />
+    <path d="M44 38h64M44 54h40" />
+    <path d="M28 108h144" />
+    <path d="M52 104v8M88 104v8M124 104v8M160 104v8" />
+    <circle cx="52" cy="108" r="3.5" fill="currentColor" stroke="none" />
+    <circle cx="88" cy="108" r="3.5" fill="currentColor" stroke="none" />
+    <circle cx="124" cy="108" r="3.5" fill="currentColor" stroke="none" />
+    <circle cx="160" cy="108" r="3.5" fill="currentColor" stroke="none" />
   </svg>
 )
 
@@ -95,14 +92,14 @@ const HandoverDiagram = ({ className }: DiagramProps) => (
   </svg>
 )
 
-/** 07 一年维保：一整圈时间刻度，中间是一个随时能应的信号点 */
+/** 07 维修保障：一面盾牌罩住业务，里面是一条不间断的监控心跳 */
 const SupportDiagram = ({ className }: DiagramProps) => (
   <svg {...SVG_PROPS} className={className}>
-    <circle cx="100" cy="66" r="44" />
-    <path d="M100 22v8M100 102v8M56 66h8M136 66h8M131 35l-6 6M69 97l-6 6M131 97l-6-6M69 35l-6 6" />
-    <circle cx="100" cy="66" r="5" fill="currentColor" stroke="none" />
-    <path d="M100 66l22-16" />
-    <path d="M100 66v20" />
+    <path d="M100 12l46 16v40c0 30-19 51-46 62-27-11-46-32-46-62V28z" />
+    <path d="M62 70h14l8-16 10 32 9-24 7 12h16" />
+    <circle cx="152" cy="98" r="3.5" fill="currentColor" stroke="none" />
+    <circle cx="166" cy="98" r="3.5" fill="currentColor" stroke="none" />
+    <circle cx="180" cy="98" r="3.5" fill="currentColor" stroke="none" />
   </svg>
 )
 
@@ -110,7 +107,7 @@ const DIAGRAMS: Record<string, (props: DiagramProps) => React.ReactElement> = {
   '01': TalkDiagram,
   '02': QuoteDiagram,
   '03': ContractDiagram,
-  '04': WeeklyDiagram,
+  '04': FeedbackDiagram,
   '05': AcceptDiagram,
   '06': HandoverDiagram,
   '07': SupportDiagram,

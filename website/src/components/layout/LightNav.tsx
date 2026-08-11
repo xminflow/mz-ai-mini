@@ -7,19 +7,10 @@ import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui'
 import { useContact } from './contact-context'
 
-// 锚点一律写成绝对形式（/#services）：站内已有第二个页面，
-// 写成 #services 时在非首页上会指向不存在的锚点。
-type NavItem = {
-  label: string
-  href: string
-  /** page 走 next/link 并参与当前页高亮；anchor 走原生 a，跨页哈希跳转需要整页导航 */
-  kind: 'anchor' | 'page'
-}
-
-const NAV_ITEMS: NavItem[] = [
-  { label: '服务', href: '/#services', kind: 'anchor' },
-  { label: '优势', href: '/#why-us', kind: 'anchor' },
-  { label: '服务模式', href: '/service-models', kind: 'page' },
+// 导航只放页面，不放页内锚点：首页本身就是一屏一屏滚下去的，锚点会让导航看起来比站点实际更复杂。
+const NAV_ITEMS: Array<{ label: string; href: string }> = [
+  { label: '首页', href: '/' },
+  { label: '案例', href: '/cases' },
 ]
 
 const LINK_CLASS = 'rounded-full px-4 py-1.5 text-[14px] transition-colors'
@@ -35,8 +26,6 @@ export const LightNav = () => {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-
-  const pageItems = NAV_ITEMS.filter((item) => item.kind === 'page')
 
   return (
     <header className="sticky top-0 z-30 w-full">
@@ -55,35 +44,22 @@ export const LightNav = () => {
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
-            {NAV_ITEMS.map((item) => {
-              if (item.kind === 'page') {
-                const active = pathname === item.href
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`${LINK_CLASS} ${active ? 'text-graphite' : 'text-graphite-soft hover:text-graphite'}`}
-                  >
-                    {item.label}
-                  </Link>
-                )
-              }
-              return (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className={`${LINK_CLASS} text-graphite-soft hover:text-graphite`}
-                >
-                  {item.label}
-                </a>
-              )
-            })}
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`${LINK_CLASS} ${
+                  pathname === item.href ? 'text-graphite' : 'text-graphite-soft hover:text-graphite'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
           </nav>
 
-          {/* 移动端只留页面级入口 + CTA：锚点在窄屏上挤不下，且首页本身就能滚到 */}
           <div className="flex items-center gap-3">
-            <nav className="flex items-center gap-3 md:hidden">
-              {pageItems.map((item) => (
+            <nav className="flex items-center gap-3.5 md:hidden">
+              {NAV_ITEMS.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
