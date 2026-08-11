@@ -30,6 +30,25 @@
     Consolas, "Liberation Mono", "Courier New", "Noto Sans SC",
     "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", monospace;
   --radius-pill: 9999px;
+
+  /* ===== 浅色首页令牌（参考 trillo.framer.ai）=====
+     命名与深色 token（ink / canvas / surface / hairline）完全不重叠，两套共存。
+     被隐藏但保留的旧页面继续用深色 token，不受影响。 */
+  --color-paper: #f7f7f5;
+  --color-paper-raised: #ffffff;
+  --color-graphite: #0e0e0e;
+  --color-graphite-soft: #44443f;
+  --color-graphite-dim: #8a8a80;
+  --color-rule: rgb(14 14 14 / 0.09);
+  --color-rule-strong: rgb(14 14 14 / 0.16);
+  --color-ember: #ff3c00;
+
+  --radius-btn: 12px;
+  --radius-card: 24px;
+
+  /* 阴影只开放这两档，杜绝各 section 自行发明阴影导致规格漂移 */
+  --shadow-soft: 0 1px 2px rgb(14 14 14 / 0.04), 0 8px 24px rgb(14 14 14 / 0.05);
+  --shadow-soft-lg: 0 2px 4px rgb(14 14 14 / 0.05), 0 16px 40px rgb(14 14 14 / 0.08);
 }
 
 *,
