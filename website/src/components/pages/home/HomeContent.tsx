@@ -8,7 +8,10 @@ import { Hero } from './Hero'
 import { HomeFooter } from './HomeFooter'
 import { HomeNav } from './HomeNav'
 import { IndustryStrip } from './IndustryStrip'
+import { Process } from './Process'
 import { ServiceGrid } from './ServiceGrid'
+import { TechStack } from './TechStack'
+import { WhyUs } from './WhyUs'
 
 export const HomeContent = () => {
   const [contactOpen, setContactOpen] = useState(false)
@@ -23,6 +26,9 @@ export const HomeContent = () => {
         <CapabilityBar />
         <ServiceGrid />
         <IndustryStrip onContact={openContact} />
+        <WhyUs />
+        <Process />
+        <TechStack />
       </main>
       <HomeFooter />
       <ContactModal open={contactOpen} onClose={closeContact} />
