@@ -2,7 +2,9 @@
 
 import { useState } from 'react'
 
+import { CapabilityBar } from './CapabilityBar'
 import { ContactModal } from './ContactModal'
+import { Hero } from './Hero'
 import { HomeFooter } from './HomeFooter'
 import { HomeNav } from './HomeNav'
 
@@ -15,9 +17,8 @@ export const HomeContent = () => {
     <div className="flex min-h-screen flex-col bg-paper text-graphite">
       <HomeNav onContact={openContact} />
       <main className="flex-1">
-        <p className="mx-auto max-w-6xl px-4 py-32 text-center text-graphite-dim sm:px-6">
-          骨架占位：Task 3 起替换为真实 section
-        </p>
+        <Hero onContact={openContact} />
+        <CapabilityBar />
       </main>
       <HomeFooter />
       <ContactModal open={contactOpen} onClose={closeContact} />
