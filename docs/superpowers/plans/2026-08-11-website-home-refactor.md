@@ -1515,27 +1515,66 @@ const SITE_DESCRIPTION =
   slogan: '把你的生意，做成一套自己的系统',
 ```
 
-- [ ] **Step 5: 类型检查与 lint**
+- [ ] **Step 5: 新增分享卡片专用短文案常量**
 
-Run: `npx tsc --noEmit && npx eslint src/app/layout.tsx`
+在 `SITE_DESCRIPTION` 之后追加，并把 `openGraph.title` / `openGraph.description` / `twitter.title` / `twitter.description` 四处从 `SITE_TITLE_DEFAULT` / `SITE_DESCRIPTION` 改为引用它们：
+
+```tsx
+// 社交分享卡片用的短文案。微信/微博/Twitter 的卡片标题与摘要都会截断，
+// 因此不复用为 SEO 铺了完整服务清单的 SITE_TITLE_DEFAULT / SITE_DESCRIPTION。
+const SHARE_TITLE = '软件定制开发 · 微域生光'
+const SHARE_DESCRIPTION =
+  '从需求梳理到上线运营，全流程闭环交付。官网、企业系统、小程序、AI 智能体等 11 类软件定制。'
+```
+
+- [ ] **Step 6: 修首页 metadata 的两处既有缺陷**
+
+修改 `src/app/(site)/page.tsx`。两处缺陷：
+
+1. `title` 自带「· 微域生光」后缀，与根 layout 的 `title.template` 叠加成两遍
+2. 页面级 `openGraph` 会**整体替换**父级（Next.js 不做深合并），把根 layout 的 `images` / `siteName` / `locale` / `type` / `url` 全顶掉，导致首页分享无封面图
+
+把 metadata 整块替换为：
+
+```tsx
+// 这里刻意不定义 openGraph：Next.js 的 openGraph 是「整体替换」而非深合并，
+// 页面级只写 title/description 会把根 layout 的 images、siteName、locale、type、url
+// 一并顶掉，导致首页分享时没有封面图。OG 信息统一由根 layout 提供。
+export const metadata: Metadata = {
+  // 后缀「· 微域生光」由根 layout 的 title.template 统一追加，这里不能再自带，否则会拼成两遍。
+  title: '软件定制服务',
+  description:
+    '官网、企业级管理系统、小程序、AI 智能体、AI 知识库、数据分析看板、SaaS 平台、电商系统、桌面客户端、系统集成——AI 原生全栈自研，设计到交互全流程闭环，高效高质量交付。',
+}
+```
+
+- [ ] **Step 7: 类型检查与 lint**
+
+Run: `npx tsc --noEmit && npx eslint src/app/layout.tsx "src/app/(site)/page.tsx"`
 Expected: 无输出（退出码 0）
 
-- [ ] **Step 6: 浏览器核对**
+- [ ] **Step 8: 浏览器核对**
 
-刷新 http://localhost:3000 ，确认：
-1. 浏览器标签页标题是「软件定制服务 · 微域生光」（来自 `(site)/page.tsx` 的 metadata，说明页面级覆盖仍然生效）
-2. 在开发者工具 Elements 面板搜索 `自媒体`，`<head>` 内**应无命中**
-3. 在 Elements 面板确认两段 `application/ld+json` 内容为软件定制口径
+刷新首页，在控制台执行检查，确认：
+1. `document.title` 为「软件定制服务 · 微域生光」，**只有一个**「· 微域生光」后缀
+2. `document.head.innerHTML.match(/自媒体|赛道分析|博主拆解|抖音|小红书|百万博主/g)` 返回 `null`
+3. `document.querySelectorAll('meta[property^="og:"]')` 中**存在** `og:image`、`og:site_name`、`og:locale`、`og:type`、`og:url`
+4. 两段 `application/ld+json` 内容为软件定制口径
 
-- [ ] **Step 7: 提交**
+- [ ] **Step 9: 提交**
 
 ```bash
-git add src/app/layout.tsx
+git add src/app/layout.tsx "src/app/(site)/page.tsx"
 git commit -m "$(cat <<'EOF'
-fix(website): 站点默认 metadata 与 JSON-LD 改为软件定制口径
+fix(website): 站点默认 metadata 与 JSON-LD 改为软件定制口径，修首页两处 metadata 缺陷
 
 默认 title/description、keywords、OG 图 alt 与 Organization slogan 原为
-自媒体获客口径，与软件定制首页不符，一并改掉。
+自媒体获客口径，与软件定制首页不符，一并改掉；新增 SHARE_TITLE /
+SHARE_DESCRIPTION 短文案供分享卡片使用，避免长标题被截断。
+
+同时修两处既有缺陷：页面级 title 自带「· 微域生光」与根 layout 的
+title.template 叠加成两遍；页面级 openGraph 会整体替换父级（Next.js 不做
+深合并），把根 layout 的 images 等字段全顶掉，导致首页分享无封面图。
 
 Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
 EOF

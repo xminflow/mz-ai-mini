@@ -6,9 +6,15 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://weelume.co
 const OG_IMAGE_PATH = '/og/cover.png'
 const OG_IMAGE_ABSOLUTE = `${SITE_URL.replace(/\/+$/, '')}${OG_IMAGE_PATH}`
 
-const SITE_TITLE_DEFAULT = 'AI × 自媒体，让客户源源不断地找上门 · 微域生光'
+const SITE_TITLE_DEFAULT = '软件定制开发 —— 官网、企业系统、小程序、AI 智能体 · 微域生光'
 const SITE_DESCRIPTION =
-  '自媒体营销获客不要再做无效尝试。微域生光提供真实的赛道分析、一线博主拆解、可落地的百万级大V运营实战精炼方法论，加上能上手的 AI 信息工具，助你消除信息差、实现流量与客源的极速增长。'
+  '微域生光提供软件定制开发服务：企业官网、企业级管理系统、小程序与移动应用、AI 智能体与知识库、数据分析看板、SaaS 平台、电商系统、桌面客户端、系统集成。从需求梳理到上线运营，由同一支团队全流程闭环交付。'
+
+// 社交分享卡片用的短文案。微信/微博/Twitter 的卡片标题与摘要都会截断，
+// 因此不复用为 SEO 铺了完整服务清单的 SITE_TITLE_DEFAULT / SITE_DESCRIPTION。
+const SHARE_TITLE = '软件定制开发 · 微域生光'
+const SHARE_DESCRIPTION =
+  '从需求梳理到上线运营，全流程闭环交付。官网、企业系统、小程序、AI 智能体等 11 类软件定制。'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -19,17 +25,20 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
   applicationName: '微域生光',
   keywords: [
-    'AI 自媒体',
-    '自媒体获客',
-    '自媒体运营',
-    '赛道分析',
-    '博主拆解',
-    '爆款拆解',
-    '内容运营方法论',
-    'AI 内容工具',
-    '抖音运营',
-    '小红书运营',
-    '百万博主',
+    '软件定制',
+    '软件定制开发',
+    '企业官网开发',
+    '企业管理系统',
+    '小程序开发',
+    'AI 智能体',
+    'AI 知识库',
+    'RAG 智能问答',
+    '数据分析看板',
+    'SaaS 开发',
+    '电商系统开发',
+    '桌面客户端开发',
+    '系统集成',
+    '流程自动化',
     '微域生光',
   ],
   authors: [{ name: '微域生光', url: SITE_URL }],
@@ -51,22 +60,23 @@ export const metadata: Metadata = {
     locale: 'zh_CN',
     type: 'website',
     url: SITE_URL,
-    title: SITE_TITLE_DEFAULT,
-    description: SITE_DESCRIPTION,
+    // 分享卡片标题另写一份短版：SITE_TITLE_DEFAULT 为 SEO 铺了服务清单，太长会在卡片里被截断
+    title: SHARE_TITLE,
+    description: SHARE_DESCRIPTION,
     images: [
       {
         url: OG_IMAGE_PATH,
         width: 1200,
         height: 630,
-        alt: 'AI × 自媒体，让客户源源不断地找上门 · 微域生光',
+        alt: '软件定制开发 · 微域生光',
         type: 'image/png',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: SITE_TITLE_DEFAULT,
-    description: SITE_DESCRIPTION,
+    title: SHARE_TITLE,
+    description: SHARE_DESCRIPTION,
     images: [OG_IMAGE_PATH],
   },
   verification: {
@@ -85,7 +95,7 @@ const ORGANIZATION_JSON_LD = {
   logo: `${SITE_URL.replace(/\/+$/, '')}/logo/weiyu-logo-inverted.png`,
   image: OG_IMAGE_ABSOLUTE,
   description: SITE_DESCRIPTION,
-  slogan: 'AI × 自媒体，让客户源源不断地找上门',
+  slogan: '把你的生意，做成一套自己的系统',
 }
 
 const WEBSITE_JSON_LD = {
