@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 
+import { BottomCta } from './BottomCta'
 import { CapabilityBar } from './CapabilityBar'
 import { ContactModal } from './ContactModal'
 import { Hero } from './Hero'
@@ -29,6 +30,7 @@ export const HomeContent = () => {
         <WhyUs />
         <Process />
         <TechStack />
+        <BottomCta onContact={openContact} />
       </main>
       <HomeFooter />
       <ContactModal open={contactOpen} onClose={closeContact} />
