@@ -1,5 +1,5 @@
-import { ENGAGEMENT_STEPS, type EngagementModeBlock } from './engagement-data'
-import { SectionHeading } from './ui'
+import { SectionHeading } from '@/components/ui'
+import { ENGAGEMENT_STEPS, type EngagementModeBlock } from './data'
 
 const ModeBlock = ({ block }: { block: EngagementModeBlock }) => (
   <div className="flex-1 border-l border-rule pl-4">
@@ -24,7 +24,7 @@ const ModeBlock = ({ block }: { block: EngagementModeBlock }) => (
 )
 
 export const Process = () => (
-  <section className="mx-auto w-full max-w-6xl px-4 pb-20 pt-16 sm:px-6 sm:pb-28 sm:pt-20">
+  <section id="process" className="mx-auto w-full max-w-6xl px-4 pb-20 pt-20 sm:px-6 sm:pb-28 sm:pt-24">
     <SectionHeading title="七步走完，每步都有你能拿到的东西" align="left" />
     <div className="relative mt-14">
       {/* 纵向贯穿线：七步横排会挤成一团，纵向才放得下每步的产出物与付款说明 */}

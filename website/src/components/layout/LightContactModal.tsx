@@ -3,14 +3,14 @@
 import { useEffect } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
-type ContactModalProps = {
+type LightContactModalProps = {
   open: boolean
   onClose: () => void
 }
 
-// 浅色版咨询弹窗。深色版 components/layout/ContactQrCodeModal.tsx 原样保留供旧页面恢复时使用，
-// 这里不复用它是因为它整体按深色 token 着色，在浅色首页上会弹出一个黑色面板。
-export const ContactModal = ({ open, onClose }: ContactModalProps) => {
+// 浅色版咨询弹窗。深色版 ContactQrCodeModal.tsx 原样保留供旧页面恢复时使用，
+// 这里不复用它是因为它整体按深色 token 着色，在浅色页面上会弹出一个黑色面板。
+export const LightContactModal = ({ open, onClose }: LightContactModalProps) => {
   useEffect(() => {
     if (!open) return
     const handler = (event: KeyboardEvent) => {

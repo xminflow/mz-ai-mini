@@ -1,5 +1,6 @@
+import { Card, SectionHeading } from '@/components/ui'
+
 import { SERVICES } from '../custom-software/data'
-import { Card, SectionHeading } from './ui'
 
 export const ServiceGrid = () => (
   <section id="services" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-28">

@@ -1,4 +1,4 @@
-export const HomeFooter = () => {
+export const LightFooter = () => {
   const year = new Date().getFullYear()
 
   return (

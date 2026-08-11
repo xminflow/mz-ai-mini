@@ -1,5 +1,6 @@
+import { SectionHeading } from '@/components/ui'
+
 import { ADVANTAGES } from '../custom-software/data'
-import { SectionHeading } from './ui'
 
 // 刻意用「左标题 + 右正文」的宽行式加细分隔线，不套卡片：
 // 5 条正文都是长句，堆成卡片会变成一片视觉噪音。

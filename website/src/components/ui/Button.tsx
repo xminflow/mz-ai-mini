@@ -12,6 +12,13 @@ const VARIANT_CLASS: Record<ButtonVariant, string> = {
   secondary: 'border border-rule bg-paper-raised text-graphite hover:border-rule-strong',
 }
 
+/**
+ * 给需要按钮外观但必须用别的元素渲染的场景用——典型是 next/link 的页面跳转。
+ * 有了它就不必为「Link 形态的按钮」再造一个组件，样式仍然只有这一份来源。
+ */
+export const buttonClassName = (variant: ButtonVariant = 'primary', className = ''): string =>
+  `${BASE_CLASS} ${VARIANT_CLASS[variant]} ${className}`
+
 type SharedProps = {
   variant?: ButtonVariant
   className?: string
@@ -33,12 +40,13 @@ export const Button = ({
   type = 'button',
   ...rest
 }: ButtonProps) => (
-  <button type={type} className={`${BASE_CLASS} ${VARIANT_CLASS[variant]} ${className}`} {...rest}>
+  <button type={type} className={buttonClassName(variant, className)} {...rest}>
     {children}
   </button>
 )
 
 // 页内锚点跳转用原生 a，不走 next/link：next/link 对 hash 锚点没有额外价值。
+// 跨页跳转请用 next/link + buttonClassName，否则会整页刷新。
 export const ButtonLink = ({
   variant = 'primary',
   className = '',
@@ -46,7 +54,7 @@ export const ButtonLink = ({
   href,
   ...rest
 }: ButtonLinkProps) => (
-  <a href={href} className={`${BASE_CLASS} ${VARIANT_CLASS[variant]} ${className}`} {...rest}>
+  <a href={href} className={buttonClassName(variant, className)} {...rest}>
     {children}
   </a>
 )

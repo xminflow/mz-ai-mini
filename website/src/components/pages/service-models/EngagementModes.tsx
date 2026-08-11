@@ -1,10 +1,4 @@
-import {
-  ITERATIVE_PREMISE,
-  MODE_CHECKLIST,
-  MODE_COMPARISON,
-  MODE_ITERATIVE,
-} from './engagement-data'
-import { SectionHeading } from './ui'
+import { ITERATIVE_PREMISE, MODE_CHECKLIST, MODE_COMPARISON, MODE_ITERATIVE } from './data'
 
 const MODES = [MODE_CHECKLIST, MODE_ITERATIVE] as const
 
@@ -12,16 +6,10 @@ const MODES = [MODE_CHECKLIST, MODE_ITERATIVE] as const
 // 真对比表在窄屏上必然挤爆，移动端改成两块纵向铺开、各自带标签。
 const GRID_CLASS = 'grid grid-cols-[minmax(0,11em)_minmax(0,1fr)_minmax(0,1fr)] gap-x-10'
 
+// 页面标题由 ServiceModelsContent 的 H1 承担，这里不再重复出标题。
 export const EngagementModes = () => (
-  <section id="process" className="mx-auto w-full max-w-6xl px-4 pt-20 sm:px-6 sm:pt-28">
-    <SectionHeading
-      eyebrow="How we work"
-      title="先选一种合作模式"
-      description="需求清楚不清楚，走的路不一样。选错了双方都难受。"
-      align="left"
-    />
-
-    <div className="mt-12 hidden md:block">
+  <section className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+    <div className="hidden md:block">
       <div className={`${GRID_CLASS} border-b border-rule pb-4`}>
         <span />
         {MODES.map((mode) => (
@@ -39,10 +27,10 @@ export const EngagementModes = () => (
       ))}
     </div>
 
-    <div className="mt-10 flex flex-col gap-9 md:hidden">
+    <div className="flex flex-col gap-9 md:hidden">
       {MODES.map((mode) => (
         <div key={mode} className="border-t border-rule pt-5">
-          <h3 className="text-[17px] font-semibold tracking-[-0.01em] text-graphite">{mode}</h3>
+          <h2 className="text-[17px] font-semibold tracking-[-0.01em] text-graphite">{mode}</h2>
           <dl className="mt-4 flex flex-col gap-3.5">
             {MODE_COMPARISON.map((row) => (
               <div key={row.label}>

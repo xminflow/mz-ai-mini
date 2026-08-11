@@ -1,6 +1,9 @@
-// 官网当前只对外开放首页（见 middleware.ts）。首页自带浅色导航与页脚
-// （components/pages/home/HomeNav.tsx、HomeFooter.tsx），因此这里不再渲染
-// 全站深色 TopNav / SiteFooter，也不再读取登录态。
+// 官网当前只对外开放首页与 /service-models（白名单见 middleware.ts）。
+// 这两个页面各自套 components/layout/LightShell.tsx，浅色导航、页脚、底部 CTA
+// 与咨询弹窗都由它提供，因此这里不再渲染全站深色 TopNav / SiteFooter，也不再读取登录态。
+//
+// 之所以不把 LightShell 提到这一层：本 layout 还包着十几个已隐藏的深色页面，
+// 在这里套浅色外壳会对那些页面做出错误断言。
 //
 // 恢复 studio / ai-coding-camp 等板块时，把下面三样接回来即可（文件都保留未删）：
 //   import { SiteFooter } from '@/components/layout/SiteFooter'
