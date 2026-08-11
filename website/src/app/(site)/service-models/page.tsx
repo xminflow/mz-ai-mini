@@ -5,7 +5,7 @@ import { ServiceModelsContent } from '@/components/pages/service-models/ServiceM
 export const metadata: Metadata = {
   title: '服务模式',
   description:
-    '软件定制的两种合作模式：需求已经清楚就走「先定清单」，逐项功能报价、对照清单验收；需求还说不清就走「边做边定」，按周计价、每周确认。七步流程每步都写明你能拿到什么、多久、要不要付钱。',
+    '软件定制的七步合作流程：先聊一次、功能清单与逐项报价、签合同建项目群、每周给你一个能上手试的版本、对照清单逐项验收、上线并把源码全部交给你、一年免费维保。每一步都写明你能拿到什么、多久、要不要付钱。',
 }
 
 export default function ServiceModelsPage() {
