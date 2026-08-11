@@ -277,6 +277,7 @@ EOF
 - Modify: `src/app/layout.tsx`（`<body>` 的 className，约 131 行）
 - Modify: `src/app/(site)/layout.tsx`（整个文件重写）
 - Modify: `src/app/(site)/page.tsx`（改 import 与渲染目标，metadata 保持不动）
+- Create: `public/logo/weiyu-logo-web-dark.svg`（裁剪过的深色 logo，见下方 Step 5 前的说明）
 - Create: `src/components/pages/home/HomeNav.tsx`
 - Create: `src/components/pages/home/HomeFooter.tsx`
 - Create: `src/components/pages/home/ContactModal.tsx`
@@ -384,6 +385,26 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
+- [ ] **Step 4b: 创建裁剪过的深色 logo**
+
+浅色底需要一个深色 logo，但现有资源都不合用：`weiyu-logo-web-light.svg` 是米色菱形（浅底上糊掉），`weiyu-logo-primary.svg` 虽为深色菱形但 `viewBox="0 0 800 800"` 四周留白过大，在 36px 尺寸下实际图形只有约 17px。新建 `public/logo/weiyu-logo-web-dark.svg`（沿用 web-light 的裁剪框、配色反转）：
+
+```svg
+<svg viewBox="200 200 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- 微域生光 — 暗色版 / Web Dark (cropped for light backgrounds) -->
+  <!-- 与 weiyu-logo-web-light.svg 同一裁剪框，仅反转明暗：深色菱形 + 浅色笔画，
+       用于浅色底页面。primary.svg 虽同为深色菱形，但 viewBox 四周留白过大，
+       在 32-40px 的导航尺寸下图形会明显偏小。 -->
+  <g transform="translate(400,400)">
+    <rect x="-136" y="-136" width="272" height="272" rx="45" fill="#1a1a1a" transform="rotate(45)"/>
+    <path d="M-70.4,-9.6 L-48,32 L-24,-9.6 L0,32 L24,-9.6 L48,32 L70.4,-9.6" fill="none" stroke="#faf8f4" stroke-width="8.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M-57.6,44.8 Q0,64 57.6,44.8" fill="none" stroke="#faf8f4" stroke-width="8.8" stroke-linecap="round"/>
+  </g>
+</svg>
+```
+
+现有 logo 文件一个都不改。
+
 - [ ] **Step 5: 创建 `HomeNav.tsx`**
 
 创建 `src/components/pages/home/HomeNav.tsx`：
@@ -428,7 +449,7 @@ export const HomeNav = ({ onContact }: HomeNavProps) => {
       >
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
           <a href="#top" className="flex items-center gap-2">
-            <img src="/logo/weiyu-logo-primary.svg" alt="微域生光" className="h-9 w-9" />
+            <img src="/logo/weiyu-logo-web-dark.svg" alt="微域生光" className="h-9 w-9" />
             <span className="text-[15px] font-semibold tracking-tight text-graphite">微域生光</span>
           </a>
 
@@ -466,7 +487,7 @@ export const HomeFooter = () => {
     <footer className="border-t border-rule">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <div className="flex items-center gap-2">
-          <img src="/logo/weiyu-logo-primary.svg" alt="微域生光" className="h-8 w-8" />
+          <img src="/logo/weiyu-logo-web-dark.svg" alt="微域生光" className="h-8 w-8" />
           <span className="text-[14px] font-semibold tracking-tight text-graphite">微域生光</span>
         </div>
         <div className="flex flex-col gap-2 text-[12px] text-graphite-dim sm:flex-row sm:items-center sm:gap-6">

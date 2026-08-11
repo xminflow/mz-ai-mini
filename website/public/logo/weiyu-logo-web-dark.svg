@@ -1,0 +1,11 @@
+<svg viewBox="200 200 400 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- 微域生光 — 暗色版 / Web Dark (cropped for light backgrounds) -->
+  <!-- 与 weiyu-logo-web-light.svg 同一裁剪框，仅反转明暗：深色菱形 + 浅色笔画，
+       用于浅色底页面。primary.svg 虽同为深色菱形，但 viewBox 四周留白过大，
+       在 32-40px 的导航尺寸下图形会明显偏小。 -->
+  <g transform="translate(400,400)">
+    <rect x="-136" y="-136" width="272" height="272" rx="45" fill="#1a1a1a" transform="rotate(45)"/>
+    <path d="M-70.4,-9.6 L-48,32 L-24,-9.6 L0,32 L24,-9.6 L48,32 L70.4,-9.6" fill="none" stroke="#faf8f4" stroke-width="8.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M-57.6,44.8 Q0,64 57.6,44.8" fill="none" stroke="#faf8f4" stroke-width="8.8" stroke-linecap="round"/>
+  </g>
+</svg>

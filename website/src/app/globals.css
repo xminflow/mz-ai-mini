@@ -66,8 +66,8 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  background-color: var(--color-canvas);
-  color: var(--color-ink);
+  background-color: var(--color-paper);
+  color: var(--color-graphite);
   font-family: var(--font-sans);
   font-feature-settings: "cv11", "ss01", "ss03", "cv01", "cv02";
   font-variant-numeric: lining-nums proportional-nums;
@@ -102,11 +102,11 @@ samp,
 }
 
 ::selection {
-  background-color: rgba(0, 153, 255, 0.35);
-  color: #fff;
+  background-color: rgb(255 60 0 / 0.18);
+  color: var(--color-graphite);
 }
 
-/* Global scrollbar — subtle, matches the dark surface */
+/* Global scrollbar — 浅色底上的低对比滑块 */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -115,13 +115,13 @@ samp,
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(14 14 14 / 0.14);
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgb(14 14 14 / 0.26);
   background-clip: padding-box;
 }
 

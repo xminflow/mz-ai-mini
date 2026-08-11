@@ -128,7 +128,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 })();`}
         </Script>
       )}
-      <body className="relative min-h-screen bg-canvas font-sans text-ink">{children}</body>
+      <body className="relative min-h-screen bg-paper font-sans text-graphite">{children}</body>
     </html>
   )
 }
