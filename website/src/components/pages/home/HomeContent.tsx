@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { BottomCta } from './BottomCta'
 import { CapabilityBar } from './CapabilityBar'
 import { ContactModal } from './ContactModal'
+import { EngagementModes } from './EngagementModes'
 import { Hero } from './Hero'
 import { HomeFooter } from './HomeFooter'
 import { HomeNav } from './HomeNav'
@@ -28,6 +29,7 @@ export const HomeContent = () => {
         <ServiceGrid />
         <IndustryStrip onContact={openContact} />
         <WhyUs />
+        <EngagementModes />
         <Process />
         <TechStack />
         <BottomCta onContact={openContact} />
