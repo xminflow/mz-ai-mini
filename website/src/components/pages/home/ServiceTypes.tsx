@@ -46,15 +46,18 @@ const geometry = (width: number) => {
  * dim 是叠在卡面上的暗色强度。这是浅色方案能不能立住的关键——面转开就该变暗，
  * 不加这一层，倾斜的白卡在米白底上会糊在一起，完全分不出前后。
  *
+ * dim 的数值在卡面改成玻璃后重调过一轮：玻璃卡本身读起来就比实心白卡暗一档，
+ * 沿用实心时代的 0.16 / 0.26 / 0.32 会把侧卡压成灰片。
+ *
  * 每一档的 x 要让本档卡的内边缘落在上一档卡的外边缘之外，否则会被压住只剩一条。
  * 透视会把远处的卡往中间拉（z 越负拉得越多），所以 x 的增量必须比「看上去需要的」更大，
  * 这几个值是逐档实测投影边界调出来的，不是等差数列。
  */
 const STAGE = [
   { x: 0, z: 0, rotate: 0, scale: 1, dim: 0, opacity: 1 },
-  { x: 0.97, z: -150, rotate: 36, scale: 0.9, dim: 0.16, opacity: 1 },
-  { x: 1.71, z: -260, rotate: 40, scale: 0.84, dim: 0.26, opacity: 1 },
-  { x: 2.35, z: -400, rotate: 46, scale: 0.76, dim: 0.32, opacity: 0 },
+  { x: 0.97, z: -150, rotate: 36, scale: 0.9, dim: 0.1, opacity: 1 },
+  { x: 1.71, z: -260, rotate: 40, scale: 0.84, dim: 0.17, opacity: 1 },
+  { x: 2.35, z: -400, rotate: 46, scale: 0.76, dim: 0.22, opacity: 0 },
 ]
 
 const stageFor = (delta: number, cardW: number) => {
@@ -342,7 +345,7 @@ export const ServiceTypes = () => {
                     放大幅度受轨道高度约束：轨道只比卡高 56px，1.09 已经吃掉大半余量，再大就会被裁 */}
                 <div
                   className={[
-                    'group/card relative flex h-full w-full flex-col overflow-hidden rounded-[3px] bg-paper-raised p-5 shadow-soft-lg sm:p-6',
+                    'group/card glass-thin relative flex h-full w-full flex-col overflow-hidden rounded-[3px] p-5 sm:p-6',
                     'transition-transform duration-300 ease-out',
                     isActive ? 'hover:scale-[1.04]' : 'cursor-pointer hover:scale-[1.09]',
                   ].join(' ')}
@@ -392,12 +395,18 @@ export const ServiceTypes = () => {
 
                 {/* 暗面：卡面转开多少就压暗多少，模拟受光。压在内容之上而不是之下，
                     否则文字仍然是纯黑、只有纸面变暗，看着像蒙了层脏东西。
-                    悬停时收掉一半，等于「这一面转回来朝向你了」 */}
+                    悬停时收掉大半，等于「这一面转回来朝向你了」。
+
+                    颜色是冷灰而不是近黑：卡面改成玻璃之后，近黑蒙层叠在半透明面上
+                    会把透上来的底光一起压死，侧卡看起来像蒙了灰。冷灰蒙层压的是
+                    明度、留得住色相，转开的面仍然带着底光的调子。 */}
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 bg-graphite opacity-[var(--dim)] transition-opacity duration-300 ease-out group-hover/card:opacity-[var(--dim-hover)]"
+                  className="pointer-events-none absolute inset-0 transition-opacity duration-300 ease-out group-hover/card:opacity-[var(--dim-hover)]"
                   style={
                     {
+                      backgroundColor: 'rgb(108 118 138)',
+                      opacity: 'var(--dim)',
                       '--dim': stage.dim,
                       '--dim-hover': stage.dim * 0.3,
                     } as React.CSSProperties
