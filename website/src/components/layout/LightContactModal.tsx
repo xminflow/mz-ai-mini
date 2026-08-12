@@ -42,7 +42,10 @@ export const LightContactModal = ({ open, onClose }: LightContactModalProps) => 
             // 容器不接收指针事件、面板本体接收：点击面板外的空白可穿透到下层遮罩触发关闭
             className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4"
           >
-            <div className="pointer-events-auto relative w-full max-w-sm rounded-card bg-paper-raised p-6 shadow-soft-lg">
+            {/* 用最厚的一档：这块面板压着整页内容，薄玻璃会让下面的文字透上来干扰阅读。
+                注意二维码容器仍是实心白（下方 bg-white），不要跟着改半透——
+                半透背景会降低扫码识别率 */}
+            <div className="glass-thick pointer-events-auto relative w-full max-w-sm rounded-card p-6">
               <button
                 type="button"
                 onClick={onClose}
