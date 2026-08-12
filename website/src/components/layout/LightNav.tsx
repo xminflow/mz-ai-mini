@@ -73,7 +73,7 @@ export const LightNav = () => {
               ))}
             </nav>
             <Button onClick={openContact} className="px-4 py-2.5 text-[13px]">
-              聊聊需求
+              联系我们
             </Button>
           </div>
         </div>

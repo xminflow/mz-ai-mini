@@ -1,382 +1,319 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { useReducedMotion } from 'framer-motion'
 
+import { Reveal } from '@/components/motion/Reveal'
 import { SectionHeading } from '@/components/ui'
 
 import { ENGAGEMENT_STEPS, type EngagementStep } from './flow-data'
 import { StepDiagram } from './StepDiagram'
 
-const LAST_INDEX = ENGAGEMENT_STEPS.length - 1
 const TOTAL = String(ENGAGEMENT_STEPS.length).padStart(2, '0')
 
-// 桌面纵向轮播的几何：卡片等高、步距固定，轨道整体平移 -active × 步距即可，无需测量。
-// PEEK 是上下各露出的邻卡高度——露得够多才有「前后还有内容」的轮播感。
-const CARD_HEIGHT = 352
-const CARD_GAP = 16
-const STRIDE = CARD_HEIGHT + CARD_GAP
-const PEEK = 104
+// 横向手风琴：七条竖条并排，悬停/聚焦的那一条展开成深色面板。
+//
+// 过渡参数取自参考站（brandlogoreveal.framer.website）实测值：
+// flex 0.72s cubic-bezier(0.22, 1, 0.26, 1)，面板内容延后 120ms 再淡入。
+// 整个效果是纯 CSS flex 伸缩，不需要动画库——framer-motion 在这里只会徒增一层运行时。
+const PANEL_MS = 720
+const PANEL_EASE = 'cubic-bezier(0.22, 1, 0.26, 1)'
+/** 面板内容比容器晚一步出现，避免文字在还没展开的窄条里闪一下 */
+const CONTENT_DELAY_MS = 120
 
-const TRACK = { type: 'spring' as const, stiffness: 260, damping: 34, mass: 1 }
-const FADE = { duration: 0.35, ease: [0.22, 1, 0.36, 1] as const }
+// 折叠 : 展开 = 1 : 6。六条折叠 + 一条展开共 12 份，展开条正好占一半宽度，
+// 与参考站 105 : 458 的比例一致。
+const COLLAPSED_FLEX = '1 1 0%'
+const EXPANDED_FLEX = '6 1 0%'
 
-/** 每步停留时长。正文 100–140 字，再短就会读到一半被切走 */
-const AUTOPLAY_MS = 6500
+/**
+ * 展开面板内容的固定宽度。
+ *
+ * 不写 100%：容器宽度正在从窄到宽做动画，百分比会让文字在过渡期间不断重排，
+ * 看起来像在抽搐。固定宽度 + overflow-hidden 让文字始终排好、由容器边缘裁切，
+ * 这也是参考站的做法（过渡中途能看到文字被切断）。
+ */
+const PANEL_CONTENT_WIDTH = '34rem'
 
-const MASK =
-  'linear-gradient(to bottom, transparent 0%, #000 16%, #000 84%, transparent 100%)'
-const MASK_X = 'linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%)'
+/**
+ * 展开面板的底光。落点压在图标与标题那一组上，让近黑的面板有一处亮起来的地方——
+ * 纯色平涂在这么大一块深色上会显得很死。
+ *
+ * 极低的白度加一点暖色温（不是品牌橙，橙色仍只留给「免费」标记），
+ * 只在余光里感觉得到，正眼看不出是一层渐变。
+ */
+const PANEL_GLOW =
+  'radial-gradient(62% 52% at 24% 64%, rgb(255 240 232 / 0.085), transparent 72%)'
 
-/** 面板四角的 L 形角标。只画角、不画整圈边，是「面板」而非「卡片」的读法 */
-const CORNER_CLASS = 'pointer-events-none absolute h-3.5 w-3.5 border-graphite'
-const CORNERS = [
-  'left-0 top-0 border-l border-t',
-  'right-0 top-0 border-r border-t',
-  'left-0 bottom-0 border-b border-l',
-  'right-0 bottom-0 border-b border-r',
-]
+/**
+ * 入场：滚到板块时七条竖条自下而上逐条立起，随后才开始自动播放。
+ *
+ * 触发点看列表本身而不是整个 section：section 还含标题和上下留白，按它算比例会在
+ * 竖条一点没露头时就先立完。进 0.2、出 0 两条线留出滞后区，避免边界上反复触发。
+ */
+const ENTER_MS = 560
+const ENTER_STEP_MS = 70
+const ENTER_RATIO = 0.2
+const ENTER_TOTAL_MS = ENTER_MS + ENTER_STEP_MS * (ENGAGEMENT_STEPS.length - 1)
 
-const CARD_CLASS =
-  'relative overflow-hidden rounded-[3px] bg-paper-raised p-6 shadow-soft-lg sm:p-9'
+/** 自动播放每步停留时长。一条正文 40-60 字，3 秒够看完标题和第一行 */
+const AUTOPLAY_MS = 3000
 
-const opacityFor = (distance: number) => (distance === 0 ? 1 : distance === 1 ? 0.3 : 0.12)
+/**
+ * 折叠竖条：居中的竖排名称 + 底部编号。
+ *
+ * 刻意不在这里放线框图标：那七张图是 200×132 的细节示意图，缩到 24px 宽只剩一团噪点，
+ * 06、07 那种带小配件的还会看着像画坏了。图标留到展开面板里放大呈现。
+ */
+const CollapsedFace = ({ step, open }: { step: EngagementStep; open: boolean }) => (
+  <span
+    className={[
+      'absolute inset-y-0 left-0 flex w-[var(--strip-w)] flex-col items-center py-8 transition-opacity',
+      open ? 'opacity-0 duration-200' : 'opacity-100 duration-300',
+    ].join(' ')}
+    style={open ? undefined : { transitionDelay: `${CONTENT_DELAY_MS}ms` }}
+  >
+    {/* 顶部一小段竖线：折叠条上半部原本是一整片空白，一条线就够把它收住，
+        与底部编号一上一下形成书脊的两端 */}
+    <span className="h-5 w-px bg-rule-strong" />
 
-const StepCard = ({ step }: { step: EngagementStep }) => (
-  <>
-    {CORNERS.map((corner) => (
-      <span key={corner} aria-hidden className={`${CORNER_CLASS} ${corner}`} />
-    ))}
+    <span className="flex flex-1 items-center">
+      {/* 中文竖排走 writing-mode，字距拉开才有参考站那种「书脊」的读法 */}
+      <span className="[writing-mode:vertical-rl] text-[17px] tracking-[0.25em] text-graphite-soft">
+        {step.short}
+      </span>
+    </span>
 
-    {/* 文字列不设 1fr：否则它会被拉宽，正文左对齐后中间空出一大片 */}
-    <div className="relative grid grid-cols-1 gap-6 sm:grid-cols-[minmax(0,32em)_minmax(0,1fr)] sm:gap-10">
-      <div>
-        <span className="block font-mono text-[11px] uppercase tracking-[0.18em] text-graphite-dim">
-          STEP {step.code} / {TOTAL}
-        </span>
-        <h3 className="mt-3 max-w-[18em] text-[clamp(1.3rem,2.2vw,1.75rem)] font-semibold leading-[1.28] tracking-[-0.02em] text-graphite">
-          {step.title}
-        </h3>
-
-        <p className="mt-4 max-w-[32em] text-[15px] leading-[1.9] text-graphite-soft">
-          {step.lead}
-        </p>
-      </div>
-
-      {/* 示意图也用角标框住，和面板同一套语言，读起来像面板里的一个预览位 */}
-      <div className="relative self-start pl-1 pt-1 sm:mt-8">
-        <span
-          aria-hidden
-          className="pointer-events-none absolute left-0 top-0 h-3 w-3 border-l border-t border-rule-strong"
-        />
-        <span
-          aria-hidden
-          className="pointer-events-none absolute bottom-0 right-0 h-3 w-3 border-b border-r border-rule-strong"
-        />
-        <StepDiagram
-          code={step.code}
-          className="h-auto w-full max-w-[13rem] text-graphite-dim sm:max-w-[16rem] lg:max-w-none"
-        />
-      </div>
-    </div>
-  </>
+    <span className="font-mono text-[12px] tracking-[0.14em] text-graphite-dim">{step.code}</span>
+  </span>
 )
 
-// 左侧选节点，右侧轮播呈现该节点：当前卡在正位、清晰完整，前后邻卡半透明露出一截，
-// 滑到正位才逐渐清晰。桌面纵向、移动横向。
+/** 展开面板：顶部编号，底部「图标 → 标题 → 正文」一组 */
+const ExpandedFace = ({ step, open }: { step: EngagementStep; open: boolean }) => (
+  <div
+    className={[
+      'pointer-events-none absolute inset-y-0 left-0 flex flex-col justify-between p-10 transition-opacity',
+      open ? 'opacity-100 duration-[450ms]' : 'opacity-0 duration-200',
+    ].join(' ')}
+    style={{
+      width: PANEL_CONTENT_WIDTH,
+      transitionDelay: open ? `${CONTENT_DELAY_MS}ms` : undefined,
+    }}
+  >
+    <div>
+      <p className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-paper/45">
+        STEP {step.code} / {TOTAL}
+        {step.tag && (
+          <>
+            <span aria-hidden className="h-3 w-px bg-paper/20" />
+            <span className="tracking-[0.1em] text-ember">{step.tag}</span>
+          </>
+        )}
+      </p>
+      {/* 编号下一条短横线：顶部原本只有孤零零一行小字，加条线才压得住这片留白 */}
+      <span aria-hidden className="mt-5 block h-px w-10 bg-paper/25" />
+    </div>
+
+    {/* 图标紧贴标题成为一组，与参考站「标记 → 名称 → 描述」的下沉节奏一致；
+        单独居中会让它悬在半空、和文字断开 */}
+    <div className="max-w-[25rem]">
+      <StepDiagram code={step.code} className="mb-6 h-16 w-auto text-paper/70" />
+      <h3 className="text-[1.65rem] font-semibold leading-[1.3] tracking-[-0.02em] text-paper">
+        {step.title}
+      </h3>
+      <p className="mt-3 text-[14.5px] leading-[1.85] text-paper/65">{step.lead}</p>
+    </div>
+  </div>
+)
+
+// 服务流程板块。
 //
-// 移动端刻意不用纵向：纵向滑动在手机上会和页面滚动抢同一个手势。横向走原生 scroll-snap，
-// 带惯性、跟手，也不需要给卡片定死高度（一行里等高由 items-stretch 解决）。
+// 桌面是横向手风琴；窄屏没有横向空间容纳七条竖条，也没有悬停，改为七步全部展开的纵向列表——
+// 手机上「点开才看得到」只会多一道无谓的门槛。
 export const ServiceFlow = () => {
   const reduce = useReducedMotion()
-  const [active, setActive] = useState(0)
-  const scrollerRef = useRef<HTMLDivElement>(null)
-  const pillsRef = useRef<HTMLDivElement>(null)
-  const sectionRef = useRef<HTMLElement>(null)
-  // 自动播放的三个刹车：滚出视口、指针停在板块内、用户已明确选过某一步
-  const [inView, setInView] = useState(false)
-  const [pointerInside, setPointerInside] = useState(false)
+  const listRef = useRef<HTMLDivElement>(null)
+
+  // 入场期间不展开任何一条：七条竖条先整齐立好，再由自动播放把第 01 条推开，
+  // 那一下才是「开始播放」的信号。用 null 表示这个「都还收着」的状态
+  const [active, setActive] = useState<number | null>(null)
+  // idle=还没立起 → entering=正在逐条立起 → live=交给自动播放。
+  // 列表滚出视野退回 idle，下次经过重播，与上方「软件类型」板块一致
+  const [phase, setPhase] = useState<'idle' | 'entering' | 'live'>('idle')
+  // 悬停、聚焦、点击任一发生就算用户接管，此后不再自动跑
   const [userTookOver, setUserTookOver] = useState(false)
-  const autoplay = !reduce && inView && !pointerInside && !userTookOver
 
-  // useCallback 是为了让自动播放的 effect 能安全地把它列进依赖：
-  // 每次渲染都新建的话，effect 会跟着重建、计时器被反复清掉，自动播放永远等不到触发
-  const scrollToIndex = useCallback(
-    (index: number) => {
-      const card = scrollerRef.current?.children[index]
-      if (card instanceof HTMLElement) {
-        card.scrollIntoView({
-          behavior: reduce ? 'auto' : 'smooth',
-          inline: 'center',
-          block: 'nearest',
-        })
-      }
-    },
-    [reduce],
-  )
-
-  const select = (index: number) => {
-    setActive(index)
-    // 桌面时这个容器是 display:none，scrollIntoView 自然无副作用
-    scrollToIndex(index)
-  }
-
-  /** 点击与键盘视为用户接管，之后不再自动播放；悬停只是暂停，移开还会继续 */
-  const selectByUser = (index: number) => {
-    setUserTookOver(true)
-    select(index)
-  }
-
-  // 只在板块进入视口时才跑：滚走了还在后台切换，既浪费也会让人滚回来时莫名其妙
   useEffect(() => {
-    const node = sectionRef.current
+    const node = listRef.current
     if (!node) return
     const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0.25 },
+      ([entry]) => {
+        if (entry.intersectionRatio >= ENTER_RATIO) {
+          setPhase((current) => (current === 'idle' ? 'entering' : current))
+        } else if (!entry.isIntersecting) {
+          // 完全离开视野才收回，并把播放进度一并复位，下次经过从第 01 步重新开始
+          setPhase('idle')
+          setActive(null)
+          setUserTookOver(false)
+        }
+      },
+      { threshold: [0, ENTER_RATIO] },
     )
     observer.observe(node)
     return () => observer.disconnect()
   }, [])
 
-  // 每步一个 setTimeout 而不是一个 setInterval：依赖 active 重建，
-  // 因此手动切过去之后也能拿到完整的停留时长，不会切完立刻又被推走
+  // 立起跑完再交给自动播放，否则第 01 条会在竖条还没站定时就被推开。
+  // 这个定时器必须自成一个 effect：和上面的触发写在一起会自毁——setPhase 让那个 effect
+  // 重跑，清理函数把刚设的定时器清掉，之后又被 guard 挡住不再重设
   useEffect(() => {
-    if (!autoplay) return
-    const timer = setTimeout(() => {
-      const next = active === LAST_INDEX ? 0 : active + 1
-      setActive(next)
-      scrollToIndex(next)
-    }, AUTOPLAY_MS)
+    if (phase !== 'entering') return
+    const timer = setTimeout(
+      () => {
+        setPhase('live')
+        setActive(0)
+      },
+      reduce ? 0 : ENTER_TOTAL_MS,
+    )
     return () => clearTimeout(timer)
-  }, [autoplay, active, scrollToIndex])
+  }, [phase, reduce])
 
-  // 横向轮播被手指滑动时反推当前项：取中心线最近的那张卡
+  // 每步一个 setTimeout 而不是 setInterval：依赖 active 重建，
+  // 用户手动看过某一条之后也能拿到完整停留时长
   useEffect(() => {
-    const scroller = scrollerRef.current
-    if (!scroller) return
+    if (reduce || phase !== 'live' || userTookOver) return
+    const timer = setTimeout(
+      () => setActive((current) => ((current ?? 0) + 1) % ENGAGEMENT_STEPS.length),
+      AUTOPLAY_MS,
+    )
+    return () => clearTimeout(timer)
+  }, [reduce, phase, userTookOver, active])
 
-    let frame = 0
-    const measure = () => {
-      frame = 0
-      const center = scroller.scrollLeft + scroller.clientWidth / 2
-      let nearest = 0
-      let best = Number.POSITIVE_INFINITY
-      Array.from(scroller.children).forEach((child, index) => {
-        if (!(child instanceof HTMLElement)) return
-        const childCenter = child.offsetLeft + child.offsetWidth / 2
-        const gap = Math.abs(childCenter - center)
-        if (gap < best) {
-          best = gap
-          nearest = index
-        }
-      })
-      setActive((prev) => (prev === nearest ? prev : nearest))
-    }
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(measure)
-    }
-
-    scroller.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      scroller.removeEventListener('scroll', onScroll)
-      if (frame) cancelAnimationFrame(frame)
-    }
-  }, [])
-
-  // 编号胶囊排不满一行时会横向滚动，当前项（可能是手指滑卡片带出来的）要自己露出来。
-  // block: 'nearest' 保证只在这一行内横向滚动，不会顺带滚动整个页面。
-  useEffect(() => {
-    const pill = pillsRef.current?.children[active]
-    if (pill instanceof HTMLElement) {
-      pill.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', inline: 'center', block: 'nearest' })
-    }
-  }, [active, reduce])
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    switch (event.key) {
-      case 'ArrowDown':
-      case 'ArrowRight':
-        event.preventDefault()
-        selectByUser(active === LAST_INDEX ? 0 : active + 1)
-        break
-      case 'ArrowUp':
-      case 'ArrowLeft':
-        event.preventDefault()
-        selectByUser(active === 0 ? LAST_INDEX : active - 1)
-        break
-      default:
-        break
-    }
+  /** 用户主动看某一条：接管播放，之后由鼠标说了算 */
+  const takeOver = (index: number) => {
+    setUserTookOver(true)
+    setActive(index)
   }
 
+  const shown = phase !== 'idle'
+  const enterMs = reduce ? 0 : ENTER_MS
+
   return (
-    <section
-      ref={sectionRef}
-      id="process"
-      // 指针停在板块内就暂停：正在读的时候被切走是自动播放最烦人的地方
-      onMouseEnter={() => setPointerInside(true)}
-      onMouseLeave={() => setPointerInside(false)}
-      className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-28"
-    >
-      <SectionHeading eyebrow="How we work" title="我们的服务流程" className="mb-12 sm:mb-14" />
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)] lg:gap-8">
-      {/* 窄屏把七行列表压成一排编号胶囊，紧贴在轮播上方：一屏内同时看得到选择器和卡片，
-          不必先滚过一整列列表 */}
-      <div
-        ref={pillsRef}
-        aria-label="合作流程节点"
-        onKeyDown={handleKeyDown}
-        className="scrollbar-hide -mx-4 flex gap-1.5 overflow-x-auto px-4 lg:hidden"
+    <section id="process" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+      {/* once=false：竖条每次经过都重新立起，标题跟着一起，不然滚回来只有列表在动 */}
+      <Reveal once={false}>
+        <SectionHeading eyebrow="How we work" title="我们的服务流程" className="mb-12 sm:mb-16" />
+      </Reveal>
+
+      {/* 入场的观察对象是这一层：ul 在窄屏是 display:none，盯着它会永远不相交，
+          窄屏那份列表就再也立不起来 */}
+      <div ref={listRef}>
+      {/* 桌面：横向手风琴。--strip-w 是折叠态内容的固定宽度，与 flex 比例对应。
+          鼠标离开整行不收起：全部收起会让板块变成一排空白竖条，回来时还得重新找位置 */}
+      <ul
+        aria-label="合作流程"
+        className="hidden h-[30rem] overflow-hidden rounded-[3px] border border-rule lg:flex"
+        style={{ ['--strip-w' as string]: '5.75rem' }}
       >
-        {ENGAGEMENT_STEPS.map((item, index) => {
-          const selected = index === active
+        {ENGAGEMENT_STEPS.map((step, index) => {
+          const open = index === active
+          const panelId = `process-panel-${step.code}`
 
           return (
-            <button
-              key={item.code}
-              type="button"
-              aria-label={`第 ${index + 1} 步：${item.short}`}
-              aria-current={selected ? 'step' : undefined}
-              onClick={() => selectByUser(index)}
+            <li
+              key={step.code}
+              style={{
+                flex: open ? EXPANDED_FLEX : COLLAPSED_FLEX,
+                opacity: shown ? 1 : 0,
+                transform: shown ? 'none' : 'translateY(20px)',
+                // 逐条立起的延迟只能分别挂在 opacity/transform 上。写成一条统一的
+                // duration/delay 会把 flex 一起延后，展开就跟不上鼠标了
+                transition: [
+                  `flex ${PANEL_MS}ms ${PANEL_EASE}`,
+                  `background-color ${PANEL_MS}ms ${PANEL_EASE}`,
+                  `opacity ${enterMs}ms ease-out ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
+                  `transform ${enterMs}ms ${PANEL_EASE} ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
+                ].join(', '),
+              }}
               className={[
-                'shrink-0 rounded-[3px] border px-3 py-2 font-mono text-[11px] tracking-[0.1em] transition-colors duration-150',
-                'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember',
-                selected ? 'border-graphite bg-graphite text-paper' : 'border-rule text-graphite-dim',
+                'relative min-w-0 overflow-hidden border-l border-rule first:border-l-0',
+                open ? 'bg-graphite' : 'bg-paper-raised',
               ].join(' ')}
             >
-              {item.code}
-            </button>
-          )
-        })}
-      </div>
-
-      <div
-        aria-label="合作流程节点"
-        onKeyDown={handleKeyDown}
-        className="hidden self-start border-b border-rule lg:mt-[104px] lg:block"
-      >
-        {ENGAGEMENT_STEPS.map((item, index) => {
-          const selected = index === active
-
-          return (
-            <button
-              key={item.code}
-              type="button"
-              aria-current={selected ? 'step' : undefined}
-              onMouseEnter={() => select(index)}
-              onFocus={() => select(index)}
-              onClick={() => selectByUser(index)}
-              className={[
-                'relative flex w-full items-center gap-3.5 border-t border-rule py-3.5 pl-4 pr-4 text-left transition-colors duration-150',
-                'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember',
-                selected ? 'bg-graphite' : 'hover:bg-paper-raised',
-              ].join(' ')}
-            >
+              {/* 底光挂在 li 上而不是面板内容里：内容宽度写死 34rem，光晕跟着它会在
+                  过渡途中被裁出一道硬边；挂在这里则始终铺满当前宽度，随伸缩自然缩放 */}
               <span
+                aria-hidden
                 className={[
-                  'font-mono text-[11px] tracking-[0.12em] transition-colors duration-150',
-                  selected ? 'text-paper/55' : 'text-graphite-dim',
+                  'pointer-events-none absolute inset-0 transition-opacity',
+                  open ? 'opacity-100 duration-[600ms]' : 'opacity-0 duration-200',
                 ].join(' ')}
-              >
-                {item.code}
-              </span>
-              <span
-                className={[
-                  'flex-1 text-[14.5px] tracking-[-0.01em] transition-colors duration-150',
-                  selected ? 'font-medium text-paper' : 'text-graphite-soft',
-                ].join(' ')}
-              >
-                {item.short}
-              </span>
-              {item.tag && (
-                <span
-                  className={[
-                    'font-mono text-[10px] tracking-[0.1em] transition-colors duration-150',
-                    selected ? 'text-paper/55' : 'text-graphite-dim',
-                  ].join(' ')}
-                >
-                  {item.tag}
-                </span>
-              )}
+                style={{ backgroundImage: PANEL_GLOW }}
+              />
 
-              {/* 自动播放时在当前行底部走一条进度线：没有它，卡片会毫无预告地自己跳走。
-                  key 绑 active，切步时重新从 0 开始跑。 */}
-              {selected && autoplay && (
-                <motion.span
-                  key={`progress-${active}`}
-                  aria-hidden
-                  className="absolute bottom-0 left-0 h-[2px] w-full origin-left bg-ember"
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: AUTOPLAY_MS / 1000, ease: 'linear' }}
-                />
-              )}
-            </button>
+              {/* 详情不放进按钮内部：否则按钮的可访问名会变成整段 140 字正文。
+                  按钮只负责命中区域与名称，详情作为它的兄弟节点由 aria-controls 关联 */}
+              <div id={panelId} aria-hidden={open ? undefined : true}>
+                <ExpandedFace step={step} open={open} />
+              </div>
+
+              <button
+                type="button"
+                aria-expanded={open}
+                aria-controls={panelId}
+                aria-label={`第 ${index + 1} 步：${step.short}`}
+                onMouseEnter={() => takeOver(index)}
+                onFocus={() => takeOver(index)}
+                onClick={() => takeOver(index)}
+                className="absolute inset-0 z-10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ember"
+              >
+                <CollapsedFace step={step} open={open} />
+              </button>
+            </li>
           )
         })}
-      </div>
+      </ul>
 
-      {/* 桌面：纵向轮播 */}
-      <div
-        className="relative hidden overflow-hidden lg:block"
-        style={{
-          height: CARD_HEIGHT + PEEK * 2,
-          maskImage: MASK,
-          WebkitMaskImage: MASK,
-        }}
-      >
-        <motion.div
-          className="absolute inset-x-0"
-          style={{ top: PEEK }}
-          animate={{ y: -(active * STRIDE) }}
-          transition={reduce ? { duration: 0 } : TRACK}
-        >
-          {ENGAGEMENT_STEPS.map((item, index) => {
-            const distance = Math.abs(index - active)
-            const isActive = distance === 0
+      {/* 窄屏：七步顺排，不折叠。没有悬停也就没有自动播放，只保留同一套逐条立起 */}
+      <ol className="border-t border-rule lg:hidden">
+        {ENGAGEMENT_STEPS.map((step, index) => (
+          <li
+            key={step.code}
+            className="border-b border-rule py-7"
+            style={{
+              opacity: shown ? 1 : 0,
+              transform: shown ? 'none' : 'translateY(20px)',
+              transition: [
+                `opacity ${enterMs}ms ease-out ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
+                `transform ${enterMs}ms ${PANEL_EASE} ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
+              ].join(', '),
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-[11px] tracking-[0.12em] text-graphite-dim">
+                {step.code} / {TOTAL}
+              </span>
+              {step.tag && (
+                <>
+                  <span aria-hidden className="h-3 w-px bg-rule-strong" />
+                  <span className="font-mono text-[10px] tracking-[0.1em] text-ember">
+                    {step.tag}
+                  </span>
+                </>
+              )}
+            </div>
 
-            return (
-              <motion.div
-                key={item.code}
-                aria-hidden={isActive ? undefined : true}
-                style={{ height: CARD_HEIGHT, marginBottom: CARD_GAP }}
-                animate={{ opacity: opacityFor(distance), scale: isActive ? 1 : 0.975 }}
-                transition={reduce ? { duration: 0 } : FADE}
-                className={isActive ? CARD_CLASS : `${CARD_CLASS} pointer-events-none`}
-              >
-                <StepCard step={item} />
-              </motion.div>
-            )
-          })}
-        </motion.div>
-      </div>
+            <div className="mt-3 flex items-start justify-between gap-6">
+              <h3 className="text-[1.35rem] font-semibold leading-[1.3] tracking-[-0.02em] text-graphite">
+                {step.title}
+              </h3>
+              <StepDiagram code={step.code} className="h-12 w-auto shrink-0 text-graphite-dim" />
+            </div>
 
-      {/* 移动：横向 scroll-snap 轮播。scrollbar-hide 是项目里已有的工具类 */}
-      <div
-        ref={scrollerRef}
-        // 触屏没有悬停，手指一碰轮播就算接管：否则用户刚滑到某一步就又被自动推走
-        onPointerDown={() => setUserTookOver(true)}
-        className="scrollbar-hide -mx-4 flex snap-x snap-mandatory items-stretch gap-3 overflow-x-auto px-4 lg:hidden"
-        style={{ maskImage: MASK_X, WebkitMaskImage: MASK_X }}
-      >
-        {ENGAGEMENT_STEPS.map((item, index) => {
-          const distance = Math.abs(index - active)
-          const isActive = distance === 0
-
-          return (
-            <motion.div
-              key={item.code}
-              aria-hidden={isActive ? undefined : true}
-              animate={{ opacity: opacityFor(distance) }}
-              transition={reduce ? { duration: 0 } : FADE}
-              className={`${CARD_CLASS} w-[86%] shrink-0 snap-center`}
-            >
-              <StepCard step={item} />
-            </motion.div>
-          )
-        })}
-        </div>
+            <p className="mt-3 text-[14.5px] leading-[1.85] text-graphite-soft">{step.lead}</p>
+          </li>
+        ))}
+      </ol>
       </div>
     </section>
   )
