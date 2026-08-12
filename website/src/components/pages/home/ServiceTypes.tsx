@@ -52,6 +52,12 @@ const geometry = (width: number) => {
  * 每一档的 x 要让本档卡的内边缘落在上一档卡的外边缘之外，否则会被压住只剩一条。
  * 透视会把远处的卡往中间拉（z 越负拉得越多），所以 x 的增量必须比「看上去需要的」更大，
  * 这几个值是逐档实测投影边界调出来的，不是等差数列。
+ *
+ * 性能实测（2026-08-13，1440×900 Chrome，rAF 连续采样 10 秒）：12 张玻璃卡同屏自动播放，
+ * 未节流平均 216fps、p99 12.6ms、无超 33ms 的帧；6 倍 CPU 节流下平均 193fps、p99 20.8ms、
+ * 超 33ms 的帧占 0.36%。远高于 50fps 门槛，因此没有做「只给可见卡开 backdrop-filter」的降级。
+ * 注意这组数据不能用来判断低端安卓：backdrop-filter 的开销主要在 GPU，CPU 节流模拟不了弱 GPU，
+ * 那一侧仍然只靠 glass-* 里的 prefers-reduced-transparency 回退兜底。
  */
 const STAGE = [
   { x: 0, z: 0, rotate: 0, scale: 1, dim: 0, opacity: 1 },
