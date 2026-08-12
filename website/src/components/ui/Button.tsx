@@ -8,8 +8,9 @@ const BASE_CLASS =
   'inline-flex items-center justify-center gap-2 rounded-btn px-[22px] py-[14px] text-[14px] font-medium leading-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember'
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
+  // primary 保持黑底实心：它是页面上对比度最高的一处落点，做成玻璃会削掉它的分量
   primary: 'bg-graphite text-paper hover:bg-graphite-soft',
-  secondary: 'border border-rule bg-paper-raised text-graphite hover:border-rule-strong',
+  secondary: 'glass-medium text-graphite hover:bg-white/75',
 }
 
 /**

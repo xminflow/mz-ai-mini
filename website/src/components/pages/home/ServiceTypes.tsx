@@ -456,7 +456,7 @@ const PagerButton = ({
     aria-label={label}
     onClick={onClick}
     // pointer-events-auto 抵消父层的 none：父层铺满整个舞台，不关掉指针会挡住卡片的点击
-    className="pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-rule bg-paper-raised text-graphite-soft shadow-soft transition-colors duration-200 hover:border-rule-strong hover:text-graphite focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember"
+    className="glass-medium pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-graphite-soft transition-colors duration-200 hover:bg-white/75 hover:text-graphite focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember"
   >
     <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round">
       {children}
