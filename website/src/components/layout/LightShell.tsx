@@ -18,8 +18,8 @@ type LightShellProps = {
   aurora?: 'home' | 'simple'
 }
 
-// 浅色站点的共用外壳：导航、底部 CTA、页脚、咨询弹窗，以及弹窗开关的唯一持有者。
-// 每个对外开放的页面套一层即可，页面自身只负责自己的 section。
+// 浅色站点的共用外壳：光域层挂载点、导航、底部 CTA、页脚、咨询弹窗，
+// 以及弹窗开关的唯一持有者。每个对外开放的页面套一层即可，页面自身只负责自己的 section。
 export const LightShell = ({ children, aurora = 'simple' }: LightShellProps) => {
   const [contactOpen, setContactOpen] = useState(false)
   const openContact = useCallback(() => setContactOpen(true), [])

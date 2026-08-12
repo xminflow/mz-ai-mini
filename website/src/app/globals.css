@@ -38,7 +38,12 @@
   --color-paper-raised: #ffffff;
   --color-graphite: #0e0e0e;
   --color-graphite-soft: #44443f;
-  --color-graphite-dim: #8a8a80;
+  /* 玻璃改造后加深：44% 白度的玻璃卡叠在服务区冷蓝光团峰值（alpha 0.34）之上，
+     原来的 #8a8a80 压 12.5px 小字对比度只有 2.65:1。brief 给的 #78786e 是按
+     服务区光团 alpha 0.24 估算的，Task 10 把该光团峰值提到 0.34 后实测仍只有
+     3.39:1，未达标，故在其基础上继续加深到此处的 #5c5c54（服务区卡片小字
+     5.12:1，页脚备案号 5.89:1，均达标） */
+  --color-graphite-dim: #5c5c54;
   --color-rule: rgb(14 14 14 / 0.09);
   --color-rule-strong: rgb(14 14 14 / 0.16);
   --color-ember: #ff3c00;
