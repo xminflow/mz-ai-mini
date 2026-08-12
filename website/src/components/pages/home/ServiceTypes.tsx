@@ -263,7 +263,7 @@ export const ServiceTypes = () => {
           // 这里曾经挂过 maskImage 做左右淡出，已移除，不要加回来：
           // mask 会创建 backdrop root，导致轨道内部所有元素的 backdrop-filter 全部失效，
           // 十二张玻璃卡会一起变成普通半透明色块。实测过同一配置仅差 mask，结果截然不同。
-          // 淡出改由父层的两块渐变覆盖层实现，见下方 EdgeFade。
+          // 淡出改由父层的两块渐变覆盖层实现，见轨道之后的两块渐变覆盖层。
           //
           // 透视点放在这一层，十二张卡共用同一个灭点；若逐卡写 transformPerspective，
           // 每张会有各自的灭点，一排卡的透视方向就对不上了
@@ -344,8 +344,9 @@ export const ServiceTypes = () => {
                 // 才不会被这里 620ms 的轮播缓动拖成一坨钝响应
                 className="absolute left-1/2 top-7 select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember"
               >
-                {/* 卡面。无边框、近乎直角：与本页「服务流程」的面板同一套规格，
-                    纸白卡面压在 paper 底色上已经分得开，再描一圈线只会让十二张卡显得碎。
+                {/* 卡面走 glass-thin，自带一道 1px 白描边作为玻璃厚度的体现——这与改造前
+                    「不描线」的判断不同，因为当时卡面是纸白实心、描线只会显碎，现在描线是
+                    玻璃质感的一部分。近乎直角：与本页「服务流程」的面板同一套规格。
                     悬停用纯 CSS。侧卡放得比中心卡明显得多——它是可点的，要请人点；
                     中心卡没有可点的动作，跟着放大只是「活」的反馈，所以留一档差值。
                     放大幅度受轨道高度约束：轨道只比卡高 56px，1.09 已经吃掉大半余量，再大就会被裁 */}
@@ -438,13 +439,14 @@ export const ServiceTypes = () => {
         className="pointer-events-none absolute inset-y-0 right-0 z-[60] w-[8%] bg-gradient-to-l from-paper to-transparent"
       />
 
-      {/* 箭头贴着侧卡外缘、垂直居中，是转盘的读法；放在轨道之外是因为轨道有左右淡出的
-          遮罩，摆进去会被一起淡掉。
+      {/* 箭头贴着侧卡外缘、垂直居中，是转盘的读法。
+          z-[70] 必须高于淡出覆盖层的 z-[60]：两者在同一层叠上下文里，不抬高的话
+          覆盖层会绘制在按钮之上，1280px 以下整颗钮会被那层 paper 渐变糊掉。
           循环之后位置刻度没有意义——没有第一张也没有最后一张，所以只留翻动方向，不做圆点 */}
       {/* 容器比版心（max-w-6xl）宽一档：舞台摊到五张后外缘已经超出版心，
           按版心摆箭头会正好压在最外侧那对卡上。1280 以下仍会轻微相叠——
           那个宽度下五张卡加两侧箭头本来就排不开，而被叠住的是最暗、最不吃重的一张 */}
-      <div className="pointer-events-none absolute inset-y-0 left-1/2 flex w-full max-w-7xl -translate-x-1/2 items-center justify-between px-3 sm:px-6">
+      <div className="pointer-events-none absolute inset-y-0 left-1/2 z-[70] flex w-full max-w-7xl -translate-x-1/2 items-center justify-between px-3 sm:px-6">
         <PagerButton label="上一类" onClick={() => step(-1)}>
           <path d="M10 3 L5 8 L10 13" />
         </PagerButton>
