@@ -175,6 +175,70 @@ samp,
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* ===== 浅色玻璃：三档规格 =====
+   上面那个 @utility glass 是深色版，供已隐藏的深色页面使用，不要动它。
+   下面三档是浅色站点唯一的玻璃来源，各 section 禁止自行发明参数。
+
+   四项配套缺一不可。半透明底色只是把面变淡，真正让眼睛读出「一块有厚度的料」
+   而不是「一张淡了的纸」的，是上缘高光线、下缘暗线和描边这三笔。只写
+   background + backdrop-filter 得到的是后者。
+
+   saturate 比 blur 更要紧：真玻璃会让透过的颜色变浓，这是它区别于半透明塑料的
+   主要特征。底色平淡时 blur 几乎无效，saturate 仍然在工作。
+
+   prefers-reduced-transparency 下整体退回近实心：backdrop-filter 在低端设备上
+   开销很大，且该偏好本身就意味着用户不想要透明效果。 */
+@utility glass-thin {
+  background: rgba(255, 255, 255, 0.44);
+  backdrop-filter: saturate(180%) blur(26px);
+  -webkit-backdrop-filter: saturate(180%) blur(26px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -1px 0 rgba(14, 14, 14, 0.04),
+    0 20px 50px rgba(14, 14, 14, 0.06);
+
+  @media (prefers-reduced-transparency: reduce) {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@utility glass-medium {
+  background: rgba(255, 255, 255, 0.62);
+  backdrop-filter: saturate(180%) blur(24px);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(14, 14, 14, 0.035),
+    0 12px 32px rgba(14, 14, 14, 0.05);
+
+  @media (prefers-reduced-transparency: reduce) {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@utility glass-thick {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: saturate(170%) blur(30px);
+  -webkit-backdrop-filter: saturate(170%) blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(14, 14, 14, 0.03),
+    0 24px 60px rgba(14, 14, 14, 0.1);
+
+  @media (prefers-reduced-transparency: reduce) {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
 @utility scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
