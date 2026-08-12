@@ -48,12 +48,17 @@ export const AuroraField = ({ variant = 'simple' }: AuroraFieldProps) => (
 
     {variant === 'home' && (
       <>
-        {/* 服务轮播区：冷蓝。玻璃卡的主要采样对象，是全页最需要有东西可透的地方 */}
+        {/* 服务轮播区：冷蓝。玻璃卡的主要采样对象，是全页最需要有东西可透的地方。
+            纵向锚点两个断点各给一次，不能只给一个值：光团位置按页高百分比定位，而两个断点下
+            服务区占页高的比例差得很远——桌面端页高 2690、服务区中心在 45.7%；窄屏各板块堆叠后
+            页高涨到 3673、服务区中心落到 28.1%。只写 top-[38%] 的话，窄屏上这团光会掉到
+            服务区下缘之外，卡片上一点色都透不到（实测过）。
+            窄屏的高度也要跟着放大：服务区在窄屏有 750px 高，360px 的光团盖不住卡片所在的下半段。 */}
         <div
-          className="absolute left-[56%] top-[38%] h-[360px] w-[92vw] -translate-x-1/2 rounded-full blur-[60px] sm:h-[620px] sm:w-[1000px] sm:blur-[90px]"
+          className="absolute left-[56%] top-[28%] h-[560px] w-[92vw] -translate-x-1/2 rounded-full blur-[60px] sm:top-[38%] sm:h-[620px] sm:w-[1000px] sm:blur-[90px]"
           style={{
             background:
-              'radial-gradient(ellipse at center, rgb(30 120 240 / 0.24), transparent 68%)',
+              'radial-gradient(ellipse at center, rgb(30 120 240 / 0.34), transparent 68%)',
           }}
         />
 
