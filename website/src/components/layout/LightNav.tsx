@@ -30,12 +30,15 @@ export const LightNav = () => {
   return (
     <header className="sticky top-0 z-30 w-full">
       <div
+        // 玻璃只在滚动后出现：停在顶部时导航压着的是首屏留白，做成玻璃只会凭空
+        // 多出一条横带。glass-medium 自带四周描边，但这是一条通栏，只有下缘该留线，
+        // 左右和上缘用内联样式压掉——同为 utility 的 border-x-0 与 glass-medium
+        // 处在同一层，谁覆盖谁取决于生成顺序，不可靠，内联样式才是确定的
         className={[
           'transition-all duration-300',
-          scrolled
-            ? 'border-b border-rule bg-paper/80 backdrop-blur-xl'
-            : 'border-b border-transparent',
+          scrolled ? 'glass-medium' : 'border-b border-transparent',
         ].join(' ')}
+        style={scrolled ? { borderTopWidth: 0, borderLeftWidth: 0, borderRightWidth: 0 } : undefined}
       >
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link href="/" className="flex items-center gap-2">
