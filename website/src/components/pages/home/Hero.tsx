@@ -3,15 +3,11 @@
 import { useContact } from '@/components/layout/contact-context'
 import { Button, ButtonLink } from '@/components/ui'
 
-import { WarmGlow } from './WarmGlow'
-
 export const Hero = () => {
   const { openContact } = useContact()
 
   return (
-    // isolate 建立独立层叠上下文，让 WarmGlow 的 -z-10 只压在本 section 内部
-    <section id="top" className="relative isolate">
-      <WarmGlow />
+    <section id="top" className="relative">
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 pb-16 pt-20 text-center sm:px-6 sm:pb-24 sm:pt-32">
         {/* 字号上限比旧标语低一档：这句每行 10 个字，5.5rem 时一行要 860px 以上，会顶到容器边 */}
         <h1 className="text-[clamp(2.2rem,5.2vw,4.75rem)] font-semibold leading-[1.12] tracking-[-0.02em] text-graphite">

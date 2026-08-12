@@ -6,7 +6,7 @@ import { ServiceFlow } from './ServiceFlow'
 import { ServiceTypes } from './ServiceTypes'
 
 export const HomeContent = () => (
-  <LightShell>
+  <LightShell aurora="home">
     <Hero />
     <CapabilityBar />
     <ServiceTypes />
