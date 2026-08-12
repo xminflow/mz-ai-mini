@@ -96,8 +96,6 @@ const UNFOLD_TOTAL_MS = UNFOLD.duration * 1000 + UNFOLD_STEP_MS * (STAGE.length 
 /** 每张停留时长。当前卡上只有一句钩子加三条要点，读完约 4 秒 */
 const AUTOPLAY_MS = 4500
 
-const MASK = 'linear-gradient(to right, transparent 0%, #000 10%, #000 90%, transparent 100%)'
-
 export const ServiceTypes = () => {
   const reduce = useReducedMotion()
   const trackRef = useRef<HTMLDivElement>(null)
@@ -253,8 +251,11 @@ export const ServiceTypes = () => {
         style={{
           height: cardH + 56,
           opacity: ready ? 1 : 0,
-          maskImage: MASK,
-          WebkitMaskImage: MASK,
+          // 这里曾经挂过 maskImage 做左右淡出，已移除，不要加回来：
+          // mask 会创建 backdrop root，导致轨道内部所有元素的 backdrop-filter 全部失效，
+          // 十二张玻璃卡会一起变成普通半透明色块。实测过同一配置仅差 mask，结果截然不同。
+          // 淡出改由父层的两块渐变覆盖层实现，见下方 EdgeFade。
+          //
           // 透视点放在这一层，十二张卡共用同一个灭点；若逐卡写 transformPerspective，
           // 每张会有各自的灭点，一排卡的透视方向就对不上了
           perspective: 1500,
@@ -408,6 +409,19 @@ export const ServiceTypes = () => {
           })}
         </motion.div>
       </div>
+
+      {/* 左右淡出。原先是轨道上的 maskImage，因为会废掉内部的 backdrop-filter 而改成
+          覆盖层。z-index 必须高过卡片（卡片是 50 - distance，最高 50），否则盖不住。
+          宽度取 8%：再宽会把最外侧那对卡整个吃掉，也会在底部光域上压出一条可见的
+          米白带 */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 left-0 z-[60] w-[8%] bg-gradient-to-r from-paper to-transparent"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 right-0 z-[60] w-[8%] bg-gradient-to-l from-paper to-transparent"
+      />
 
       {/* 箭头贴着侧卡外缘、垂直居中，是转盘的读法；放在轨道之外是因为轨道有左右淡出的
           遮罩，摆进去会被一起淡掉。
