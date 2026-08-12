@@ -13,7 +13,7 @@ export const CapabilityBar = () => (
     <div className="flex justify-center">
       {/* 五项在窄屏一行放不下，必然换行；换行后 rounded-full 会把两三行文字裹成一个
           橄榄球形，所以窄屏给固定圆角，宽屏单行时再回到胶囊 */}
-      <div className="flex max-w-full flex-wrap items-center justify-center gap-y-1 rounded-[22px] bg-paper-raised px-3 py-3 shadow-soft sm:rounded-full">
+      <div className="glass-medium flex max-w-full flex-wrap items-center justify-center gap-y-1 rounded-[22px] px-3 py-3 sm:rounded-full">
         {CAPABILITIES.map((item, index) => (
           <span key={item} className="flex items-center">
             {index > 0 && (
