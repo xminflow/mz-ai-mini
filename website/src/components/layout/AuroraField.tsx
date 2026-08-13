@@ -1,103 +1,180 @@
 type AuroraVariant = 'home' | 'simple'
 
 type AuroraFieldProps = {
-  /** home 铺四团光对应首页四个板块；simple 只留首屏一团，给案例页这类短页面用 */
+  /** home 铺三条帘幕；simple 只铺一条，给案例页这类短页面用 */
   variant?: AuroraVariant
 }
 
 /**
- * 光域层：浅色站点唯一的背景光来源，取代原先只覆盖首屏的那层光晕。
+ * 光域层：浅色站点唯一的背景光来源。
  *
  * 它存在的理由不是装饰，是给毛玻璃提供采样对象。实测过：底色是一整块平米白时，
  * 给卡片加 backdrop-filter 是零效果——玻璃只搬运背后的信息，背后没信息就什么都
  * 不发生。所以这一层一旦被移除或调淡到看不见，全站的玻璃质感会同时消失，
  * 两者是一套东西的两半。
  *
- * 三条硬约束：
+ * ===== 形态：极光帘幕 =====
  *
- * 1. 光团不压在大标题正下方。首屏那团的中心刻意推到容器上边缘之外，标题所在的
- *    横带上只剩余光，正文对比度不受影响。
+ * 走到这一版之前推翻过三次，教训都记在这里免得再来一遍：
  *
- * 2. 不同色相的光团之间必须退到接近 0。相邻色相在交界处叠加会泛出脏色——
- *    这条是之前踩过的：暖橙与琥珀两种暖色叠在一起，会在交界处泛出偏绿的脏色。
- *    现在四团是「蓝为主，红黄点缀」的三原色分配，蓝红黄两两相邻都可能泛脏
- *    （红叠黄出橙、蓝叠红出紫），所以纵向间距必须保持在 22% 页高以上，
- *    配合 68% 的透明落点让交界处归零。这条比冷色族时代更要紧，不能放宽。
+ * 一、几团独立的圆斑。孤立的模糊圆斑读起来是水彩晕染，气质偏软，与科技产品要的
+ *     利落感相反。
  *
- * 3. 尺寸随断点收窄。固定 px 宽度在窄屏上会让渐变的密集中心铺满整屏，柔光变成
- *    一层色蒙版。窄屏只保留首屏和服务区两团：首屏团尺寸减半；服务区团窄屏反而要
- *    略放大以盖住卡片，原因见该团内联注释。
+ * 二、超大渐变铺满整页。形态问题解决了，却带来更糟的结果：覆盖连续与大面积着色是
+ *     同一件事的两面，中段一整片粉、下段一整片米黄，比第一版更脏。
  *
- * 定位用 absolute 而不是 fixed：光要跟着页面一起滚，光团与板块的对应关系才是
- * 固定可控的。fixed 会让光停在视口上，不同板块滚过去时透出什么色相由滚动位置
- * 决定，无法预期。
+ * 三、单层柔光带。位置和留白都对了，但整条带被 blur 糊成均匀的一坨，
+ *     丢掉了极光最要命的两个特征——**纵向光柱**和**下缘锐利、上缘渐隐的不对称**。
+ *     没有这两样，它只是一条模糊的色条，不是极光。
  *
- * 纵向位置按页高百分比给出，锚点取自首页实测：
- * 首屏 65–625、能力条 625–784、服务 784–1674、流程 1674–2526、页脚 2526–2690。
- * 这组锚点是桌面端（页高 2690）的实测值。窄屏只渲染首屏与服务区两团（点 3），
- * 流程、页脚两团整段隐藏，不需要窄屏锚点；首屏那团窄屏沿用同一份百分比即可，
- * 唯独服务区——窄屏各板块堆叠后页高涨到 3673，服务区中心落到页高的 28.1%，
- * 与桌面端 45.7% 差得远——是全部光团里唯一按两个断点分别给一次纵向锚点的一团。
+ * 所以现在每条帘幕由两层构成：
+ *
+ *   带体（Sheet）——柔和的纵向渐变，负责整体色彩，也是玻璃真正采样的那一层。
+ *                   色标刻意不对称：下缘收得紧、上缘拖得长，模拟极光底边亮、顶部散开。
+ *   光柱（Rays）——细密的垂直纹理，用 mask 裁进带体的形状里，blur 给得很小以保住边界。
+ *                   它单独以更快的速度横向流动，光才像在幕内淌而不是印在幕上。
+ *
+ * 硬约束：
+ *
+ * 1. **元素要矮而宽，带体渐变沿纵向走。** 这条最容易搞反，搞反了整个效果就废：
+ *    曾经写成 104deg 的斜向渐变套在一个高 900px 的矩形上，渐变沿水平变化、纵向均匀，
+ *    整块被染成一片大色面。倾角交给 transform 的 rotate，不要交给渐变角度。
+ *
+ * 2. 带必须显著宽于视口（这里 200vw）。宽度不够时旋转后两端会露进屏幕，
+ *    光带变回一条有头有尾的色块。
+ *
+ * 3. 带与带之间要留出没有光的间隙。首屏、板块留白、页脚保持米白纸面的干净，
+ *    光只出现在玻璃卡真正需要它的区段——「铺满整页」是第二版失败的原因。
+ *
+ * 4. 带的位置要对准玻璃卡。玻璃卡滚到没有光的位置时 backdrop-filter 会失效，
+ *    卡片突然变成平板一块——曾在页面 25% 处留下一段色度为 0 的空档。
+ *
+ * 5. 光柱必须比带体清晰。带体可以糊（它只提供色彩），光柱不能——它是「有质感、
+ *    有边界」的唯一来源，blur 超过 12px 就重新糊成一片，这一版也就白改了。
+ *
+ * 定位用 absolute 而不是 fixed：光要跟着页面一起滚。fixed 会让光停在视口上，
+ * 滚动时透出什么色相由滚动位置决定，玻璃卡的采样对象也就不可预期了。
  */
+
+/** 三条帘幕各自的周期。互质，避免整体构图周期性归位 */
+const DURATION = { a: '34s', b: '41s', c: '47s' } as const
+
+/**
+ * 带体底色：纵向三段渐变，下缘收得紧、上缘拖得长。
+ *
+ * 固定 180deg（自上而下）。带的倾角由 transform 的 rotate 负责，不要写进这里——
+ * 用渐变角度做倾斜会同时改变渐变的变化方向，带就散成一整块色面了。
+ */
+const sheet = (color: string) =>
+  `linear-gradient(180deg, transparent 0%, ${color} 62%, ${color} 82%, transparent 100%)`
+
+/**
+ * 光柱纹理：不等间距的垂直细纹。
+ *
+ * 间距刻意取 7 / 11 / 19 三种宽度交替而不是均匀重复——真实极光的光柱疏密不均，
+ * 等距重复会立刻读成人造的条纹图案（像百叶窗），而不是自然光。
+ *
+ * 89deg 而非 90deg：让光柱本身也带一点点斜，与带体的 rotate 叠加后不会显得死板。
+ */
+const rays = (color: string) =>
+  `repeating-linear-gradient(89deg, ${color} 0 1.5px, transparent 1.5px 7px, ${color} 7px 8px, transparent 8px 19px)`
+
+/** 光柱只在带体的中段显现，上下两端淡出，避免出现横平的截断边 */
+const RAYS_MASK = 'linear-gradient(180deg, transparent 4%, #000 46%, #000 76%, transparent 100%)'
+
+type CurtainProps = {
+  className: string
+  duration: string
+  /** 带体色，含 alpha */
+  sheetColor: string
+  /** 光柱色，比带体浓一档——面积小，同 alpha 下几乎看不见 */
+  rayColor: string
+  sheetBlur: number
+  animation: string
+}
+
+const Curtain = ({
+  className,
+  duration,
+  sheetColor,
+  rayColor,
+  sheetBlur,
+  animation,
+}: CurtainProps) => (
+  // 动画只能写在内联 style 里：帧名是参数传进来的，写成 animate-[${animation}] 这种
+  // 模板字符串 Tailwind 扫描不到、根本不会生成对应的类。
+  // 代价是 motion-safe: 前缀也用不了，因此降级改由 globals.css 里针对 [data-aurora]
+  // 的 prefers-reduced-motion 规则统一兜住——少了那条规则，减少动态偏好下背景照样在飘。
+  <div
+    data-aurora
+    className={`absolute left-[-50%] w-[200vw] ${className}`}
+    style={{
+      animation: `${animation} ${duration} ease-in-out infinite`,
+      willChange: 'transform',
+    }}
+  >
+    {/* 带体：糊一点没关系，它负责色彩与玻璃采样 */}
+    <div
+      className="absolute inset-0"
+      style={{ background: sheet(sheetColor), filter: `blur(${sheetBlur}px)` }}
+    />
+    {/* 光柱：blur 压到 8px 以内保住边界，单独更快地横向流动 */}
+    <div
+      data-aurora
+      className="absolute inset-0"
+      style={{
+        background: rays(rayColor),
+        WebkitMaskImage: RAYS_MASK,
+        maskImage: RAYS_MASK,
+        filter: 'blur(7px)',
+        animation: 'auroraRays 19s ease-in-out infinite',
+        willChange: 'transform',
+      }}
+    />
+  </div>
+)
+
 export const AuroraField = ({ variant = 'simple' }: AuroraFieldProps) => (
   <div
     aria-hidden
     className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
   >
-    {/* 首屏：蓝（品牌主色）。中心推到 -6%，标题横带上只有余光。
-        蓝担纲首屏与页脚，是「蓝为主、红黄点缀」里的主：首尾同色收束整页，
-        中段才交给黄与红做变化。
-        窄屏的纵向锚点用 px 而不是 %：这团贴着页顶，而 % 是相对整页高度的——窄屏页高涨到 3673
-        之后，-6% 会把它推到 -220px，配上窄屏本就减半的高度，光就打不到标题区了。 */}
-    <div
-      className="absolute left-[18%] top-[-40px] h-[320px] w-[86vw] -translate-x-1/2 rounded-full blur-[60px] sm:top-[-6%] sm:h-[560px] sm:w-[900px] sm:blur-[80px]"
-      style={{
-        background:
-          'radial-gradient(ellipse at center, rgb(15 95 216 / 0.26), transparent 68%)',
-      }}
+    {/* 主帘·蓝。压在服务轮播区——全页玻璃卡最密集、最需要有东西可透的地方。
+        上缘越过板块顶边，顺带兜住紧贴上方的能力条：那个玻璃胶囊若背后全无光，
+        会退化成一块半透明白。
+        案例页没有轮播区，这条帘整体上移去托住正文卡片。 */}
+    <Curtain
+      className={variant === 'home' ? 'top-[29%] h-[210px]' : 'top-[21%] h-[240px]'}
+      duration={DURATION.a}
+      animation="auroraBandA"
+      sheetColor="rgb(15 95 216 / 0.34)"
+      rayColor="rgb(15 95 216 / 0.30)"
+      sheetBlur={38}
     />
 
     {variant === 'home' && (
       <>
-        {/* 服务轮播区：黄。玻璃卡的主要采样对象，是全页最需要有东西可透的地方。
-            alpha 从冷蓝时代的 0.34 一路压到 0.16，是实测逼出来的：黄的感知亮度远高于蓝，
-            0.30 时中心那张玻璃卡整体泛成旧纸的黄，0.16 才只留色温、不染卡面。
-            这一档是全站最低的，别再往回调。
-            纵向锚点两个断点各给一次，不能只给一个值：光团位置按页高百分比定位，而两个断点下
-            服务区占页高的比例差得很远——桌面端页高 2690、服务区中心在 45.7%；窄屏各板块堆叠后
-            页高涨到 3673、服务区中心落到 28.1%。只写 top-[38%] 的话，窄屏上这团光会掉到
-            服务区下缘之外，卡片上一点色都透不到（实测过）。
-            窄屏的高度也要跟着放大：服务区在窄屏有 750px 高，360px 的光团盖不住卡片所在的下半段。
-            纵向锚点的断点是 lg 而不是 sm：页高的突变点由 ServiceFlow 决定——它的桌面手风琴是
-            hidden lg:flex、纵向列表是 lg:hidden，板块高度在 1024 处才剧变。实测 901px 宽时页高 3586、
-            服务区 722–1591，仍然接近窄屏形态。切在 sm 会让 640–1023 这一整段的光掉到板块之外。 */}
-        <div
-          className="absolute left-[56%] top-[28%] h-[560px] w-[92vw] -translate-x-1/2 rounded-full blur-[60px] sm:w-[1000px] sm:blur-[90px] lg:top-[38%] lg:h-[620px]"
-          style={{
-            background:
-              'radial-gradient(ellipse at center, rgb(232 178 28 / 0.16), transparent 68%)',
-          }}
+        {/* 副帘·黄。掠过服务区下缘，与蓝帘边缘交叠出暖调过渡，让这一段不是单一支蓝。
+            alpha 相对最低：黄的感知亮度远高于蓝红，同样 alpha 下显色强得多，
+            压不住就会把经过的玻璃卡染成旧纸黄（这一条实测踩过）。 */}
+        <Curtain
+          className="top-[44%] h-[170px]"
+          duration={DURATION.c}
+          animation="auroraBandC"
+          sheetColor="rgb(232 178 28 / 0.20)"
+          rayColor="rgb(232 178 28 / 0.20)"
+          sheetBlur={42}
         />
 
-        {/* 流程区：红。手风琴那七张 Acrylic 卡靠它提供采样对象——
-            真玻璃只搬运背后的信息，压回 0.16 会让 backdrop-filter 变成零效果。
-            alpha 取 0.20 是三团里最低的：红透过浅玻璃会让卡片偏粉，比黄更容易脏，
-            只做色温底噪，明暗结构交给卡片内部的渐层光。 */}
-        <div
-          className="absolute left-[22%] top-[68%] hidden h-[520px] w-[820px] -translate-x-1/2 rounded-full blur-[90px] sm:block"
-          style={{
-            background:
-              'radial-gradient(ellipse at center, rgb(200 32 44 / 0.20), transparent 70%)',
-          }}
-        />
-
-        {/* 页脚：蓝回归，与首屏同一支主色呼应收尾 */}
-        <div
-          className="absolute left-[74%] top-[92%] hidden h-[420px] w-[760px] -translate-x-1/2 rounded-full blur-[80px] sm:block"
-          style={{
-            background:
-              'radial-gradient(ellipse at center, rgb(15 95 216 / 0.18), transparent 70%)',
-          }}
+        {/* 主帘·红。掠过流程区，那七张 Acrylic 卡靠它提供采样对象。
+            alpha 压在 0.24：红透过浅玻璃会让卡片偏粉，比黄更容易脏。 */}
+        <Curtain
+          className="top-[67%] h-[200px]"
+          duration={DURATION.b}
+          animation="auroraBandB"
+          sheetColor="rgb(200 32 44 / 0.24)"
+          rayColor="rgb(200 32 44 / 0.22)"
+          sheetBlur={40}
         />
       </>
     )}

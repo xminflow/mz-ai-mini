@@ -399,6 +399,65 @@ samp,
   to { transform: scaleX(1); }
 }
 
+/* ===== 光域的三条漂移轨迹 =====
+   只动 transform，走 GPU 合成，不触发重排——这一层铺满整页且带着上百像素的 blur，
+   一旦碰 width/top 这类属性会逐帧重算布局，整页跟着掉帧。
+
+   三条轨迹的方向、幅度、缩放各不相同，配合 AuroraField 里 28s / 37s / 43s 三个互质周期，
+   整体构图的重复周期长到以小时计。周期若取成倍数关系，每隔一会儿三层就会同时回到
+   初始位置，那一瞬间的「归位」是看得出来的。
+
+   幅度压在 6% 以内：快到能看出在动就俗了，这一层的目标是让人感觉页面是活的，
+   而不是让人注意到背景在动。 */
+/* 极光帘幕的三条轨迹。
+   与普通光斑漂移的区别在于 skewY：极光之所以像一幅飘动的幕布而不是一条平移的色带，
+   靠的就是带体本身在缓慢扭曲。幅度只给 1.5–2.5 度，再大就从「飘动」变成「变形」了。
+
+   横向位移给得比纵向大得多（12–16% vs 2–4%）：极光是沿着带的方向淌，
+   不是整体上下浮动。 */
+/* 极光帘幕的三条轨迹。
+   rotate 写在关键帧里而不是元素上：带的倾角本身要缓慢变化，幕布才像在飘，
+   固定倾角只会得到一条平移的斜线。两个关键帧的角度差 2 度左右就够。
+
+   skewY 让带体在平移的同时轻微扭曲，是「幕」区别于「条」的关键；
+   scaleY 让带忽宽忽窄，模拟极光的强弱起伏。幅度都压得很小，
+   这一层的目标是让人感觉页面是活的，而不是让人注意到背景在动。
+
+   横向位移给得比纵向大得多：极光沿着带的方向淌，不是整体上下浮动。 */
+@keyframes auroraBandA {
+  0%, 100% { transform: translate3d(-5%, 0, 0) rotate(-7deg) skewY(-1.5deg) scaleY(1); }
+  50% { transform: translate3d(7%, -2%, 0) rotate(-5deg) skewY(1deg) scaleY(1.18); }
+}
+
+@keyframes auroraBandB {
+  0%, 100% { transform: translate3d(6%, 0, 0) rotate(5deg) skewY(1.8deg) scaleY(1.12); }
+  50% { transform: translate3d(-8%, 2%, 0) rotate(3deg) skewY(-1deg) scaleY(1); }
+}
+
+@keyframes auroraBandC {
+  0%, 100% { transform: translate3d(-7%, 1%, 0) rotate(-4deg) skewY(1deg) scaleY(1); }
+  50% { transform: translate3d(5%, -1%, 0) rotate(-6deg) skewY(-1.6deg) scaleY(1.15); }
+}
+
+/* 光柱层的流动。极光的纵向光柱不是随幕布整体平移的，它们自己在幕内淌，
+   所以这一层单独走一条比带体更快、幅度更大的横向位移——两者速度一致的话，
+   光柱就成了印在带上的静态花纹，「流动」的感觉全没了。
+
+   只推 X 不推 Y：光柱是竖的，纵向位移会让它显得在上下抖。 */
+@keyframes auroraRays {
+  0%, 100% { transform: translate3d(-14%, 0, 0); }
+  50% { transform: translate3d(14%, 0, 0); }
+}
+
+/* 光域的动画必须写成内联 style（帧名是组件参数，Tailwind 扫不到模板字符串生成的类名），
+   于是 motion-safe: 前缀也用不上。这条规则是减少动态偏好下唯一的关闭开关，
+   删掉它背景就会一直飘。 */
+@media (prefers-reduced-motion: reduce) {
+  [data-aurora] {
+    animation: none !important;
+  }
+}
+
 /* ===== 课程 Markdown：对齐 Typora Night（深色），复用全站 token，不另起浅色卡片 ===== */
 .typora-md {
   max-width: 800px;
