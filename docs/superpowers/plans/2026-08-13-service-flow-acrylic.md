@@ -664,10 +664,11 @@ cd website && npx tsc --noEmit && pnpm run lint
 
 - [ ] **Step 6: 提交收尾**
 
-若前几步产生了参数微调，一并提交：
+若前几步产生了参数微调，一并提交。**必须指定文件路径**：工作树里有数十处与本次
+无关的未提交改动，`git add -A` 会把它们全部卷进来。
 
 ```bash
-git add -A website/
+git add website/src/app/globals.css website/src/components/pages/home/ServiceFlow.tsx
 git commit -m "fix(website): Acrylic 改造的降级与对比度实测修正
 
 Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"

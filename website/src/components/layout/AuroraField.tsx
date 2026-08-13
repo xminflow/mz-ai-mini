@@ -6,7 +6,7 @@ type AuroraFieldProps = {
 }
 
 /**
- * 光域层：浅色站点唯一的背景光来源，取代原先只覆盖首屏的那层暖光晕。
+ * 光域层：浅色站点唯一的背景光来源，取代原先只覆盖首屏的那层光晕。
  *
  * 它存在的理由不是装饰，是给毛玻璃提供采样对象。实测过：底色是一整块平米白时，
  * 给卡片加 backdrop-filter 是零效果——玻璃只搬运背后的信息，背后没信息就什么都
@@ -20,7 +20,9 @@ type AuroraFieldProps = {
  *
  * 2. 不同色相的光团之间必须退到接近 0。相邻色相在交界处叠加会泛出脏色——
  *    这条是之前踩过的：暖橙与琥珀两种暖色叠在一起，会在交界处泛出偏绿的脏色。
- *    这里橙、蓝、紫三团的纵向间距都在 22% 页高以上，配合 68% 的透明落点，交界处已经归零。
+ *    现在全站已去掉暖色，青蓝、正蓝、淡紫三团同属冷色族，交界处即便相接也不会泛脏色，
+ *    但纵向间距仍保持在 22% 页高以上、配合 68% 的透明落点——间距是为了让每团光与
+ *    对应板块一一对应，不是只为避免脏色，放宽了就会出现两团同时压在一个板块上。
  *
  * 3. 尺寸随断点收窄。固定 px 宽度在窄屏上会让渐变的密集中心铺满整屏，柔光变成
  *    一层色蒙版。窄屏只保留首屏和服务区两团：首屏团尺寸减半；服务区团窄屏反而要
@@ -42,14 +44,16 @@ export const AuroraField = ({ variant = 'simple' }: AuroraFieldProps) => (
     aria-hidden
     className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
   >
-    {/* 首屏：暖橙。中心推到 -6%，标题横带上只有余光。
+    {/* 首屏：青蓝。中心推到 -6%，标题横带上只有余光。
+        色相刻意偏青，与服务区那团正蓝拉开半档——两团都在页面上半程，同一支蓝会让
+        首屏到服务区读起来是一整片没有层次的蓝。
         窄屏的纵向锚点用 px 而不是 %：这团贴着页顶，而 % 是相对整页高度的——窄屏页高涨到 3673
         之后，-6% 会把它推到 -220px，配上窄屏本就减半的高度，光就打不到标题区了。 */}
     <div
       className="absolute left-[18%] top-[-40px] h-[320px] w-[86vw] -translate-x-1/2 rounded-full blur-[60px] sm:top-[-6%] sm:h-[560px] sm:w-[900px] sm:blur-[80px]"
       style={{
         background:
-          'radial-gradient(ellipse at center, rgb(255 88 36 / 0.26), transparent 68%)',
+          'radial-gradient(ellipse at center, rgb(45 165 215 / 0.26), transparent 68%)',
       }}
     />
 
@@ -81,12 +85,12 @@ export const AuroraField = ({ variant = 'simple' }: AuroraFieldProps) => (
           }}
         />
 
-        {/* 页脚：暖橙回归，与首屏呼应收尾 */}
+        {/* 页脚：青蓝回归，与首屏同一支色相呼应收尾 */}
         <div
           className="absolute left-[74%] top-[92%] hidden h-[420px] w-[760px] -translate-x-1/2 rounded-full blur-[80px] sm:block"
           style={{
             background:
-              'radial-gradient(ellipse at center, rgb(255 88 36 / 0.18), transparent 70%)',
+              'radial-gradient(ellipse at center, rgb(45 165 215 / 0.18), transparent 70%)',
           }}
         />
       </>
