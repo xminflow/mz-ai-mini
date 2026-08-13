@@ -17,7 +17,7 @@ export const LightFooter = () => {
             <span className="text-[14px] font-semibold tracking-tight text-graphite">微域生光</span>
           </div>
           <span className="inline-flex items-center gap-2 text-[12px] text-graphite-dim">
-            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-ember" />
+            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-red" />
             正在接收新的合作申请
           </span>
         </div>

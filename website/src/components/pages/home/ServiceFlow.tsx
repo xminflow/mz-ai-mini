@@ -135,7 +135,7 @@ const ExpandedFace = ({
         {step.tag && (
           <>
             <span aria-hidden className="h-3 w-px bg-rule-strong" />
-            <span className="tracking-[0.1em] text-ember">{step.tag}</span>
+            <span className="tracking-[0.1em] text-red">{step.tag}</span>
           </>
         )}
       </p>
@@ -342,7 +342,7 @@ export const ServiceFlow = () => {
                 <span
                   key={active}
                   aria-hidden
-                  className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[2px] origin-left bg-graphite/55"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[2px] origin-left bg-blue"
                   style={{ animation: `flowProgress ${AUTOPLAY_MS}ms linear forwards` }}
                 />
               )}
@@ -355,7 +355,7 @@ export const ServiceFlow = () => {
                 onMouseEnter={() => takeOver(index)}
                 onFocus={() => takeOver(index)}
                 onClick={() => takeOver(index)}
-                className="absolute inset-0 z-10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ember"
+                className="absolute inset-0 z-10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue"
               >
                 <CollapsedFace step={step} open={open} />
               </button>
@@ -386,7 +386,7 @@ export const ServiceFlow = () => {
               {step.tag && (
                 <>
                   <span aria-hidden className="h-3 w-px bg-rule-strong" />
-                  <span className="font-mono text-[10px] tracking-[0.1em] text-ember">
+                  <span className="font-mono text-[10px] tracking-[0.1em] text-red">
                     {step.tag}
                   </span>
                 </>

@@ -5,7 +5,7 @@ type ButtonVariant = 'primary' | 'secondary'
 // 按钮规格集中在此：圆角与内边距取自参考站实测值（radius 12px / padding 14px 22px）。
 // primary 走黑底，橙色不用于按钮——橙色配额只留给编号、流程节点与状态点。
 const BASE_CLASS =
-  'inline-flex items-center justify-center gap-2 rounded-btn px-[22px] py-[14px] text-[14px] font-medium leading-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember'
+  'inline-flex items-center justify-center gap-2 rounded-btn px-[22px] py-[14px] text-[14px] font-medium leading-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue'
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
   // primary 保持黑底实心：它是页面上对比度最高的一处落点，做成玻璃会削掉它的分量

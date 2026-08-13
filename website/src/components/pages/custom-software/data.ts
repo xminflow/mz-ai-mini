@@ -23,17 +23,24 @@ export type Theme = {
 
 // 复用官网既有品牌色板（与 ai-coding-camp/data.ts 的 THEMES / STAGE2_THEMES 数值一致），
 // 保持视觉同源；本页独立维护一份，避免跨 feature 页面互相引用。
+// 浅色站点只允许红黄蓝三支彩色，所以这十个主题的 hex / rgb 全部收敛到三原色上。
+// 分配按 SERVICES 里卡片的出场顺序轮转，让相邻两张不同色：
+//   01 蓝 · 02 红 · 03 黄 · 04 蓝 · 05 蓝 · 06 红 · 07 黄 · 08 蓝 · 09 红 · 10 黄 · 11 红 · 12 蓝
+// 04 与 05 同为蓝是数据本身的语义——它们共用 agent 主题，同类同色反而正确。
+//
+// gradientFrom / gradientTo 保持原值不动：首页只读 hex 与 rgb 两个字段，
+// 那两个渐变字段仅供已隐藏的深色页面使用，动它们会波及不在本次范围内的页面。
 export const THEMES: Record<ThemeKey, Theme> = {
-  cognition: { label: "官网 · 品牌", hex: "#0099ff", rgb: "0, 153, 255", gradientFrom: "#7dadff", gradientTo: "#155eef" },
-  frontend: { label: "小程序 · 应用", hex: "#01aef0", rgb: "1, 174, 240", gradientFrom: "#57beff", gradientTo: "#0284c7" },
-  backend: { label: "企业系统", hex: "#8c5eff", rgb: "140, 94, 255", gradientFrom: "#af53ff", gradientTo: "#4a1fb8" },
-  agent: { label: "智能体", hex: "#d42672", rgb: "212, 38, 114", gradientFrom: "#ff52b7", gradientTo: "#d1157a" },
-  launch: { label: "数据 · 洞察", hex: "#f8ec1d", rgb: "248, 236, 29", gradientFrom: "#fff652", gradientTo: "#eaaa08" },
-  mobile: { label: "交易 · 电商", hex: "#ff5a1f", rgb: "255, 90, 31", gradientFrom: "#ff7a4d", gradientTo: "#ff4405" },
-  mindset: { label: "桌面 · 客户端", hex: "#bafa77", rgb: "186, 250, 119", gradientFrom: "#d4ff9e", gradientTo: "#16b364" },
-  advance: { label: "SaaS 平台", hex: "#155eef", rgb: "21, 94, 239", gradientFrom: "#7dadff", gradientTo: "#175cd3" },
-  enterprise: { label: "集成 · 自动化", hex: "#eaaa08", rgb: "234, 170, 8", gradientFrom: "#f8ec1d", gradientTo: "#92600E" },
-  career: { label: "内容 · AIGC", hex: "#16b364", rgb: "22, 179, 100", gradientFrom: "#bafa77", gradientTo: "#0f766e" },
+  cognition: { label: "官网 · 品牌", hex: "#0f5fd8", rgb: "15, 95, 216", gradientFrom: "#7dadff", gradientTo: "#155eef" },
+  frontend: { label: "小程序 · 应用", hex: "#e8b21c", rgb: "232, 178, 28", gradientFrom: "#57beff", gradientTo: "#0284c7" },
+  backend: { label: "企业系统", hex: "#c8202c", rgb: "200, 32, 44", gradientFrom: "#af53ff", gradientTo: "#4a1fb8" },
+  agent: { label: "智能体", hex: "#0f5fd8", rgb: "15, 95, 216", gradientFrom: "#ff52b7", gradientTo: "#d1157a" },
+  launch: { label: "数据 · 洞察", hex: "#c8202c", rgb: "200, 32, 44", gradientFrom: "#fff652", gradientTo: "#eaaa08" },
+  mobile: { label: "交易 · 电商", hex: "#0f5fd8", rgb: "15, 95, 216", gradientFrom: "#ff7a4d", gradientTo: "#ff4405" },
+  mindset: { label: "桌面 · 客户端", hex: "#c8202c", rgb: "200, 32, 44", gradientFrom: "#d4ff9e", gradientTo: "#16b364" },
+  advance: { label: "SaaS 平台", hex: "#e8b21c", rgb: "232, 178, 28", gradientFrom: "#7dadff", gradientTo: "#175cd3" },
+  enterprise: { label: "集成 · 自动化", hex: "#e8b21c", rgb: "232, 178, 28", gradientFrom: "#f8ec1d", gradientTo: "#92600E" },
+  career: { label: "内容 · AIGC", hex: "#c8202c", rgb: "200, 32, 44", gradientFrom: "#bafa77", gradientTo: "#0f766e" },
 };
 
 // 行业/场景清单：面向客户的「主」视角。客户按行业自我识别，避免「按软件类型切分」把

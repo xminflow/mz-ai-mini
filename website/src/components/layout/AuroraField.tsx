@@ -20,9 +20,9 @@ type AuroraFieldProps = {
  *
  * 2. 不同色相的光团之间必须退到接近 0。相邻色相在交界处叠加会泛出脏色——
  *    这条是之前踩过的：暖橙与琥珀两种暖色叠在一起，会在交界处泛出偏绿的脏色。
- *    现在全站已去掉暖色，青蓝、正蓝、淡紫三团同属冷色族，交界处即便相接也不会泛脏色，
- *    但纵向间距仍保持在 22% 页高以上、配合 68% 的透明落点——间距是为了让每团光与
- *    对应板块一一对应，不是只为避免脏色，放宽了就会出现两团同时压在一个板块上。
+ *    现在四团是「蓝为主，红黄点缀」的三原色分配，蓝红黄两两相邻都可能泛脏
+ *    （红叠黄出橙、蓝叠红出紫），所以纵向间距必须保持在 22% 页高以上，
+ *    配合 68% 的透明落点让交界处归零。这条比冷色族时代更要紧，不能放宽。
  *
  * 3. 尺寸随断点收窄。固定 px 宽度在窄屏上会让渐变的密集中心铺满整屏，柔光变成
  *    一层色蒙版。窄屏只保留首屏和服务区两团：首屏团尺寸减半；服务区团窄屏反而要
@@ -44,22 +44,25 @@ export const AuroraField = ({ variant = 'simple' }: AuroraFieldProps) => (
     aria-hidden
     className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
   >
-    {/* 首屏：青蓝。中心推到 -6%，标题横带上只有余光。
-        色相刻意偏青，与服务区那团正蓝拉开半档——两团都在页面上半程，同一支蓝会让
-        首屏到服务区读起来是一整片没有层次的蓝。
+    {/* 首屏：蓝（品牌主色）。中心推到 -6%，标题横带上只有余光。
+        蓝担纲首屏与页脚，是「蓝为主、红黄点缀」里的主：首尾同色收束整页，
+        中段才交给黄与红做变化。
         窄屏的纵向锚点用 px 而不是 %：这团贴着页顶，而 % 是相对整页高度的——窄屏页高涨到 3673
         之后，-6% 会把它推到 -220px，配上窄屏本就减半的高度，光就打不到标题区了。 */}
     <div
       className="absolute left-[18%] top-[-40px] h-[320px] w-[86vw] -translate-x-1/2 rounded-full blur-[60px] sm:top-[-6%] sm:h-[560px] sm:w-[900px] sm:blur-[80px]"
       style={{
         background:
-          'radial-gradient(ellipse at center, rgb(45 165 215 / 0.26), transparent 68%)',
+          'radial-gradient(ellipse at center, rgb(15 95 216 / 0.26), transparent 68%)',
       }}
     />
 
     {variant === 'home' && (
       <>
-        {/* 服务轮播区：冷蓝。玻璃卡的主要采样对象，是全页最需要有东西可透的地方。
+        {/* 服务轮播区：黄。玻璃卡的主要采样对象，是全页最需要有东西可透的地方。
+            alpha 从冷蓝时代的 0.34 一路压到 0.16，是实测逼出来的：黄的感知亮度远高于蓝，
+            0.30 时中心那张玻璃卡整体泛成旧纸的黄，0.16 才只留色温、不染卡面。
+            这一档是全站最低的，别再往回调。
             纵向锚点两个断点各给一次，不能只给一个值：光团位置按页高百分比定位，而两个断点下
             服务区占页高的比例差得很远——桌面端页高 2690、服务区中心在 45.7%；窄屏各板块堆叠后
             页高涨到 3673、服务区中心落到 28.1%。只写 top-[38%] 的话，窄屏上这团光会掉到
@@ -72,28 +75,28 @@ export const AuroraField = ({ variant = 'simple' }: AuroraFieldProps) => (
           className="absolute left-[56%] top-[28%] h-[560px] w-[92vw] -translate-x-1/2 rounded-full blur-[60px] sm:w-[1000px] sm:blur-[90px] lg:top-[38%] lg:h-[620px]"
           style={{
             background:
-              'radial-gradient(ellipse at center, rgb(30 120 240 / 0.34), transparent 68%)',
+              'radial-gradient(ellipse at center, rgb(232 178 28 / 0.16), transparent 68%)',
           }}
         />
 
-        {/* 流程区：淡紫。手风琴改成 Acrylic 玻璃后，这团光是深面板唯一的采样对象——
-            真玻璃只搬运背后的信息，alpha 压回 0.16 会让 backdrop-filter 变成零效果。
-            但也不能提到服务区蓝那一档（0.34）：深玻璃的 saturate 会把透过来的紫再加浓一档，
-            到那个强度面板边缘会泛出脏色。0.22 只做色温底噪，明暗结构交给面板内部的渐层光。 */}
+        {/* 流程区：红。手风琴那七张 Acrylic 卡靠它提供采样对象——
+            真玻璃只搬运背后的信息，压回 0.16 会让 backdrop-filter 变成零效果。
+            alpha 取 0.20 是三团里最低的：红透过浅玻璃会让卡片偏粉，比黄更容易脏，
+            只做色温底噪，明暗结构交给卡片内部的渐层光。 */}
         <div
           className="absolute left-[22%] top-[68%] hidden h-[520px] w-[820px] -translate-x-1/2 rounded-full blur-[90px] sm:block"
           style={{
             background:
-              'radial-gradient(ellipse at center, rgb(150 105 240 / 0.22), transparent 70%)',
+              'radial-gradient(ellipse at center, rgb(200 32 44 / 0.20), transparent 70%)',
           }}
         />
 
-        {/* 页脚：青蓝回归，与首屏同一支色相呼应收尾 */}
+        {/* 页脚：蓝回归，与首屏同一支主色呼应收尾 */}
         <div
           className="absolute left-[74%] top-[92%] hidden h-[420px] w-[760px] -translate-x-1/2 rounded-full blur-[80px] sm:block"
           style={{
             background:
-              'radial-gradient(ellipse at center, rgb(45 165 215 / 0.18), transparent 70%)',
+              'radial-gradient(ellipse at center, rgb(15 95 216 / 0.18), transparent 70%)',
           }}
         />
       </>

@@ -256,7 +256,7 @@ export const ServiceTypes = () => {
         aria-label="软件类型"
         tabIndex={0}
         onKeyDown={handleKeyDown}
-        className="relative w-full overflow-hidden transition-opacity duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ember"
+        className="relative w-full overflow-hidden transition-opacity duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue"
         style={{
           height: cardH + 56,
           opacity: ready ? 1 : 0,
@@ -342,7 +342,7 @@ export const ServiceTypes = () => {
                 }}
                 // 这一层只负责轮播位姿，卡面样式全在里层：悬停反馈交给 CSS，
                 // 才不会被这里 620ms 的轮播缓动拖成一坨钝响应
-                className="absolute left-1/2 top-7 select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember"
+                className="absolute left-1/2 top-7 select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
               >
                 {/* 卡面走 glass-thin，自带一道 1px 白描边作为玻璃厚度的体现——这与改造前
                     「不描线」的判断不同，因为当时卡面是纸白实心、描线只会显碎，现在描线是
@@ -404,15 +404,19 @@ export const ServiceTypes = () => {
                     否则文字仍然是纯黑、只有纸面变暗，看着像蒙了层脏东西。
                     悬停时收掉大半，等于「这一面转回来朝向你了」。
 
-                    颜色是冷灰而不是近黑：卡面改成玻璃之后，近黑蒙层叠在半透明面上
-                    会把透上来的底光一起压死，侧卡看起来像蒙了灰。冷灰蒙层压的是
-                    明度、留得住色相，转开的面仍然带着底光的调子。 */}
+                    颜色是中灰而不是近黑：卡面改成玻璃之后，近黑蒙层叠在半透明面上
+                    会把透上来的底光一起压死，侧卡看起来像蒙了灰。中灰蒙层压的是
+                    明度、留得住色相，转开的面仍然带着底光的调子。
+
+                    原值是偏蓝的冷灰 rgb(108 118 138)，配的是那一版的冷色光域；
+                    光域换成红黄蓝之后冷灰不再配套，且它本身带蓝相，违反「三色之外不用彩色」，
+                    因此收敛到与 paper 同族的中性灰。 */}
                 <span
                   aria-hidden
                   className="pointer-events-none absolute inset-0 transition-opacity duration-300 ease-out group-hover/card:opacity-[var(--dim-hover)]"
                   style={
                     {
-                      backgroundColor: 'rgb(108 118 138)',
+                      backgroundColor: 'rgb(118 118 112)',
                       opacity: 'var(--dim)',
                       '--dim': stage.dim,
                       '--dim-hover': stage.dim * 0.3,
@@ -473,7 +477,7 @@ const PagerButton = ({
     aria-label={label}
     onClick={onClick}
     // pointer-events-auto 抵消父层的 none：父层铺满整个舞台，不关掉指针会挡住卡片的点击
-    className="glass-medium pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-btn text-graphite-soft transition-colors duration-200 hover:bg-white/75 hover:text-graphite focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember"
+    className="glass-medium pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-btn text-graphite-soft transition-colors duration-200 hover:bg-white/75 hover:text-graphite focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
   >
     <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round">
       {children}
