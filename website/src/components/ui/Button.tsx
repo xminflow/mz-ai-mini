@@ -2,14 +2,20 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'reac
 
 type ButtonVariant = 'primary' | 'secondary'
 
-// 按钮规格集中在此：圆角与内边距取自参考站实测值（radius 12px / padding 14px 22px）。
-// primary 走黑底，橙色不用于按钮——橙色配额只留给编号、流程节点与状态点。
+// 按钮规格集中在此：内边距取自参考站实测值（padding 14px 22px），圆角走全站统一的 --radius-btn。
+//
+// focus 描边用主色蓝，配合 outline-offset-2 落在按钮之外的浅色纸底上——
+// 没有这个 offset，蓝描边贴着蓝底按钮会完全看不见。
 const BASE_CLASS =
   'inline-flex items-center justify-center gap-2 rounded-btn px-[22px] py-[14px] text-[14px] font-medium leading-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue'
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
-  // primary 保持黑底实心：它是页面上对比度最高的一处落点，做成玻璃会削掉它的分量
-  primary: 'bg-graphite text-paper hover:bg-graphite-soft',
+  // primary 走描边而非实心：站点整体是极简排版加毛玻璃，任何实心色块（原来的纯黑、
+  // 试过的蓝底）都比周围重一大截，读起来突兀。
+  // 彩色只给边框，文字保持中性黑——蓝字加蓝边两处上色会让按钮整体偏蓝、抢过版面，
+  // 黑字也让按钮文案与全站正文同一读法。悬停时补一层极淡蓝填充并把边加深一档。
+  primary: 'border border-blue text-graphite hover:bg-blue/[0.07] hover:border-blue-deep',
+  // secondary 靠玻璃与深灰字退到次要位：它不带彩色，与带蓝的 primary 拉开层级
   secondary: 'glass-medium text-graphite hover:bg-white/75',
 }
 
