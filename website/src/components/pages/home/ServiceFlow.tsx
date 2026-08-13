@@ -117,7 +117,21 @@ const ExpandedFace = ({ step, open }: { step: EngagementStep; open: boolean }) =
     {/* 图标紧贴标题成为一组，与参考站「标记 → 名称 → 描述」的下沉节奏一致；
         单独居中会让它悬在半空、和文字断开 */}
     <div className="max-w-[25rem]">
-      <StepDiagram code={step.code} className="mb-6 h-16 w-auto text-paper/70" />
+      {/* 放大到 h-36 当主角，但仍留在标题组里、不单独居中——理由见上一条注释。
+          StepDiagram 的 viewBox 是 200×132、stroke-width 1.5：h-16 时缩放比只有 0.485，
+          线宽实际渲染 0.73px，这才是它看起来单薄的根因；h-36 时缩放比 1.09，线宽约 1.64px，
+          不用改 SVG 本体就有了分量。背光让它在深玻璃上像个发光体，而不是贴上去的线框。 */}
+      <div className="relative mb-6 w-fit">
+        <span
+          aria-hidden
+          className="pointer-events-none absolute -inset-8 rounded-full"
+          style={{
+            background:
+              'radial-gradient(circle at 50% 50%, rgb(200 215 255 / 0.10), transparent 70%)',
+          }}
+        />
+        <StepDiagram code={step.code} className="relative h-36 w-auto text-paper/75" />
+      </div>
       <h3 className="text-[1.65rem] font-semibold leading-[1.3] tracking-[-0.02em] text-paper">
         {step.title}
       </h3>
@@ -316,7 +330,7 @@ export const ServiceFlow = () => {
               <h3 className="text-[1.35rem] font-semibold leading-[1.3] tracking-[-0.02em] text-graphite">
                 {step.title}
               </h3>
-              <StepDiagram code={step.code} className="h-12 w-auto shrink-0 text-graphite-dim" />
+              <StepDiagram code={step.code} className="h-16 w-auto shrink-0 text-graphite-dim" />
             </div>
 
             <p className="mt-3 text-[14.5px] leading-[1.85] text-graphite-soft">{step.lead}</p>
