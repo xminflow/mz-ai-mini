@@ -400,6 +400,16 @@ samp,
   100% { background-position: 200% 50%; }
 }
 
+/* 背景蓝光的漂移。只动 transform，走 GPU 合成——这一层铺得很大且带上百像素的 blur，
+   碰 top/width 这类属性会逐帧重算布局，整页跟着掉帧。
+
+   幅度只给 4%、周期拉到 40s 以上：这一层的作用是让页面不死板、顺带给毛玻璃留出
+   可采样的信息，不是让人注意到背景在动。快到能看出在动就俗了。 */
+@keyframes glowDrift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(4%, -2%, 0) scale(1.06); }
+}
+
 /* 服务流程自动播放进度条。用 transform 而不是 width：width 动画每帧触发布局，
    这一条要在玻璃面板上连续跑 3 秒，不能让它拖累合成 */
 @keyframes flowProgress {

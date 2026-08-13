@@ -1,0 +1,83 @@
+type GlowVariant = 'home' | 'simple'
+
+type GlowFieldProps = {
+  /** home 铺两片（对应服务区与流程区）；simple 只铺一片，给案例页这类短页面用 */
+  variant?: GlowVariant
+}
+
+/**
+ * 背景蓝光层。
+ *
+ * 两个作用，缺一不可：一是让米白底不至于太素；二是给毛玻璃提供采样对象——
+ * 玻璃只搬运背后的信息，底色是一整块平米白时 backdrop-filter 就是零效果，
+ * 这是实测结论。所以这一层调淡到看不见的那一刻，全站的玻璃质感也会同时消失。
+ *
+ * ===== 为什么是「两片柔光」这么简单的形态 =====
+ *
+ * 这一层前后推翻过五版，都比现在复杂，也都更难看，教训记在这里免得再走一遍：
+ *
+ * 一、多团独立圆斑分别对应各板块——孤立的模糊圆斑读起来是水彩晕染，气质偏软。
+ * 二、超大渐变铺满整页——覆盖连续与大面积着色是同一件事的两面，中段一整片粉、
+ *     下段一整片米黄，比第一版更脏。
+ * 三、横向斜掠的极光带——形态有了，但方向不对，光在横着淌。
+ * 四、自上而下的垂落光幕加纵向光柱——方向对了，但柱距 9px 配 0.34 的 alpha
+ *     渲染成一整片百叶窗，条纹直接压在标题上。
+ * 五、三色光柱交织——用 multiply 裁切柱状，而 multiply 会压暗它盖住的每一个像素，
+ *     三层叠完整片背景变成灰蒙蒙的一层雾。（若日后还要做柱状，用 mask 裁切，
+ *     mask 只决定哪里可见、不参与颜色运算。）
+ *
+ * 结论是：这一层越简单越好。它是背景，任何能被一眼注意到的形态、纹理、
+ * 色彩交织，最后都会变成噪音。现在只保留最朴素的一件事——两片蓝色柔光，
+ * 落在玻璃卡最密集的位置，极缓慢地漂移。
+ *
+ * 三条约束：
+ *
+ * 1. 只用蓝。三色同屏必然在交界处混出中间色（蓝叠黄偏绿、三色混偏灰），
+ *    在浅底上尤其明显。红黄留给图标填充与「免费」标记那类小面积强调。
+ *
+ * 2. 光要盖住玻璃卡所在的整段。卡片滚到没有光的位置时 backdrop-filter 会失效，
+ *    卡片突然变成平板一块——曾在页面 25% 处留下一段色度为 0 的空档，就是这么来的。
+ *
+ * 3. 首屏与页脚不投光，保持米白纸面的干净。「铺满整页」是第二版失败的原因。
+ *
+ * 定位用 absolute 而不是 fixed：光要跟着页面一起滚，光与板块的对应关系才固定可控。
+ * fixed 会让光停在视口上，滚动时透出什么由滚动位置决定，玻璃的采样对象也就不可预期。
+ */
+
+const BLUE = '15 95 216'
+
+export const GlowField = ({ variant = 'simple' }: GlowFieldProps) => (
+  <div
+    aria-hidden
+    className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+  >
+    {/* 服务轮播区。全页玻璃卡最密集的地方，也是这一层最不能省的一片。
+        上缘越过板块顶边，顺带兜住紧贴上方的能力条：那个玻璃胶囊若背后全无光，
+        会退化成一块半透明白。 */}
+    <div
+      className={[
+        'absolute left-[-25%] w-[150vw] motion-safe:animate-[glowDrift_44s_ease-in-out_infinite]',
+        variant === 'home' ? 'top-[22%] h-[34%]' : 'top-[8%] h-[52%]',
+      ].join(' ')}
+      style={{
+        background: `radial-gradient(ellipse 58% 52% at 46% 48%, rgb(${BLUE} / 0.26), transparent 72%)`,
+        filter: 'blur(100px)',
+        willChange: 'transform',
+      }}
+    />
+
+    {variant === 'home' && (
+      /* 流程区。七张 Acrylic 卡靠它提供采样对象。
+         比上面那片淡一档：这一段的卡片本身已经有噪点与内缘高光撑着质感，
+         光只需要托底，压过头会把浅色卡染蓝。 */
+      <div
+        className="absolute left-[-15%] top-[60%] h-[32%] w-[150vw] motion-safe:animate-[glowDrift_57s_ease-in-out_infinite]"
+        style={{
+          background: `radial-gradient(ellipse 56% 50% at 52% 50%, rgb(${BLUE} / 0.19), transparent 70%)`,
+          filter: 'blur(110px)',
+          willChange: 'transform',
+        }}
+      />
+    )}
+  </div>
+)
