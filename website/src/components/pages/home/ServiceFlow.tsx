@@ -177,7 +177,7 @@ const ExpandedFace = ({
   )
 }
 
-// 服务流程板块。
+// 合作流程板块。
 //
 // 桌面是横向手风琴；窄屏没有横向空间容纳七条竖条，也没有悬停，改为七步全部展开的纵向列表——
 // 手机上「点开才看得到」只会多一道无谓的门槛。
@@ -253,7 +253,7 @@ export const ServiceFlow = () => {
     <section id="process" className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
       {/* once=false：竖条每次经过都重新立起，标题跟着一起，不然滚回来只有列表在动 */}
       <Reveal once={false}>
-        <SectionHeading eyebrow="How we work" title="我们的服务流程" className="mb-12 sm:mb-16" />
+        <SectionHeading eyebrow="How we work" title="我们的合作流程" className="mb-12 sm:mb-16" />
       </Reveal>
 
       {/* 入场的观察对象是这一层：ul 在窄屏是 display:none，盯着它会永远不相交，
