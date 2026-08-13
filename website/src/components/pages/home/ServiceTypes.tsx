@@ -322,8 +322,19 @@ export const ServiceTypes = () => {
                 // 展开这一步的判断则要排在 teleports 之前——外侧卡在展开时也满足
                 // 「换位前后都在视野外」，走那条分支会被判成绕场换位、直接落位，
                 // 逐档摊开的层次就没了
+                //
+                // hidden 这一档是性能修复：opacity 为 0 的卡（distance ≥ 3，12 张里占 7 张）
+                // 直接落位，不参与补间。它们本来就看不见，动不动没有任何视觉差别，
+                // 但每一张参与补间的 motion 组件都会让 framer-motion 的 projection 系统
+                // 每帧调一次 measureScroll 去读几何属性，而此时样式已被动画作废，
+                // 于是触发强制同步布局。6 倍 CPU 节流下实测：滚入并展开这一段累计
+                // 强制重排 434ms，伴随 461/409/344ms 三个超长帧——就是那种「顿一下」的观感。
+                // 把同时补间的卡从 12 张压到 5 张，是这条链路上收益最大、改动最小的一刀。
+                // hidden 必须排在 unfolding 之前：展开正是最卡的一段，而那 7 张隐藏卡
+                // 起点（FOLDED.opacity 0）与终点（stage.opacity 0）都不可见，
+                // 让它们参与逐档摊开毫无视觉收益，只是白白多 7 份重排。
                 transition={
-                  reduce || folded
+                  reduce || folded || hidden
                     ? { duration: 0 }
                     : phase === 'unfolding'
                       ? { ...UNFOLD, delay: (distance * UNFOLD_STEP_MS) / 1000 }
