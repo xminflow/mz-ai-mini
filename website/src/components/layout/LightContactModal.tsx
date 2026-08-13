@@ -49,7 +49,7 @@ export const LightContactModal = ({ open, onClose }: LightContactModalProps) => 
               <button
                 type="button"
                 onClick={onClose}
-                className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-rule text-graphite-dim transition-colors hover:text-graphite"
+                className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-btn border border-rule text-graphite-dim transition-colors hover:text-graphite"
                 aria-label="关闭"
               >
                 <svg viewBox="0 0 16 16" fill="currentColor" className="h-3.5 w-3.5">

@@ -13,7 +13,7 @@ const NAV_ITEMS: Array<{ label: string; href: string }> = [
   { label: '案例', href: '/cases' },
 ]
 
-const LINK_CLASS = 'rounded-full px-4 py-1.5 text-[14px] transition-colors'
+const LINK_CLASS = 'rounded-btn px-4 py-1.5 text-[14px] transition-colors'
 
 export const LightNav = () => {
   const pathname = usePathname()

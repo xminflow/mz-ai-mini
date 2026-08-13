@@ -11,9 +11,9 @@ const CAPABILITIES: string[] = [
 export const CapabilityBar = () => (
   <section className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-28">
     <div className="flex justify-center">
-      {/* 五项在窄屏一行放不下，必然换行；换行后 rounded-full 会把两三行文字裹成一个
-          橄榄球形，所以窄屏给固定圆角，宽屏单行时再回到胶囊 */}
-      <div className="glass-medium flex max-w-full flex-wrap items-center justify-center gap-y-1 rounded-[22px] px-3 py-3 sm:rounded-full">
+      {/* 圆角跟随全站按钮的 4px。原先窄屏 22px、宽屏胶囊的分档是为了避开「换行后被裹成
+          橄榄球形」，统一成小圆角后这个问题不复存在，两档也就没有必要了 */}
+      <div className="glass-medium rounded-btn flex max-w-full flex-wrap items-center justify-center gap-y-1 px-3 py-3">
         {CAPABILITIES.map((item, index) => (
           <span key={item} className="flex items-center">
             {index > 0 && (
