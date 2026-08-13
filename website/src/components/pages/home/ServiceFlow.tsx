@@ -177,6 +177,44 @@ const ExpandedFace = ({
   )
 }
 
+/**
+ * 窄屏正文：默认两行，点「展开」看全文。
+ *
+ * 最长的一条 150 字在 390 宽下要 6 行，七步铺开就是一整片字墙，手机上没人会读。
+ * 折叠的只有正文细节——编号、标题、图标、节点全程可见，扫读七步的动线不受影响。
+ *
+ * 用 line-clamp 而不是截字符串：截字符串要按中英文宽度估算断点，还会把「7×24」
+ * 这类词组切断；line-clamp 交给浏览器按实际排版断，且展开时不需要重新测量。
+ *
+ * 展开态没做收起：手机上读完一条就往下滑了，回头收起的动机几乎不存在，
+ * 多一个状态反而多一次误触。
+ */
+const MobileLead = ({ text }: { text: string }) => {
+  const [expanded, setExpanded] = useState(false)
+
+  return (
+    <div className="mt-2.5">
+      <p
+        className={[
+          'text-[14.5px] leading-[1.8] text-graphite-soft',
+          expanded ? '' : 'line-clamp-2',
+        ].join(' ')}
+      >
+        {text}
+      </p>
+      {!expanded && (
+        <button
+          type="button"
+          onClick={() => setExpanded(true)}
+          className="mt-1.5 font-mono text-[11px] tracking-[0.1em] text-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+        >
+          展开
+        </button>
+      )}
+    </div>
+  )
+}
+
 // 合作流程板块。
 //
 // 桌面是横向手风琴；窄屏没有横向空间容纳七条竖条，也没有悬停，改为七步全部展开的纵向列表——
@@ -364,12 +402,16 @@ export const ServiceFlow = () => {
         })}
       </ul>
 
-      {/* 窄屏：七步顺排，不折叠。没有悬停也就没有自动播放，只保留同一套逐条立起 */}
-      <ol className="border-t border-rule lg:hidden">
+      {/* 窄屏：竖向时间轴。
+          手机上没有悬停，横向也放不下七条竖条，所以不复用手风琴。
+          之前这里是七步平铺的长列表，实测总高 2341px（约 3 个屏）、每步 242–322px，
+          七段并列的文章读不出「流程在推进」——而这正是本板块唯一要传达的东西。
+          改成左侧一条贯穿的轴线加节点，推进感由轴线本身承担。 */}
+      <ol className="lg:hidden">
         {ENGAGEMENT_STEPS.map((step, index) => (
           <li
             key={step.code}
-            className="border-b border-rule py-7"
+            className="group relative pb-9 pl-8 last:pb-0"
             style={{
               opacity: shown ? 1 : 0,
               transform: shown ? 'none' : 'translateY(20px)',
@@ -379,9 +421,31 @@ export const ServiceFlow = () => {
               ].join(', '),
             }}
           >
-            <div className="flex items-center gap-3">
-              <span className="font-mono text-[11px] tracking-[0.12em] text-graphite-dim">
-                {step.code} / {TOTAL}
+            {/* 连接线：每项只画到「自己节点下方」为止，最后一项不画（group-last:hidden）。
+                这样线自然停在末节点圆心，不需要去算列表总高——用一条贯穿的绝对定位线
+                反而要拿到最后一项的高度才能收尾，末尾容易多出一截悬空的线。
+                注意必须是 group-last 而不是 last：last 判断的是这个 span 在 li 内的位置，
+                它是第一个子元素，永远命中不了。 */}
+            <span
+              aria-hidden
+              className="absolute bottom-0 left-[7px] top-[26px] w-px bg-rule-strong group-last:hidden"
+            />
+
+            {/* 节点：空心圆 + 主色描边。带 tag 的那几步填实，让「免费」在扫读时也成立 */}
+            <span
+              aria-hidden
+              className={[
+                'absolute left-0 top-2 z-10 h-[15px] w-[15px] rounded-full border-2 border-blue',
+                step.tag ? 'bg-blue' : 'bg-paper',
+              ].join(' ')}
+            />
+
+            <div className="flex items-center gap-2.5">
+              <span className="font-mono text-[12px] font-medium tracking-[0.12em] text-blue">
+                {step.code}
+              </span>
+              <span className="font-mono text-[11px] tracking-[0.1em] text-graphite-dim">
+                / {TOTAL}
               </span>
               {step.tag && (
                 <>
@@ -393,14 +457,16 @@ export const ServiceFlow = () => {
               )}
             </div>
 
-            <div className="mt-3 flex items-start justify-between gap-6">
-              <h3 className="text-[1.35rem] font-semibold leading-[1.3] tracking-[-0.02em] text-graphite">
+            {/* 图标缩到 40px 跟在标题右边：窄屏上它是辅助标识而非主角，
+                原来 h-16 挂在标题右侧、与正文之间隔着大段空白，既撑不起视觉又打断阅读动线 */}
+            <div className="mt-2 flex items-center justify-between gap-4">
+              <h3 className="text-[1.25rem] font-semibold leading-[1.35] tracking-[-0.02em] text-graphite">
                 {step.title}
               </h3>
-              <StepDiagram code={step.code} className="h-16 w-auto shrink-0 text-graphite-dim" />
+              <StepDiagram code={step.code} className="h-10 w-auto shrink-0 text-graphite-dim" />
             </div>
 
-            <p className="mt-3 text-[14.5px] leading-[1.85] text-graphite-soft">{step.lead}</p>
+            <MobileLead text={step.lead} />
           </li>
         ))}
       </ol>
