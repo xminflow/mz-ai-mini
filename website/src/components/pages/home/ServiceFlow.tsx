@@ -20,6 +20,8 @@ const PANEL_MS = 720
 const PANEL_EASE = 'cubic-bezier(0.22, 1, 0.26, 1)'
 /** 面板内容比容器晚一步出现，避免文字在还没展开的窄条里闪一下 */
 const CONTENT_DELAY_MS = 120
+/** 面板内容逐级进场的级间隔。五级（编号→短线→图标→标题→正文）共 220ms，收得住 */
+const LAYER_STEP_MS = 55
 
 // 折叠 : 展开 = 1 : 6。六条折叠 + 一条展开共 12 份，展开条正好占一半宽度，
 // 与参考站 105 : 458 的比例一致。
@@ -36,14 +38,15 @@ const EXPANDED_FLEX = '6 1 0%'
 const PANEL_CONTENT_WIDTH = '34rem'
 
 /**
- * 展开面板的底光。落点压在图标与标题那一组上，让近黑的面板有一处亮起来的地方——
+ * 展开面板内部的渐层光。落点压在图标与标题那一组上，让深玻璃有一处亮起来的地方——
  * 纯色平涂在这么大一块深色上会显得很死。
  *
- * 极低的白度加一点暖色温（不是品牌橙，橙色仍只留给「免费」标记），
- * 只在余光里感觉得到，正眼看不出是一层渐变。
+ * 方案 B 的分工：背后透进来的紫光只做色温底噪，明暗结构由这一层负责，
+ * 所以强度比改造前（0.085，实际渲染完全不可见）显著提高。
+ * 色相取极淡的冷白偏蓝，与背后透过来的紫同属冷色族，叠加不会泛脏色。
  */
 const PANEL_GLOW =
-  'radial-gradient(62% 52% at 24% 64%, rgb(255 240 232 / 0.085), transparent 72%)'
+  'radial-gradient(70% 60% at 26% 62%, rgb(190 210 255 / 0.14), transparent 72%)'
 
 /**
  * 入场：滚到板块时七条竖条自下而上逐条立起，随后才开始自动播放。
@@ -88,20 +91,47 @@ const CollapsedFace = ({ step, open }: { step: EngagementStep; open: boolean }) 
   </span>
 )
 
-/** 展开面板：顶部编号，底部「图标 → 标题 → 正文」一组 */
-const ExpandedFace = ({ step, open }: { step: EngagementStep; open: boolean }) => (
+/** 展开面板：顶部编号，底部「图标 → 标题 → 正文」一组，五级逐级进场 */
+const ExpandedFace = ({
+  step,
+  open,
+  reduce,
+}: {
+  step: EngagementStep
+  open: boolean
+  reduce: boolean
+}) => {
+  /**
+   * 逐级进场。收起时刻意不错开、200ms 齐落：错开只在展开时是「层次展开」，
+   * 收起时会变成拖沓的余音。
+   *
+   * 整体淡入已经从外层容器移除——外层整块淡入与这里的逐级进场同时存在会互相打架。
+   */
+  const layer = (index: number) => {
+    if (reduce) return { opacity: open ? 1 : 0 }
+    const delay = CONTENT_DELAY_MS + index * LAYER_STEP_MS
+    return {
+      opacity: open ? 1 : 0,
+      transform: open ? 'none' : 'translateY(10px)',
+      transition: open
+        ? [
+            `opacity 420ms ease-out ${delay}ms`,
+            `transform 420ms ${PANEL_EASE} ${delay}ms`,
+          ].join(', ')
+        : 'opacity 200ms ease-out, transform 200ms ease-out',
+    }
+  }
+
+  return (
   <div
-    className={[
-      'pointer-events-none absolute inset-y-0 left-0 flex flex-col justify-between p-10 transition-opacity',
-      open ? 'opacity-100 duration-[450ms]' : 'opacity-0 duration-200',
-    ].join(' ')}
-    style={{
-      width: PANEL_CONTENT_WIDTH,
-      transitionDelay: open ? `${CONTENT_DELAY_MS}ms` : undefined,
-    }}
+    className="pointer-events-none absolute inset-y-0 left-0 flex flex-col justify-between p-10"
+    style={{ width: PANEL_CONTENT_WIDTH }}
   >
     <div>
-      <p className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-paper/45">
+      <p
+        className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-paper/45"
+        style={layer(0)}
+      >
         STEP {step.code} / {TOTAL}
         {step.tag && (
           <>
@@ -111,7 +141,7 @@ const ExpandedFace = ({ step, open }: { step: EngagementStep; open: boolean }) =
         )}
       </p>
       {/* 编号下一条短横线：顶部原本只有孤零零一行小字，加条线才压得住这片留白 */}
-      <span aria-hidden className="mt-5 block h-px w-10 bg-paper/25" />
+      <span aria-hidden className="mt-5 block h-px w-10 bg-paper/25" style={layer(1)} />
     </div>
 
     {/* 图标紧贴标题成为一组，与参考站「标记 → 名称 → 描述」的下沉节奏一致；
@@ -121,7 +151,7 @@ const ExpandedFace = ({ step, open }: { step: EngagementStep; open: boolean }) =
           StepDiagram 的 viewBox 是 200×132、stroke-width 1.5：h-16 时缩放比只有 0.485，
           线宽实际渲染 0.73px，这才是它看起来单薄的根因；h-36 时缩放比 1.09，线宽约 1.64px，
           不用改 SVG 本体就有了分量。背光让它在深玻璃上像个发光体，而不是贴上去的线框。 */}
-      <div className="relative mb-6 w-fit">
+      <div className="relative mb-6 w-fit" style={layer(2)}>
         <span
           aria-hidden
           className="pointer-events-none absolute -inset-8 rounded-full"
@@ -132,13 +162,19 @@ const ExpandedFace = ({ step, open }: { step: EngagementStep; open: boolean }) =
         />
         <StepDiagram code={step.code} className="relative h-36 w-auto text-paper/75" />
       </div>
-      <h3 className="text-[1.65rem] font-semibold leading-[1.3] tracking-[-0.02em] text-paper">
+      <h3
+        className="text-[1.65rem] font-semibold leading-[1.3] tracking-[-0.02em] text-paper"
+        style={layer(3)}
+      >
         {step.title}
       </h3>
-      <p className="mt-3 text-[14.5px] leading-[1.85] text-paper/65">{step.lead}</p>
+      <p className="mt-3 text-[14.5px] leading-[1.85] text-paper/65" style={layer(4)}>
+        {step.lead}
+      </p>
     </div>
   </div>
-)
+  )
+}
 
 // 服务流程板块。
 //
@@ -264,20 +300,29 @@ export const ServiceFlow = () => {
               ].join(' ')}
             >
               {/* 底光挂在 li 上而不是面板内容里：内容宽度写死 34rem，光晕跟着它会在
-                  过渡途中被裁出一道硬边；挂在这里则始终铺满当前宽度，随伸缩自然缩放 */}
+                  过渡途中被裁出一道硬边；挂在这里则始终铺满当前宽度，随伸缩自然缩放。
+                  scaleX 与 flex 共用同一组时长和缓动，否则光会跟不上面板边缘。 */}
               <span
                 aria-hidden
-                className={[
-                  'pointer-events-none absolute inset-0 transition-opacity',
-                  open ? 'opacity-100 duration-[600ms]' : 'opacity-0 duration-200',
-                ].join(' ')}
-                style={{ backgroundImage: PANEL_GLOW }}
+                className="pointer-events-none absolute inset-0"
+                style={{
+                  backgroundImage: PANEL_GLOW,
+                  opacity: open ? 1 : 0,
+                  transform: open ? 'scaleX(1)' : 'scaleX(0.55)',
+                  transformOrigin: 'left',
+                  transition: reduce
+                    ? 'none'
+                    : [
+                        `opacity ${open ? 600 : 200}ms ease-out`,
+                        `transform ${PANEL_MS}ms ${PANEL_EASE}`,
+                      ].join(', '),
+                }}
               />
 
               {/* 详情不放进按钮内部：否则按钮的可访问名会变成整段 140 字正文。
                   按钮只负责命中区域与名称，详情作为它的兄弟节点由 aria-controls 关联 */}
               <div id={panelId} aria-hidden={open ? undefined : true}>
-                <ExpandedFace step={step} open={open} />
+                <ExpandedFace step={step} open={open} reduce={Boolean(reduce)} />
               </div>
 
               <button
