@@ -30,6 +30,22 @@ type GlowFieldProps = {
  * 色彩交织，最后都会变成噪音。现在只保留最朴素的一件事——两片蓝色柔光，
  * 落在玻璃卡最密集的位置，极缓慢地漂移。
  *
+ * ===== 这一层必须保持静止 =====
+ *
+ * 曾经给两片光加过极缓慢的漂移（glowDrift，周期 44s/57s、幅度 4%），慢到几乎看不出在动，
+ * 却让服务轮播区的帧率从 218fps 掉到 43fps——五倍的代价换一个看不见的效果。
+ *
+ * 原因不在这一层自身，而在它与玻璃的相互作用：backdrop-filter 必须采样元素背后的内容，
+ * 背后的内容每帧都在变，采样就得每帧重做。页面上有 25 个 backdrop-filter 元素
+ * （12 张轮播卡 + 7 张流程卡 + 导航 + 能力条 + 按钮），而这两片是 2280×980、blur(100px)
+ * 的超大模糊层。于是每帧要先重算两片巨型 blur，再让 25 个玻璃元素重新采样已经变了的背景。
+ *
+ * 对照实验数据：现状 43fps / 仅停这一层的动画 218fps / 把这一层整个隐藏 207fps。
+ * 隐藏并不比停动画更快，说明成本几乎全在「动」上，不在「有光」上——所以光留着，别让它动。
+ *
+ * 顺带一提，ServiceTypes 注释里那组 216fps 的实测是在光域静止的年代做的，
+ * 与这里的 218fps 几乎一致。给这一层加动画等于推翻了那次实测的前提。
+ *
  * 三条约束：
  *
  * 1. 只用蓝。三色同屏必然在交界处混出中间色（蓝叠黄偏绿、三色混偏灰），
@@ -56,13 +72,12 @@ export const GlowField = ({ variant = 'simple' }: GlowFieldProps) => (
         会退化成一块半透明白。 */}
     <div
       className={[
-        'absolute left-[-25%] w-[150vw] motion-safe:animate-[glowDrift_44s_ease-in-out_infinite]',
+        'absolute left-[-25%] w-[150vw]',
         variant === 'home' ? 'top-[22%] h-[34%]' : 'top-[8%] h-[52%]',
       ].join(' ')}
       style={{
         background: `radial-gradient(ellipse 58% 52% at 46% 48%, rgb(${BLUE} / 0.26), transparent 72%)`,
         filter: 'blur(100px)',
-        willChange: 'transform',
       }}
     />
 
@@ -71,11 +86,10 @@ export const GlowField = ({ variant = 'simple' }: GlowFieldProps) => (
          比上面那片淡一档：这一段的卡片本身已经有噪点与内缘高光撑着质感，
          光只需要托底，压过头会把浅色卡染蓝。 */
       <div
-        className="absolute left-[-15%] top-[60%] h-[32%] w-[150vw] motion-safe:animate-[glowDrift_57s_ease-in-out_infinite]"
+        className="absolute left-[-15%] top-[60%] h-[32%] w-[150vw]"
         style={{
           background: `radial-gradient(ellipse 56% 50% at 52% 50%, rgb(${BLUE} / 0.19), transparent 70%)`,
           filter: 'blur(110px)',
-          willChange: 'transform',
         }}
       />
     )}

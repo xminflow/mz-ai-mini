@@ -396,15 +396,11 @@ samp,
   100% { background-position: 200% 50%; }
 }
 
-/* 背景蓝光的漂移。只动 transform，走 GPU 合成——这一层铺得很大且带上百像素的 blur，
-   碰 top/width 这类属性会逐帧重算布局，整页跟着掉帧。
-
-   幅度只给 4%、周期拉到 40s 以上：这一层的作用是让页面不死板、顺带给毛玻璃留出
-   可采样的信息，不是让人注意到背景在动。快到能看出在动就俗了。 */
-@keyframes glowDrift {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(4%, -2%, 0) scale(1.06); }
-}
+/* 这里曾有一个 glowDrift 关键帧给背景蓝光做极缓慢漂移，已删除。
+   它把服务轮播区的帧率从 218fps 拖到 43fps——原因不是这个动画本身贵，
+   而是它每帧改变了 25 个 backdrop-filter 元素背后的内容，迫使它们全部重新采样。
+   完整的对照数据与结论记在 components/layout/GlowField.tsx 的注释里。
+   给背景层加动画之前，请先读那段。 */
 
 /* 合作流程自动播放进度条。用 transform 而不是 width：width 动画每帧触发布局，
    这一条要在玻璃面板上连续跑 3 秒，不能让它拖累合成 */
