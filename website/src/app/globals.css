@@ -291,7 +291,11 @@ samp,
   background:
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='ad'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.75 0'/></filter><rect width='100%' height='100%' filter='url(%23ad)' opacity='0.5'/></svg>")
       repeat,
-    rgba(14, 14, 14, 0.82);
+    /* 0.88 而不是 0.82：按纯 paper 底推算 0.82 有 5.4:1，但实际背后有光团、
+       噪点又是 overlay 提亮，实测背景被抬到 71，正文只剩 4.74:1——过线但余量仅 0.24，
+       换个屏幕或滚动位置就可能掉下去。0.88 下最坏位置（最左侧、光团最强处）
+       实测正文 5.94:1、含噪点亮点的保守估计 5.44:1、标题 13.04:1。 */
+    rgba(14, 14, 14, 0.88);
   background-blend-mode: overlay, normal;
   /* saturate 取 150% 而非浅色档的 180%：深底上放大色彩更容易发脏 */
   backdrop-filter: saturate(150%) blur(30px);
