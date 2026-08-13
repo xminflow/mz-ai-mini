@@ -38,15 +38,14 @@ const EXPANDED_FLEX = '6 1 0%'
 const PANEL_CONTENT_WIDTH = '34rem'
 
 /**
- * 展开面板内部的渐层光。落点压在图标与标题那一组上，让深玻璃有一处亮起来的地方——
- * 纯色平涂在这么大一块深色上会显得很死。
+ * 展开面板内部的渐层光。落点压在图标与标题那一组上，让这一大片浅玻璃有一处亮起来的地方。
  *
- * 方案 B 的分工：背后透进来的紫光只做色温底噪，明暗结构由这一层负责，
- * 所以强度比改造前（0.085，实际渲染完全不可见）显著提高。
- * 色相取极淡的冷白偏蓝，与背后透过来的紫同属冷色族，叠加不会泛脏色。
+ * 卡片改浅色后这一层必须换色：原来那支冷白偏蓝（rgb(190 210 255 / 0.14)）是给近黑底配的，
+ * 放到接近白的底上完全看不见。浅底上做「光」只能靠提亮——用纯白把玻璃在这一块压实一档，
+ * 与四周透出的背景光形成明暗差。
  */
 const PANEL_GLOW =
-  'radial-gradient(70% 60% at 26% 62%, rgb(190 210 255 / 0.14), transparent 72%)'
+  'radial-gradient(70% 60% at 26% 62%, rgb(255 255 255 / 0.55), transparent 72%)'
 
 /**
  * 入场：滚到板块时七条竖条自下而上逐条立起，随后才开始自动播放。
@@ -129,19 +128,19 @@ const ExpandedFace = ({
   >
     <div>
       <p
-        className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-paper/45"
+        className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.18em] text-graphite-dim"
         style={layer(0)}
       >
         STEP {step.code} / {TOTAL}
         {step.tag && (
           <>
-            <span aria-hidden className="h-3 w-px bg-paper/20" />
+            <span aria-hidden className="h-3 w-px bg-rule-strong" />
             <span className="tracking-[0.1em] text-ember">{step.tag}</span>
           </>
         )}
       </p>
       {/* 编号下一条短横线：顶部原本只有孤零零一行小字，加条线才压得住这片留白 */}
-      <span aria-hidden className="mt-5 block h-px w-10 bg-paper/25" style={layer(1)} />
+      <span aria-hidden className="mt-5 block h-px w-10 bg-rule-strong" style={layer(1)} />
     </div>
 
     {/* 图标紧贴标题成为一组，与参考站「标记 → 名称 → 描述」的下沉节奏一致；
@@ -152,23 +151,25 @@ const ExpandedFace = ({
           线宽实际渲染 0.73px，这才是它看起来单薄的根因；h-36 时缩放比 1.09，线宽约 1.64px，
           不用改 SVG 本体就有了分量。背光让它在深玻璃上像个发光体，而不是贴上去的线框。 */}
       <div className="relative mb-6 w-fit" style={layer(2)}>
+        {/* 背光同样换向：深底上是「发光」，浅底上只能是「压实一小块白」，
+            让图标坐在一处比四周更实的地方，而不是浮在半透明玻璃上 */}
         <span
           aria-hidden
           className="pointer-events-none absolute -inset-8 rounded-full"
           style={{
             background:
-              'radial-gradient(circle at 50% 50%, rgb(200 215 255 / 0.10), transparent 70%)',
+              'radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.45), transparent 70%)',
           }}
         />
-        <StepDiagram code={step.code} className="relative h-36 w-auto text-paper/75" />
+        <StepDiagram code={step.code} className="relative h-36 w-auto text-graphite-dim" />
       </div>
       <h3
-        className="text-[1.65rem] font-semibold leading-[1.3] tracking-[-0.02em] text-paper"
+        className="text-[1.65rem] font-semibold leading-[1.3] tracking-[-0.02em] text-graphite"
         style={layer(3)}
       >
         {step.title}
       </h3>
-      <p className="mt-3 text-[14.5px] leading-[1.85] text-paper/65" style={layer(4)}>
+      <p className="mt-3 text-[14.5px] leading-[1.85] text-graphite-soft" style={layer(4)}>
         {step.lead}
       </p>
     </div>
@@ -261,12 +262,14 @@ export const ServiceFlow = () => {
       {/* 桌面：横向手风琴。--strip-w 是折叠态内容的固定宽度，与 flex 比例对应。
           鼠标离开整行不收起：全部收起会让板块变成一排空白竖条，回来时还得重新找位置。
 
-          这一层只负责圆角、描边、投影，绝不能加 backdrop-filter——父级一旦有它就会成为
-          子元素的 backdrop root，七条 li 的玻璃会全部失效（同类事故见 ServiceTypes 的 maskImage）。
+          七张卡各自独立、以 9px 间隙分开，所以这一层不再有圆角、描边、投影与 overflow-hidden——
+          这些都下放到单卡上了。overflow-hidden 尤其不能留在这里：它会把每张卡的投影裁掉。
+          绝不能给这一层加 backdrop-filter——父级一旦有它就会成为子元素的 backdrop root，
+          七条 li 的玻璃会全部失效（同类事故见 ServiceTypes 的 maskImage）。
           高度 32rem 而非 30rem：图标放大到 h-36 后，最长的第 06 步文案在 30rem 下会溢出 11px。 */}
       <ul
         aria-label="合作流程"
-        className="hidden h-[32rem] overflow-hidden rounded-card border border-rule shadow-soft-lg lg:flex"
+        className="hidden h-[32rem] gap-[9px] lg:flex"
         style={{ ['--strip-w' as string]: '5.75rem' }}
       >
         {ENGAGEMENT_STEPS.map((step, index) => {
@@ -282,25 +285,27 @@ export const ServiceFlow = () => {
                 transform: shown ? 'none' : 'translateY(20px)',
                 // 逐条立起的延迟只能分别挂在 opacity/transform 上。写成一条统一的
                 // duration/delay 会把 flex 一起延后，展开就跟不上鼠标了
-                // 深浅两档玻璃之间切换的是 class，这三个属性必须各自声明过渡才会插值而不是跳变。
-                // backdrop-filter 两档的函数列表同构（都是 saturate + blur），可以平滑插值。
+                // 展开时变的是 flex、玻璃白度（0.5→0.62）与阴影档位，三者都要显式声明过渡，
+                // 否则后两项会硬切。噪点层不参与插值（背景图不变），只有 background-color 在变。
                 transition: [
                   `flex ${PANEL_MS}ms ${PANEL_EASE}`,
                   `background-color ${PANEL_MS}ms ${PANEL_EASE}`,
                   `box-shadow ${PANEL_MS}ms ${PANEL_EASE}`,
-                  `backdrop-filter ${PANEL_MS}ms ${PANEL_EASE}`,
-                  `-webkit-backdrop-filter ${PANEL_MS}ms ${PANEL_EASE}`,
                   `opacity ${enterMs}ms ease-out ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
                   `transform ${enterMs}ms ${PANEL_EASE} ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
                 ].join(', '),
               }}
+              // 七张卡同一种材质（噪点参数一致），展开的那张靠「宽度 1:6」「玻璃实一档」
+              // 「阴影重一档」三者叠加区分，不再用深色底做对比——大面积近黑色块是这一版要去掉的。
+              // 玻璃档位不能换成 glass-medium：那一档没有噪点，与相邻六张并排会露馅。
+              //
               // 刻意不给折叠态加 hover 提亮或字色反馈：onMouseEnter 会当场 takeOver 把这一条
-              // 展开，class 同帧就切到 glass-acrylic-dark，:hover 分支永远轮不到生效——
-              // 试过一版，CSS 确实生效（竖排字 translate 与 color 都变了），但那些样式作用在
-              // 展开后 opacity 为 0 的折叠面上，用户 100% 看不见。展开本身就是最强的悬停反馈。
+              // 展开，:hover 分支永远轮不到生效——试过一版，CSS 确实生效（竖排字 translate 与
+              // color 都变了），但那些样式作用在展开后 opacity 为 0 的折叠面上，用户 100% 看不见。
+              // 展开本身就是最强的悬停反馈。
               className={[
-                'relative min-w-0 overflow-hidden border-l border-rule first:border-l-0',
-                open ? 'glass-acrylic-dark' : 'glass-acrylic',
+                'rounded-card relative min-w-0 overflow-hidden',
+                open ? 'glass-acrylic-strong shadow-soft-lg' : 'glass-acrylic shadow-soft',
               ].join(' ')}
             >
               {/* 底光挂在 li 上而不是面板内容里：内容宽度写死 34rem，光晕跟着它会在
@@ -331,12 +336,13 @@ export const ServiceFlow = () => {
 
               {/* 自动播放进度条。key 绑 active：不重建元素的话 CSS 动画不会重头跑，
                   第二步之后进度条会停在满格。用户接管后整个元素卸载，进度条随之消失。
-                  用白色不用品牌橙：橙色配额已给「免费」标记，两条橙线会打架。 */}
+                  卡片改浅色后这条线必须跟着翻成深色，原来的 paper/70 白线在浅玻璃上看不见。
+                  用中性深灰不用品牌橙：橙色配额已给「免费」标记，两条橙线会打架。 */}
               {open && phase === 'live' && !userTookOver && !reduce && (
                 <span
                   key={active}
                   aria-hidden
-                  className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[2px] origin-left bg-paper/70"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[2px] origin-left bg-graphite/55"
                   style={{ animation: `flowProgress ${AUTOPLAY_MS}ms linear forwards` }}
                 />
               )}

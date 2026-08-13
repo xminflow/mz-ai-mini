@@ -50,8 +50,13 @@
   --color-rule-strong: rgb(14 14 14 / 0.16);
   --color-ember: #ff3c00;
 
-  --radius-btn: 12px;
-  --radius-card: 24px;
+  /* 全站按钮圆角的唯一来源。刻意做得很小：胶囊形与 12px 圆角都偏软，
+     4px 让按钮读起来更利落。导航胶囊、Pill、轮播翻页键都统一取这个值，
+     全站不应再出现 rounded-full 形态的按钮（圆点、头像等装饰性圆形不在此列）。 */
+  --radius-btn: 4px;
+  /* 当前与 --radius-btn 同值：全站只保留一种很小的圆角。
+     两个 token 仍分开留着，日后若要让卡片与按钮分化，改这里即可 */
+  --radius-card: 4px;
 
   /* 阴影只开放这两档，杜绝各 section 自行发明阴影导致规格漂移 */
   --shadow-soft: 0 1px 2px rgb(14 14 14 / 0.04), 0 8px 24px rgb(14 14 14 / 0.05);
@@ -246,8 +251,8 @@ samp,
   }
 }
 
-/* ===== Acrylic：两档深浅毛玻璃 =====
-   供首页服务流程手风琴使用。与上面三档的区别只有一处——多一层噪点。
+/* ===== Acrylic：毛玻璃 =====
+   供首页服务流程手风琴的七张卡使用。与上面三档的区别只有一处——多一层噪点。
    噪点是「毛」感的唯一来源：只有半透明底色与模糊的话，得到的是透明塑料而不是磨砂玻璃。
 
    Windows 11 Acrylic 的配方是四层：背景模糊 → 亮度层 → 色调层 → 噪点纹理。
@@ -256,18 +261,16 @@ samp,
 
    噪点通过多重 background + background-blend-mode 实现，不引入任何额外 DOM 节点。
    图案沿用 noise-layer 的 feTurbulence 参数，强度是并排比对实测调出来的，不是估算：
+   白噪点叠 overlay 在接近白色的底上会被完全吞掉——0.8 的强度渲染出来与无噪点一模一样，
+   所以这里用「黑噪点 + multiply」，且强度要比深底低一个数量级：0.5 会变成压暗一大档的
+   灰砂纸，0.22 开始发灰，0.14 才是「有颗粒但底色不脏」。
 
-   - 深色档用「白噪点 + overlay」。实测 0.22 与无噪点肉眼无差别，0.45 才隐约可感，
-     0.75 起颗粒清晰且不刺眼。
-   - 浅色档必须换成「黑噪点 + multiply」。这一条是踩过的：白噪点叠 overlay 在接近白色的
-     底上会被完全吞掉，0.8 的强度渲染出来与无噪点一模一样。换 multiply 后强度要低一个
-     数量级——0.5 会变成压暗一大档的灰砂纸，0.22 开始发灰，0.14 才是「有颗粒但底色不脏」。
+   不含外投影也不含 border：投影由组件按展开/折叠给到 shadow-soft-lg / shadow-soft 两档，
+   放在这里就无法随状态切换。这是相对上面三档「四项配套」的有意偏离，不是遗漏。
 
-   两档强度差了五倍，是因为混合模式和底色亮度都不同，不是笔误。
-
-   两档都不含外投影，也不含 border：这七条嵌在 overflow-hidden 的 ul 内部，
-   外投影会被直接裁掉；描边由组件的 border-l 分隔线承担，utility 再加一层会成双线。
-   这是相对上面三档「四项配套」的有意偏离，原因是使用场景不同，不是遗漏。 */
+   曾经还有一档 glass-acrylic-dark（近黑 0.88 + 白噪点 overlay 0.75）给展开卡用，
+   随「七张卡改为同一种浅色、只靠宽度与阴影区分」一并删除。若日后再需要深面玻璃，
+   注意两件事：白噪点强度要到 0.75 才看得见；色调层不能低于 0.88，否则正文对比度掉到 4.7 上下。 */
 @utility glass-acrylic {
   background:
     url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='ac'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.14 0'/></filter><rect width='100%' height='100%' filter='url(%23ac)' opacity='0.5'/></svg>")
@@ -287,25 +290,24 @@ samp,
   }
 }
 
-@utility glass-acrylic-dark {
+/* 更实一档的 Acrylic，给手风琴展开的那张卡用。
+   噪点参数与上面完全一致，只有白度从 0.5 提到 0.62——七张卡必须是同一种材质，
+   展开的那张只是「更实、更靠前」，不能变成另一种料。
+   不能直接用 glass-medium 顶替：那一档没有噪点层，与相邻六张有颗粒的卡并排会露馅。 */
+@utility glass-acrylic-strong {
   background:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='ad'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.75 0'/></filter><rect width='100%' height='100%' filter='url(%23ad)' opacity='0.5'/></svg>")
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='as'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.14 0'/></filter><rect width='100%' height='100%' filter='url(%23as)' opacity='0.5'/></svg>")
       repeat,
-    /* 0.88 而不是 0.82：按纯 paper 底推算 0.82 有 5.4:1，但实际背后有光团、
-       噪点又是 overlay 提亮，实测背景被抬到 71，正文只剩 4.74:1——过线但余量仅 0.24，
-       换个屏幕或滚动位置就可能掉下去。0.88 下最坏位置（最左侧、光团最强处）
-       实测正文 5.94:1、含噪点亮点的保守估计 5.44:1、标题 13.04:1。 */
-    rgba(14, 14, 14, 0.88);
-  background-blend-mode: overlay, normal;
-  /* saturate 取 150% 而非浅色档的 180%：深底上放大色彩更容易发脏 */
-  backdrop-filter: saturate(150%) blur(30px);
-  -webkit-backdrop-filter: saturate(150%) blur(30px);
+    rgba(255, 255, 255, 0.62);
+  background-blend-mode: multiply, normal;
+  backdrop-filter: saturate(180%) blur(30px);
+  -webkit-backdrop-filter: saturate(180%) blur(30px);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(14, 14, 14, 0.05);
 
   @media (prefers-reduced-transparency: reduce) {
-    background: rgba(14, 14, 14, 0.97);
+    background: rgba(255, 255, 255, 0.96);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
