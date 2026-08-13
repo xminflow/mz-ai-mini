@@ -209,10 +209,14 @@ export const ServiceFlow = () => {
           窄屏那份列表就再也立不起来 */}
       <div ref={listRef}>
       {/* 桌面：横向手风琴。--strip-w 是折叠态内容的固定宽度，与 flex 比例对应。
-          鼠标离开整行不收起：全部收起会让板块变成一排空白竖条，回来时还得重新找位置 */}
+          鼠标离开整行不收起：全部收起会让板块变成一排空白竖条，回来时还得重新找位置。
+
+          这一层只负责圆角、描边、投影，绝不能加 backdrop-filter——父级一旦有它就会成为
+          子元素的 backdrop root，七条 li 的玻璃会全部失效（同类事故见 ServiceTypes 的 maskImage）。
+          高度 32rem 而非 30rem：图标放大到 h-36 后，最长的第 06 步文案在 30rem 下会溢出 11px。 */}
       <ul
         aria-label="合作流程"
-        className="hidden h-[30rem] overflow-hidden rounded-[3px] border border-rule lg:flex"
+        className="hidden h-[32rem] overflow-hidden rounded-card border border-rule shadow-soft-lg lg:flex"
         style={{ ['--strip-w' as string]: '5.75rem' }}
       >
         {ENGAGEMENT_STEPS.map((step, index) => {

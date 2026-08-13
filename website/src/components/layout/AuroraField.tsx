@@ -76,12 +76,15 @@ export const AuroraField = ({ variant = 'simple' }: AuroraFieldProps) => (
           }}
         />
 
-        {/* 流程区：淡紫。强度压到最低，这一区主体是近黑面板，光只负责让四周不死板 */}
+        {/* 流程区：淡紫。手风琴改成 Acrylic 玻璃后，这团光是深面板唯一的采样对象——
+            真玻璃只搬运背后的信息，alpha 压回 0.16 会让 backdrop-filter 变成零效果。
+            但也不能提到服务区蓝那一档（0.34）：深玻璃的 saturate 会把透过来的紫再加浓一档，
+            到那个强度面板边缘会泛出脏色。0.22 只做色温底噪，明暗结构交给面板内部的渐层光。 */}
         <div
           className="absolute left-[22%] top-[68%] hidden h-[520px] w-[820px] -translate-x-1/2 rounded-full blur-[90px] sm:block"
           style={{
             background:
-              'radial-gradient(ellipse at center, rgb(150 105 240 / 0.16), transparent 70%)',
+              'radial-gradient(ellipse at center, rgb(150 105 240 / 0.22), transparent 70%)',
           }}
         />
 
