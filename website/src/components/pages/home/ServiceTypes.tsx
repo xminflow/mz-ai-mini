@@ -350,6 +350,11 @@ export const ServiceTypes = () => {
                   transformStyle: 'preserve-3d',
                   // 隐藏的卡不能再吃点击：它就压在可见卡的正后方
                   pointerEvents: hidden ? 'none' : undefined,
+                  // opacity 为 0 的元素浏览器照样会绘制与合成——它只是「透明」，不是「不存在」。
+                  // 这一层是玻璃卡（backdrop-filter）加 3D 变换，每张都会各自成为合成层，
+                  // 实测本板块潜在合成层达 25 个。visibility: hidden 才会让浏览器真正跳过绘制。
+                  // 不用 display: none：那会改变布局，framer-motion 要重新测量，反而更贵。
+                  visibility: hidden ? 'hidden' : undefined,
                 }}
                 // 这一层只负责轮播位姿，卡面样式全在里层：悬停反馈交给 CSS，
                 // 才不会被这里 620ms 的轮播缓动拖成一坨钝响应
