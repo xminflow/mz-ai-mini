@@ -178,47 +178,95 @@ const ExpandedFace = ({
 }
 
 /**
- * 窄屏正文：默认两行，点「展开」看全文。
+ * 窄屏折叠条：编号 + 标题横排。
  *
- * 最长的一条 150 字在 390 宽下要 6 行，七步铺开就是一整片字墙，手机上没人会读。
- * 折叠的只有正文细节——编号、标题、图标、节点全程可见，扫读七步的动线不受影响。
- *
- * 用 line-clamp 而不是截字符串：截字符串要按中英文宽度估算断点，还会把「7×24」
- * 这类词组切断；line-clamp 交给浏览器按实际排版断，且展开时不需要重新测量。
- *
- * 展开态没做收起：手机上读完一条就往下滑了，回头收起的动机几乎不存在，
- * 多一个状态反而多一次误触。
+ * 不沿用桌面那套竖排「书脊」：竖排中文在手机上读起来费劲，而且横条本来就有横向空间。
  */
-const MobileLead = ({ text }: { text: string }) => {
-  const [expanded, setExpanded] = useState(false)
+const MobileCollapsedFace = ({ step, open }: { step: EngagementStep; open: boolean }) => (
+  <span
+    className={[
+      'absolute inset-x-0 top-0 flex h-[var(--strip-h)] items-center gap-3 px-4 transition-opacity',
+      open ? 'opacity-0 duration-200' : 'opacity-100 duration-300',
+    ].join(' ')}
+    style={open ? undefined : { transitionDelay: `${CONTENT_DELAY_MS}ms` }}
+  >
+    <span className="font-mono text-[12px] font-medium tracking-[0.12em] text-blue">
+      {step.code}
+    </span>
+    <span className="text-[15px] font-medium text-graphite-soft">{step.short}</span>
+    {step.tag && (
+      <span className="ml-auto font-mono text-[10px] tracking-[0.1em] text-red">{step.tag}</span>
+    )}
+  </span>
+)
+
+/**
+ * 窄屏展开面：图标 + 标题 + 正文，与桌面同一套五级分层进场。
+ *
+ * 高度是这里唯一真正紧的资源：展开条只有 336px。桌面上图标被放大到 h-36 当主角，
+ * 那个尺寸在这里会把正文整段挤出去，所以压到 h-14 退回标题的陪衬位。
+ * 正文字号维持 14.5px 不动——那是舒适阅读的下限，宁可截行也不缩字号。
+ */
+const MobileExpandedFace = ({
+  step,
+  open,
+  reduce,
+}: {
+  step: EngagementStep
+  open: boolean
+  reduce: boolean
+}) => {
+  const layer = (index: number) => {
+    if (reduce) return { opacity: open ? 1 : 0 }
+    const delay = CONTENT_DELAY_MS + index * LAYER_STEP_MS
+    return {
+      opacity: open ? 1 : 0,
+      transform: open ? 'none' : 'translateY(8px)',
+      transition: open
+        ? [
+            `opacity 380ms ease-out ${delay}ms`,
+            `transform 380ms ${PANEL_EASE} ${delay}ms`,
+          ].join(', ')
+        : 'opacity 180ms ease-out, transform 180ms ease-out',
+    }
+  }
 
   return (
-    <div className="mt-2.5">
+    <div className="pointer-events-none absolute inset-0 flex flex-col justify-center gap-2.5 px-4 py-5">
+      <div className="flex items-center gap-2.5" style={layer(0)}>
+        <span className="font-mono text-[11px] tracking-[0.14em] text-graphite-dim">
+          STEP {step.code} / {TOTAL}
+        </span>
+        {step.tag && (
+          <>
+            <span aria-hidden className="h-3 w-px bg-rule-strong" />
+            <span className="font-mono text-[10px] tracking-[0.1em] text-red">{step.tag}</span>
+          </>
+        )}
+      </div>
+
+      <div className="flex items-center gap-3" style={layer(1)}>
+        <StepDiagram code={step.code} className="h-14 w-auto shrink-0 text-graphite-dim" />
+        <h3 className="text-[1.3rem] font-semibold leading-[1.3] tracking-[-0.02em] text-graphite">
+          {step.title}
+        </h3>
+      </div>
+
       <p
-        className={[
-          'text-[14.5px] leading-[1.8] text-graphite-soft',
-          expanded ? '' : 'line-clamp-2',
-        ].join(' ')}
+        className="line-clamp-5 text-[14.5px] leading-[1.75] text-graphite-soft"
+        style={layer(2)}
       >
-        {text}
+        {step.lead}
       </p>
-      {!expanded && (
-        <button
-          type="button"
-          onClick={() => setExpanded(true)}
-          className="mt-1.5 font-mono text-[11px] tracking-[0.1em] text-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
-        >
-          展开
-        </button>
-      )}
     </div>
   )
 }
 
 // 合作流程板块。
 //
-// 桌面是横向手风琴；窄屏没有横向空间容纳七条竖条，也没有悬停，改为七步全部展开的纵向列表——
-// 手机上「点开才看得到」只会多一道无谓的门槛。
+// 桌面是横向手风琴，窄屏是同一套手风琴的转置版（主轴换成纵向）。
+// 两边共用 active / phase / 自动播放 / 用户接管这一份状态，差别只在布局方向与触发方式：
+// 桌面认悬停，手机只认点击。
 export const ServiceFlow = () => {
   const reduce = useReducedMotion()
   const listRef = useRef<HTMLDivElement>(null)
@@ -402,73 +450,75 @@ export const ServiceFlow = () => {
         })}
       </ul>
 
-      {/* 窄屏：竖向时间轴。
-          手机上没有悬停，横向也放不下七条竖条，所以不复用手风琴。
-          之前这里是七步平铺的长列表，实测总高 2341px（约 3 个屏）、每步 242–322px，
-          七段并列的文章读不出「流程在推进」——而这正是本板块唯一要传达的东西。
-          改成左侧一条贯穿的轴线加节点，推进感由轴线本身承担。 */}
-      <ol className="lg:hidden">
-        {ENGAGEMENT_STEPS.map((step, index) => (
-          <li
-            key={step.code}
-            className="group relative pb-9 pl-8 last:pb-0"
-            style={{
-              opacity: shown ? 1 : 0,
-              transform: shown ? 'none' : 'translateY(20px)',
-              transition: [
-                `opacity ${enterMs}ms ease-out ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
-                `transform ${enterMs}ms ${PANEL_EASE} ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
-              ].join(', '),
-            }}
-          >
-            {/* 连接线：每项只画到「自己节点下方」为止，最后一项不画（group-last:hidden）。
-                这样线自然停在末节点圆心，不需要去算列表总高——用一条贯穿的绝对定位线
-                反而要拿到最后一项的高度才能收尾，末尾容易多出一截悬空的线。
-                注意必须是 group-last 而不是 last：last 判断的是这个 span 在 li 内的位置，
-                它是第一个子元素，永远命中不了。 */}
-            <span
-              aria-hidden
-              className="absolute bottom-0 left-[7px] top-[26px] w-px bg-rule-strong group-last:hidden"
-            />
+      {/* 窄屏：纵向手风琴，桌面那套的转置版。
+          手机上放不下七条竖条，但「一次只展开一条 + 自动播放」的读法可以照搬——
+          把主轴从横向换成纵向，flex 伸缩机制与桌面完全相同，
+          active / phase / 自动播放 / 用户接管全部复用同一份状态，不另起一套。
 
-            {/* 节点：空心圆 + 主色描边。带 tag 的那几步填实，让「免费」在扫读时也成立 */}
-            <span
-              aria-hidden
+          高度这笔账必须对上：flex-basis 取 0%，所有高度都按比例分，
+          --strip-h 只是折叠面内容的排版高度，它必须等于比例算出来的实际条高，否则文字会偏心。
+          13 份 × 48px = 624px 内容 + 6 道 8px 间隙 = 672px，即 42rem；
+          展开条拿到 7 份共 336px，放得下图标、标题与五行正文。
+          改容器高度或间隙时，--strip-h 要跟着重算。 */}
+      <ol
+        aria-label="合作流程"
+        className="flex h-[42rem] flex-col gap-2 lg:hidden"
+        style={{ ['--strip-h' as string]: '48px' }}
+      >
+        {ENGAGEMENT_STEPS.map((step, index) => {
+          const open = index === active
+          const panelId = `process-panel-m-${step.code}`
+
+          return (
+            <li
+              key={step.code}
+              style={{
+                // 折叠 : 展开 = 1 : 7。六条折叠加一条展开共 13 份，
+                // 展开条占到一半以上高度，才放得下图标、标题与四行正文
+                flex: open ? '7 1 0%' : '1 1 0%',
+                opacity: shown ? 1 : 0,
+                transform: shown ? 'none' : 'translateY(16px)',
+                transition: [
+                  `flex ${PANEL_MS}ms ${PANEL_EASE}`,
+                  `background-color ${PANEL_MS}ms ${PANEL_EASE}`,
+                  `box-shadow ${PANEL_MS}ms ${PANEL_EASE}`,
+                  `opacity ${enterMs}ms ease-out ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
+                  `transform ${enterMs}ms ${PANEL_EASE} ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
+                ].join(', '),
+              }}
               className={[
-                'absolute left-0 top-2 z-10 h-[15px] w-[15px] rounded-full border-2 border-blue',
-                step.tag ? 'bg-blue' : 'bg-paper',
+                'rounded-card relative min-h-0 overflow-hidden',
+                open ? 'glass-acrylic-strong shadow-soft-lg' : 'glass-acrylic shadow-soft',
               ].join(' ')}
-            />
-
-            <div className="flex items-center gap-2.5">
-              <span className="font-mono text-[12px] font-medium tracking-[0.12em] text-blue">
-                {step.code}
-              </span>
-              <span className="font-mono text-[11px] tracking-[0.1em] text-graphite-dim">
-                / {TOTAL}
-              </span>
-              {step.tag && (
-                <>
-                  <span aria-hidden className="h-3 w-px bg-rule-strong" />
-                  <span className="font-mono text-[10px] tracking-[0.1em] text-red">
-                    {step.tag}
-                  </span>
-                </>
+            >
+              {/* 与桌面同款的自动播放进度条，同样绑 key={active} 才能在切步时重头跑 */}
+              {open && phase === 'live' && !userTookOver && !reduce && (
+                <span
+                  key={active}
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[2px] origin-left bg-blue"
+                  style={{ animation: `flowProgress ${AUTOPLAY_MS}ms linear forwards` }}
+                />
               )}
-            </div>
 
-            {/* 图标缩到 40px 跟在标题右边：窄屏上它是辅助标识而非主角，
-                原来 h-16 挂在标题右侧、与正文之间隔着大段空白，既撑不起视觉又打断阅读动线 */}
-            <div className="mt-2 flex items-center justify-between gap-4">
-              <h3 className="text-[1.25rem] font-semibold leading-[1.35] tracking-[-0.02em] text-graphite">
-                {step.title}
-              </h3>
-              <StepDiagram code={step.code} className="h-10 w-auto shrink-0 text-graphite-dim" />
-            </div>
+              <div id={panelId} aria-hidden={open ? undefined : true}>
+                <MobileExpandedFace step={step} open={open} reduce={Boolean(reduce)} />
+              </div>
 
-            <MobileLead text={step.lead} />
-          </li>
-        ))}
+              {/* 手机上没有悬停，只认点击；命中区铺满整条 */}
+              <button
+                type="button"
+                aria-expanded={open}
+                aria-controls={panelId}
+                aria-label={`第 ${index + 1} 步：${step.short}`}
+                onClick={() => takeOver(index)}
+                className="absolute inset-0 z-10 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-blue"
+              >
+                <MobileCollapsedFace step={step} open={open} />
+              </button>
+            </li>
+          )
+        })}
       </ol>
       </div>
     </section>

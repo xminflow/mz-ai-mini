@@ -446,22 +446,20 @@ export const ServiceTypes = () => {
         </motion.div>
       </div>
 
-      {/* 左右淡出。原先是轨道上的 maskImage，因为会废掉内部的 backdrop-filter 而改成
-          覆盖层。z-index 必须高过卡片（卡片是 50 - distance，最高 50），否则盖不住。
-          宽度取 8%：再宽会把最外侧那对卡整个吃掉，也会在底部光域上压出一条可见的
-          米白带 */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 left-0 z-[60] w-[8%] bg-gradient-to-r from-paper to-transparent"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-y-0 right-0 z-[60] w-[8%] bg-gradient-to-l from-paper to-transparent"
-      />
+      {/* ===== 这里不要再加左右淡出覆盖层 =====
+          曾经在轨道两侧各盖一块 w-[8%] 的 from-paper 渐变做淡出（更早还试过轨道上的
+          maskImage，那一版会废掉内部所有 backdrop-filter）。覆盖层这一版必须去掉：
+          paper 是不透明米白，而这一段的背景不是米白，是 GlowField 那片蓝光。
+          用米白盖蓝光，盖出来的就是两块比四周更白的竖条，上下缘还是硬边——
+          在页面上读作「背景有个白色方块、不均匀」。任何静态色的覆盖层都躲不开这个问题，
+          因为它要遮的背景本身是一片渐变。
+
+          去掉之后靠轨道自身的 overflow-hidden 收边：桌面上五张卡的最外缘离视口边还有
+          160px 以上，那两块渐变本来就什么都没遮；窄屏上裁切点正好落在屏幕边缘，
+          与常规轮播的读法一致。 */}
 
       {/* 箭头贴着侧卡外缘、垂直居中，是转盘的读法。
-          z-[70] 必须高于淡出覆盖层的 z-[60]：两者在同一层叠上下文里，不抬高的话
-          覆盖层会绘制在按钮之上，1280px 以下整颗钮会被那层 paper 渐变糊掉。
+          z-[70] 是为了压过卡片（卡片是 50 - distance，最高 50）。
           循环之后位置刻度没有意义——没有第一张也没有最后一张，所以只留翻动方向，不做圆点 */}
       {/* 容器比版心（max-w-6xl）宽一档：舞台摊到五张后外缘已经超出版心，
           按版心摆箭头会正好压在最外侧那对卡上。1280 以下仍会轻微相叠——
