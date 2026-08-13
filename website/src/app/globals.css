@@ -26,6 +26,13 @@
   /* 中文字形回退到与正文一致的 CJK 字体:JetBrains Mono 无中文字形,
      不补 CJK 会让 font-mono 的中文标签(如「前端 · 视觉 · 5–6 课时」)
      掉到系统默认等宽字体,与全站正文字体明显不一致。拉丁/数字仍走 JetBrains Mono。 */
+  /* Hero 专用的两支普惠体。回退链必须完整保留：子集里只有 Hero 现有文案那几十个字，
+     一旦文案改动而忘了重跑子集脚本，缺的字会落到这条回退链上而不是变成豆腐块。 */
+  --font-hero: var(--font-puhuiti-title), "Inter", "Noto Sans SC",
+    "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --font-hero-sub: var(--font-puhuiti-sub), "Inter", "Noto Sans SC",
+    "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
     Consolas, "Liberation Mono", "Courier New", "Noto Sans SC",
     "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", monospace;
@@ -101,15 +108,20 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-display);
-  font-optical-sizing: auto;
-  font-feature-settings: "cv11", "ss01", "ss03", "cv01", "cv02", "calt", "palt";
+/* 标题默认字体必须放进 @layer base，不能裸写在任何 layer 之外。
+   这一条踩过：Hero 标题挂了 font-hero 类、字体文件加载正常、CSS 变量也解析正确，
+   但标题就是不换字体。根因是 CSS 层叠层——Tailwind v4 把工具类生成在 @layer utilities 里，
+   而未分层（unlayered）的样式无条件胜过任何已分层的样式，**特异性根本不参与比较**。
+   所以裸写的 h1 规则会压掉 .font-hero，且当时试过用 :where() 把特异性降到 0 也没用，
+   因为比的压根不是特异性。放进 @layer base 之后，utilities 层才能正常覆盖它。
+
+   :where() 保留：它让这条规则成为「默认值」而非「强制值」，同层内也易于覆盖。 */
+@layer base {
+  :where(h1, h2, h3, h4, h5, h6) {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+    font-feature-settings: "cv11", "ss01", "ss03", "cv01", "cv02", "calt", "palt";
+  }
 }
 
 @utility font-serif-zh {
