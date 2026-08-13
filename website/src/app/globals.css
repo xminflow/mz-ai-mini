@@ -361,6 +361,13 @@ samp,
   100% { background-position: 200% 50%; }
 }
 
+/* 服务流程自动播放进度条。用 transform 而不是 width：width 动画每帧触发布局，
+   这一条要在玻璃面板上连续跑 3 秒，不能让它拖累合成 */
+@keyframes flowProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
 /* ===== 课程 Markdown：对齐 Typora Night（深色），复用全站 token，不另起浅色卡片 ===== */
 .typora-md {
   max-width: 800px;

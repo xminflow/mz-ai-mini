@@ -294,8 +294,12 @@ export const ServiceFlow = () => {
                   `transform ${enterMs}ms ${PANEL_EASE} ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
                 ].join(', '),
               }}
+              // 刻意不给折叠态加 hover 提亮或字色反馈：onMouseEnter 会当场 takeOver 把这一条
+              // 展开，class 同帧就切到 glass-acrylic-dark，:hover 分支永远轮不到生效——
+              // 试过一版，CSS 确实生效（竖排字 translate 与 color 都变了），但那些样式作用在
+              // 展开后 opacity 为 0 的折叠面上，用户 100% 看不见。展开本身就是最强的悬停反馈。
               className={[
-                'group relative min-w-0 overflow-hidden border-l border-rule first:border-l-0',
+                'relative min-w-0 overflow-hidden border-l border-rule first:border-l-0',
                 open ? 'glass-acrylic-dark' : 'glass-acrylic',
               ].join(' ')}
             >
@@ -324,6 +328,18 @@ export const ServiceFlow = () => {
               <div id={panelId} aria-hidden={open ? undefined : true}>
                 <ExpandedFace step={step} open={open} reduce={Boolean(reduce)} />
               </div>
+
+              {/* 自动播放进度条。key 绑 active：不重建元素的话 CSS 动画不会重头跑，
+                  第二步之后进度条会停在满格。用户接管后整个元素卸载，进度条随之消失。
+                  用白色不用品牌橙：橙色配额已给「免费」标记，两条橙线会打架。 */}
+              {open && phase === 'live' && !userTookOver && !reduce && (
+                <span
+                  key={active}
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[2px] origin-left bg-paper/70"
+                  style={{ animation: `flowProgress ${AUTOPLAY_MS}ms linear forwards` }}
+                />
+              )}
 
               <button
                 type="button"
