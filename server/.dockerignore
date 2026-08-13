@@ -8,3 +8,6 @@ dist
 wheels
 *.egg-info
 logs
+# 本地打包/部署产物，禁止进入构建上下文
+*.tar
+docker-compose*.yml

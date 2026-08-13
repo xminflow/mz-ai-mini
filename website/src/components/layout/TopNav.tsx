@@ -22,8 +22,9 @@ type NavLink = {
 }
 
 const NAV_LINKS: NavLink[] = [
-  { href: '/', label: 'AI企业项目实战', exact: true },
-  { href: '/custom', label: '软件定制', matchPrefix: '/custom' },
+  { href: '/', label: '软件定制', exact: true },
+  { href: '/studio', label: '实战项目培训', matchPrefix: '/studio' },
+  { href: '/ai-coding-camp', label: 'AI架构师训练营', matchPrefix: '/ai-coding-camp' },
 ]
 
 type TopNavProps = {
@@ -243,14 +244,19 @@ export const TopNav = ({ initialAuthState }: TopNavProps) => {
               )
             })}
             {accountLabel ? (
-              <button
-                type="button"
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="text-[13px] text-muted transition-colors hover:text-ink disabled:opacity-50"
-              >
-                退出
-              </button>
+              <>
+                <Link href="/course" className="text-[13px] text-muted transition-colors hover:text-ink">
+                  我的课程
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  disabled={loggingOut}
+                  className="text-[13px] text-muted transition-colors hover:text-ink disabled:opacity-50"
+                >
+                  退出
+                </button>
+              </>
             ) : (
               <Link href={loginHref} className="text-[13px] text-muted transition-colors hover:text-ink">
                 登录

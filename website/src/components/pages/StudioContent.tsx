@@ -23,14 +23,14 @@ export function StudioContent() {
       {/* 2. 词云：项目优势与课程价值关键词 */}
       <WordCloudSection />
 
-      {/* 3. 实战项目库：20 个课程项目，按难度分三档 */}
+      {/* 3. 基础巩固：做 10 个项目前必学的 6 块地基（作为实战项目的前置铺垫，放在项目库之前） */}
+      <FoundationBasics />
+
+      {/* 4. 实战项目库：10 个课程项目，按难度分三档 */}
       <ProjectShowcase />
 
-      {/* 4. 赠送课程大纲：往期课程可展开层级树 + 报名 CTA */}
+      {/* 5. 赠送课程大纲：往期课程可展开层级树 + 报名 CTA */}
       <CourseOutline onEnroll={openContact} />
-
-      {/* 5. 基础巩固：做 20 个项目前必学的 6 块地基（放在页面最底部） */}
-      <FoundationBasics />
 
       <ContactQrCodeModal open={contactOpen} onClose={closeContact} />
     </div>

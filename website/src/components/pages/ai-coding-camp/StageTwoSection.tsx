@@ -158,7 +158,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
         </div>
       </section>
 
-      {/* 收获墙：5 项专家级成果（高阶学完产出，位置对齐第一阶段四大成果） */}
+      {/* 收获墙：6 项专家级成果（高阶学完产出，位置对齐第一阶段四大成果） */}
       <section className="relative mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6 sm:pb-24 lg:pb-28">
         <Reveal>
           <div className="flex flex-col gap-4">
@@ -166,7 +166,7 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
             <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[-0.02em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
               <span className="block">学完，你手里会多出</span>
               <span className="mt-1 block sm:mt-1.5">
-                <GradientText className="font-semibold">5 项专家级硬核成果</GradientText>
+                <GradientText className="font-semibold">6 项专家级硬核成果</GradientText>
               </span>
             </h2>
           </div>
@@ -379,33 +379,16 @@ export function StageTwoSection({ onEnroll }: { onEnroll: () => void }) {
           <div className="flex flex-col items-center gap-6 text-center">
             <SectionEyebrow color={advance.hex} index={3}>本阶段报名</SectionEyebrow>
 
-            {/* 价格条 + 含第一阶段全部内容 pill */}
+            {/* 价格条（原「含第一阶段全部内容」pill 随第一阶段下架一并去掉） */}
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-              <PriceChip badge="AI 架构师" specialLabel="报名价" price={STAGE2_PRICE.now} onClick={onEnroll} />
-              <span
-                className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-[12px] font-semibold sm:text-[12.5px]"
-                style={{
-                  borderColor: `rgba(${advance.rgb}, 0.42)`,
-                  background: `linear-gradient(110deg, rgba(${advance.rgb}, 0.16), rgba(${STAGE2_THEMES.career.rgb}, 0.12))`,
-                  color: advance.hex,
-                  boxShadow: `0 0 24px -8px ${advance.hex}88`,
-                }}
-              >
-                <span className="h-1.5 w-1.5 rounded-full" style={{ background: advance.hex }} />
-                {STAGE2_PRICE.includes}
-              </span>
+              <PriceChip
+                badge="AI 架构师"
+                originalPrice={STAGE2_PRICE.original}
+                specialLabel="限时特价"
+                price={STAGE2_PRICE.now}
+                onClick={onEnroll}
+              />
             </div>
-
-            {/* 邀请返学费提示 */}
-            <p className="flex items-center gap-2 text-[12.5px] leading-[1.6] text-ink-soft sm:text-[13px]">
-              <span aria-hidden className="h-1.5 w-1.5 rounded-full" style={{ background: advance.hex }} />
-              <span>
-                <span className="font-semibold" style={{ color: advance.hex }}>
-                  邀请返学费
-                </span>
-                　每邀请一位学员，退回 <span className="font-semibold text-ink">¥1000</span> 学费
-              </span>
-            </p>
           </div>
         </Reveal>
       </section>

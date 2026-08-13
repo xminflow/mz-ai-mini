@@ -2,12 +2,12 @@ import type { Metadata } from 'next'
 import { AiCodingCampContent } from '@/components/pages/AiCodingCampContent'
 
 export const metadata: Metadata = {
-  title: 'AI架构师训练营 · 零基础入门 + AI 架构师',
+  title: 'AI架构师训练营 · 企业级 AI 工程与求职进阶',
   description:
-    '两门课覆盖两类人群:AI 编程入门(¥1999)带你从零做出能上线的网页与小程序;AI 架构师(¥4999,含第一阶段全部)带你打通企业级 AI 工程、两套实战系统与求职面试。',
+    'AI 架构师(限时特价 ¥3999,原价 ¥5999)带你打通企业级 AI 工程:能力进阶、两套企业级实战系统直播、求职面试冲刺,一条主线跟到拿下 offer。',
   openGraph: {
     title: 'AI架构师训练营 · 微域生光',
-    description: '零基础入门 + AI 架构师,两门课各得其所,完整学习路径与收获一目了然。',
+    description: 'AI 架构师进阶主线,完整学习路径与收获一目了然。',
   },
 }
 

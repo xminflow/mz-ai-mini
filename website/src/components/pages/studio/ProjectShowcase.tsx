@@ -137,12 +137,12 @@ export function ProjectShowcase() {
           <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[-0.02em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
             <span className="block">课程完全以项目为核心，</span>
             <span className="mt-1 block sm:mt-1.5">
-              <GradientText className="font-semibold">20 个真实项目由浅入深</GradientText>
+              <GradientText className="font-semibold">10 个真实项目由浅入深</GradientText>
             </span>
             <span className="mt-1 block sm:mt-1.5">挑选你需要的，直接写入简历</span>
           </h2>
           <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
-            每个部门都在这些项目里选一个真刀真枪地做，从基础练手到面试顶流题材，难度由浅入深，覆盖系统架构与 AI 应用两条主线。
+            从这些项目里挑你需要的真刀真枪地做，从基础练手到面试顶流题材，难度由浅入深，覆盖系统架构与 AI 应用两条主线。
           </p>
         </div>
       </Reveal>

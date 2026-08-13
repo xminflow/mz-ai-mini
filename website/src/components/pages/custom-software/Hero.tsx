@@ -12,19 +12,13 @@ export function Hero({ onContact }: { onContact: () => void }) {
             <span className="hero-shine mb-2 block text-[18px] font-bold tracking-[0.18em] sm:mb-2.5 sm:text-[22px] lg:text-[26px]">
               软件定制服务
             </span>
-            <span className="block text-[28px] font-bold sm:text-[42px] lg:text-[52px]">
-              从<GradientText className="font-bold">想法</GradientText>到
-              <GradientText className="font-bold">上线</GradientText>，一个团队全包
+            <span className="block text-[26px] font-bold leading-[1.3] sm:text-[38px] lg:text-[48px]">
+              我们只做<GradientText className="font-bold">100% 满足你的业务需求</GradientText>的定制服务
+            </span>
+            <span className="mt-3 block text-[16px] font-semibold leading-[1.6] text-ink-soft sm:mt-4 sm:text-[22px] lg:text-[26px]">
+              从需求梳理到上线运营 · 全流程闭环服务 · 最大程度让你省事省心
             </span>
           </h1>
-        </Reveal>
-        <Reveal delay={0.16}>
-          <div className="mt-6 max-w-3xl sm:mt-7">
-            <p className="text-balance text-[15px] font-medium leading-[1.75] text-ink-soft sm:text-[18px] lg:text-[20px]">
-              官网、企业系统、小程序、AI 智能体——
-              <span className="font-semibold text-ink">AI 原生全栈自研，设计到交互全流程闭环，高效高质量交付</span>
-            </p>
-          </div>
         </Reveal>
         <Reveal delay={0.24}>
           <div className="mt-9 flex flex-col items-center gap-4 sm:mt-10 sm:flex-row sm:gap-5">

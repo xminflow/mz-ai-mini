@@ -4,13 +4,7 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 
 import { Reveal } from '../../motion'
-import {
-  STAGE1_CHAPTERS,
-  THEMES,
-  STAGE2_THEMES,
-  AUDIENCES,
-  STAGE2_PRICE,
-} from './data'
+import { STAGE2_THEMES, AUDIENCES } from './data'
 import type { Theme, Stage2ThemeKey } from './data'
 
 /* ─────────────────────────  全景学习路径 JourneyMap（蛇形蜿蜒成长曲线）  ─────────────────────────
@@ -41,14 +35,6 @@ function smoothThrough(pts: ReadonlyArray<Pt>): string {
   }
   return d
 }
-
-/* ── 第一阶段：10 个课时单行成长曲线（viewBox 1200×280）。
- * 起伏加大且「上标签节点抬高、下标签节点压低」，让标签向上下两端散开、腾出中间空间。 ── */
-const STAGE1_COORDS: Pt[] = [
-  { x: 60, y: 78 }, { x: 180, y: 195 }, { x: 300, y: 74 }, { x: 420, y: 198 }, { x: 540, y: 80 },
-  { x: 660, y: 193 }, { x: 780, y: 76 }, { x: 900, y: 197 }, { x: 1020, y: 78 }, { x: 1140, y: 195 },
-]
-const STAGE1_PATH = smoothThrough(STAGE1_COORDS)
 
 /* 一条成长曲线（桌面 SVG 流动曲线 + 辉光节点 + 流光；含上下交替标签）。 */
 function GrowthCurve({
@@ -246,15 +232,6 @@ function StageHead({
   )
 }
 
-const STAGE1_NODES: CurveNode[] = STAGE1_CHAPTERS.map((c) => ({
-  key: `s1-${c.index}`, theme: THEMES[c.theme], badge: '', title: c.title, detail: c.deliverable,
-}))
-const STAGE1_STOPS = [
-  { offset: 0, color: THEMES.cognition.hex }, { offset: 0.3, color: THEMES.frontend.hex },
-  { offset: 0.55, color: THEMES.backend.hex }, { offset: 0.72, color: THEMES.agent.hex },
-  { offset: 0.85, color: THEMES.launch.hex }, { offset: 1, color: THEMES.mindset.hex },
-]
-
 /* 第二阶段压缩为单条成长曲线：把「上/下」「一/二」等分集课时合并，14 → 11 个节点，各带一句描述。 */
 const STAGE2_CURVE: { title: string; detail: string; theme: Stage2ThemeKey }[] = [
   { title: 'Claude Code 与 Codex 进阶', detail: 'agentic 工具深度用法 + 可复用 AI 工作流', theme: 'advance' },
@@ -267,68 +244,34 @@ const STAGE2_CURVE: { title: string; detail: string; theme: Stage2ThemeKey }[] =
   { title: '大模型应用开发 · 智能体与 harness', detail: '从零搭一个可控、带记忆的智能体', theme: 'advance' },
   { title: '企业级实战直播 · 大数据 AI 智能分析系统', detail: '海量数据智能问数 + AI 出图表洞察，可上线带权限', theme: 'enterprise' }, // 合并 上/下
   { title: '企业级实战直播 · Hermes/Openclaw 智能体系统', detail: '可上线、可运营的智能体系统', theme: 'enterprise' }, // 合并 上/下
+  { title: '企业级实战直播 · AI 工作流与智能体 SaaS 平台', detail: '可视化编排 + 多租户计费的 SaaS 平台', theme: 'enterprise' }, // 合并 上/下
   { title: '求职面试专题', detail: '高频面试题 + 个人答案稿', theme: 'career' }, // 合并 一/二
 ]
 const STAGE2_NODES: CurveNode[] = STAGE2_CURVE.map((n, i) => ({
   key: `s2-${i}`, theme: STAGE2_THEMES[n.theme], badge: '', title: n.title, detail: n.detail,
 }))
-// 11 节点单行成长曲线（viewBox 1200×280），加大起伏、上下散开标签。
+// 12 节点单行成长曲线（viewBox 1200×280），加大起伏、上下散开标签。
 const STAGE2_COORDS: Pt[] = [
-  { x: 60, y: 78 }, { x: 168, y: 195 }, { x: 276, y: 74 }, { x: 384, y: 198 }, { x: 492, y: 80 },
-  { x: 600, y: 193 }, { x: 708, y: 76 }, { x: 816, y: 197 }, { x: 924, y: 78 }, { x: 1032, y: 195 }, { x: 1140, y: 80 },
+  { x: 60, y: 78 }, { x: 158, y: 195 }, { x: 256, y: 74 }, { x: 354, y: 198 }, { x: 452, y: 80 }, { x: 550, y: 193 },
+  { x: 648, y: 76 }, { x: 746, y: 197 }, { x: 844, y: 78 }, { x: 942, y: 195 }, { x: 1040, y: 80 }, { x: 1140, y: 193 },
 ]
 const STAGE2_PATH = smoothThrough(STAGE2_COORDS)
-// 渐变：能力进阶(钢蓝, 1–8) → 企业实战(暗金, 9–10) → 求职冲刺(翡翠, 11)。
+// 渐变：能力进阶(钢蓝, 1–8) → 企业实战(暗金, 9–11) → 求职冲刺(翡翠, 12)。
 const STAGE2_STOPS = [
-  { offset: 0, color: STAGE2_THEMES.advance.hex }, { offset: 0.66, color: STAGE2_THEMES.advance.hex },
-  { offset: 0.74, color: STAGE2_THEMES.enterprise.hex }, { offset: 0.88, color: STAGE2_THEMES.enterprise.hex },
-  { offset: 0.94, color: STAGE2_THEMES.career.hex }, { offset: 1, color: STAGE2_THEMES.career.hex },
+  { offset: 0, color: STAGE2_THEMES.advance.hex }, { offset: 0.64, color: STAGE2_THEMES.advance.hex },
+  { offset: 0.7, color: STAGE2_THEMES.enterprise.hex }, { offset: 0.91, color: STAGE2_THEMES.enterprise.hex },
+  { offset: 0.96, color: STAGE2_THEMES.career.hex }, { offset: 1, color: STAGE2_THEMES.career.hex },
 ]
 
 export function JourneyMap() {
   return (
     <div className="mx-auto w-full max-w-6xl">
-      {/* ── 第一阶段板块 ── */}
-      <Reveal>
-        <StageHead
-          accent={THEMES.cognition.hex}
-          name={AUDIENCES.stage1.name}
-          coverage={AUDIENCES.stage1.coverage}
-          fit={AUDIENCES.stage1.fit}
-        />
-      </Reveal>
-      <div className="mt-4 sm:mt-6">
-        <GrowthCurve
-          nodes={STAGE1_NODES}
-          coords={STAGE1_COORDS}
-          pathD={STAGE1_PATH}
-          vbH={280}
-          svgTop={100}
-          containerH={500}
-          aboveOffset={96}
-          pathLen={1300}
-          gradientStops={STAGE1_STOPS}
-          idPrefix="s1"
-        />
-      </div>
-
-      {/* ── LEVEL UP 分隔 ── */}
-      <Reveal>
-        <div className="my-6 flex items-center gap-3 sm:my-8">
-          <span aria-hidden className="inline-flex h-2 w-2 animate-pulse rounded-full" style={{ background: STAGE2_THEMES.advance.hex, boxShadow: `0 0 10px ${STAGE2_THEMES.advance.hex}` }} />
-          <span className="font-mono text-[10.5px] font-bold uppercase tracking-[0.16em]" style={{ color: STAGE2_THEMES.advance.hex }}>
-            LEVEL UP · 进阶解锁
-          </span>
-          <span aria-hidden className="h-px flex-1" style={{ background: `linear-gradient(to right, ${STAGE2_THEMES.advance.hex}66, transparent)` }} />
-        </div>
-      </Reveal>
-
-      {/* ── 第二阶段板块（单条成长曲线，11 个合并节点） ── */}
+      {/* ── 课程主体板块（单条成长曲线，12 个合并节点）
+       * 第一阶段「AI 编程入门」已下架展示，STAGE1_* 常量与 StageOneSection 组件保留备用 ── */}
       <Reveal>
         <StageHead
           accent={STAGE2_THEMES.advance.hex}
           name={AUDIENCES.stage2.name}
-          includes={STAGE2_PRICE.includes}
           coverage={AUDIENCES.stage2.coverage}
           fit={AUDIENCES.stage2.fit}
           full

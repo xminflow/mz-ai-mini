@@ -12,13 +12,13 @@ export function FoundationBasics() {
         <div className="flex flex-col gap-4">
           <SectionEyebrow color="#bafa77">基础巩固</SectionEyebrow>
           <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[-0.02em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
-            <span className="block">动手做 20 个项目之前，</span>
+            <span className="block">动手做 10 个项目之前，</span>
             <span className="mt-1 block sm:mt-1.5">
               <GradientText className="font-semibold">先补齐这 6 块地基</GradientText>
             </span>
           </h2>
           <p className="max-w-2xl text-[13.5px] leading-[1.85] text-ink-soft sm:text-[14.5px]">
-            从 AI 架构师训练营的课程里提炼、合并出应届生 / 专科生真正必学的部分（不含企业实战直播、求职冲刺这类项目或面试导向内容），是做实战项目前建议先打牢的地基。
+            以下是我们课程的基础能力部分，我们会在项目实战开始之前，为大家补全这些 AI 基础能力。不论你是什么技术栈、有没有工作经验，这部分基础知识都可以让你们站在同一起跑线上，为后续的项目实战做好准备。
           </p>
         </div>
       </Reveal>

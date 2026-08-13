@@ -12,7 +12,7 @@ export function WhyUsSection() {
           <SectionEyebrow color="#d42672">为什么选我们</SectionEyebrow>
           <h2 className="font-serif-zh text-[22px] font-semibold leading-[1.5] tracking-[0.005em] sm:text-[26px] sm:leading-[1.45] lg:text-[34px] lg:leading-[1.3]">
             <span className="mt-1 block sm:mt-1.5">
-              <GradientText className="font-semibold">不是找个外包，是找个能长期合作的团队</GradientText>
+              <GradientText className="font-semibold">我们是值得你信任的长期合作伙伴</GradientText>
             </span>
           </h2>
         </div>
