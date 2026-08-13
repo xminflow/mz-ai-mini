@@ -246,6 +246,67 @@ samp,
   }
 }
 
+/* ===== Acrylic：两档深浅毛玻璃 =====
+   供首页服务流程手风琴使用。与上面三档的区别只有一处——多一层噪点。
+   噪点是「毛」感的唯一来源：只有半透明底色与模糊的话，得到的是透明塑料而不是磨砂玻璃。
+
+   Windows 11 Acrylic 的配方是四层：背景模糊 → 亮度层 → 色调层 → 噪点纹理。
+   CSS 没有与 luminosity blend 直接对应的能力，这里用色调层 + saturate 近似，
+   因此结果是接近而非像素级一致。
+
+   噪点通过多重 background + background-blend-mode 实现，不引入任何额外 DOM 节点。
+   图案沿用 noise-layer 的 feTurbulence 参数，强度是并排比对实测调出来的，不是估算：
+
+   - 深色档用「白噪点 + overlay」。实测 0.22 与无噪点肉眼无差别，0.45 才隐约可感，
+     0.75 起颗粒清晰且不刺眼。
+   - 浅色档必须换成「黑噪点 + multiply」。这一条是踩过的：白噪点叠 overlay 在接近白色的
+     底上会被完全吞掉，0.8 的强度渲染出来与无噪点一模一样。换 multiply 后强度要低一个
+     数量级——0.5 会变成压暗一大档的灰砂纸，0.22 开始发灰，0.14 才是「有颗粒但底色不脏」。
+
+   两档强度差了五倍，是因为混合模式和底色亮度都不同，不是笔误。
+
+   两档都不含外投影，也不含 border：这七条嵌在 overflow-hidden 的 ul 内部，
+   外投影会被直接裁掉；描边由组件的 border-l 分隔线承担，utility 再加一层会成双线。
+   这是相对上面三档「四项配套」的有意偏离，原因是使用场景不同，不是遗漏。 */
+@utility glass-acrylic {
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='ac'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.14 0'/></filter><rect width='100%' height='100%' filter='url(%23ac)' opacity='0.5'/></svg>")
+      repeat,
+    rgba(255, 255, 255, 0.5);
+  background-blend-mode: multiply, normal;
+  backdrop-filter: saturate(180%) blur(30px);
+  -webkit-backdrop-filter: saturate(180%) blur(30px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -1px 0 rgba(14, 14, 14, 0.04);
+
+  @media (prefers-reduced-transparency: reduce) {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@utility glass-acrylic-dark {
+  background:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'><filter id='ad'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.75 0'/></filter><rect width='100%' height='100%' filter='url(%23ad)' opacity='0.5'/></svg>")
+      repeat,
+    rgba(14, 14, 14, 0.82);
+  background-blend-mode: overlay, normal;
+  /* saturate 取 150% 而非浅色档的 180%：深底上放大色彩更容易发脏 */
+  backdrop-filter: saturate(150%) blur(30px);
+  -webkit-backdrop-filter: saturate(150%) blur(30px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+
+  @media (prefers-reduced-transparency: reduce) {
+    background: rgba(14, 14, 14, 0.97);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
 @utility scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;

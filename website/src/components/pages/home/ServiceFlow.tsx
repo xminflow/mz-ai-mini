@@ -232,16 +232,21 @@ export const ServiceFlow = () => {
                 transform: shown ? 'none' : 'translateY(20px)',
                 // 逐条立起的延迟只能分别挂在 opacity/transform 上。写成一条统一的
                 // duration/delay 会把 flex 一起延后，展开就跟不上鼠标了
+                // 深浅两档玻璃之间切换的是 class，这三个属性必须各自声明过渡才会插值而不是跳变。
+                // backdrop-filter 两档的函数列表同构（都是 saturate + blur），可以平滑插值。
                 transition: [
                   `flex ${PANEL_MS}ms ${PANEL_EASE}`,
                   `background-color ${PANEL_MS}ms ${PANEL_EASE}`,
+                  `box-shadow ${PANEL_MS}ms ${PANEL_EASE}`,
+                  `backdrop-filter ${PANEL_MS}ms ${PANEL_EASE}`,
+                  `-webkit-backdrop-filter ${PANEL_MS}ms ${PANEL_EASE}`,
                   `opacity ${enterMs}ms ease-out ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
                   `transform ${enterMs}ms ${PANEL_EASE} ${reduce ? 0 : index * ENTER_STEP_MS}ms`,
                 ].join(', '),
               }}
               className={[
-                'relative min-w-0 overflow-hidden border-l border-rule first:border-l-0',
-                open ? 'bg-graphite' : 'bg-paper-raised',
+                'group relative min-w-0 overflow-hidden border-l border-rule first:border-l-0',
+                open ? 'glass-acrylic-dark' : 'glass-acrylic',
               ].join(' ')}
             >
               {/* 底光挂在 li 上而不是面板内容里：内容宽度写死 34rem，光晕跟着它会在
