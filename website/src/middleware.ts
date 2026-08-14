@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server'
+import { isTemplatesModuleEnabled } from '@/features/site-templates/config'
 
 // 官网当前只对外开放首页，其余路径统一 307 回首页。页面与组件代码均保留未删。
 //
@@ -8,7 +9,11 @@ import { NextResponse, type NextRequest } from 'next/server'
 //      （续签实现保留在 features/auth/server/backend.ts，受保护路由判断保留在
 //       features/auth/protected-routes.ts，两者都未删除）
 //   3. 同步更新 app/sitemap.ts 的路径清单与 (site)/layout.tsx 的导航渲染
-const PUBLIC_PATH_PREFIXES: string[] = ['/', '/cases']
+// 模板模块只在开关打开时放行（默认仅开发环境）。关闭时走下面统一的 307 回首页逻辑——
+// 路由与入口一起消失，不需要额外的隐藏机制。
+//
+// 这里在模块顶层求值，即每个 middleware 冷启动只算一次。改了环境变量必须重启 dev 才生效。
+const PUBLIC_PATH_PREFIXES: string[] = isTemplatesModuleEnabled() ? ['/', '/templates'] : ['/']
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATH_PREFIXES.some((prefix) => {
