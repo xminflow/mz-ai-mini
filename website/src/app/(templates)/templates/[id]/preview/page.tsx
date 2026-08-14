@@ -9,7 +9,9 @@ interface RouteParams {
 }
 
 interface PreviewSearchParams {
-  page?: string
+  // Next.js 对重复的同名 query（如 ?page=a&page=b）在运行时会给出 string[]，
+  // 而不是 string；只声明 string 会让类型系统对这种输入撒谎。
+  page?: string | string[]
 }
 
 export async function generateMetadata({
@@ -35,8 +37,9 @@ export default async function TemplatePreviewPage({
   const template = getTemplateById(id)
   if (!template) notFound()
 
-  // 不带 ?page 时预览首页（slug 为空串）。
-  const activeSlug = requestedSlug ?? ''
+  // 不带 ?page 时预览首页（slug 为空串）；重复传参（?page=a&page=b）时视同未传，
+  // 回落到首页——绝不能让数组静默流进 getTemplatePage 做字符串比较。
+  const activeSlug = typeof requestedSlug === 'string' ? requestedSlug : ''
   const activePage = getTemplatePage(template, activeSlug)
   if (!activePage) notFound()
 
@@ -72,6 +75,7 @@ export default async function TemplatePreviewPage({
             <Link
               key={page.slug}
               href={href}
+              aria-current={page.slug === activeSlug ? 'page' : undefined}
               className={
                 page.slug === activeSlug
                   ? 'text-sm text-neutral-100'

@@ -8,6 +8,12 @@ import { meridianTemplate } from './catalog/meridian/meta'
  */
 const RESERVED_SLUGS: string[] = ['preview']
 
+/** kebab-case，不含 `/`：用于 template.id，它同时是 URL 片段和目录名。 */
+const KEBAB_CASE_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+
+/** kebab-case，允许 `/` 作为多级分隔：用于非空的 page.slug。 */
+const KEBAB_CASE_SLUG = /^[a-z0-9]+(?:[-/][a-z0-9]+)*$/
+
 /** 新增模板的唯一注册入口：建好 catalog/<id>/ 目录后在这里加一行。 */
 export const SITE_TEMPLATES: SiteTemplate[] = [meridianTemplate]
 
@@ -23,6 +29,13 @@ function assertRegistryValid(templates: SiteTemplate[]): void {
       throw new Error(`[site-templates] 模板 id 重复：${template.id}`)
     }
     seenIds.add(template.id)
+
+    if (!KEBAB_CASE_ID.test(template.id)) {
+      throw new Error(
+        `[site-templates] 模板 id「${template.id}」不是合法的 kebab-case（如 my-template），` +
+          `它同时被用作 URL 片段和 catalog 目录名，格式不对会导致路由或目录解析失败`,
+      )
+    }
 
     if (!template.pages.some((page) => page.slug === '')) {
       throw new Error(`[site-templates] 模板 ${template.id} 缺少首页（slug 为空串的页面）`)
@@ -41,6 +54,13 @@ function assertRegistryValid(templates: SiteTemplate[]): void {
         )
       }
       seenSlugs.add(page.slug)
+
+      if (page.slug !== '' && !KEBAB_CASE_SLUG.test(page.slug)) {
+        throw new Error(
+          `[site-templates] 模板 ${template.id} 的页面 slug「${page.slug}」不是合法的 kebab-case` +
+            `（如 team 或 about/team，多级用 / 分隔），格式不对的 slug 在运行时会静默 404`,
+        )
+      }
     }
   }
 }

@@ -22,6 +22,7 @@ export function PreviewFrame({ src, title }: { src: string; title: string }) {
             key={item.id}
             type="button"
             onClick={() => setViewport(item.id)}
+            aria-pressed={item.id === viewport}
             className={
               item.id === viewport
                 ? 'text-sm text-neutral-100'

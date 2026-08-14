@@ -15,8 +15,10 @@ export interface SiteTemplatePage {
   slug: string
   title: string
   /**
-   * 用 import() 缩略函数而非直接引用组件：Next.js 能静态分析这种写法，
-   * 为每套模板独立分包，模板数量增长时不会互相拖累首屏体积。
+   * 用 import() 缩略函数而非直接引用组件：Next.js 能静态分析这种写法做代码分割。
+   * 意图是让每套模板独立分包，模板数量增长时不互相拖累首屏体积——但这只是设计意图，
+   * 尚未在生产构建产物里验证过（dev 模式的加载策略与生产 chunk 划分不是一回事）。
+   * 详见 README「已知遗留」。
    */
   load: () => Promise<{ default: ComponentType<SiteTemplatePageProps> }>
 }
