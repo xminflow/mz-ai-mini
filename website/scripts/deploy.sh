@@ -4,9 +4,6 @@
 # 流程：本地 docker build -> docker save | gzip -> scp 到远端 /tmp
 #       -> 远端 docker load -> 远端 restart.sh 重启容器 -> 清理远端临时包。
 #
-# 课件内容不在镜像里（走 bind-mount，见 sync-content.ps1），所以本脚本只负责
-# 代码镜像的更新；换镜像不影响已挂载的 courses/community 内容。
-#
 # 用法（Windows 用 Git Bash 运行）：
 #   bash deploy.sh                      # 全流程：构建+部署
 #   bash deploy.sh --proxy http://192.168.32.1:7078   # 构建走代理

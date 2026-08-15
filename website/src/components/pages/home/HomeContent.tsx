@@ -1,5 +1,6 @@
 import { LightShell } from '@/components/layout/LightShell'
 
+import { Advantages } from './Advantages'
 import { CapabilityBar } from './CapabilityBar'
 import { Hero } from './Hero'
 import { ServiceFlow } from './ServiceFlow'
@@ -11,5 +12,6 @@ export const HomeContent = () => (
     <CapabilityBar />
     <ServiceTypes />
     <ServiceFlow />
+    <Advantages />
   </LightShell>
 )

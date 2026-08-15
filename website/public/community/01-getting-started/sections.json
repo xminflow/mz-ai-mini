@@ -1,6 +1,0 @@
-{
-  "sections": [
-    { "id": "01-welcome", "title": "欢迎来到 AI 学习社区", "file": "01-welcome.md" },
-    { "id": "02-how-to-learn-in-ai-era", "title": "AI 时代，编程到底该怎么学？", "file": "02-how-to-learn-in-ai-era.md" }
-  ]
-}

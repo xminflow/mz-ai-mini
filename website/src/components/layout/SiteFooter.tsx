@@ -8,8 +8,6 @@ const FOOTER_GROUPS: Array<{
     title: "浏览",
     links: [
       { label: "软件定制", href: "/" },
-      { label: "实战项目培训", href: "/studio" },
-      { label: "AI架构师训练营", href: "/ai-coding-camp" },
     ],
   },
 ];

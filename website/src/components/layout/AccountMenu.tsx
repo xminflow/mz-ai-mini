@@ -20,13 +20,6 @@ export function AccountMenu({
   return (
     <div className="flex items-center gap-2 rounded-full border border-hairline bg-surface px-3 py-1.5">
       <Link
-        href="/course"
-        className="text-[13px] text-ink-soft transition-colors hover:text-ink"
-      >
-        我的课程
-      </Link>
-      <span aria-hidden className="h-3 w-px bg-hairline" />
-      <Link
         href="/account"
         className="max-w-[150px] truncate text-[13px] text-ink-soft transition-colors hover:text-ink"
       >

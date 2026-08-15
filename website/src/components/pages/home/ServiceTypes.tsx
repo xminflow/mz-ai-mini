@@ -6,7 +6,7 @@ import { motion, useReducedMotion, type PanInfo } from 'framer-motion'
 import { Reveal } from '@/components/motion/Reveal'
 import { SectionHeading } from '@/components/ui'
 
-import { SERVICES, THEMES } from '../custom-software/data'
+import { SERVICES, THEMES } from './service-data'
 import { ServiceArtwork } from './ServiceArtwork'
 
 const COUNT = SERVICES.length
