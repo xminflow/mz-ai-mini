@@ -2,41 +2,93 @@
    令牌不能提到 :root，否则会污染全站并与其它模板串色；一律以 --tpl- 开头，
    与官网 globals.css 的 --color-* 令牌命名完全不重叠。
 
-   本模板是浅色控制台界面：白底 + 极浅灰面 + 1px 细分割线 + 青蓝强调，
-   状态色（健康/警告/严重）是这套界面的核心语义，必须单独成令牌而不是散在各页写死。 */
+   本模板是深色科技风的监控控制台：近黑的靛蓝底 + 环境辉光 + 网格，
+   面板一律走玻璃质感（半透明 + 背景模糊 + 一道高光边）。
+   监控大屏本来就长期挂在墙上或值班机上，深色底既是行业惯例也更耐看。 */
 [data-template='aegis'] {
-  --tpl-bg: #ffffff;
-  /* surface 用于卡片/面板底；subtle 更浅一层，用于表头、代码块、选中行等次级底 */
-  --tpl-surface: #f7f8fa;
-  --tpl-subtle: #fbfcfd;
-  --tpl-rule: #e8eaed;
-  --tpl-rule-strong: #d6dae0;
+  /* ---------- 底层与面 ---------- */
+  --tpl-bg: #070b12;
+  /* 需要实底的地方（图表画布、表头）用它——canvas 拿不到半透明玻璃的视觉效果 */
+  --tpl-bg-elev: #0d121c;
+  /* 玻璃面：两档透明度，用在面板与卡片上 */
+  --tpl-glass: rgb(148 163 184 / 0.06);
+  --tpl-glass-strong: rgb(148 163 184 / 0.1);
+  --tpl-surface: rgb(148 163 184 / 0.08);
+  --tpl-subtle: rgb(148 163 184 / 0.04);
 
-  --tpl-fg: #1b1f26;
-  --tpl-fg-dim: #6b7280;
-  --tpl-fg-faint: #9aa1ab;
+  /* 吸顶的侧栏与顶栏用它：要压住下方滚动的内容，又不能是实心色否则玻璃感断掉 */
+  --tpl-bg-sticky: rgb(7 11 18 / 0.72);
 
-  --tpl-accent: #2563eb;
-  --tpl-accent-soft: #eff4ff;
+  --tpl-rule: rgb(148 163 184 / 0.14);
+  --tpl-rule-strong: rgb(148 163 184 / 0.26);
 
-  /* 三档状态语义色。soft 变体用于标签底色，保证浅色底上的对比度不刺眼 */
-  --tpl-ok: #10b981;
-  --tpl-ok-soft: #e7f8f1;
-  --tpl-warn: #f59e0b;
-  --tpl-warn-soft: #fef5e6;
-  --tpl-crit: #e11d48;
-  --tpl-crit-soft: #fdeaef;
+  /* ---------- 文字 ---------- */
+  --tpl-fg: #e6edf7;
+  --tpl-fg-dim: #93a4bd;
+  --tpl-fg-faint: #64758c;
+
+  /* ---------- 强调与状态 ---------- */
+  /* 青蓝是这套界面的品牌色，也是"科技感"的主要来源 */
+  --tpl-accent: #38bdf8;
+  --tpl-accent-soft: rgb(56 189 248 / 0.16);
+
+  /* 三档状态语义色。全部经色觉与对比度校验（底色 #0d121c）：
+     相邻色对最差 ΔE 8.0（tritan），正常视觉最差 21.2，对比度均 ≥ 6.9:1。
+     soft 变体用于标签底色，深色底上要够暗才不刺眼。 */
+  --tpl-ok: #34d399;
+  --tpl-ok-soft: rgb(52 211 153 / 0.16);
+  --tpl-warn: #fbbf24;
+  --tpl-warn-soft: rgb(251 191 36 / 0.16);
+  --tpl-crit: #fb7185;
+  --tpl-crit-soft: rgb(251 113 133 / 0.16);
 
   --tpl-font-body: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
-  /* 等宽字体用于日志、trace id、时间戳与所有数字指标：控制台界面里数字必须等宽对齐 */
+  /* 等宽字体用于日志、trace id、时间戳与所有数字指标：控制台里数字必须等宽对齐 */
   --tpl-font-mono: "SF Mono", "JetBrains Mono", "Cascadia Code", Consolas, "Liberation Mono", monospace;
 
-  background: var(--tpl-bg);
   color: var(--tpl-fg);
   font-family: var(--tpl-font-body);
   /* 控制台界面信息密度高，整体字号比官网小一档 */
   font-size: 14px;
   line-height: 1.5;
+
+  /* 环境层：两团辉光 + 一张细网格。
+     这是全模板"科技感"的地基——面板本身保持克制，气氛由底下这层承担，
+     而不是给每个组件都加发光边框。background-attachment: fixed 让网格在滚动时不跟着跑，
+     读起来像界面钉在一块背光板上。 */
+  background-color: var(--tpl-bg);
+  background-image:
+    radial-gradient(1100px 560px at 12% -8%, rgb(56 189 248 / 0.14), transparent 62%),
+    radial-gradient(900px 480px at 92% 2%, rgb(167 139 250 / 0.1), transparent 58%),
+    linear-gradient(rgb(148 163 184 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(148 163 184 / 0.06) 1px, transparent 1px);
+  background-size:
+    auto,
+    auto,
+    48px 48px,
+    48px 48px;
+  background-attachment: fixed;
+}
+
+/* 玻璃面板。
+   三件事一起做才成立：半透明底、背景模糊、以及顶端那道一像素高光——
+   只做半透明会显得脏，只做模糊会糊成一片，高光边是"玻璃有厚度"的关键。 */
+[data-template='aegis'] .tpl-glass-panel {
+  position: relative;
+  background: linear-gradient(180deg, rgb(148 163 184 / 0.09), rgb(148 163 184 / 0.045));
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgb(148 163 184 / 0.14);
+  box-shadow:
+    0 1px 0 0 rgb(255 255 255 / 0.06) inset,
+    0 18px 40px -24px rgb(0 0 0 / 0.8);
+}
+
+/* 卡片级玻璃，比面板淡一档：面板里再嵌卡片时不至于越叠越白 */
+[data-template='aegis'] .tpl-glass-card {
+  background: rgb(148 163 184 / 0.05);
+  border: 1px solid rgb(148 163 184 / 0.12);
+  box-shadow: 0 1px 0 0 rgb(255 255 255 / 0.04) inset;
 }
 
 /* 服务存活指示点的呼吸动画。做成 CSS 动画而不是 JS 定时器：
@@ -64,8 +116,8 @@
   }
 }
 
-/* 日志流等表格容器的细滚动条，避免默认滚动条在浅色密集界面里过于抢眼 */
+/* 日志流等表格容器的细滚动条。深色底上默认滚动条是一条亮杠，必须压下去 */
 [data-template='aegis'] .tpl-scroll {
   scrollbar-width: thin;
-  scrollbar-color: var(--tpl-rule-strong) transparent;
+  scrollbar-color: rgb(148 163 184 / 0.3) transparent;
 }

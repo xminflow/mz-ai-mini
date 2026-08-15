@@ -13,7 +13,7 @@ import '../theme.css'
  * 结果就是"明明写了 w-20 却还是占满一行"。宽度一律由调用处单独给。
  */
 const FIELD_BASE =
-  'rounded-md border border-[var(--tpl-rule)] bg-[var(--tpl-bg)] px-2.5 py-1.5 text-[12px] text-[var(--tpl-fg)] outline-none transition focus:border-[var(--tpl-accent)]'
+  'rounded-md border border-[var(--tpl-rule)] bg-[var(--tpl-subtle)] px-2.5 py-1.5 text-[12px] text-[var(--tpl-fg)] outline-none transition focus:border-[var(--tpl-accent)]'
 const FIELD_CLASS = `w-full ${FIELD_BASE}`
 
 /** 指标下拉里混排通用指标与类型专属指标，说明两者用的是同一套规则引擎。 */
@@ -247,7 +247,7 @@ export default function RulesPage({ basePath }: SiteTemplatePageProps) {
               </fieldset>
 
               <div className="flex gap-2 border-t border-[var(--tpl-rule)] pt-3.5">
-                <span className="rounded-md bg-[var(--tpl-accent)] px-3.5 py-1.5 text-[12px] font-medium text-white">
+                <span className="rounded-md bg-[var(--tpl-accent)] px-3.5 py-1.5 text-[12px] font-medium text-[var(--tpl-bg)]">
                   保存规则
                 </span>
                 <span className="rounded-md border border-[var(--tpl-rule)] px-3.5 py-1.5 text-[12px] text-[var(--tpl-fg-dim)]">
@@ -261,7 +261,7 @@ export default function RulesPage({ basePath }: SiteTemplatePageProps) {
         <Panel title="通知渠道" hint="渠道级开关优先于规则配置">
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
             {NOTIFY_CHANNELS.map((channel) => (
-              <div key={channel.name} className="rounded-md border border-[var(--tpl-rule)] px-3 py-2.5">
+              <div key={channel.name} className="tpl-glass-card rounded-lg px-3 py-2.5">
                 <div className="flex items-center gap-2">
                   <span className="min-w-0 flex-1 truncate text-[12px] font-medium">{channel.name}</span>
                   <span

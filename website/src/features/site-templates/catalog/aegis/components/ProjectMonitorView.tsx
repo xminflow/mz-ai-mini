@@ -178,7 +178,7 @@ export function ProjectMonitorView({ basePath }: { basePath: string }) {
         <Panel title="依赖服务存活" hint={`${project.services.length} 个依赖 · 健康检查间隔 15s`}>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {project.services.map((node) => (
-              <div key={node.name} className="rounded-md border border-[var(--tpl-rule)] px-3 py-2.5">
+              <div key={node.name} className="tpl-glass-card rounded-lg px-3 py-2.5">
                 <div className="flex items-center gap-2">
                   <StatusDot status={node.status} />
                   <span className="min-w-0 flex-1 truncate text-[12px] font-medium">{node.name}</span>

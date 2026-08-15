@@ -2,7 +2,7 @@ import type { ComponentType } from 'react'
 
 export interface SiteTemplatePageProps {
   /**
-   * 模板站点在当前挂载点下的根路径，如 `/templates/meridian`。
+   * 该端在当前挂载点下的根路径，如 `/templates/meridian/site`。
    *
    * 模板内部所有站内链接都必须基于它拼接，禁止硬编码 `/templates` 前缀——
    * 将来模板换挂载点（独立域名、上架后的预览页）时才不用逐套改。
@@ -10,7 +10,7 @@ export interface SiteTemplatePageProps {
   basePath: string
 }
 
-/** 模板内的单个页面。slug 为空串代表模板首页。 */
+/** 一个端内的单个页面。slug 为空串代表该端的首页。 */
 export interface SiteTemplatePage {
   slug: string
   title: string
@@ -24,14 +24,10 @@ export interface SiteTemplatePage {
 }
 
 /**
- * 模板元数据。字段按「将来上架的模板列表页需要什么」来定，
- * 而不是按「现在开发调试需要什么」——上架时不该再改一遍数据结构。
- */
-/**
- * 模板跑在哪个端。与场景分类正交：场景回答「做的是什么」，这里回答「在哪儿用」。
+ * 端跑在什么设备形态上。与场景分类正交：场景回答「做的是什么」，这里回答「在哪儿用」。
  *
- * 单值而非数组：PC 版与小程序版当成两套模板分开做。一套模板只有一份页面代码、
- * 一个预览入口，硬标成「同时是 PC 和小程序」，预览时就得替客户决定给他看哪一端。
+ * 挂在端上而不是模板上：一套交付常常同时包含 PC 端的管理后台与小程序端的商城，
+ * 挂在模板级就表达不了这种组合。
  */
 export type TemplatePlatform = 'pc' | 'miniprogram' | 'mobile'
 
@@ -42,6 +38,27 @@ export const TEMPLATE_PLATFORM_LABELS: Record<TemplatePlatform, string> = {
   mobile: '手机端',
 }
 
+/**
+ * 一套交付里的一个独立站点。
+ *
+ * 这一层是必要的而不是过度设计：真实项目很少只有一个站——企业官网通常配一个管理后台，
+ * 商城小程序背后还有一套订单后台。它们页面集完全不同、设计语言往往也不同，
+ * 硬塞进同一个扁平的 pages 数组，客户在预览里会看到官网和后台的页面混在一排。
+ */
+export interface TemplateSurface {
+  /** kebab-case，URL 片段：`/templates/<模板 id>/<端 id>/<页面 slug>` */
+  id: string
+  /** 展示名，如「官网」「管理后台」「商城小程序」 */
+  name: string
+  platform: TemplatePlatform
+  /** 该端的页面，必须含一个 slug 为空串的首页 */
+  pages: SiteTemplatePage[]
+}
+
+/**
+ * 模板元数据。字段按「将来上架的模板列表页需要什么」来定，
+ * 而不是按「现在开发调试需要什么」——上架时不该再改一遍数据结构。
+ */
 export interface SiteTemplate {
   id: string
   name: string
@@ -53,8 +70,6 @@ export interface SiteTemplate {
    * 再留一条近似的行业轴会让新增模板的人不知道该往哪填，行业信息一律进 tags。
    */
   sceneId: string
-  /** 模板跑在哪个端，与 sceneId 正交，卡片上并列展示 */
-  platform: TemplatePlatform
   /**
    * 是否已上架到对外的案例页 `/cases`。
    *
@@ -70,5 +85,6 @@ export interface SiteTemplate {
   accentColor: string
   /** 封面图路径，位于 public/templates/<id>/ 下 */
   cover: string
-  pages: SiteTemplatePage[]
+  /** 这套交付包含的端，数组顺序即预览页的端切换顺序，第一个是默认端 */
+  surfaces: TemplateSurface[]
 }

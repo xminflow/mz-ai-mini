@@ -25,7 +25,7 @@ export default function LogsPage({ basePath }: SiteTemplatePageProps) {
           {LOG_LEVEL_COUNTS.map((item) => (
             <div
               key={item.level}
-              className="flex items-center gap-3 rounded-lg border border-[var(--tpl-rule)] bg-[var(--tpl-bg)] px-4 py-3"
+              className="tpl-glass-card flex items-center gap-3 rounded-xl px-4 py-3"
             >
               <span
                 className="h-8 w-[3px] shrink-0 rounded-full"

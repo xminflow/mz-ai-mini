@@ -130,7 +130,7 @@ export default function AlertsPage({ basePath }: SiteTemplatePageProps) {
               ))}
             </ol>
 
-            <div className="mt-4 rounded-md border border-[var(--tpl-rule)] bg-[var(--tpl-subtle)] px-3 py-2.5">
+            <div className="tpl-glass-card mt-4 rounded-lg px-3 py-2.5">
               <p className="text-[11px] text-[var(--tpl-fg-dim)]">
                 确认耗时 <span className="font-[family-name:var(--tpl-font-mono)] tabular-nums text-[var(--tpl-fg)]">2 分 26 秒</span>
                 　恢复耗时 <span className="font-[family-name:var(--tpl-font-mono)] tabular-nums text-[var(--tpl-fg)]">51 分 14 秒</span>

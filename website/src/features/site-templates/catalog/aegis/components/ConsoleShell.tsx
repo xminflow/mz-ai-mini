@@ -85,12 +85,12 @@ interface ConsoleShellProps {
 
 export function ConsoleShell({ basePath, activeSlug, title, subtitle, toolbar, children }: ConsoleShellProps) {
   return (
-    <div className="flex min-h-screen bg-[var(--tpl-surface)]">
+    <div className="flex min-h-screen">
       {/* 侧栏三档形态：窄屏隐藏（改用下方横向导航），中屏只留图标，宽屏图标加文字。
           这是本模板在预览页三档视口下最直观的响应式表现。 */}
-      <aside className="sticky top-0 hidden h-screen w-14 shrink-0 flex-col border-r border-[var(--tpl-rule)] bg-[var(--tpl-bg)] md:flex xl:w-56">
+      <aside className="sticky top-0 hidden h-screen w-14 shrink-0 flex-col border-r border-[var(--tpl-rule)] bg-[var(--tpl-bg-sticky)] backdrop-blur-xl md:flex xl:w-56">
         <div className="flex h-14 items-center gap-2.5 border-b border-[var(--tpl-rule)] px-4">
-          <span className="flex size-6 shrink-0 items-center justify-center rounded-[5px] bg-[var(--tpl-accent)] text-[11px] font-bold text-white">
+          <span className="flex size-6 shrink-0 items-center justify-center rounded-[5px] bg-[var(--tpl-accent)] text-[11px] font-bold text-[var(--tpl-bg)]">
             微
           </span>
           <span className="hidden truncate text-[13px] font-semibold tracking-tight xl:inline">
@@ -134,7 +134,7 @@ export function ConsoleShell({ basePath, activeSlug, title, subtitle, toolbar, c
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-10 border-b border-[var(--tpl-rule)] bg-[var(--tpl-bg)]/95 backdrop-blur">
+        <header className="sticky top-0 z-10 border-b border-[var(--tpl-rule)] bg-[var(--tpl-bg-sticky)] backdrop-blur-xl">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 sm:px-6">
             <div className="min-w-0 flex-1">
               <h1 className="truncate text-[15px] font-semibold tracking-tight">{title}</h1>
@@ -178,7 +178,7 @@ export function ConsoleShell({ basePath, activeSlug, title, subtitle, toolbar, c
 /** 顶栏右侧常用的一组只读筛选控件。做成视觉态，不接交互逻辑。 */
 export function ToolbarChips({ items, activeIndex = 0 }: { items: string[]; activeIndex?: number }) {
   return (
-    <div className="flex shrink-0 items-center rounded-md border border-[var(--tpl-rule)] bg-[var(--tpl-bg)] p-0.5">
+    <div className="flex shrink-0 items-center rounded-md border border-[var(--tpl-rule)] bg-[var(--tpl-subtle)] p-0.5">
       {items.map((item, index) => (
         <span
           key={item}

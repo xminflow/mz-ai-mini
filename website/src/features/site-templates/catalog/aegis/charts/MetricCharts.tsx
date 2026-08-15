@@ -38,7 +38,8 @@ const TIME_SERIES_GRID = { left: 68, right: 16, top: 12, bottom: 26, containLabe
 /** 故障时段背景标注。只有真出过事的项目才画，healthy 的项目不该凭空多一条红带。 */
 const INCIDENT_MARK_AREA = {
   silent: true,
-  itemStyle: { color: 'rgba(225, 29, 72, 0.05)' },
+  // 深色底上这层背景带必须比浅色底重一档，0.05 的红在近黑底上等于看不见
+  itemStyle: { color: 'rgba(251, 113, 133, 0.12)' },
   data: [[{ xAxis: '14:00' }, { xAxis: '16:00' }]],
 }
 

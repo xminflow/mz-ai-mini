@@ -10,12 +10,10 @@ import { TEMPLATE_PLATFORM_LABELS, type SiteTemplate } from '../types'
  * 整行 + 大封面才给得出足够的观感，行与行之间只用一条细线分隔，不做卡片套卡片。
  */
 export function TemplateRow({ template }: { template: SiteTemplate }) {
-  // 眉标是「业务形态 · 端」两个正交维度，而不是再存一份行业字符串——
+  // 眉标只写业务形态，不写端：一套交付可能同时有 PC 后台与小程序商城，
+  // 眉标塞不下也不该塞——端信息在下面按端分组的清单里逐条给出。
   // sceneId 是唯一事实来源，注册表已经校验过它一定存在于场景清单里。
-  const scene = getSceneById(template.sceneId)
-  const category = [scene?.name, TEMPLATE_PLATFORM_LABELS[template.platform]]
-    .filter(Boolean)
-    .join(' · ')
+  const category = getSceneById(template.sceneId)?.name ?? ''
 
   return (
     <Link
@@ -53,11 +51,22 @@ export function TemplateRow({ template }: { template: SiteTemplate }) {
 
           {/* mt-auto 把这块压到行底，与封面下沿对齐。
               这里列出页面名而不是只写「5 个页面」：右栏底部本来会空出一大块，
-              用真实内容填比用留白填诚实——读者在点进去之前就知道这套模板包含什么。 */}
+              用真实内容填比用留白填诚实——读者在点进去之前就知道这套模板包含什么。
+              一套交付常含多个端（官网 + 管理后台），按端分组列，否则两个站的页面名会混成一排。 */}
           <div className="mt-8 lg:mt-auto lg:pt-10">
-            <p className="border-t border-rule pt-5 font-mono text-[12px] leading-[2] text-graphite-dim">
-              {template.pages.map((page) => page.title).join(' · ')}
-            </p>
+            <dl className="border-t border-rule pt-5 font-mono text-[12px] leading-[2] text-graphite-dim">
+              {template.surfaces.map((surface) => (
+                <div key={surface.id} className="flex flex-col gap-x-3 sm:flex-row">
+                  <dt className="shrink-0 text-graphite-soft sm:w-32">
+                    {surface.name}
+                    <span className="ml-1.5">
+                      {TEMPLATE_PLATFORM_LABELS[surface.platform]}
+                    </span>
+                  </dt>
+                  <dd className="min-w-0">{surface.pages.map((page) => page.title).join(' · ')}</dd>
+                </div>
+              ))}
+            </dl>
             <p className="mt-5 flex items-baseline gap-2 text-[14px] text-graphite">
               <span>查看预览</span>
               <span

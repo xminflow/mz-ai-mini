@@ -28,7 +28,7 @@ export function StatTile({
   status?: HealthStatus
 }) {
   return (
-    <div className="relative overflow-hidden rounded-lg border border-[var(--tpl-rule)] bg-[var(--tpl-bg)] px-4 py-3">
+    <div className="tpl-glass-card relative overflow-hidden rounded-xl px-4 py-3">
       {status ? (
         <span
           className="absolute inset-y-0 left-0 w-[3px]"

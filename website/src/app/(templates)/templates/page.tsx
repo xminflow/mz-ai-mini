@@ -6,7 +6,13 @@ export const metadata: Metadata = {
   title: { absolute: '模板工作台' },
 }
 
-const TOTAL_PAGES = SITE_TEMPLATES.reduce((sum, template) => sum + template.pages.length, 0)
+// 页面数要跨端累加：一套交付可能含官网 + 管理后台两个站，各有各的页面集
+const TOTAL_SURFACES = SITE_TEMPLATES.reduce((sum, template) => sum + template.surfaces.length, 0)
+const TOTAL_PAGES = SITE_TEMPLATES.reduce(
+  (sum, template) =>
+    sum + template.surfaces.reduce((surfaceSum, surface) => surfaceSum + surface.pages.length, 0),
+  0,
+)
 
 export default function TemplatesWorkbenchPage() {
   return (
@@ -24,7 +30,8 @@ export default function TemplatesWorkbenchPage() {
       </header>
 
       <p className="mt-16 font-mono text-[12px] leading-relaxed text-graphite-dim lg:mt-20">
-        {SITE_TEMPLATES.length} 套模板 · {TOTAL_PAGES} 个页面 · 仅开发环境可见，生产环境需设置
+        {SITE_TEMPLATES.length} 套模板 · {TOTAL_SURFACES} 个端 · {TOTAL_PAGES} 个页面 ·
+        仅开发环境可见，生产环境需设置
         TEMPLATES_MODULE_ENABLED=true
       </p>
 

@@ -21,7 +21,7 @@ export function Panel({
 }) {
   return (
     <section
-      className={`overflow-hidden rounded-lg border border-[var(--tpl-rule)] bg-[var(--tpl-bg)] ${className ?? ''}`}
+      className={`tpl-glass-panel overflow-hidden rounded-xl ${className ?? ''}`}
     >
       {title ? (
         <header className="flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-[var(--tpl-rule)] px-4 py-3">

@@ -77,7 +77,7 @@ export default function InspectionPage({ basePath }: SiteTemplatePageProps) {
               const isRunning = agent.status === 'running'
               const total = INSPECTED_PROJECTS.length
               return (
-                <div key={agent.name} className="rounded-md border border-[var(--tpl-rule)] px-3 py-3">
+                <div key={agent.name} className="tpl-glass-card rounded-lg px-3 py-3">
                   <div className="flex items-center gap-2">
                     <span
                       className="inline-block size-2 shrink-0 rounded-full"
@@ -176,7 +176,7 @@ export default function InspectionPage({ basePath }: SiteTemplatePageProps) {
             bodyClassName="p-4 space-y-3"
           >
             {PENDING_FIXES.map((fix) => (
-              <div key={fix.id} className="rounded-md border border-[var(--tpl-rule)] px-3 py-3">
+              <div key={fix.id} className="tpl-glass-card rounded-lg px-3 py-3">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                   <span className="font-[family-name:var(--tpl-font-mono)] text-[10px] text-[var(--tpl-fg-faint)]">
                     {fix.id}
@@ -209,7 +209,7 @@ export default function InspectionPage({ basePath }: SiteTemplatePageProps) {
                     {fix.foundBy} · {fix.foundAt}
                   </span>
                   {/* 按钮做成视觉态：模板展示的是界面形态，不实现产品逻辑 */}
-                  <span className="ml-auto rounded-md bg-[var(--tpl-accent)] px-3 py-1 text-[11px] font-medium text-white">
+                  <span className="ml-auto rounded-md bg-[var(--tpl-accent)] px-3 py-1 text-[11px] font-medium text-[var(--tpl-bg)]">
                     授权修复
                   </span>
                   <span className="rounded-md border border-[var(--tpl-rule)] px-3 py-1 text-[11px] text-[var(--tpl-fg-dim)]">

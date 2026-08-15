@@ -112,7 +112,7 @@ function ProjectCard({ project, basePath }: { project: Project; basePath: string
   return (
     <Link
       href={`${basePath}/project`}
-      className="group rounded-lg border border-[var(--tpl-rule)] bg-[var(--tpl-bg)] p-4 transition hover:border-[var(--tpl-rule-strong)]"
+      className="tpl-glass-card group rounded-xl p-4 transition hover:border-[var(--tpl-rule-strong)]"
     >
       <div className="flex items-center gap-2">
         <StatusDot status={project.status} />

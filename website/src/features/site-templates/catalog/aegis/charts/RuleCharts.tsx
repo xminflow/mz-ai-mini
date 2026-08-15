@@ -5,6 +5,7 @@ import { HOURS, THRESHOLD_PREVIEW } from '../data'
 import { EChart } from './EChart'
 import {
   AXIS_LABEL_STYLE,
+  CHART_SURFACE,
   AXIS_TOOLTIP,
   GRID,
   STATUS_COLORS,
@@ -61,7 +62,7 @@ export function ThresholdPreviewChart() {
           // 越界点单独成一个序列：折线不连、只留标记点，视觉上是"打在曲线上的红点"
           lineStyle: { width: 0 },
           symbolSize: 8,
-          itemStyle: { color: STATUS_COLORS.crit, borderColor: '#ffffff', borderWidth: 2 },
+          itemStyle: { color: STATUS_COLORS.crit, borderColor: CHART_SURFACE, borderWidth: 2 },
           data: breachPoints,
           tooltip: { show: false },
         },
