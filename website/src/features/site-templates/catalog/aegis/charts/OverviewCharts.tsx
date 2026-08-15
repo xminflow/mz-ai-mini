@@ -136,7 +136,7 @@ export function BudgetRankingChart() {
     <EChart
       option={option}
       height={252}
-      ariaLabel={`误差预算消耗最高的 ${BUDGET_RANKING_SIZE} 个项目排行，实时数仓入湖已透支 132%`}
+      ariaLabel={`误差预算消耗最高的 ${BUDGET_RANKING_SIZE} 个项目排行，平台-订单数据同步管道已透支 132%`}
     />
   )
 }

@@ -39,14 +39,6 @@ export interface TemplateSceneGroup {
   scenes: TemplateScene[]
 }
 
-/**
- * 与 app/(site)/cases/other 这个静态路由段冲突的 scene id。
- * Next.js 静态段优先级高于动态段，场景若取这个名字会被静默吞掉，
- * 表现为「场景配了却打不开」，因此在 taxonomy 层直接拒绝，
- * 与 registry.ts 拒绝保留 slug `preview` 是同一个坑、同一种处理。
- */
-const RESERVED_SCENE_IDS: string[] = ['other']
-
 const KEBAB_CASE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 /**
@@ -126,11 +118,6 @@ function assertTaxonomyValid(groups: TemplateSceneGroup[]): void {
         throw new Error(
           `[site-templates] 场景 id「${scene.id}」不是合法的 kebab-case，` +
             `它是 /cases/<scene-id> 的 URL 片段，格式不对会导致路由解析失败`,
-        )
-      }
-      if (RESERVED_SCENE_IDS.includes(scene.id)) {
-        throw new Error(
-          `[site-templates] 场景 id「${scene.id}」是保留值，该路径被案例页的静态路由段占用`,
         )
       }
       if (seenSceneIds.has(scene.id)) {

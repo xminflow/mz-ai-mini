@@ -19,18 +19,14 @@ import '../theme.css'
 
 const GROUPS = groupProjectsByKind()
 
-/** 「2 正常 · 1 警告 · 1 异常」这类一行摘要，只列出现的状态。 */
+/**
+ * 分组摘要只报需要处理的数量，不报"多少个正常"。
+ * 正常是默认状态，把它数出来只会稀释真正要看的那个数字；一组全都正常时这里就是空的。
+ */
 function groupSummary(projects: Project[]): string {
-  const counts = {
-    healthy: projects.filter((item) => item.status === 'healthy').length,
-    warning: projects.filter((item) => item.status === 'warning').length,
-    critical: projects.filter((item) => item.status === 'critical').length,
-  }
-  return [
-    counts.critical ? `${counts.critical} 异常` : '',
-    counts.warning ? `${counts.warning} 警告` : '',
-    counts.healthy ? `${counts.healthy} 正常` : '',
-  ]
+  const critical = projects.filter((item) => item.status === 'critical').length
+  const warning = projects.filter((item) => item.status === 'warning').length
+  return [critical ? `${critical} 异常` : '', warning ? `${warning} 警告` : '']
     .filter(Boolean)
     .join(' · ')
 }
@@ -43,7 +39,7 @@ export default function OverviewPage({ basePath }: SiteTemplatePageProps) {
       basePath={basePath}
       activeSlug=""
       title="项目总览"
-      subtitle={`${PROJECTS.length} 个项目 · ${GROUPS.length} 种类型 · ${alertingCount} 个项目存在活跃告警`}
+      subtitle={`${alertingCount} 个项目存在活跃告警`}
       toolbar={<ToolbarChips items={['24 小时', '7 天', '30 天']} />}
     >
       <div className="space-y-5">
@@ -73,7 +69,7 @@ export default function OverviewPage({ basePath }: SiteTemplatePageProps) {
 
           <Panel
             title="SLO 误差预算消耗"
-            hint={`近 7 天 · 仅列消耗最高的 ${BUDGET_RANKING_SIZE} 个（共 ${PROJECTS.length} 个项目）`}
+            hint={`近 7 天 · 仅列消耗最高的 ${BUDGET_RANKING_SIZE} 个（重点项目 ${PROJECTS.length} 个）`}
             className="xl:col-span-2"
             bodyClassName="px-3 pb-3 pt-2"
           >
@@ -81,7 +77,7 @@ export default function OverviewPage({ basePath }: SiteTemplatePageProps) {
           </Panel>
         </section>
 
-        {/* 14 个项目平铺成一片卡片会读不出结构，按类型分组之后
+        {/* 二十几个项目平铺成一片卡片会读不出结构，按类型分组之后
             「这套平台什么类型都能纳管」这件事本身就成了页面上最显眼的信息 */}
         {GROUPS.map(({ kind, projects }) => {
           const spec = getKindSpec(kind)
@@ -89,9 +85,6 @@ export default function OverviewPage({ basePath }: SiteTemplatePageProps) {
             <section key={kind}>
               <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-[var(--tpl-rule)] pb-2">
                 <h2 className="text-[13px] font-semibold tracking-tight">{spec.label}</h2>
-                <span className="font-[family-name:var(--tpl-font-mono)] text-[11px] tabular-nums text-[var(--tpl-fg-faint)]">
-                  {projects.length}
-                </span>
                 <span className="text-[11px] text-[var(--tpl-fg-dim)]">{groupSummary(projects)}</span>
                 <span className="ml-auto text-[11px] text-[var(--tpl-fg-faint)]">{spec.note}</span>
               </div>

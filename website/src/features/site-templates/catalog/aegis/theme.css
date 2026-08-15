@@ -1,4 +1,4 @@
-/* Aegis 模板的设计令牌，作用域锁在 [data-template='aegis'] 子树内。
+/* 微域智能运维平台模板的设计令牌，作用域锁在 [data-template='aegis'] 子树内。
    令牌不能提到 :root，否则会污染全站并与其它模板串色；一律以 --tpl- 开头，
    与官网 globals.css 的 --color-* 令牌命名完全不重叠。
 

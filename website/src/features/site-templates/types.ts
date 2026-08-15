@@ -38,6 +38,14 @@ export interface SiteTemplate {
    * 再留一条近似的行业轴会让新增模板的人不知道该往哪填，行业信息一律进 tags。
    */
   sceneId: string
+  /**
+   * 是否已上架到对外的案例页 `/cases`。
+   *
+   * 刻意做成必填而不是可选：上架意味着这套模板要被客户看到，必须是一次明确的点头，
+   * 不能是「新建模板时忘了写」的默认结果。内部工作台 `/templates` 不看这个字段，
+   * 始终全量显示——它是调试入口，收录进注册表与对外展示是两件事。
+   */
+  listed: boolean
   /** 风格与行业标签，卡片上平铺展示 */
   tags: string[]
   summary: string

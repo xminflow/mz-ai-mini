@@ -84,9 +84,11 @@ export function ConsoleShell({ basePath, activeSlug, title, subtitle, toolbar, c
       <aside className="sticky top-0 hidden h-screen w-14 shrink-0 flex-col border-r border-[var(--tpl-rule)] bg-[var(--tpl-bg)] md:flex xl:w-56">
         <div className="flex h-14 items-center gap-2.5 border-b border-[var(--tpl-rule)] px-4">
           <span className="flex size-6 shrink-0 items-center justify-center rounded-[5px] bg-[var(--tpl-accent)] text-[11px] font-bold text-white">
-            A
+            微
           </span>
-          <span className="hidden text-[13px] font-semibold tracking-tight xl:inline">Aegis</span>
+          <span className="hidden truncate text-[13px] font-semibold tracking-tight xl:inline">
+            微域智能运维
+          </span>
         </div>
 
         <nav className="flex flex-1 flex-col gap-0.5 p-2">
@@ -159,7 +161,7 @@ export function ConsoleShell({ basePath, activeSlug, title, subtitle, toolbar, c
         <main className="flex-1 px-4 py-5 sm:px-6 sm:py-6">{children}</main>
 
         <footer className="border-t border-[var(--tpl-rule)] px-4 py-4 text-[11px] text-[var(--tpl-fg-faint)] sm:px-6">
-          Aegis 项目监控运维平台 · 数据窗口 最近 24 小时 · 采集延迟 &lt; 15s
+          微域智能运维平台 · 数据窗口 最近 24 小时 · 采集延迟 &lt; 15s
         </footer>
       </div>
     </div>

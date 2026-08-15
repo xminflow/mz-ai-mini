@@ -32,18 +32,13 @@ function assertRegistryValid(templates: SiteTemplate[]): void {
     }
     seenIds.add(template.id)
 
-    // 场景填错、或场景有模板却漏配自定义区，都当场炸，不留到运行时让案例页缺内容
-    const scene = getSceneById(template.sceneId)
-    if (!scene) {
+    // 场景填错当场炸，不留到运行时让案例页静默少一套模板。
+    // 这里不再要求场景配了自定义区：15 个场景个个成页，没写 Section.tsx 的会走
+    // SceneFallback，与该场景有没有模板无关，两者不再互为前提。
+    if (!getSceneById(template.sceneId)) {
       throw new Error(
         `[site-templates] 模板 ${template.id} 的 sceneId「${template.sceneId}」` +
           `不在 taxonomy.ts 的场景清单里`,
-      )
-    }
-    if (!scene.load) {
-      throw new Error(
-        `[site-templates] 模板 ${template.id} 所属场景「${template.sceneId}」没有配置自定义区：` +
-          `请在 taxonomy.ts 给它补上 load，并新建 scenes/${template.sceneId}/Section.tsx`,
       )
     }
 

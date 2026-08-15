@@ -1,5 +1,5 @@
 import type { AlertSeverity, TimelineEvent } from './model'
-import { PROJECTS, getProject } from './projects'
+import { MANAGED_PROJECT_TOTAL, PROJECTS, getProject } from './projects'
 import { HOURS, INCIDENT_HOUR, shapedSeries } from './series'
 
 /**
@@ -26,13 +26,23 @@ export interface GlobalKpi {
 
 const TOTAL_ALERTS = PROJECTS.reduce((sum, project) => sum + project.activeAlerts, 0)
 const AVERAGE_UPTIME = PROJECTS.reduce((sum, project) => sum + project.uptime, 0) / PROJECTS.length
-const SLO_MET = PROJECTS.filter((project) => project.budgetUsed <= 100).length
-const TOTAL_COMPONENTS = PROJECTS.reduce((sum, project) => sum + project.services.length, 0)
+/** 误差预算透支的项目数。这些项目一定在总览页展示的重点项目里——出问题的才会被选进来 */
+const SLO_BREACHED = PROJECTS.filter((project) => project.budgetUsed > 100).length
+
+/**
+ * 纳管的服务组件总数。
+ *
+ * 这一项不能从 PROJECTS 的 services 求和：那只是 24 个重点项目的依赖，
+ * 而这行 KPI 描述的是 78 个项目的全部组件。样本数据里不存在另外 54 个项目的依赖清单，
+ * 所以这里是个直接给定的量级，与 MANAGED_PROJECT_TOTAL 相称（人均约 4 个组件）。
+ */
+const TOTAL_COMPONENTS = 312
 
 export const GLOBAL_KPIS: GlobalKpi[] = [
   {
+    // 这一格是平台整体口径（78），不是下方分组列出的重点项目数（24）
     label: '在线项目',
-    value: `${PROJECTS.length} / ${PROJECTS.length}`,
+    value: `${MANAGED_PROJECT_TOTAL} / ${MANAGED_PROJECT_TOTAL}`,
     delta: '全部在线',
     trend: 'flat',
     tone: 'positive',
@@ -48,12 +58,12 @@ export const GLOBAL_KPIS: GlobalKpi[] = [
   },
   {
     label: 'SLO 达标项目',
-    value: `${SLO_MET} / ${PROJECTS.length}`,
-    delta: '-2',
+    value: `${MANAGED_PROJECT_TOTAL - SLO_BREACHED} / ${MANAGED_PROJECT_TOTAL}`,
+    delta: `-${SLO_BREACHED}`,
     trend: 'down',
     tone: 'negative',
   },
-  { label: '24h 处理总量', value: '2.14', unit: '亿', delta: '+6.8%', trend: 'up', tone: 'neutral' },
+  { label: '24h 处理总量', value: '842', unit: '万', delta: '+6.8%', trend: 'up', tone: 'neutral' },
   {
     label: '纳管服务组件',
     value: String(TOTAL_COMPONENTS),
@@ -76,13 +86,6 @@ export const ALERT_TREND: { critical: number[]; warning: number[]; info: number[
 
 export type LogLevel = 'ERROR' | 'WARN' | 'INFO' | 'DEBUG'
 
-export const LOG_LEVEL_COUNTS: { level: LogLevel; count: number }[] = [
-  { level: 'ERROR', count: 3642 },
-  { level: 'WARN', count: 24180 },
-  { level: 'INFO', count: 486320 },
-  { level: 'DEBUG', count: 1284600 },
-]
-
 const LOG_SHAPE = [
   0.24, 0.2, 0.18, 0.16, 0.18, 0.26, 0.4, 0.6, 0.8, 0.93, 1.0, 0.96, 0.74, 0.86, 0.98, 0.95, 0.87,
   0.76, 0.64, 0.57, 0.5, 0.42, 0.34, 0.28,
@@ -93,12 +96,26 @@ export const LOG_VOLUME_SERIES: Record<LogLevel, number[]> = {
   INFO: shapedSeries(LOG_SHAPE, 29500, 0.16, 7102),
   WARN: shapedSeries(LOG_SHAPE, 1420, 0.3, 7103),
   ERROR: HOURS.map((_, index) => {
-    const base = 70 + LOG_SHAPE[index] * 90
+    const base = 32 + LOG_SHAPE[index] * 44
     // 故障时段 ERROR 激增，这是日志页最该被一眼看到的信息
-    const lift = index === INCIDENT_HOUR ? 8.6 : index === INCIDENT_HOUR + 1 ? 5.2 : index === INCIDENT_HOUR + 2 ? 2.1 : 1
+    const lift = index === INCIDENT_HOUR ? 5.6 : index === INCIDENT_HOUR + 1 ? 3.4 : index === INCIDENT_HOUR + 2 ? 1.7 : 1
     return Math.round(base * lift)
   }),
 }
+
+/**
+ * 等级统计由曲线求和得出，不再手填。
+ *
+ * 这四个数字与上面的 24 小时曲线画的是同一批日志，手填就必然会在某次调整后对不上——
+ * 而它们恰好在同一屏里上下相邻，读者把柱子加一遍就能发现。派生之后这类矛盾不可能发生。
+ * 数组顺序是展示顺序（错误在前），与 LOG_VOLUME_SERIES 的定义顺序无关。
+ */
+export const LOG_LEVEL_COUNTS: { level: LogLevel; count: number }[] = (
+  ['ERROR', 'WARN', 'INFO', 'DEBUG'] as LogLevel[]
+).map((level) => ({
+  level,
+  count: LOG_VOLUME_SERIES[level].reduce((sum, value) => sum + value, 0),
+}))
 
 export interface ErrorCluster {
   /** 归一化后的错误签名，同类异常聚在一起 */
@@ -118,55 +135,55 @@ export interface ErrorCluster {
 export const ERROR_CLUSTERS: ErrorCluster[] = [
   {
     signature: 'UpstreamTimeout: POST /v2/pay 返回 504 Gateway Timeout',
-    project: '支付网关',
+    project: '平台-统一支付网关',
     service: 'bank-adapter',
-    count: 862,
+    count: 520,
     delta: '+780%',
     trend: 'up',
     firstSeen: '14:06',
     lastSeen: '15:09',
-    impacted: 641,
+    impacted: 386,
     spark: [2, 1, 0, 3, 4, 2, 1, 0, 2, 3, 1, 2, 4, 6, 412, 268, 84, 22, 6, 3, 2, 1, 0, 1],
   },
   {
-    signature: 'ConsumerLagExceeded: 消费组 cdc-lakehouse 积压 182 万条',
-    project: '实时数仓入湖',
+    signature: 'ConsumerLagExceeded: 消费组 order-sync 积压 182 万条',
+    project: '平台-订单数据同步管道',
     service: 'kafka-consumer',
-    count: 517,
+    count: 300,
     delta: '+高',
     trend: 'up',
     firstSeen: '13:58',
     lastSeen: '15:11',
-    impacted: 517,
+    impacted: 300,
     spark: [4, 3, 2, 2, 3, 4, 6, 8, 9, 10, 12, 9, 7, 96, 214, 168, 74, 26, 12, 8, 6, 5, 4, 3],
   },
   {
     signature: "JSError: Cannot read properties of undefined (reading 'orderNo')",
-    project: '小程序商城',
+    project: '新环家电-小程序商城',
     service: 'mini-shop-web',
-    count: 431,
+    count: 240,
     delta: '+214%',
     trend: 'up',
     firstSeen: '12:11',
     lastSeen: '15:12',
-    impacted: 398,
+    impacted: 222,
     spark: [1, 0, 1, 0, 0, 1, 2, 4, 8, 12, 16, 14, 22, 34, 118, 96, 48, 22, 14, 10, 8, 6, 4, 2],
   },
   {
     signature: 'SlowQuery: SELECT … FROM t_reconcile 执行 8.4s 未走索引',
-    project: '主库集群',
+    project: '平台-主库集群',
     service: 'mysql-proxy',
-    count: 342,
+    count: 260,
     delta: '+38%',
     trend: 'up',
     firstSeen: '00:14',
     lastSeen: '15:08',
-    impacted: 342,
+    impacted: 260,
     spark: [12, 14, 18, 9, 6, 8, 12, 16, 18, 20, 22, 19, 14, 17, 34, 28, 22, 18, 15, 13, 11, 10, 9, 8],
   },
   {
     signature: 'ContextWindowExceeded: 输入 token 超出模型上限，已截断历史',
-    project: '智能客服 Agent',
+    project: '新环家电-售后客服 Agent',
     service: 'llm-gateway',
     count: 214,
     delta: '+12%',
@@ -178,7 +195,7 @@ export const ERROR_CLUSTERS: ErrorCluster[] = [
   },
   {
     signature: 'BatchRetryExhausted: recon-daily 渠道对账文件未就绪，重试 3/3',
-    project: '每日对账批处理',
+    project: '平台-每日对账批处理',
     service: 'cron-scheduler',
     count: 14,
     delta: '持平',
@@ -205,7 +222,7 @@ export const LOG_ENTRIES: LogEntry[] = [
   { time: '15:11:47.203', level: 'ERROR', service: 'bank-adapter', traceId: 'c58e7712', message: 'UpstreamTimeout: POST /v2/pay exceeded 30s, retry 2/3' },
   { time: '15:11:46.887', level: 'ERROR', service: 'payment-gateway', traceId: 'c58e7712', message: 'channel CMB returned 504, falling back to channel=ICBC' },
   { time: '15:11:40.115', level: 'INFO', service: 'auth-center', traceId: 'd90a1b3c', message: 'token issued sub=u_41822 ttl=7200s scope=[order,pay]' },
-  { time: '15:11:33.774', level: 'ERROR', service: 'kafka-consumer', traceId: 'e13f8802', message: 'ConsumerLagExceeded: group=cdc-lakehouse lag=1824391 threshold=500000' },
+  { time: '15:11:33.774', level: 'ERROR', service: 'kafka-consumer', traceId: 'e13f8802', message: 'ConsumerLagExceeded: group=order-sync lag=1824391 threshold=500000' },
   { time: '15:11:29.560', level: 'WARN', service: 'flink-etl', traceId: 'e13f8802', message: 'backpressure detected on operator sink-iceberg, ratio=0.87' },
   { time: '15:11:21.338', level: 'ERROR', service: 'mini-shop-web', traceId: 'f4a02219', message: "JSError: Cannot read properties of undefined (reading 'orderNo') at pay-result.js:142" },
   { time: '15:11:14.092', level: 'WARN', service: 'llm-gateway', traceId: '0c7b3ad1', message: 'ContextWindowExceeded: 132480 tokens exceeds limit 131072, truncating history' },
@@ -238,16 +255,16 @@ export interface ActiveAlert {
 }
 
 export const ACTIVE_ALERTS: ActiveAlert[] = [
-  { id: 'ALT-20418', severity: 'critical', title: '上游依赖超时率 8.4% 超出阈值 2%', project: '支付网关', kindLabel: 'API 服务', rule: '上游依赖超时率突增', firedAt: '14:21', duration: '51 分钟', assignee: '陈见山', state: '处理中' },
-  { id: 'ALT-20417', severity: 'critical', title: 'P95 响应耗时 4.5s 超出阈值 1.5s', project: '支付网关', kindLabel: 'API 服务', rule: 'P95 响应耗时劣化', firedAt: '14:09', duration: '1 小时 3 分', assignee: '陈见山', state: '已抑制' },
-  { id: 'ALT-20416', severity: 'critical', title: '银行渠道适配器实例存活 2/3', project: '支付网关', kindLabel: 'API 服务', rule: '依赖实例不足', firedAt: '14:06', duration: '1 小时 6 分', assignee: '许知白', state: '处理中' },
-  { id: 'ALT-20414', severity: 'critical', title: '管道积压 182 万条 超出阈值 50 万', project: '实时数仓入湖', kindLabel: '数据管道', rule: '管道积压超限', firedAt: '14:12', duration: '1 小时', assignee: '林拾', state: '处理中' },
-  { id: 'ALT-20412', severity: 'warning', title: '端到端时延 14.2 分钟 超出阈值 5 分钟', project: '实时数仓入湖', kindLabel: '数据管道', rule: '管道时延劣化', firedAt: '14:18', duration: '54 分钟', assignee: '待分配', state: '待认领' },
-  { id: 'ALT-20409', severity: 'warning', title: '前端 JS 错误率 2.8% 超出阈值 1%', project: '小程序商城', kindLabel: 'Web 应用', rule: '前端 JS 错误率', firedAt: '14:24', duration: '48 分钟', assignee: '待分配', state: '待认领' },
-  { id: 'ALT-20404', severity: 'warning', title: '上下文溢出 214 次/小时 超出阈值 100 次', project: '智能客服 Agent', kindLabel: 'AI Agent', rule: '上下文溢出频次', firedAt: '14:48', duration: '24 分钟', assignee: '陈见山', state: '处理中' },
-  { id: 'ALT-20398', severity: 'warning', title: '批次执行时长 76 分钟 超出阈值 60 分钟', project: '每日对账批处理', kindLabel: '定时任务', rule: '任务执行超时', firedAt: '02:16', duration: '12 小时 56 分', assignee: '陈见山', state: '处理中' },
+  { id: 'ALT-20418', severity: 'critical', title: '上游依赖超时率 8.4% 超出阈值 2%', project: '平台-统一支付网关', kindLabel: 'API 服务', rule: '上游依赖超时率突增', firedAt: '14:21', duration: '51 分钟', assignee: '陈见山', state: '处理中' },
+  { id: 'ALT-20417', severity: 'critical', title: 'P95 响应耗时 4.5s 超出阈值 1.5s', project: '平台-统一支付网关', kindLabel: 'API 服务', rule: 'P95 响应耗时劣化', firedAt: '14:09', duration: '1 小时 3 分', assignee: '陈见山', state: '已抑制' },
+  { id: 'ALT-20416', severity: 'critical', title: '银行渠道适配器实例存活 2/3', project: '平台-统一支付网关', kindLabel: 'API 服务', rule: '依赖实例不足', firedAt: '14:06', duration: '1 小时 6 分', assignee: '许知白', state: '处理中' },
+  { id: 'ALT-20414', severity: 'critical', title: '管道积压 182 万条 超出阈值 50 万', project: '平台-订单数据同步管道', kindLabel: '数据管道', rule: '管道积压超限', firedAt: '14:12', duration: '1 小时', assignee: '林拾', state: '处理中' },
+  { id: 'ALT-20412', severity: 'warning', title: '端到端时延 14.2 分钟 超出阈值 5 分钟', project: '平台-订单数据同步管道', kindLabel: '数据管道', rule: '管道时延劣化', firedAt: '14:18', duration: '54 分钟', assignee: '待分配', state: '待认领' },
+  { id: 'ALT-20409', severity: 'warning', title: '前端 JS 错误率 2.8% 超出阈值 1%', project: '新环家电-小程序商城', kindLabel: 'Web 应用', rule: '前端 JS 错误率', firedAt: '14:24', duration: '48 分钟', assignee: '待分配', state: '待认领' },
+  { id: 'ALT-20404', severity: 'warning', title: '上下文溢出 214 次/小时 超出阈值 100 次', project: '新环家电-售后客服 Agent', kindLabel: 'AI Agent', rule: '上下文溢出频次', firedAt: '14:48', duration: '24 分钟', assignee: '陈见山', state: '处理中' },
+  { id: 'ALT-20398', severity: 'warning', title: '批次执行时长 76 分钟 超出阈值 60 分钟', project: '平台-每日对账批处理', kindLabel: '定时任务', rule: '任务执行超时', firedAt: '02:16', duration: '12 小时 56 分', assignee: '陈见山', state: '处理中' },
   // 告警的严重度必须与它所属规则的严重度一致，否则规则页与告警页会互相打脸
-  { id: 'ALT-20391', severity: 'info', title: '慢查询 342 条/小时 超出阈值 200 条', project: '主库集群', kindLabel: '数据库', rule: '慢查询突增', firedAt: '14:52', duration: '20 分钟', assignee: '许知白', state: '已恢复' },
+  { id: 'ALT-20391', severity: 'info', title: '慢查询 260 条 超出阈值 200 条', project: '平台-主库集群', kindLabel: '数据库', rule: '慢查询突增', firedAt: '14:52', duration: '20 分钟', assignee: '许知白', state: '已恢复' },
 ]
 
 /** 严重度构成由告警列表实时算出，杜绝图与表对不上。 */
@@ -274,7 +291,7 @@ export const ALERT_TIMELINE: TimelineEvent[] = [
   { time: '14:21:06', title: '规则触发', detail: '上游依赖超时率连续 5 分钟 > 2%，实测 8.4%', tone: 'critical' },
   { time: '14:21:14', title: '通知已送达', detail: '企业微信值班群 · 电话呼叫 陈见山（8 秒接通）', tone: 'neutral' },
   { time: '14:23:32', title: '已认领', detail: '陈见山认领，确认耗时 2 分 26 秒', tone: 'neutral' },
-  { time: '14:26:10', title: '关联归因', detail: '定位到银行渠道适配器上游 504，同时关联到小程序商城 JS 错误率上涨', tone: 'warning' },
+  { time: '14:26:10', title: '关联归因', detail: '定位到银行渠道适配器上游 504，同时关联到新环家电-小程序商城 JS 错误率上涨', tone: 'warning' },
   { time: '14:38:47', title: '预案执行', detail: '自动切换备用银行渠道并降级为异步补单', tone: 'neutral' },
   { time: '15:12:20', title: '指标恢复', detail: '超时率回落至 0.4%，告警进入恢复观察期', tone: 'healthy' },
 ]
@@ -301,7 +318,7 @@ export interface AlertRule {
 
 export const ALERT_RULES: AlertRule[] = [
   { id: 'RULE-001', name: '上游依赖超时率突增', scope: '全部生产项目', metric: 'upstream.timeout_rate', condition: '> 2% 持续 5 分钟', severity: 'critical', silence: '30 分钟', channels: ['企业微信', '电话'], enabled: true, fired7d: 4 },
-  { id: 'RULE-002', name: 'P95 响应耗时劣化', scope: '支付网关', metric: 'latency.p95', condition: '> 1500ms 持续 10 分钟', severity: 'critical', silence: '30 分钟', channels: ['企业微信', '钉钉'], enabled: true, fired7d: 7 },
+  { id: 'RULE-002', name: 'P95 响应耗时劣化', scope: '平台-统一支付网关', metric: 'latency.p95', condition: '> 1500ms 持续 10 分钟', severity: 'critical', silence: '30 分钟', channels: ['企业微信', '钉钉'], enabled: true, fired7d: 7 },
   { id: 'RULE-003', name: '依赖实例不足', scope: '全部项目', metric: 'service.replicas_ready', condition: '< 期望实例数 持续 2 分钟', severity: 'critical', silence: '15 分钟', channels: ['企业微信', '电话', 'Webhook'], enabled: true, fired7d: 3 },
   { id: 'RULE-004', name: '成功率下滑', scope: '全部项目', metric: 'task.success_rate', condition: '< 95% 持续 15 分钟', severity: 'warning', silence: '1 小时', channels: ['企业微信'], enabled: true, fired7d: 11 },
   { id: 'RULE-005', name: '管道积压超限', scope: '数据管道类', metric: 'pipeline.backlog', condition: '> 50 万条 持续 10 分钟', severity: 'critical', silence: '30 分钟', channels: ['企业微信', '电话'], enabled: true, fired7d: 2 },
@@ -330,7 +347,7 @@ export const NOTIFY_CHANNELS: { name: NotifyChannel; target: string; enabled: bo
  * 越界次数与「换个阈值会触发几次」全部由曲线现算，不写死——
  * 手填的对照数字一旦和曲线对不上，这个面板最有说服力的地方反而变成破绽。
  */
-const PREVIEW_PROJECT = getProject('payment-gateway')
+const PREVIEW_PROJECT = getProject('platform-payment')
 
 function breachCountAt(threshold: number): number {
   return PREVIEW_PROJECT.latency.filter((value) => value > threshold).length

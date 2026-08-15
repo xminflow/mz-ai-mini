@@ -107,7 +107,7 @@ export default function AlertsPage({ basePath }: SiteTemplatePageProps) {
             </Table>
           </Panel>
 
-          <Panel title="处理时间线" hint="ALT-20418 · 支付网关 上游依赖超时率突增">
+          <Panel title="处理时间线" hint="ALT-20418 · 平台-统一支付网关 上游依赖超时率突增">
             <ol className="relative ml-1 border-l border-[var(--tpl-rule)] pl-5">
               {ALERT_TIMELINE.map((event) => (
                 <li key={event.time} className="relative pb-4 last:pb-0">

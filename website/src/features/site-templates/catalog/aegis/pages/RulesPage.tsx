@@ -38,7 +38,7 @@ const SCOPE_OPTIONS = [
   '数据管道类',
   '定时任务类',
   '数据库类',
-  '支付网关',
+  '平台-统一支付网关',
 ]
 
 export default function RulesPage({ basePath }: SiteTemplatePageProps) {
@@ -153,7 +153,7 @@ export default function RulesPage({ basePath }: SiteTemplatePageProps) {
             </div>
           </Panel>
 
-          <Panel title="编辑规则" hint="RULE-002 · 支付网关 P95 响应耗时劣化">
+          <Panel title="编辑规则" hint="RULE-002 · 平台-统一支付网关 P95 响应耗时劣化">
             <div className="space-y-3.5">
               <label className="block">
                 <span className="mb-1 block text-[11px] text-[var(--tpl-fg-dim)]">规则名称</span>
@@ -162,7 +162,7 @@ export default function RulesPage({ basePath }: SiteTemplatePageProps) {
 
               <label className="block">
                 <span className="mb-1 block text-[11px] text-[var(--tpl-fg-dim)]">作用范围</span>
-                <select className={FIELD_CLASS} defaultValue="支付网关">
+                <select className={FIELD_CLASS} defaultValue="平台-统一支付网关">
                   {SCOPE_OPTIONS.map((scope) => (
                     <option key={scope}>{scope}</option>
                   ))}

@@ -40,10 +40,10 @@
    `import '../theme.css'`
 4. 站内链接一律基于 props 传入的 `basePath` 拼接，**禁止硬编码 `/templates` 前缀**
 5. 封面图放 `public/templates/<template-id>/`
-6. 在 `meta.ts` 里填 `sceneId`，取值必须是 `taxonomy.ts` 里已有的场景 id；
-   若该场景是第一次有模板，还需要在 `taxonomy.ts` 给它补上 `load`，
-   并在 `scenes/<scene-id>/Section.tsx` 写它的自定义区（见「案例页」一节）
-7. 在 `registry.ts` 的 `SITE_TEMPLATES` 里加一行
+6. 在 `meta.ts` 里填 `sceneId`，取值必须是 `taxonomy.ts` 里已有的场景 id
+7. 在 `meta.ts` 里填 `listed: false`。**新模板一律先写 false**，它只在内部工作台可见；
+   等这套模板确认可以给客户看了，再单独改成 `true` 上架到 `/cases`（见「案例页」一节）
+8. 在 `registry.ts` 的 `SITE_TEMPLATES` 里加一行
 
 不需要新建任何路由文件。
 
@@ -84,19 +84,27 @@
 `/cases` 是模板模块对外的陈列面，与 `/templates` 工作台共用同一个
 `isTemplatesModuleEnabled()` 开关，要么一起可达要么一起 307 回首页。
 
-- 场景清单的唯一来源是 `taxonomy.ts`，数组顺序即左侧导航顺序。清单是**完整**的，
-  包含还没有模板的场景——它同时是接下来要补哪些模板的路线图
-- `gallery/selectors.ts` 负责推导视图数据：侧栏只渲染有模板的分支，空场景统一进
-  `/cases/other`。没有模板的场景不单独成页，直接 404
+**上架是一次明确的点头，不是新建模板的副作用。** `SiteTemplate.listed` 必填：
+只有 `listed: true` 的模板会出现在 `/cases`。收录进注册表与对外展示是两件事——
+`/templates` 工作台不看这个字段，始终全量显示，它是内部调试入口。
+新建模板时一律先写 `listed: false`，等这套模板确认可以给客户看了再改成 `true`。
+
+- 场景清单的唯一来源是 `taxonomy.ts`，数组顺序即左侧导航顺序
+- **侧栏原样列出三个一级分类与全部 15 个场景，不按有无模板过滤，也不显示模板数量。**
+  它表达的是业务范围而不是当前库存：访客带着「我要做个进销存」进来，那一项必须能找到，
+  哪怕它下面暂时没有可公开的成品。因此每个场景都点得开，没有已上架模板不是错误状态，
+  只有场景 id 不在清单里才 404
 - 场景的介绍区是组件插槽而不是数据字段：`scenes/<scene-id>/Section.tsx` 默认导出一个
   接收 `SceneSectionProps` 的组件，想放什么放什么。只写两段话的场景套
   `scenes/_shared/SceneIntro.tsx` 即可
-- `other` 是保留 scene id，被 `/cases/other` 这个静态路由段占用，taxonomy 校验会拒绝
+- 还没写 `Section.tsx` 的场景走 `scenes/_shared/SceneFallback.tsx`——通用说明加联系入口。
+  这不是静默兜底而是一个明确状态：15 个场景个个成页，而介绍文案是逐个确认后才填的，
+  没填的那些需要一个说得过去的样子。填了自己的 Section 之后这个兜底就不再出现
 - 侧栏是客户端组件（要 `usePathname` 做高亮），因此 `selectors.ts` 返回的都是可序列化数据，
   不要把带 `load` 函数的 `TemplateScene` 整个传过去
 - `SceneSidebar` 的高亮用 `pathname === href` 精确匹配，前提是 `next.config.ts` 没开
-  `trailingSlash`（默认 false）。若将来开成 `true`，`/cases/other` 这类路径会被框架 308
-  到带斜杠的形式，精确匹配会立刻失效、所有高亮消失，届时需要同步改成归一化比较（去掉尾部斜杠再比）
+  `trailingSlash`（默认 false）。若将来开成 `true`，路径会被框架 308 到带斜杠的形式，
+  精确匹配会立刻失效、所有高亮消失，届时需要同步改成归一化比较（去掉尾部斜杠再比）
 - 案例页的模板陈列**复用**了 `workbench/TemplateRow.tsx`，而不是另做一套浅色卡片：
   两个页面陈列的是同一批对象，做两份是重复实现。代价是跨了 `workbench/` 与 `gallery/`
   的目录边界——`TemplateRow` 将来若要为工作台单独演进，需要先把它拆成两份再改
