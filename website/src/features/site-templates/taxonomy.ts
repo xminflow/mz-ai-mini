@@ -53,8 +53,9 @@ export const TEMPLATE_SCENES: TemplateScene[] = [
   { id: 'crm', name: '客户管理' },
   { id: 'dashboard', name: '数据看板' },
   { id: 'approval-oa', name: '审批 / OA' },
-  { id: 'monitoring', name: '监控运维', load: () => import('./scenes/monitoring/Section') },
   { id: 'internal-tools', name: '企业内部工具' },
+  // 兜底项固定排在末尾：软件定制没法被十几个名字穷尽，归不到上面任何一类的项目落这里
+  { id: 'other', name: '其他', load: () => import('./scenes/other/Section') },
 ]
 
 /**

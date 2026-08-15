@@ -3,7 +3,7 @@ import type { SiteTemplate } from '../../types'
 export const aegisTemplate: SiteTemplate = {
   id: 'aegis',
   name: '微域智能运维平台',
-  sceneId: 'monitoring',
+  sceneId: 'other',
   platform: 'pc',
   listed: false,
   tags: ['浅色', '控制台', '图表', '数据密集', '云原生 / 可观测性'],
