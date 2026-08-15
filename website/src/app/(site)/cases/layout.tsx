@@ -9,7 +9,7 @@ export default function CasesLayout({ children }: { children: ReactNode }) {
   return (
     <LightShell>
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pb-24 pt-16 sm:px-6 lg:flex-row lg:gap-16 lg:pt-24">
-        <SceneSidebar groups={getSidebarNav()} />
+        <SceneSidebar scenes={getSidebarNav()} />
         {/* min-w-0：不加的话内部网格的最小内容宽度会把 flex 项撑破，右侧溢出容器 */}
         <div className="min-w-0 flex-1">{children}</div>
       </div>

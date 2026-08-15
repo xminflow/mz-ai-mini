@@ -5,7 +5,7 @@ import { SectionHeading } from '@/components/ui'
 import { TemplateRow } from '@/features/site-templates/workbench/TemplateRow'
 import { getTemplatesByScene } from '@/features/site-templates/gallery/selectors'
 import { SceneFallback } from '@/features/site-templates/scenes/_shared/SceneFallback'
-import { getGroupOfScene, getSceneById } from '@/features/site-templates/taxonomy'
+import { getSceneById } from '@/features/site-templates/taxonomy'
 
 // Next.js 15：动态段参数是 Promise，必须 await
 type ScenePageProps = { params: Promise<{ scene: string }> }
@@ -15,10 +15,9 @@ export async function generateMetadata({ params }: ScenePageProps): Promise<Meta
   const scene = getSceneById(sceneId)
   if (!scene) return {}
 
-  const group = getGroupOfScene(sceneId)
   return {
     title: scene.name,
-    description: `微域生光的${group ? `${group.name} · ` : ''}${scene.name}项目案例与做法。`,
+    description: `微域生光的${scene.name}项目案例与做法。`,
     // 必须按实际 scene id 显式覆盖：不写的话会继承根 layout 的 canonical: '/'，
     // 每个场景页都会对外声明自己是首页的重复内容，与「场景页可独立索引」的设计前提矛盾
     alternates: {
@@ -35,17 +34,11 @@ export default async function ScenePage({ params }: ScenePageProps) {
   if (!scene) notFound()
 
   const templates = getTemplatesByScene(sceneId)
-  const group = getGroupOfScene(sceneId)
   const Section = scene.load ? (await scene.load()).default : null
 
   return (
     <>
-      <SectionHeading
-        as="h1"
-        eyebrow={group ? `Cases · ${group.name}` : 'Cases'}
-        title={scene.name}
-        align="left"
-      />
+      <SectionHeading as="h1" eyebrow="Cases" title={scene.name} align="left" />
 
       {/* Section 插槽只接收可序列化字段：TemplateScene 带 load 函数，不能整体传给可能是
           'use client' 的场景自定义区，见 taxonomy.ts 的 SceneSummary 说明 */}

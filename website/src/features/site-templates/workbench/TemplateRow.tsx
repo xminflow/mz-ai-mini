@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { getGroupOfScene, getSceneById } from '../taxonomy'
-import type { SiteTemplate } from '../types'
+import { getSceneById } from '../taxonomy'
+import { TEMPLATE_PLATFORM_LABELS, type SiteTemplate } from '../types'
 
 /**
  * 目录里的一套模板占满一整行，而不是网格里的一张缩略卡。
@@ -10,11 +10,12 @@ import type { SiteTemplate } from '../types'
  * 整行 + 大封面才给得出足够的观感，行与行之间只用一条细线分隔，不做卡片套卡片。
  */
 export function TemplateRow({ template }: { template: SiteTemplate }) {
-  // 眉标走 taxonomy 的「一级分类 / 场景」，而不是再存一份行业字符串——
+  // 眉标是「业务形态 · 端」两个正交维度，而不是再存一份行业字符串——
   // sceneId 是唯一事实来源，注册表已经校验过它一定存在于场景清单里。
   const scene = getSceneById(template.sceneId)
-  const group = getGroupOfScene(template.sceneId)
-  const category = [group?.name, scene?.name].filter(Boolean).join(' / ')
+  const category = [scene?.name, TEMPLATE_PLATFORM_LABELS[template.platform]]
+    .filter(Boolean)
+    .join(' · ')
 
   return (
     <Link

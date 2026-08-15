@@ -4,6 +4,7 @@ export const meridianTemplate: SiteTemplate = {
   id: 'meridian',
   name: 'Meridian 律师事务所',
   sceneId: 'corporate-site',
+  platform: 'pc',
   listed: false,
   tags: ['深色', '衬线', '克制', '专业服务'],
   summary: '深色底配衬线标题的律所官网，强调资历与专业领域，适合律所、会计事务所与咨询机构。',

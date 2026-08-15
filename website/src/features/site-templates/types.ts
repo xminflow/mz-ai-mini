@@ -27,6 +27,21 @@ export interface SiteTemplatePage {
  * 模板元数据。字段按「将来上架的模板列表页需要什么」来定，
  * 而不是按「现在开发调试需要什么」——上架时不该再改一遍数据结构。
  */
+/**
+ * 模板跑在哪个端。与场景分类正交：场景回答「做的是什么」，这里回答「在哪儿用」。
+ *
+ * 单值而非数组：PC 版与小程序版当成两套模板分开做。一套模板只有一份页面代码、
+ * 一个预览入口，硬标成「同时是 PC 和小程序」，预览时就得替客户决定给他看哪一端。
+ */
+export type TemplatePlatform = 'pc' | 'miniprogram' | 'mobile'
+
+/** 端类型的中文展示名，卡片上直接用。 */
+export const TEMPLATE_PLATFORM_LABELS: Record<TemplatePlatform, string> = {
+  pc: 'PC 端',
+  miniprogram: '小程序',
+  mobile: '手机端',
+}
+
 export interface SiteTemplate {
   id: string
   name: string
@@ -38,6 +53,8 @@ export interface SiteTemplate {
    * 再留一条近似的行业轴会让新增模板的人不知道该往哪填，行业信息一律进 tags。
    */
   sceneId: string
+  /** 模板跑在哪个端，与 sceneId 正交，卡片上并列展示 */
+  platform: TemplatePlatform
   /**
    * 是否已上架到对外的案例页 `/cases`。
    *

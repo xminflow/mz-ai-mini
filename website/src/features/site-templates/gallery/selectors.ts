@@ -14,12 +14,6 @@ export interface SidebarScene {
   name: string
 }
 
-export interface SidebarGroup {
-  id: string
-  name: string
-  scenes: SidebarScene[]
-}
-
 /**
  * 已上架到案例页的模板。`listed` 为 false 的模板只在内部工作台 /templates 可见。
  *
@@ -35,15 +29,11 @@ export function getTemplatesByScene(sceneId: string): SiteTemplate[] {
 }
 
 /**
- * 侧栏导航数据：三个一级分类与全部 15 个场景原样列出，不按有无模板过滤。
+ * 侧栏导航数据：全部业务形态原样列出，不按有无模板过滤。
  *
  * 侧栏表达的是业务范围而不是当前库存——访客是带着「我要做个进销存」进来的，
- * 那一项必须在目录里能找到，哪怕它下面暂时还没有可公开的样板。
+ * 那一项必须在目录里能找到，哪怕它下面暂时还没有可公开的成品。
  */
-export function getSidebarNav(): SidebarGroup[] {
-  return TEMPLATE_SCENES.map((group) => ({
-    id: group.id,
-    name: group.name,
-    scenes: group.scenes.map((scene) => ({ id: scene.id, name: scene.name })),
-  }))
+export function getSidebarNav(): SidebarScene[] {
+  return TEMPLATE_SCENES.map((scene) => ({ id: scene.id, name: scene.name }))
 }

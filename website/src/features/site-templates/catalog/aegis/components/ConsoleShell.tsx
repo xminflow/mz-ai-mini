@@ -42,6 +42,12 @@ const ICONS = {
       <path d="M10.5 20a2 2 0 0 0 3 0" />
     </svg>
   ),
+  inspect: (
+    <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M12 3 4.5 6v5.5c0 4.4 3.1 8.2 7.5 9.5 4.4-1.3 7.5-5.1 7.5-9.5V6z" />
+      <path d="m9 12 2 2 4-4" />
+    </svg>
+  ),
   rules: (
     <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h9M17 18h3" />
@@ -55,6 +61,7 @@ const ICONS = {
 const NAV_ITEMS: NavItem[] = [
   { slug: '', label: '项目总览', icon: ICONS.overview },
   { slug: 'project', label: '项目监控', icon: ICONS.project },
+  { slug: 'inspect', label: '智能体巡检', icon: ICONS.inspect },
   { slug: 'logs', label: '日志与异常', icon: ICONS.logs },
   { slug: 'alerts', label: '告警中心', icon: ICONS.alerts },
   { slug: 'rules', label: '规则配置', icon: ICONS.rules },
