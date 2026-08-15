@@ -1,5 +1,5 @@
 import type { SiteTemplatePageProps } from '../../../types'
-import { ALERT_RULES, NOTIFY_CHANNELS, THRESHOLD_PREVIEW } from '../data'
+import { ALERT_RULES, NOTIFY_CHANNELS, RULES_INSIGHT, THRESHOLD_PREVIEW } from '../data'
 import { ThresholdPreviewChart } from '../charts/RuleCharts'
 import { ConsoleShell, ToolbarChips } from '../components/ConsoleShell'
 import { Panel } from '../components/Panel'
@@ -51,6 +51,7 @@ export default function RulesPage({ basePath }: SiteTemplatePageProps) {
       title="告警规则配置"
       subtitle={`${ALERT_RULES.length} 条规则 · ${enabledCount} 条已启用 · ${NOTIFY_CHANNELS.length} 个通知渠道`}
       toolbar={<ToolbarChips items={['全部规则', '已启用', '已停用']} />}
+      insight={RULES_INSIGHT}
     >
       <div className="space-y-5">
         {/* 规则表有 7 列且「触发条件」「作用范围」都是长文本，挤在两栏里会把右侧的

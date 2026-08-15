@@ -5,6 +5,7 @@ import {
   BUDGET_RANKING_SIZE,
   GLOBAL_KPIS,
   PROJECTS,
+  OVERVIEW_INSIGHT,
   formatNumber,
   getKindSpec,
   groupProjectsByKind,
@@ -40,6 +41,7 @@ export default function OverviewPage({ basePath }: SiteTemplatePageProps) {
       activeSlug=""
       title="项目总览"
       subtitle={`${alertingCount} 个项目存在活跃告警`}
+      insight={OVERVIEW_INSIGHT}
       toolbar={<ToolbarChips items={['24 小时', '7 天', '30 天']} />}
     >
       <div className="space-y-5">

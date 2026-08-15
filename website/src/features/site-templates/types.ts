@@ -2,7 +2,7 @@ import type { ComponentType } from 'react'
 
 export interface SiteTemplatePageProps {
   /**
-   * 该端在当前挂载点下的根路径，如 `/templates/meridian/site`。
+   * 该端在当前挂载点下的根路径，如 `/templates/aegis/console`。
    *
    * 模板内部所有站内链接都必须基于它拼接，禁止硬编码 `/templates` 前缀——
    * 将来模板换挂载点（独立域名、上架后的预览页）时才不用逐套改。

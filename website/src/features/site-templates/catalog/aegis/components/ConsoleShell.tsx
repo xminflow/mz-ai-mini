@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { ReactNode } from 'react'
+import type { AgentInsight } from '../data'
 
 /**
  * 控制台外壳：侧边导航 + 顶栏 + 内容容器，五个页面共用。
@@ -80,10 +81,25 @@ interface ConsoleShellProps {
   subtitle: string
   /** 顶栏右侧的上下文操作区，各页自定义（时间范围、筛选等） */
   toolbar?: ReactNode
+  /**
+   * 运维智能体对**当前这一页**的分析结论。
+   *
+   * 做成必填而不是可选：它是这套控制台的产品主张之一——每一页都有智能体在看。
+   * 可选就意味着某天新加的页面会悄悄少掉它，那条横幅"统一出现"的承诺就断了。
+   */
+  insight: AgentInsight
   children: ReactNode
 }
 
-export function ConsoleShell({ basePath, activeSlug, title, subtitle, toolbar, children }: ConsoleShellProps) {
+export function ConsoleShell({
+  basePath,
+  activeSlug,
+  title,
+  subtitle,
+  toolbar,
+  insight,
+  children,
+}: ConsoleShellProps) {
   return (
     <div className="flex min-h-screen">
       {/* 侧栏三档形态：窄屏隐藏（改用下方横向导航），中屏只留图标，宽屏图标加文字。
@@ -165,13 +181,61 @@ export function ConsoleShell({ basePath, activeSlug, title, subtitle, toolbar, c
           </nav>
         </header>
 
-        <main className="flex-1 px-4 py-5 sm:px-6 sm:py-6">{children}</main>
+        <main className="flex-1 px-4 py-5 sm:px-6 sm:py-6">
+          <AgentInsightBanner insight={insight} />
+          {children}
+        </main>
 
         <footer className="border-t border-[var(--tpl-rule)] px-4 py-4 text-[11px] text-[var(--tpl-fg-faint)] sm:px-6">
           微域智能运维平台 · 数据窗口 最近 24 小时 · 采集延迟 &lt; 15s
         </footer>
       </div>
     </div>
+  )
+}
+
+/**
+ * 运维智能体横幅。
+ *
+ * 做成横贯内容区顶部的一条，而不是右下角浮窗：浮窗读起来像挂上去的客服机器人，
+ * 横幅才是产品的一等公民；而且它不遮挡任何内容，不需要展开就能读完。
+ *
+ * "实时"不靠动效表达——分析时刻比页面上其它时间戳都新，状态写「持续分析中」，
+ * 配一个与依赖存活点同款的呼吸点（已尊重 prefers-reduced-motion）。
+ */
+function AgentInsightBanner({ insight }: { insight: AgentInsight }) {
+  return (
+    <section className="tpl-glass-panel relative mb-5 overflow-hidden rounded-xl px-4 py-3.5 sm:px-5">
+      {/* 左侧一道强调色实线 + 一团辉光：让这条横幅在满屏面板里先被看到，
+          又不至于像告警那样刺眼 */}
+      <span className="absolute inset-y-0 left-0 w-px bg-[var(--tpl-accent)]" aria-hidden />
+      <span
+        className="pointer-events-none absolute -left-24 -top-24 size-56 rounded-full bg-[var(--tpl-accent)] opacity-[0.07] blur-3xl"
+        aria-hidden
+      />
+
+      <div className="relative flex flex-wrap items-center gap-x-3 gap-y-1">
+        <span className="flex size-5 shrink-0 items-center justify-center rounded-[5px] bg-[var(--tpl-accent-soft)] text-[11px] text-[var(--tpl-accent)]">
+          ◈
+        </span>
+        <span className="text-[12px] font-medium">运维智能体</span>
+        <span className="inline-flex items-center gap-1.5 text-[11px] text-[var(--tpl-accent)]">
+          <span className="tpl-pulse inline-block size-1.5 rounded-full bg-[var(--tpl-accent)]" aria-hidden />
+          持续分析中
+        </span>
+        <span className="ml-auto font-[family-name:var(--tpl-font-mono)] text-[11px] tabular-nums text-[var(--tpl-fg-faint)]">
+          分析于 {insight.at}
+        </span>
+      </div>
+
+      <p className="relative mt-2.5 max-w-5xl text-[13px] leading-[1.85] text-[var(--tpl-fg)]">
+        {insight.conclusion}
+      </p>
+
+      <p className="relative mt-2.5 font-[family-name:var(--tpl-font-mono)] text-[11px] text-[var(--tpl-fg-dim)]">
+        置信度 {insight.confidence.toFixed(2)} · {insight.scope} · {insight.suggestion}
+      </p>
+    </section>
   )
 }
 

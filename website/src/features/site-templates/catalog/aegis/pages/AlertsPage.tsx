@@ -1,5 +1,5 @@
 import type { SiteTemplatePageProps } from '../../../types'
-import { ACTIVE_ALERTS, ALERT_METRICS, ALERT_TIMELINE } from '../data'
+import { ACTIVE_ALERTS, ALERTS_INSIGHT, ALERT_METRICS, ALERT_TIMELINE } from '../data'
 import { SeverityDonutChart } from '../charts/AlertCharts'
 import { ConsoleShell, ToolbarChips } from '../components/ConsoleShell'
 import { Panel } from '../components/Panel'
@@ -26,6 +26,7 @@ export default function AlertsPage({ basePath }: SiteTemplatePageProps) {
       title="告警中心"
       subtitle={`${ACTIVE_ALERTS.length} 条未关闭告警 · ${unclaimed} 条待认领`}
       toolbar={<ToolbarChips items={['全部', '未恢复', '已抑制']} />}
+      insight={ALERTS_INSIGHT}
     >
       <div className="space-y-5">
         <section className="grid gap-4 xl:grid-cols-3">

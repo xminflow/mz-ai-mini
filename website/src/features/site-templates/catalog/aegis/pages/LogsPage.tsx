@@ -1,5 +1,5 @@
 import type { SiteTemplatePageProps } from '../../../types'
-import { ERROR_CLUSTERS, LOG_ENTRIES, LOG_LEVEL_COUNTS } from '../data'
+import { ERROR_CLUSTERS, LOGS_INSIGHT, LOG_ENTRIES, LOG_LEVEL_COUNTS } from '../data'
 import { LOG_LEVEL_COLORS } from '../charts/chartTheme'
 import { LogErrorChart, LogVolumeChart } from '../charts/LogCharts'
 import { ConsoleShell, ToolbarChips } from '../components/ConsoleShell'
@@ -18,6 +18,7 @@ export default function LogsPage({ basePath }: SiteTemplatePageProps) {
       title="日志与异常"
       subtitle={`近 24 小时共 ${(TOTAL_LOGS / 10000).toFixed(1)} 万条 · 异常聚类 ${ERROR_CLUSTERS.length} 组`}
       toolbar={<ToolbarChips items={['全部等级', 'ERROR', 'WARN']} />}
+      insight={LOGS_INSIGHT}
     >
       <div className="space-y-5">
         {/* 等级统计既是概览也是上面两张图的表格视图：图表的读数不能只存在于提示层里 */}

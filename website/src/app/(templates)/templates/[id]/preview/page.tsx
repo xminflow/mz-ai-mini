@@ -1,11 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import {
-  getSurfaceById,
-  getSurfacePage,
-  getTemplateById,
-} from '@/features/site-templates/registry'
+import { getSurfaceById, getTemplateById } from '@/features/site-templates/registry'
 import { PreviewFrame } from '@/features/site-templates/workbench/PreviewFrame'
 import { TEMPLATE_PLATFORM_LABELS } from '@/features/site-templates/types'
 
@@ -14,13 +10,12 @@ interface RouteParams {
 }
 
 interface PreviewSearchParams {
-  // Next.js 对重复的同名 query（如 ?page=a&page=b）在运行时会给出 string[]，
+  // Next.js 对重复的同名 query（如 ?surface=a&surface=b）在运行时会给出 string[]，
   // 而不是 string；只声明 string 会让类型系统对这种输入撒谎。
   surface?: string | string[]
-  page?: string | string[]
 }
 
-/** 重复传参（?page=a&page=b）视同未传：绝不能让数组静默流进字符串比较。 */
+/** 重复传参视同未传：绝不能让数组静默流进字符串比较。 */
 function readParam(value: string | string[] | undefined): string | undefined {
   return typeof value === 'string' ? value : undefined
 }
@@ -43,7 +38,7 @@ export default async function TemplatePreviewPage({
   searchParams: Promise<PreviewSearchParams>
 }) {
   const { id } = await params
-  const { surface: requestedSurface, page: requestedSlug } = await searchParams
+  const { surface: requestedSurface } = await searchParams
 
   const template = getTemplateById(id)
   if (!template) notFound()
@@ -53,36 +48,32 @@ export default async function TemplatePreviewPage({
   const activeSurface = surfaceId ? getSurfaceById(template, surfaceId) : template.surfaces[0]
   if (!activeSurface) notFound()
 
-  const activeSlug = readParam(requestedSlug) ?? ''
-  const activePage = getSurfacePage(activeSurface, activeSlug)
-  if (!activePage) notFound()
-
-  const surfaceBase = `/templates/${template.id}/${activeSurface.id}`
-  const previewSrc = `${surfaceBase}${activeSlug ? `/${activeSlug}` : ''}`
+  /**
+   * 预览一律从该端首页进，**不提供页面切换**。
+   *
+   * 模板站点自己就有导航（官网的顶部菜单、控制台的侧边栏），预览页顶上再列一遍全部页面
+   * 是同一件事说两遍；更重要的是，客户要判断的恰恰是"这套东西自己好不好用"，
+   * 让他用模板自己的导航翻页才是真实体验，外挂一排 tab 反而把这一点遮住了。
+   *
+   * 代价明确：模板必须自带能覆盖全部页面的站内导航，否则某些页面在预览里点不到。
+   * 这条写进了 README 的约束，新增模板时要自查。
+   */
+  const previewSrc = `/templates/${template.id}/${activeSurface.id}`
 
   /**
    * 窗口地址栏里显示的是一个示意域名，不是模板在本站的真实路径。
-   * 路径形如 /templates/aegis/site 会立刻暴露"这是嵌在别人站里的一个页面"，
+   * 路径形如 /templates/aegis/console 会立刻暴露"这是嵌在别人站里的一个页面"，
    * 而这块窗口要传达的恰恰相反——框里是一个独立的站点。
    * 域名用 IANA 保留给文档示例的 example.com 子域，不会撞上任何真实机构。
    * 多端时用端 id 做子域，让「官网」与「后台」在地址栏里也是两个站。
+   *
+   * 只显示主机名不显示路径：iframe 内部导航时这个装饰性地址栏不会跟着变，
+   * 带上路径反而会与框里的实际页面对不上。
    */
-  const mockHost =
+  const mockAddress =
     template.surfaces.length > 1
       ? `${activeSurface.id}.${template.id}.example.com`
       : `${template.id}.example.com`
-  const mockAddress = `${mockHost}${activeSlug ? `/${activeSlug}` : ''}`
-
-  const previewHref = (targetSurfaceId: string, targetSlug: string) => {
-    const query = new URLSearchParams({ surface: targetSurfaceId })
-    if (targetSlug) query.set('page', targetSlug)
-    return `/templates/${template.id}/preview?${query.toString()}`
-  }
-
-  const tabClass = (isActive: boolean) =>
-    isActive
-      ? 'relative pb-2 text-[14px] text-graphite'
-      : 'relative pb-2 text-[14px] text-graphite-dim transition hover:text-graphite'
 
   return (
     <main className="mx-auto w-full max-w-[1600px] px-6 pb-24 pt-14 sm:px-10">
@@ -109,9 +100,8 @@ export default async function TemplatePreviewPage({
         </a>
       </div>
 
-      {/* 端切换只在多端时出现：只有一个端时这一行是恒定的单个标签，纯占位。
-          切端一律回落到该端首页——两个端的页面 slug 没有对应关系，
-          带着当前 slug 切过去多半直接 404。 */}
+      {/* 端切换只在多端时出现。端之间是彼此独立的站点，模板内部不会有跨端的导航，
+          所以这一层必须由工作台提供——和页面切换不是一回事。 */}
       {template.surfaces.length > 1 ? (
         <nav aria-label="切换端" className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
           {template.surfaces.map((surface) => {
@@ -119,7 +109,7 @@ export default async function TemplatePreviewPage({
             return (
               <Link
                 key={surface.id}
-                href={previewHref(surface.id, '')}
+                href={`/templates/${template.id}/preview?surface=${surface.id}`}
                 aria-current={isActive ? 'page' : undefined}
                 className={
                   isActive
@@ -137,34 +127,10 @@ export default async function TemplatePreviewPage({
         </nav>
       ) : null}
 
-      {/* 选中态的下划线取模板自己的强调色：工作台的彩色一律来自它正在陈列的那套模板 */}
-      <nav aria-label="切换页面" className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
-        {activeSurface.pages.map((page) => {
-          const isActive = page.slug === activeSlug
-          return (
-            <Link
-              key={page.slug}
-              href={previewHref(activeSurface.id, page.slug)}
-              aria-current={isActive ? 'page' : undefined}
-              className={tabClass(isActive)}
-            >
-              {page.title}
-              {isActive ? (
-                <span
-                  aria-hidden
-                  className="absolute inset-x-0 bottom-0 h-[2px]"
-                  style={{ backgroundColor: template.accentColor }}
-                />
-              ) : null}
-            </Link>
-          )
-        })}
-      </nav>
-
       <div className="mt-10">
         <PreviewFrame
           src={previewSrc}
-          title={`${template.name} - ${activeSurface.name} - ${activePage.title}`}
+          title={`${template.name} - ${activeSurface.name}`}
           address={mockAddress}
           accentColor={template.accentColor}
         />

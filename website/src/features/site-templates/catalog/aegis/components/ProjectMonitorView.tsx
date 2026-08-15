@@ -3,7 +3,14 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import type { ProjectKind } from '../data'
-import { PROJECTS, PROJECT_KINDS, DEFAULT_PROJECT_ID, formatNumber, getProject } from '../data'
+import {
+  PROJECTS,
+  PROJECT_KINDS,
+  DEFAULT_PROJECT_ID,
+  formatNumber,
+  getProject,
+  projectInsight,
+} from '../data'
 import { MetricSeriesChart, ResourceChart } from '../charts/MetricCharts'
 import { ConsoleShell, ToolbarChips } from './ConsoleShell'
 import { Panel } from './Panel'
@@ -26,6 +33,7 @@ export function ProjectMonitorView({ basePath }: { basePath: string }) {
   const [kindFilter, setKindFilter] = useState<KindFilter>('all')
   const [projectId, setProjectId] = useState(DEFAULT_PROJECT_ID)
 
+  // 智能体的结论随选中项目变——切到哪个项目，横幅上分析的就是哪个
   const project = getProject(projectId)
   const spec = project.spec
   const visibleProjects = kindFilter === 'all' ? PROJECTS : PROJECTS.filter((item) => item.kind === kindFilter)
@@ -48,6 +56,7 @@ export function ProjectMonitorView({ basePath }: { basePath: string }) {
       title={project.name}
       subtitle={`${spec.label} · ${project.role} · ${project.env} · 负责人 ${project.owner}`}
       toolbar={<ToolbarChips items={['24 小时', '7 天', '30 天']} />}
+      insight={projectInsight(project)}
     >
       <div className="space-y-5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">

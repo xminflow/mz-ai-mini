@@ -6,6 +6,7 @@ import {
   INSPECTION_AGENTS,
   INSPECTION_INTERVAL,
   INSPECTION_LINES,
+  INSPECTION_INSIGHT,
   INSPECTION_SUMMARY,
   PENDING_FIXES,
 } from '../data'
@@ -37,7 +38,8 @@ export default function InspectionPage({ basePath }: SiteTemplatePageProps) {
       activeSlug="inspect"
       title="智能体巡检"
       subtitle={`${INSPECTION_AGENTS.length} 个巡检智能体 · ${running} 个正在工作 · ${INSPECTION_INTERVAL}`}
-      toolbar={<ToolbarChips items={['本轮', '今日', '近 7 天']} />}
+      toolbar={<ToolbarChips items={["本轮", "今日", "近 7 天"]} />}
+      insight={INSPECTION_INSIGHT}
     >
       <div className="space-y-5">
         <section className="grid grid-cols-2 gap-3 xl:grid-cols-4">

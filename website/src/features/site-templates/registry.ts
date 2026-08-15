@@ -1,6 +1,5 @@
 import type { SiteTemplate, SiteTemplatePage, TemplateSurface } from './types'
 import { aegisTemplate } from './catalog/aegis/meta'
-import { meridianTemplate } from './catalog/meridian/meta'
 import { getSceneById } from './taxonomy'
 
 /**
@@ -19,7 +18,7 @@ const KEBAB_CASE_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const KEBAB_CASE_SLUG = /^[a-z0-9]+(?:[-/][a-z0-9]+)*$/
 
 /** 新增模板的唯一注册入口：建好 catalog/<id>/ 目录后在这里加一行。 */
-export const SITE_TEMPLATES: SiteTemplate[] = [aegisTemplate, meridianTemplate]
+export const SITE_TEMPLATES: SiteTemplate[] = [aegisTemplate]
 
 /** 校验单个端的结构。抽出来是因为端内的规则与模板级规则是两回事，混在一个循环里读不清。 */
 function assertSurfaceValid(templateId: string, surface: TemplateSurface): void {
