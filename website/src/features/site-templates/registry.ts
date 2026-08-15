@@ -1,5 +1,7 @@
 import type { SiteTemplate, SiteTemplatePage } from './types'
+import { aegisTemplate } from './catalog/aegis/meta'
 import { meridianTemplate } from './catalog/meridian/meta'
+import { getSceneById } from './taxonomy'
 
 /**
  * 与 app/(templates)/templates/[id]/preview 这个静态路由段冲突的 slug。
@@ -15,7 +17,7 @@ const KEBAB_CASE_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const KEBAB_CASE_SLUG = /^[a-z0-9]+(?:[-/][a-z0-9]+)*$/
 
 /** 新增模板的唯一注册入口：建好 catalog/<id>/ 目录后在这里加一行。 */
-export const SITE_TEMPLATES: SiteTemplate[] = [meridianTemplate]
+export const SITE_TEMPLATES: SiteTemplate[] = [aegisTemplate, meridianTemplate]
 
 /**
  * 注册表的结构性错误必须在开发时立刻炸出来，不能等到某个页面莫名 404 才发现。
@@ -29,6 +31,21 @@ function assertRegistryValid(templates: SiteTemplate[]): void {
       throw new Error(`[site-templates] 模板 id 重复：${template.id}`)
     }
     seenIds.add(template.id)
+
+    // 场景填错、或场景有模板却漏配自定义区，都当场炸，不留到运行时让案例页缺内容
+    const scene = getSceneById(template.sceneId)
+    if (!scene) {
+      throw new Error(
+        `[site-templates] 模板 ${template.id} 的 sceneId「${template.sceneId}」` +
+          `不在 taxonomy.ts 的场景清单里`,
+      )
+    }
+    if (!scene.load) {
+      throw new Error(
+        `[site-templates] 模板 ${template.id} 所属场景「${template.sceneId}」没有配置自定义区：` +
+          `请在 taxonomy.ts 给它补上 load，并新建 scenes/${template.sceneId}/Section.tsx`,
+      )
+    }
 
     if (!KEBAB_CASE_ID.test(template.id)) {
       throw new Error(

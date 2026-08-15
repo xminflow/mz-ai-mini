@@ -4,7 +4,7 @@ import { isTemplatesModuleEnabled } from '@/features/site-templates/config'
 // 官网当前只对外开放首页，其余路径统一 307 回首页。页面与组件代码均保留未删。
 //
 // 恢复某个板块时：
-//   1. 把它的路径前缀加进 PUBLIC_PATH_PREFIXES，例如 '/studio'
+//   1. 把它的路径前缀加进 PUBLIC_PATH_PREFIXES，例如 '/library'
 //   2. 若该板块需要登录，把 token 静默续签与受保护路由判断接回本文件
 //      （续签实现保留在 features/auth/server/backend.ts，受保护路由判断保留在
 //       features/auth/protected-routes.ts，两者都未删除）
@@ -17,7 +17,11 @@ import { isTemplatesModuleEnabled } from '@/features/site-templates/config'
 //
 // 官网自身的白名单条目（目前只有 '/'）与模板模块的白名单条目分开维护、再拼接，
 // 不共用同一个三元分支：避免恢复/关闭某个板块时需要同时改两支，漏改一支会静默丢条目。
-const TEMPLATE_PATH_PREFIXES: string[] = isTemplatesModuleEnabled() ? ['/templates'] : []
+// /cases 与 /templates 共用同一个开关，不新增第二个门禁：
+// 前者是模板模块对外的陈列面，后者是内部调试用的工作台，两者要么一起可达要么一起消失。
+const TEMPLATE_PATH_PREFIXES: string[] = isTemplatesModuleEnabled()
+  ? ['/templates', '/cases']
+  : []
 const PUBLIC_PATH_PREFIXES: string[] = ['/', ...TEMPLATE_PATH_PREFIXES]
 
 function isPublicPath(pathname: string): boolean {

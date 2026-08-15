@@ -1,0 +1,71 @@
+/* Aegis 模板的设计令牌，作用域锁在 [data-template='aegis'] 子树内。
+   令牌不能提到 :root，否则会污染全站并与其它模板串色；一律以 --tpl- 开头，
+   与官网 globals.css 的 --color-* 令牌命名完全不重叠。
+
+   本模板是浅色控制台界面：白底 + 极浅灰面 + 1px 细分割线 + 青蓝强调，
+   状态色（健康/警告/严重）是这套界面的核心语义，必须单独成令牌而不是散在各页写死。 */
+[data-template='aegis'] {
+  --tpl-bg: #ffffff;
+  /* surface 用于卡片/面板底；subtle 更浅一层，用于表头、代码块、选中行等次级底 */
+  --tpl-surface: #f7f8fa;
+  --tpl-subtle: #fbfcfd;
+  --tpl-rule: #e8eaed;
+  --tpl-rule-strong: #d6dae0;
+
+  --tpl-fg: #1b1f26;
+  --tpl-fg-dim: #6b7280;
+  --tpl-fg-faint: #9aa1ab;
+
+  --tpl-accent: #2563eb;
+  --tpl-accent-soft: #eff4ff;
+
+  /* 三档状态语义色。soft 变体用于标签底色，保证浅色底上的对比度不刺眼 */
+  --tpl-ok: #10b981;
+  --tpl-ok-soft: #e7f8f1;
+  --tpl-warn: #f59e0b;
+  --tpl-warn-soft: #fef5e6;
+  --tpl-crit: #e11d48;
+  --tpl-crit-soft: #fdeaef;
+
+  --tpl-font-body: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  /* 等宽字体用于日志、trace id、时间戳与所有数字指标：控制台界面里数字必须等宽对齐 */
+  --tpl-font-mono: "SF Mono", "JetBrains Mono", "Cascadia Code", Consolas, "Liberation Mono", monospace;
+
+  background: var(--tpl-bg);
+  color: var(--tpl-fg);
+  font-family: var(--tpl-font-body);
+  /* 控制台界面信息密度高，整体字号比官网小一档 */
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 服务存活指示点的呼吸动画。做成 CSS 动画而不是 JS 定时器：
+   模板页面是服务端组件，引入定时器就得整页转客户端，代价与收益不成比例。 */
+@keyframes tpl-aegis-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.82);
+  }
+}
+
+[data-template='aegis'] .tpl-pulse {
+  animation: tpl-aegis-pulse 2.4s ease-in-out infinite;
+}
+
+/* 尊重系统的减少动效偏好；控制台里这类装饰性动画对前庭敏感用户是负担 */
+@media (prefers-reduced-motion: reduce) {
+  [data-template='aegis'] .tpl-pulse {
+    animation: none;
+  }
+}
+
+/* 日志流等表格容器的细滚动条，避免默认滚动条在浅色密集界面里过于抢眼 */
+[data-template='aegis'] .tpl-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--tpl-rule-strong) transparent;
+}

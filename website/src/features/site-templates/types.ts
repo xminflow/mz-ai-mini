@@ -30,9 +30,15 @@ export interface SiteTemplatePage {
 export interface SiteTemplate {
   id: string
   name: string
-  /** 适用行业，列表页展示与将来的筛选维度 */
-  industry: string
-  /** 风格标签，将来的筛选维度 */
+  /**
+   * 所属场景，取值必须是 taxonomy.ts 里定义的 scene id，注册表会校验。
+   * 它决定模板出现在案例页的哪个分类下。
+   *
+   * 这里刻意不再保留独立的 industry 字段：sceneId 已经表达了「这是什么类型的项目」，
+   * 再留一条近似的行业轴会让新增模板的人不知道该往哪填，行业信息一律进 tags。
+   */
+  sceneId: string
+  /** 风格与行业标签，卡片上平铺展示 */
   tags: string[]
   summary: string
   /** 主色，列表页用一个色点标识 */

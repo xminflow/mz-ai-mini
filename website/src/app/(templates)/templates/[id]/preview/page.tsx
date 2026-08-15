@@ -45,51 +45,77 @@ export default async function TemplatePreviewPage({
 
   const previewSrc = `/templates/${template.id}${activeSlug ? `/${activeSlug}` : ''}`
 
+  /**
+   * 窗口地址栏里显示的是一个示意域名，不是模板在本站的真实路径。
+   * 路径形如 /templates/aegis 会立刻暴露"这是嵌在别人站里的一个页面"，
+   * 而这块窗口要传达的恰恰相反——框里是一个独立的站点。
+   * 域名用 IANA 保留给文档示例的 example.com 子域，不会撞上任何真实机构。
+   */
+  const mockAddress = `${template.id}.example.com${activeSlug ? `/${activeSlug}` : ''}`
+
   return (
-    <main className="mx-auto w-full max-w-[1600px] px-6 py-10">
-      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
-        <Link
-          href="/templates"
-          className="text-sm text-neutral-500 transition hover:text-neutral-300"
-        >
-          ← 工作台
-        </Link>
-        <h1 className="text-xl font-medium">{template.name}</h1>
-        <span className="text-xs text-neutral-500">{template.industry}</span>
+    <main className="mx-auto w-full max-w-[1600px] px-6 pb-24 pt-14 sm:px-10">
+      <Link
+        href="/templates"
+        className="font-mono text-[12px] tracking-[0.14em] text-graphite-dim transition hover:text-graphite"
+      >
+        ← 工作台
+      </Link>
+
+      <div className="mt-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 border-b border-rule pb-8">
+        <div>
+          <h1 className="text-[clamp(1.75rem,3.2vw,2.5rem)] font-semibold leading-[1.1] tracking-[-0.03em]">
+            {template.name}
+          </h1>
+        </div>
         <a
           href={previewSrc}
           target="_blank"
           rel="noreferrer"
-          className="ml-auto text-sm text-neutral-500 transition hover:text-neutral-300"
+          className="text-[14px] text-graphite-dim transition hover:text-graphite"
         >
-          新标签打开 ↗
+          在新标签打开 ↗
         </a>
       </div>
 
-      <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+      {/* 选中态的下划线取模板自己的强调色：工作台的彩色一律来自它正在陈列的那套模板 */}
+      <nav className="mt-8 flex flex-wrap gap-x-8 gap-y-3">
         {template.pages.map((page) => {
           const href = page.slug
             ? `/templates/${template.id}/preview?page=${page.slug}`
             : `/templates/${template.id}/preview`
+          const isActive = page.slug === activeSlug
           return (
             <Link
               key={page.slug}
               href={href}
-              aria-current={page.slug === activeSlug ? 'page' : undefined}
+              aria-current={isActive ? 'page' : undefined}
               className={
-                page.slug === activeSlug
-                  ? 'text-sm text-neutral-100'
-                  : 'text-sm text-neutral-500 transition hover:text-neutral-300'
+                isActive
+                  ? 'relative pb-2 text-[14px] text-graphite'
+                  : 'relative pb-2 text-[14px] text-graphite-dim transition hover:text-graphite'
               }
             >
               {page.title}
+              {isActive ? (
+                <span
+                  aria-hidden
+                  className="absolute inset-x-0 bottom-0 h-[2px]"
+                  style={{ backgroundColor: template.accentColor }}
+                />
+              ) : null}
             </Link>
           )
         })}
-      </div>
+      </nav>
 
-      <div className="mt-8">
-        <PreviewFrame src={previewSrc} title={`${template.name} - ${activePage.title}`} />
+      <div className="mt-10">
+        <PreviewFrame
+          src={previewSrc}
+          title={`${template.name} - ${activePage.title}`}
+          address={mockAddress}
+          accentColor={template.accentColor}
+        />
       </div>
     </main>
   )

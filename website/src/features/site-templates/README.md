@@ -33,17 +33,73 @@
 2. `theme.css` 里的令牌**必须**挂在 `[data-template='<template-id>']` 选择器下，禁止提到
    `:root`，否则会污染全站并与其它模板串色；令牌一律以 `--tpl-` 开头。
    **该选择器下必须同时显式设置 `background` 与 `color`，不能只放令牌**——
-   `(templates)/layout.tsx` 给整个路由组套了工作台的深色底
-   （`bg-neutral-950 text-neutral-100`），已有的 Meridian 恰好也是深色模板，看不出问题；
-   一旦有模板是浅色调性，若 `theme.css` 只定义了令牌而没有在根选择器上覆盖背景色和文字色，
-   页面会静默继承工作台的深色底，而不是报错
+   `(templates)/layout.tsx` 给整个路由组套了工作台的底色（`bg-paper text-graphite`，
+   与官网一致）。模板若只定义了令牌而没有在根选择器上覆盖背景色和文字色，
+   页面会静默继承工作台的底色，而不是报错。深色模板（如 Meridian）尤其明显
 3. 每个页面组件 `export default` 一个接收 `SiteTemplatePageProps` 的组件，并在文件顶部
    `import '../theme.css'`
 4. 站内链接一律基于 props 传入的 `basePath` 拼接，**禁止硬编码 `/templates` 前缀**
 5. 封面图放 `public/templates/<template-id>/`
-6. 在 `registry.ts` 的 `SITE_TEMPLATES` 里加一行
+6. 在 `meta.ts` 里填 `sceneId`，取值必须是 `taxonomy.ts` 里已有的场景 id；
+   若该场景是第一次有模板，还需要在 `taxonomy.ts` 给它补上 `load`，
+   并在 `scenes/<scene-id>/Section.tsx` 写它的自定义区（见「案例页」一节）
+7. 在 `registry.ts` 的 `SITE_TEMPLATES` 里加一行
 
 不需要新建任何路由文件。
+
+## 模板里画图表
+
+`aegis` 模板引入了 `echarts`（Apache-2.0，可商用），它是目前唯一为模板而加的依赖。
+新模板要画图时照它的做法，不要另起炉灶：
+
+- 图表组件必须是 `'use client'`，页面本身保持服务端组件
+- **不要把 echarts 的 option 对象从页面以 props 传给图表组件**：option 里的
+  `formatter` 是函数，跨 Server/Client 边界不可序列化，会直接报错。让图表组件自己
+  `import` 数据模块并在内部用 `useMemo` 构造 option
+- echarts 按需注册（`echarts/core` + 用到的 charts/components）。**漏注册不会报错，
+  只是那部分静默不渲染**——本模板就踩过一次：`graphic` 忘了注册，环形图中心的总数
+  整个不显示。新用一种图或组件时记得回 `charts/EChart.tsx` 补注册
+- 图表配色只能写字面量十六进制。canvas 拿不到 CSS 自定义属性，写 `var(--tpl-*)`
+  画不出颜色，因此 `chartTheme.ts` 与 `theme.css` 需要手工保持一致
+- 演示数据禁止 `Math.random()` / `Date.now()` / `new Date()`：同一份数据服务端与
+  客户端各算一次，取值不确定会导致 hydration 报错。要"看起来随机"就用固定种子的生成器
+- **不要从 `'use client'` 模块导出常量给服务端页面 import**。Next 会把客户端模块的
+  所有导出换成客户端引用代理，常量到了服务端就变成一个不能调用的函数，症状是页面上
+  直接渲染出一段 `Attempted to call X() from the server`。共享常量放数据层这类普通模块里
+
+## 模板里做交互
+
+`aegis` 的「项目监控」页是目前唯一带交互的模板页面（可切换被监控项目）。它的做法是
+**服务端页面壳 + 一个客户端视图组件**，而不是把整页标成 `'use client'`：
+
+- `pages/ProjectPage.tsx` 保持服务端组件，只渲染 `<ProjectMonitorView basePath={...} />`
+- 交互状态、数据选择、图表全在 `components/ProjectMonitorView.tsx` 里
+- 图表组件此时必须**接收 props** 而不是自己 import 固定数据，否则切换项目图不会变
+
+其余四个页面仍是纯服务端组件。交互只在"不做就说不清楚"的地方做——比如"同一套监控
+形态能罩住六种项目类型"这件事，静态截图证明不了，必须能点。
+
+## 案例页（/cases）
+
+`/cases` 是模板模块对外的陈列面，与 `/templates` 工作台共用同一个
+`isTemplatesModuleEnabled()` 开关，要么一起可达要么一起 307 回首页。
+
+- 场景清单的唯一来源是 `taxonomy.ts`，数组顺序即左侧导航顺序。清单是**完整**的，
+  包含还没有模板的场景——它同时是接下来要补哪些模板的路线图
+- `gallery/selectors.ts` 负责推导视图数据：侧栏只渲染有模板的分支，空场景统一进
+  `/cases/other`。没有模板的场景不单独成页，直接 404
+- 场景的介绍区是组件插槽而不是数据字段：`scenes/<scene-id>/Section.tsx` 默认导出一个
+  接收 `SceneSectionProps` 的组件，想放什么放什么。只写两段话的场景套
+  `scenes/_shared/SceneIntro.tsx` 即可
+- `other` 是保留 scene id，被 `/cases/other` 这个静态路由段占用，taxonomy 校验会拒绝
+- 侧栏是客户端组件（要 `usePathname` 做高亮），因此 `selectors.ts` 返回的都是可序列化数据，
+  不要把带 `load` 函数的 `TemplateScene` 整个传过去
+- `SceneSidebar` 的高亮用 `pathname === href` 精确匹配，前提是 `next.config.ts` 没开
+  `trailingSlash`（默认 false）。若将来开成 `true`，`/cases/other` 这类路径会被框架 308
+  到带斜杠的形式，精确匹配会立刻失效、所有高亮消失，届时需要同步改成归一化比较（去掉尾部斜杠再比）
+- 案例页的模板陈列**复用**了 `workbench/TemplateRow.tsx`，而不是另做一套浅色卡片：
+  两个页面陈列的是同一批对象，做两份是重复实现。代价是跨了 `workbench/` 与 `gallery/`
+  的目录边界——`TemplateRow` 将来若要为工作台单独演进，需要先把它拆成两份再改
 
 ## 约束
 
@@ -74,6 +130,8 @@
   是关闭的、访客完全看不到它。fail-fast 本身是有意为之、不应该改成静默跳过，但这个
   爆炸半径必须写清楚：改的是 dev-only 的模板代码，挂的是官网发布流水线，第一次撞上
   的人不看这条会完全摸不着头脑
+  新增的 `sceneId` 校验（场景不存在、场景没配 `load`）同样在这个位置执行，
+  因此它们也在这个爆炸半径内。
 - **「每套模板独立分包」是未验证的假设**：`types.ts` 里 `load: () => import(...)`
   的注释断言这种写法能让模板数量增长时不互相拖累首屏体积。这是整个架构在「很多套
   模板」规模下不会劣化的关键假设，但从未被验证过——dev 模式的模块加载策略和生产
@@ -83,3 +141,6 @@
   生产构建时，应确认 `.next/static/chunks` 里各模板确实是分开的 chunk，再把这条从
   「已知遗留」移除
 - `public/templates/` 下的封面图不经过 middleware，知道 URL 即可直接访问；这些图本就是将来要公开的资产
+- **案例页无导航入口**：`/cases` 只能直接输 URL 访问。上架时需要按门禁条件渲染导航项——
+  无条件加进 `LightNav` 的 `NAV_ITEMS` 会在生产环境留下死链
+- **`sitemap.ts` 不含 `/cases`**：与模板路径同属上架待办
