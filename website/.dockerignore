@@ -1,6 +1,8 @@
 # Dependencies & build outputs
 node_modules
 .next
+.next-*
+.work
 dist
 dist-ssr
 out
@@ -46,7 +48,5 @@ Dockerfile
 README.md
 *.local
 
-# pnpm-workspace.yaml 仅用于本地 pnpm 10/11 的构建脚本审批（onlyBuiltDependencies）；
-# 镜像使用 pnpm 9.15.4，会把它当作 monorepo 清单并因缺少 packages 字段而报错
-# "packages field missing or empty"，故排除，避免污染构建上下文
+# 镜像只使用本工程 package.json 与冻结锁文件，本机工作区审批配置无需进入镜像。
 pnpm-workspace.yaml

@@ -1,0 +1,15 @@
+/* 文档滚动条属于 html；仅在挂载共享滚动条的模板内取消原生预留槽。 */
+html:has(.template-scrollbar){scrollbar-width:none;scrollbar-gutter:auto}
+html:has(.template-scrollbar)::-webkit-scrollbar{display:none;width:0;height:0}
+.template-scrollbar{position:fixed;z-index:65;top:max(8px,env(safe-area-inset-top));right:0;bottom:max(8px,env(safe-area-inset-bottom));width:14px;touch-action:none;user-select:none;opacity:0;pointer-events:none;transition:opacity .3s}
+.template-scrollbar[data-scrollable='true']{pointer-events:auto;cursor:pointer}
+.template-scrollbar[data-scrollable='true']:is([data-active='true'],:hover,:focus-visible,[data-dragging='true']){opacity:1}
+.template-scrollbar-thumb{position:absolute;top:0;left:5px;width:4px;border-radius:999px;background:var(--template-scroll-thumb);box-shadow:0 0 0 1px rgba(15,20,30,.18);cursor:grab;transition:width .2s,background .2s}
+.template-scrollbar:is(:hover,:focus-visible,[data-dragging='true']) .template-scrollbar-thumb{left:4px;width:6px;background:var(--template-scroll-active)}
+.template-scrollbar:focus-visible{outline:none}
+.template-scrollbar:focus-visible .template-scrollbar-thumb{outline:2px solid var(--template-scroll-active);outline-offset:2px}
+.template-scrollbar[data-dragging='true'] .template-scrollbar-thumb{cursor:grabbing}
+:is(.rc-site,.nr-site):has(dialog[open]) .template-scrollbar{opacity:0;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.template-scrollbar,.template-scrollbar-thumb{transition:none}}
+@media(forced-colors:active){.template-scrollbar[data-scrollable='true']{opacity:1}.template-scrollbar-thumb{background:CanvasText}}
+

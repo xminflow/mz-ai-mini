@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>软件定制服务介绍</title>
+<style>
+  @page { size: A4; margin: 0; }
+
+  :root {
+    --paper: #ffffff;
+    --paper-tint: #f7f7f5;
+    --graphite: #0e0e0e;
+    --graphite-soft: #44443f;
+    --graphite-dim: #64645b;
+    --rule: rgba(14,14,14,0.10);
+    --rule-strong: rgba(14,14,14,0.18);
+    --blue: #0f5fd8;
+    --red: #c8202c;
+    --yellow: #e8b21c;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #6b6b66;
+    color: var(--graphite);
+    font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 210mm;
+    height: 296.6mm;
+    padding: 18mm 18mm 24mm;
+    background: var(--paper);
+    overflow: hidden;
+    page-break-after: always;
+    break-after: page;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+
+  /* 屏幕下与打印保持完全一致的几何，便于按整页高度裁切核对 */
+  @media screen {
+    body { padding: 0; }
+    .page { margin: 0 auto; }
+  }
+
+  /* ============ 通用排版 ============ */
+  .eyebrow {
+    font-size: 7.5pt;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--graphite-dim);
+  }
+
+  .sec-head { border-bottom: 1px solid var(--rule-strong); padding-bottom: 5mm; }
+  .sec-head h2 {
+    margin: 2.5mm 0 0;
+    font-size: 20pt;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .sec-head p {
+    margin: 2.5mm 0 0;
+    font-size: 9.5pt;
+    line-height: 1.7;
+    color: var(--graphite-soft);
+    max-width: 150mm;
+  }
+
+  /* 正文区统一撑满剩余高度，块与块之间由 space-between 分配，避免页尾大片留白 */
+  .body { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding-top: 7mm; }
+
+  .foot {
+    position: absolute;
+    left: 18mm;
+    right: 18mm;
+    bottom: 9mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 7.5pt;
+    color: var(--graphite-dim);
+    border-top: 1px solid var(--rule);
+    padding-top: 3mm;
+  }
+  .foot .dots { display: flex; gap: 1.6mm; align-items: center; }
+  .foot .dots i { width: 1.6mm; height: 1.6mm; border-radius: 50%; display: block; }
+
+  /* ============ 封面 ============ */
+  .cover { background: var(--paper-tint); }
+  .cover .top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .cover .marks { display: flex; gap: 2mm; }
+  .cover .marks i { width: 4mm; height: 4mm; display: block; }
+  .cover h1 {
+    margin: 0;
+    font-size: 33pt;
+    font-weight: 700;
+    line-height: 1.28;
+    letter-spacing: -0.015em;
+  }
+  .cover .lead {
+    margin: 8mm 0 0;
+    font-size: 11pt;
+    line-height: 1.95;
+    color: var(--graphite-soft);
+    max-width: 152mm;
+  }
+  .cover .caps {
+    margin-top: 9mm;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 4mm;
+    font-size: 9pt;
+    color: var(--graphite-soft);
+  }
+  .cover .caps span { white-space: nowrap; }
+  .cover .caps em { font-style: normal; color: rgba(14,14,14,0.28); }
+  .cover .mid { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .cover .toc { border-top: 1px solid var(--rule-strong); padding-top: 6mm; }
+  .cover .toc-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4mm;
+    padding: 2.6mm 0;
+    font-size: 10pt;
+  }
+  .cover .toc-row b { font-weight: 600; }
+  .cover .toc-row .n { font-size: 8pt; color: var(--graphite-dim); letter-spacing: 0.1em; width: 8mm; }
+  .cover .toc-row .d { color: var(--graphite-dim); font-size: 8.5pt; }
+
+  /* ============ 服务矩阵 ============ */
+  .svc-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 8mm;
+    align-content: space-between;
+  }
+  .svc { border-top: 1px solid var(--rule); padding-top: 3.4mm; }
+  .svc .hd { display: flex; align-items: center; gap: 2.2mm; }
+  .svc .dot { width: 2.2mm; height: 2.2mm; border-radius: 50%; flex: none; }
+  .svc .code { font-size: 7pt; letter-spacing: 0.16em; color: var(--graphite-dim); }
+  .svc h3 { margin: 1.8mm 0 0; font-size: 11.5pt; font-weight: 700; line-height: 1.35; }
+  .svc .hook { margin: 1.8mm 0 0; font-size: 8.6pt; line-height: 1.55; color: var(--blue); font-weight: 600; }
+  .svc ul { margin: 2.4mm 0 0; padding: 0; list-style: none; }
+  .svc li {
+    position: relative;
+    padding-left: 3.4mm;
+    font-size: 8.2pt;
+    line-height: 1.7;
+    color: var(--graphite-soft);
+  }
+  .svc li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 1.7mm;
+    width: 1.4mm;
+    height: 1px;
+    background: var(--graphite-dim);
+  }
+
+  /* ============ 合作流程 ============ */
+  .flow { flex: 1; display: flex; flex-direction: column; justify-content: space-between; position: relative; padding-left: 12mm; }
+  .flow::before {
+    content: "";
+    position: absolute;
+    left: 2.15mm;
+    top: 2mm;
+    bottom: 4mm;
+    width: 1px;
+    background: var(--rule-strong);
+  }
+  .step { position: relative; }
+  .step::before {
+    content: "";
+    position: absolute;
+    left: -10.6mm;
+    top: 1.4mm;
+    width: 3.3mm;
+    height: 3.3mm;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--blue);
+  }
+  .step.solid::before { background: var(--blue); }
+  .step .hd { display: flex; align-items: baseline; gap: 3mm; }
+  .step .code { font-size: 7.5pt; letter-spacing: 0.16em; color: var(--graphite-dim); }
+  .step h3 { margin: 0; font-size: 12.5pt; font-weight: 700; letter-spacing: -0.005em; }
+  .step .tag {
+    font-size: 7.5pt;
+    font-weight: 600;
+    color: var(--red);
+    border: 1px solid rgba(200,32,44,0.35);
+    padding: 0.4mm 1.6mm;
+    border-radius: 1px;
+  }
+  .step p {
+    margin: 2.4mm 0 0;
+    font-size: 9pt;
+    line-height: 1.8;
+    color: var(--graphite-soft);
+    max-width: 160mm;
+  }
+
+  /* ============ 对比 ============ */
+  .cmp { border-top: 1px solid var(--rule); padding-top: 3.4mm; }
+  /* 首块紧贴 sec-head 的分隔线，再画一条会变成双线 */
+  .body > .cmp:first-child { border-top: none; padding-top: 0; }
+  .cmp h3 { margin: 0; font-size: 12.5pt; font-weight: 700; letter-spacing: -0.01em; }
+  .cmp .row { display: flex; gap: 3.5mm; margin-top: 2.6mm; align-items: baseline; }
+  .cmp .lb {
+    flex: none;
+    width: 17mm;
+    font-size: 7.5pt;
+    letter-spacing: 0.08em;
+    color: var(--graphite-dim);
+  }
+  .cmp .theirs {
+    font-size: 9pt;
+    line-height: 1.6;
+    color: var(--graphite-dim);
+    text-decoration: line-through;
+    text-decoration-color: var(--red);
+    text-decoration-thickness: 1px;
+  }
+  .cmp .ours { font-size: 9.2pt; line-height: 1.72; color: var(--graphite); }
+
+  /* ============ 维保平台截图 ============ */
+  /* 截图按 1450×900 的原始比例排版：整页放两张时宽度必须收到 150mm，
+     否则两张的总高会顶穿页脚。宽度改动前先按 900/1450 重算总高。 */
+  .shot { width: 150mm; margin: 0 auto; }
+  .shot .cap { display: flex; align-items: baseline; gap: 3mm; margin-bottom: 2.6mm; }
+  .shot .cap b { font-size: 10.5pt; font-weight: 700; }
+  .shot .cap span { font-size: 8.6pt; color: var(--graphite-soft); }
+  .frame {
+    position: relative;
+    width: 100%;
+    background: #0d121c;
+    padding: 1.1mm;
+    border-radius: 1.5px;
+  }
+  .frame img { display: block; width: 100%; height: auto; border-radius: 1px; }
+  /* 截图左上角是平台自身的标识区，这里以同色块覆盖并改写为通用名称 */
+  .frame .mask {
+    position: absolute;
+    left: 1.1mm;
+    top: 1.1mm;
+    width: 15.45%;
+    height: 6.22%;
+    background: #080c13;
+    display: flex;
+    align-items: center;
+    gap: 1.6mm;
+    padding-left: 3mm;
+    border-right: 1px solid rgba(148,163,184,0.14);
+    border-bottom: 1px solid rgba(148,163,184,0.14);
+  }
+  .frame .mask i {
+    width: 2.2mm;
+    height: 2.2mm;
+    border-radius: 0.6mm;
+    background: #38bdf8;
+    flex: none;
+  }
+  .frame .mask span {
+    font-size: 5.6pt;
+    font-weight: 600;
+    color: #e6edf7;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  .ops-note {
+    border-top: 1px solid var(--rule);
+    padding-top: 4.5mm;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 7mm;
+  }
+  .ops-note div b { display: block; font-size: 9.8pt; margin-bottom: 1.8mm; }
+  .ops-note div p { margin: 0; font-size: 8.6pt; line-height: 1.75; color: var(--graphite-soft); }
+
+  /* ============ 结尾 ============ */
+  .closing { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+  .closing h2 { margin: 0; font-size: 24pt; font-weight: 700; line-height: 1.35; letter-spacing: -0.015em; }
+  .closing .sub { margin: 5mm 0 0; font-size: 10pt; line-height: 1.85; color: var(--graphite-soft); max-width: 150mm; }
+  .closing .pledge { margin-top: 11mm; border-top: 1px solid var(--rule-strong); }
+  .closing .pledge .p {
+    display: flex;
+    gap: 5mm;
+    align-items: baseline;
+    padding: 5mm 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .closing .pledge .p b { flex: none; width: 42mm; font-size: 10.5pt; font-weight: 700; }
+  .closing .pledge .p span { font-size: 9.3pt; line-height: 1.8; color: var(--graphite-soft); }
+</style>
+</head>
+<body>
+
+<!-- ============================== 01 封面 ============================== -->
+<section class="page cover">
+  <div class="top">
+    <div class="eyebrow">软件定制服务 · Service Overview</div>
+    <div class="marks"><i style="background:var(--blue)"></i><i style="background:var(--red)"></i><i style="background:var(--yellow)"></i></div>
+  </div>
+
+  <div class="mid">
+    <h1>把软件定制<br>做成您的专属贵宾服务</h1>
+    <p class="lead">
+      从需求梳理、产品设计，到开发交付与后期运营，全流程 1 对 1 深度服务。<br>
+      7×24 小时为您提供专属的服务人员，以服务行业的标准来做软件定制生意。
+    </p>
+    <div class="caps">
+      <span>1V1 高端服务</span><em>·</em>
+      <span>全天候响应</span><em>·</em>
+      <span>全透明流程</span><em>·</em>
+      <span>100% 主动推进</span><em>·</em>
+      <span>高质量维保</span>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div class="toc-row"><span class="n">01</span><b>我们做过的软件类型</b><span class="d">12 类常见定制方向与交付内容</span></div>
+    <div class="toc-row"><span class="n">02</span><b>我们的合作流程</b><span class="d">从初步交流到终生 bug 修复的七个步骤</span></div>
+    <div class="toc-row"><span class="n">03</span><b>我们与其他定制商的不同</b><span class="d">八个问题，两种答案</span></div>
+    <div class="toc-row"><span class="n">04</span><b>我们的维保优势</b><span class="d">自研 AI 维保平台，交付之后仍在工作</span></div>
+  </div>
+</section>
+
+<!-- ============================== 02 服务矩阵 ============================== -->
+<section class="page">
+  <div class="sec-head">
+    <div class="eyebrow">01 · Services</div>
+    <h2>我们做过的软件类型</h2>
+    <p>下列方向均已在真实项目中落地。不确定自己的需求属于哪一类，也可以直接描述业务场景，由架构师帮您判断。</p>
+  </div>
+
+  <div class="body">
+    <div class="svc-grid">
+      <div class="svc">
+        <div class="hd"><i class="dot" style="background:var(--blue)"></i><span class="code">01</span></div>
+        <h3>企业官网 &amp; 品牌落地页</h3>
+        <p class="hook">会自己获客的官网，3 秒抓住客户</p>
+        <ul><li>品牌官网 / 营销活动页</li><li>SEO 结构与移动端自适应</li><li>内容与转化路径一体设计</li></ul>
+      </div>
+      <div class="svc">
+        <div class="hd"><i class="dot" style="background:var(--red)"></i><span class="code">02</span></div>
+        <h3>企业级管理系统</h3>
+        <p class="hook">把 Excel 和微信群里的生意，装进一套系统</p>
+        <ul><li>CRM / ERP / OA</li><li>进销存 / 后台管理平台</li><li>多角色权限与审批流</li></ul>
+      </div>
+      <div class="svc">
+        <div class="hd"><i class="dot" style="background:var(--yellow)"></i><span class="code">03</span></div>
+        <h3>小程序 &amp; 移动应用</h3>
+        <p class="hook">客户在哪，您的入口就在哪</p>
+        <ul><li>微信小程序 / H5</li><li>原生 / 跨端 App</li><li>复用已有后端，快速上线</li></ul>
+      </div>
+
+      <div class="svc">
+        <div class="hd"><i class="dot" style="background:var(--blue)"></i><span class="code">04</span></div>
+        <h3>AI 智能体 / 数字员工</h3>
+        <p class="hook">7×24 不下班的员工，一次培训永久上岗</p>
+        <ul><li>智能客服 / 业务自动化 Agent</li><li>多轮对话与长期记忆</li><li>接入企业真实业务流程</li></ul>
+      </div>
+      <div class="svc">
+        <div class="hd"><i class="dot" style="background:var(--blue)"></i><span class="code">05</span></div>
+        <h3>AI 知识库 &amp; 智能问答</h3>
+        <p class="hook">让公司多年的经验，随问随答</p>
+        <ul><li>RAG 检索增强问答</li><li>企业知识库 / 文档助手</li><li>私有数据不出企业</li></ul>
+      </div>
+      <div class="svc">
+        <div class="hd"><i class="dot" style="background:var(--red)"></i><span class="code">06</span></div>
+        <h3>数据分析 &amp; BI 看板</h3>
+        <p class="hook">经营看板一屏看懂，决策不再靠拍脑袋</p>
+        <ul><li>经营数据大屏</li><li>自动化报表</li><li>异常与趋势自动提醒</li></ul>
+      </div>
+
+      <div class="svc">
+        <div class="hd"><i class="dot" style="background:var(--yellow)"></i><span class="code">07</span></div>
+        <h3>SaaS 产品 / 平台开发</h3>
+        <p class="hook">从 0 到 1，把想法做成能收费的产品</p>
+        <ul><li>多租户架构</li><li>订阅计费体系</li><li>从产品原型到规模化上线</li></ul>
+      </div>
+      <div class="svc">
+        <div class="hd"><i class="dot" style="background:var(--blue)"></i><span class="code">08</span></div>
+        <h3>电商 &amp; 交易系统</h3>
+        <p class="hook">下单、支付、履约，一条龙跑通</p>
+        <ul><li>商城 / 预约 / 分销</li><li>支付与订单履约</li><li>会员与营销活动</li></ul>
+      </div>
+      <div class="svc">
+        <div class="hd"><i class="dot" style="background:var(--red)"></i><span class="code">09</span></div>
+        <h3>桌面客户端</h3>
+        <p class="hook">Windows / Mac 一套代码，双端上线</p>
+        <ul><li>Electron 跨平台桌面应用</li><li>本地化工具与离线能力</li><li>自动更新与安装包分发</li></ul>
+      </div>
+
+      <div class="svc">
+        <div class="hd"><i class="dot" style="background:var(--yellow)"></i><span class="code">10</span></div>
+        <h3>系统集成 &amp; 流程自动化</h3>
+        <p class="hook">让各个软件自己对话，人只管收结果</p>
+        <ul><li>第三方 API 打通</li><li>跨系统工作流自动化</li><li>定时任务与异步处理</li></ul>
+      </div>
+      <div class="svc">
+        <div class="hd"><i class="dot" style="background:var(--red)"></i><span class="code">11</span></div>
+        <h3>AIGC 内容工具</h3>
+        <p class="hook">一个人，干出一个内容团队的产量</p>
+        <ul><li>自动化内容生产</li><li>营销素材批量生成</li><li>呼应自媒体获客场景</li></ul>
+      </div>
+      <div class="svc">
+        <div class="hd"><i class="dot" style="background:var(--blue)"></i><span class="code">12</span></div>
+        <h3>企业业务 AI 化改造</h3>
+        <p class="hook">不推翻现有系统，一段段把 AI 接进去</p>
+        <ul><li>先诊断哪些环节值得上 AI</li><li>在现有系统上接入，不另起一套</li><li>按环节分批改造，业务不停</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>软件定制服务介绍</span>
+    <span class="dots"><i style="background:var(--blue)"></i><i style="background:var(--red)"></i><i style="background:var(--yellow)"></i></span>
+    <span>02</span>
+  </div>
+</section>
+
+<!-- ============================== 03 合作流程 ============================== -->
+<section class="page">
+  <div class="sec-head">
+    <div class="eyebrow">02 · How we work</div>
+    <h2>我们的合作流程</h2>
+    <p>七个步骤，从初次沟通一直到交付之后。前两步完全免费，您可以在不付出任何成本的情况下，先拿到一份完整的需求文档与报价方案。</p>
+  </div>
+
+  <div class="body">
+    <div class="flow">
+      <div class="step solid">
+        <div class="hd"><span class="code">01</span><h3>初步交流</h3><span class="tag">免费</span></div>
+        <p>我们会为您分配不低于 10 年工作经验的专属架构师，与您深度讨论您的业务需求，了解您的完整项目规划。即使您目前想法还比较模糊，我们也可以基于多年的行业落地经验，在后续与您一起仔细探讨，为您提供真实可靠的建议，帮助您逐步理清需求规划。</p>
+      </div>
+      <div class="step solid">
+        <div class="hd"><span class="code">02</span><h3>需求与报价</h3><span class="tag">免费</span></div>
+        <p>在持续沟通中，我们会基于您的真实需求和决策，整理一份完整的需求文档，并针对梳理出来的需求制定合理的报价方案。若您对需求文档或报价方案不满意，我们可以持续沟通优化，直到满意为止。</p>
+      </div>
+      <div class="step">
+        <div class="hd"><span class="code">03</span><h3>法律合同</h3></div>
+        <p>需求文档与报价确认后，我们会提供具有法律效力的定制合同。这份合同将充分保障您的合法权益：通过条款与法律约束保障您在约定周期内能够安全验收项目，同时保障您对项目源代码、业务数据及相关知识产权的完整权益，让软件真正属于您。</p>
+      </div>
+      <div class="step">
+        <div class="hd"><span class="code">04</span><h3>持续反馈</h3></div>
+        <p>合同签署后，我们将为您建立专属的沟通渠道，并在开发期间每周向您汇报项目进展，及时获取您的反馈，保证项目稳步且正确地推进，不搞黑盒开发。</p>
+      </div>
+      <div class="step">
+        <div class="hd"><span class="code">05</span><h3>逐项验收</h3></div>
+        <p>开发完成后，您可以按照需求文档对每一项功能一一验收，确保交付的工程完全符合您的预期。任何一项功能存在问题，或您觉得设计不好，我们都将进行优化调整。</p>
+      </div>
+      <div class="step">
+        <div class="hd"><span class="code">06</span><h3>上线交付</h3></div>
+        <p>功能验收完成后，我们将根据您的要求在合适的时间正式上线和交付项目：把源代码完整部署到您的服务器上，并完成线上测试，确保项目上线成功。同时我们还会准备完整详细的交付文档和培训服务，将项目完整交付到您手上。</p>
+      </div>
+      <div class="step solid">
+        <div class="hd"><span class="code">07</span><h3>维修保障</h3></div>
+        <p>自交付日起，我们将为您免费提供为期一年的维保服务。在此期间，我们会 7×24 小时持续监控您的服务运行状况，出现任何异常问题都将在 24 小时内处理，保障您的业务长期稳定运行。并且我们承诺：只要是属于本次交付范畴内的系统 bug，我们终生提供免费修复服务。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>软件定制服务介绍</span>
+    <span class="dots"><i style="background:var(--blue)"></i><i style="background:var(--red)"></i><i style="background:var(--yellow)"></i></span>
+    <span>03</span>
+  </div>
+</section>
+
+<!-- ============================== 04 对比 ============================== -->
+<section class="page">
+  <div class="sec-head">
+    <div class="eyebrow">03 · Difference</div>
+    <h2>我们与其他定制商的不同</h2>
+    <p>八个问题，两种答案。上面一行是行业里的常见做法，下面一行是我们的做法。</p>
+  </div>
+
+  <div class="body">
+    <div class="cmp">
+      <h3>交付的是什么？</h3>
+      <div class="row"><span class="lb">常见做法</span><span class="theirs">交完代码就收工，关系随之结束</span></div>
+      <div class="row"><span class="lb">我们的做法</span><span class="ours">交的是一整套定制服务，技术标准与客户服务都有硬指标。我们要把软件定制做成服务标杆，积累的是长期的品牌信誉。</span></div>
+    </div>
+    <div class="cmp">
+      <h3>价格从哪来？</h3>
+      <div class="row"><span class="lb">常见做法</span><span class="theirs">拿系统复杂当理由，开出高价</span></div>
+      <div class="row"><span class="lb">我们的做法</span><span class="ours">多年大型项目交付与产品研发沉淀出的研发效率，叠加 AI 带来的杠杆，在做到行业内最优质服务的同时，给出真正有竞争力的价格。</span></div>
+    </div>
+    <div class="cmp">
+      <h3>谁先发现问题？</h3>
+      <div class="row"><span class="lb">常见做法</span><span class="theirs">等用户反馈才被动补救</span></div>
+      <div class="row"><span class="lb">我们的做法</span><span class="ours">通过自研 AI 智能维保平台主动监控服务运行状态与用户使用情况，在用户开口之前发现问题并修复，不把损失留到事后。</span></div>
+    </div>
+    <div class="cmp">
+      <h3>响应要等多久？</h3>
+      <div class="row"><span class="lb">常见做法</span><span class="theirs">两个工作日内，节假日不算</span></div>
+      <div class="row"><span class="lb">我们的做法</span><span class="ours">7×24 小时响应，不分工作日与节假日，交付回款之后也是同一条标准，保障您的业务稳定可靠。</span></div>
+    </div>
+    <div class="cmp">
+      <h3>服务期之后呢？</h3>
+      <div class="row"><span class="lb">常见做法</span><span class="theirs">服务期一到，问题不再受理</span></div>
+      <div class="row"><span class="lb">我们的做法</span><span class="ours">属于本次交付范畴内的系统 bug，无论是否还在服务期，终生免费修复，不给您留下任何包袱。</span></div>
+    </div>
+    <div class="cmp">
+      <h3>看不见的地方呢？</h3>
+      <div class="row"><span class="lb">常见做法</span><span class="theirs">只做明面需求，底层没有标准</span></div>
+      <div class="row"><span class="lb">我们的做法</span><span class="ours">数据安全、系统稳定、运行性能、容灾容错，统一设定严格的交付基准，保障系统能长期稳定运行。</span></div>
+    </div>
+    <div class="cmp">
+      <h3>界面从哪来？</h3>
+      <div class="row"><span class="lb">常见做法</span><span class="theirs">套模板求快，风格陈旧</span></div>
+      <div class="row"><span class="lb">我们的做法</span><span class="ours">100% 定制，风格与交互与您共同敲定，贴合您真实的业务流程，做出完全符合预期的使用体验。</span></div>
+    </div>
+    <div class="cmp">
+      <h3>谁来跟您对接？</h3>
+      <div class="row"><span class="lb">常见做法</span><span class="theirs">派基础开发对接，业务听不懂</span></div>
+      <div class="row"><span class="lb">我们的做法</span><span class="ours">只派架构师与您亲自对接，听得懂业务、沟通高效，并在过程中主动给出更优的方案建议。</span></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>软件定制服务介绍</span>
+    <span class="dots"><i style="background:var(--blue)"></i><i style="background:var(--red)"></i><i style="background:var(--yellow)"></i></span>
+    <span>04</span>
+  </div>
+</section>
+
+<!-- ============================== 05 维保 1 ============================== -->
+<section class="page">
+  <div class="sec-head">
+    <div class="eyebrow">04 · Operations</div>
+    <h2>我们的维保优势</h2>
+    <p>基于自研的 AI 维保平台。交付只是起点，长期稳定的服务才是信任的基石。以下为平台的真实界面。</p>
+  </div>
+
+  <div class="body">
+    <div class="shot">
+      <div class="cap"><b>项目总览</b><span>在线项目数、活跃告警、可用性与全局告警趋势，一屏看清全部在维项目</span></div>
+      <div class="frame">
+        <img src="../../website/public/home/ops/overview.webp" alt="项目总览">
+        <div class="mask"><i></i><span>应用维保平台</span></div>
+      </div>
+    </div>
+
+    <div class="shot">
+      <div class="cap"><b>智能体巡检</b><span>多个巡检智能体分工扫描，逐条输出发现与处置，问题在用户开口之前被找出来</span></div>
+      <div class="frame">
+        <img src="../../website/public/home/ops/inspect.webp" alt="智能体巡检">
+        <div class="mask"><i></i><span>应用维保平台</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>软件定制服务介绍</span>
+    <span class="dots"><i style="background:var(--blue)"></i><i style="background:var(--red)"></i><i style="background:var(--yellow)"></i></span>
+    <span>05</span>
+  </div>
+</section>
+
+<!-- ============================== 06 维保 2 ============================== -->
+<section class="page">
+  <div class="sec-head">
+    <div class="eyebrow">04 · Operations</div>
+    <h2>我们的维保优势（续）</h2>
+    <p>问题不等用户反馈：告警自动分级、异常自动聚类，维保期内任何异常均在 24 小时内响应并处理完毕。</p>
+  </div>
+
+  <div class="body">
+    <div class="shot">
+      <div class="cap"><b>告警中心</b><span>告警严重度构成、确认与恢复时长，以及单条告警从触发到恢复的完整处理时间线</span></div>
+      <div class="frame">
+        <img src="../../website/public/home/ops/alerts.webp" alt="告警中心">
+        <div class="mask"><i></i><span>应用维保平台</span></div>
+      </div>
+    </div>
+
+    <div class="shot">
+      <div class="cap"><b>日志与异常</b><span>日志分级总量、异常趋势，并按错误签名归一做异常聚类，同源问题只处理一次</span></div>
+      <div class="frame">
+        <img src="../../website/public/home/ops/logs.webp" alt="日志与异常">
+        <div class="mask"><i></i><span>应用维保平台</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">
+    <span>软件定制服务介绍</span>
+    <span class="dots"><i style="background:var(--blue)"></i><i style="background:var(--red)"></i><i style="background:var(--yellow)"></i></span>
+    <span>06</span>
+  </div>
+</section>
+
+<!-- ============================== 07 承诺 ============================== -->
+<section class="page cover">
+  <div class="top">
+    <div class="eyebrow">Commitments</div>
+    <div class="marks"><i style="background:var(--blue)"></i><i style="background:var(--red)"></i><i style="background:var(--yellow)"></i></div>
+  </div>
+
+  <div class="closing">
+    <h2>让软件真正属于您</h2>
+    <p class="sub">软件定制不是一次性的买卖。以下五条是我们写进合同、也写进日常服务里的承诺。</p>
+    <div class="pledge">
+      <div class="p"><b>源码与知识产权</b><span>项目源代码、业务数据及相关知识产权完整归您所有，由具有法律效力的定制合同保障。</span></div>
+      <div class="p"><b>免费的前两步</b><span>初步交流与需求梳理报价全程免费，不满意可持续沟通优化，直到满意为止。</span></div>
+      <div class="p"><b>不搞黑盒开发</b><span>专属沟通渠道，开发期间每周汇报进展；交付前按需求文档逐项验收，不满意就调整。</span></div>
+      <div class="p"><b>一年免费维保</b><span>自交付日起免费维保一年，7×24 小时监控服务运行状况，异常 24 小时内处理。</span></div>
+      <div class="p"><b>终生免费修复</b><span>只要是本次交付范畴内的系统 bug，无论是否还在服务期，终生免费修复。</span></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>软件定制服务介绍</span>
+    <span class="dots"><i style="background:var(--blue)"></i><i style="background:var(--red)"></i><i style="background:var(--yellow)"></i></span>
+    <span>07</span>
+  </div>
+</section>
+
+</body>
+</html>

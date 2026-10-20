@@ -21,7 +21,7 @@ export const SectionHeading = ({
   const alignClass = align === 'center' ? 'items-center text-center' : 'items-start text-left'
 
   return (
-    <div className={`flex flex-col ${alignClass} ${className}`}>
+    <div className={`section-heading flex flex-col ${alignClass} ${className}`}>
       {eyebrow && (
         <span className="mb-4 text-[11px] font-medium uppercase tracking-[0.2em] text-graphite-dim">
           {eyebrow}

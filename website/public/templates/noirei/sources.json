@@ -1,0 +1,769 @@
+{
+  "reference": "https://noirei.framer.website/",
+  "capturedAt": "2026-10-19T11:58:19.771Z",
+  "pages": [
+    {
+      "path": "/",
+      "title": "NOIRÉ — Hotel & Retreat, Lake Como"
+    },
+    {
+      "path": "/about",
+      "title": "Our story — NOIRÉ"
+    },
+    {
+      "path": "/room",
+      "title": "Rooms, suites & villas — NOIRÉ"
+    },
+    {
+      "path": "/experiences",
+      "title": "Experiences — NOIRÉ"
+    },
+    {
+      "path": "/journal",
+      "title": "Journal — NOIRÉ"
+    },
+    {
+      "path": "/contact",
+      "title": "Contact — NOIRÉ"
+    },
+    {
+      "path": "/room/lake-classic-room",
+      "title": "Lake Classic Room — NOIRÉ, Lake Como"
+    },
+    {
+      "path": "/room/garden-deluxe-room",
+      "title": "Garden Deluxe Room — NOIRÉ, Lake Como"
+    },
+    {
+      "path": "/room/belvedere-junior-suite",
+      "title": "Belvedere Junior Suite — NOIRÉ, Lake Como"
+    },
+    {
+      "path": "/room/terrace-suite",
+      "title": "Terrace Suite — NOIRÉ, Lake Como"
+    },
+    {
+      "path": "/room/villa-cipresso",
+      "title": "Villa Cipresso, private pool villa — NOIRÉ, Lake Como"
+    },
+    {
+      "path": "/room/the-noire-residence",
+      "title": "The NOIRÉ Residence — three-bedroom boathouse, Lake Como"
+    },
+    {
+      "path": "/experiences/lakeside-dinner-at-la-darsena",
+      "title": "Lakeside Dinner at La Darsena — NOIRÉ, Lake Como"
+    },
+    {
+      "path": "/experiences/the-stone-spa-ritual",
+      "title": "The Stone Spa Ritual — NOIRÉ, Lake Como"
+    },
+    {
+      "path": "/experiences/private-boat-to-bellagio",
+      "title": "Private Boat to Bellagio — NOIRÉ, Lake Como"
+    },
+    {
+      "path": "/experiences/morning-hike-to-san-martino",
+      "title": "Morning Hike to San Martino — NOIRÉ, Lake Como"
+    },
+    {
+      "path": "/offers/stay-longer",
+      "title": "Stay Longer — Offers at NOIRÉ"
+    },
+    {
+      "path": "/offers/spring-by-the-lake",
+      "title": "Spring by the Lake — Offers at NOIRÉ"
+    },
+    {
+      "path": "/offers/the-honeymoon-itinerary",
+      "title": "The Honeymoon Itinerary — Offers at NOIRÉ"
+    },
+    {
+      "path": "/journal/the-silk-merchants-house",
+      "title": "The silk merchant’s house — NOIRÉ Journal"
+    },
+    {
+      "path": "/journal/the-first-boat-of-the-morning",
+      "title": "The first boat of the morning — NOIRÉ Journal"
+    },
+    {
+      "path": "/journal/tagliatelle-by-hand",
+      "title": "Tagliatelle, by hand — NOIRÉ Journal"
+    },
+    {
+      "path": "/legal",
+      "title": "Privacy & terms — NOIRÉ"
+    },
+    {
+      "path": "/experiences/wine-cellar-tasting",
+      "title": "Wine Cellar Tasting — NOIRÉ, Lake Como"
+    },
+    {
+      "path": "/experiences/silk-workshop-in-como",
+      "title": "Silk Workshop in Como — NOIRÉ, Lake Como"
+    },
+    {
+      "path": "/journal/cold-water-warm-stone",
+      "title": "Cold water, warm stone — NOIRÉ Journal"
+    },
+    {
+      "path": "/journal/three-villages-one-afternoon",
+      "title": "Three villages, one afternoon — NOIRÉ Journal"
+    },
+    {
+      "path": "/journal/what-the-cellar-keeps",
+      "title": "What the cellar keeps — NOIRÉ Journal"
+    }
+  ],
+  "assets": [
+    {
+      "source": "https://framerusercontent.com/images/0cTPrPf5qL68rqMGIIVAvuTIUI4.jpg",
+      "alt": "A table with a blue table cloth set for a meal",
+      "file": "/templates/noirei/assets/0cTPrPf5qL68rqMGIIVAvuTIUI4.jpg",
+      "download": "https://framerusercontent.com/images/0cTPrPf5qL68rqMGIIVAvuTIUI4.jpg?scale-down-to=1600",
+      "bytes": 265436,
+      "sha256": "e220e829a25c194470e6be94251b26c26a4fcbfc5a08fd01a56ed068394b7161"
+    },
+    {
+      "source": "https://framerusercontent.com/images/0FopXLYzK6yUvTyT2Kzeni97M.jpg",
+      "alt": "A small island in the middle of a body of water",
+      "file": "/templates/noirei/assets/0FopXLYzK6yUvTyT2Kzeni97M.jpg",
+      "download": "https://framerusercontent.com/images/0FopXLYzK6yUvTyT2Kzeni97M.jpg?scale-down-to=1600",
+      "bytes": 517315,
+      "sha256": "c2c865aaebaee9971625533bd54570159d6a051191f542a7e18465aadbe023d5"
+    },
+    {
+      "source": "https://framerusercontent.com/images/0x8KnQPRLyyt8eu0L2Mg4ukw.jpg",
+      "alt": "A view of a town from a boat",
+      "file": "/templates/noirei/assets/0x8KnQPRLyyt8eu0L2Mg4ukw.jpg",
+      "download": "https://framerusercontent.com/images/0x8KnQPRLyyt8eu0L2Mg4ukw.jpg?scale-down-to=1600",
+      "bytes": 299503,
+      "sha256": "1d154548fbb4f4eac92f763c530988db12b1fa0e0c43d384888b8a1a8560ab53"
+    },
+    {
+      "source": "https://framerusercontent.com/images/1f6ORcBxPCi7RlpKyPJ7ccWVUIs.jpg",
+      "alt": "Sunrise over a misty lake with trees and a house",
+      "file": "/templates/noirei/assets/1f6ORcBxPCi7RlpKyPJ7ccWVUIs.jpg",
+      "download": "https://framerusercontent.com/images/1f6ORcBxPCi7RlpKyPJ7ccWVUIs.jpg?scale-down-to=1600",
+      "bytes": 401803,
+      "sha256": "fb49d50960745be28d7614c639a6d76ba72e5475bf930c58fdf86ee497bf3901"
+    },
+    {
+      "source": "https://framerusercontent.com/images/1KSabnxkJTFvOOxZSEZAvOYBIw.jpg",
+      "alt": "First light over a still alpine lake, mountains reflected in the water",
+      "file": "/templates/noirei/assets/1KSabnxkJTFvOOxZSEZAvOYBIw.jpg",
+      "download": "https://framerusercontent.com/images/1KSabnxkJTFvOOxZSEZAvOYBIw.jpg?scale-down-to=1600",
+      "bytes": 130154,
+      "sha256": "21c61a050af1d2666b841f5def74df96789b99c018a6458f15091ec9977937bb"
+    },
+    {
+      "source": "https://framerusercontent.com/images/2jnNRqLr1ttXjdjqC6lxRxBfs8.jpg",
+      "alt": "Armchairs at a wall of glass above a still lake and snowy peaks",
+      "file": "/templates/noirei/assets/2jnNRqLr1ttXjdjqC6lxRxBfs8.jpg",
+      "download": "https://framerusercontent.com/images/2jnNRqLr1ttXjdjqC6lxRxBfs8.jpg?scale-down-to=1600",
+      "bytes": 381525,
+      "sha256": "522b6f2a2990620d16de4e93118ca54289afc2640fcedc9f9ec08417a0b6c46f"
+    },
+    {
+      "source": "https://framerusercontent.com/images/2qlh4PMgmm51yGteRBqYSqI0Xis.jpg",
+      "alt": "Armchairs by tall windows that open onto a garden of potted lemon trees",
+      "file": "/templates/noirei/assets/2qlh4PMgmm51yGteRBqYSqI0Xis.jpg",
+      "download": "https://framerusercontent.com/images/2qlh4PMgmm51yGteRBqYSqI0Xis.jpg?scale-down-to=1600",
+      "bytes": 342303,
+      "sha256": "0c1068fd150cff02e3c4ea35736afe1dd3d5da4775369117c1ea0d4c71eee9ba"
+    },
+    {
+      "source": "https://framerusercontent.com/images/30PzNp2PyuAladHbGwRFzbGbKY.jpg",
+      "alt": "Mountains above a turquoise lake, framed by pines",
+      "file": "/templates/noirei/assets/30PzNp2PyuAladHbGwRFzbGbKY.jpg",
+      "download": "https://framerusercontent.com/images/30PzNp2PyuAladHbGwRFzbGbKY.jpg?scale-down-to=1600",
+      "bytes": 523005,
+      "sha256": "e42f95f8536dbacef94f3056223aea92b5beba00c47197f5ef4bebc8fba6abbd"
+    },
+    {
+      "source": "https://framerusercontent.com/images/4HIyoqYtX4kQgim6W9Yqae9hPg.jpg",
+      "alt": "Infinity pool overlooking a calm ocean and distant mountains",
+      "file": "/templates/noirei/assets/4HIyoqYtX4kQgim6W9Yqae9hPg.jpg",
+      "download": "https://framerusercontent.com/images/4HIyoqYtX4kQgim6W9Yqae9hPg.jpg?scale-down-to=1600",
+      "bytes": 326300,
+      "sha256": "6b05cce7adf08d7254d0da4d2863fe33ec09fa332ad32df816c38eb234d72118"
+    },
+    {
+      "source": "https://framerusercontent.com/images/5nmEGZ5RmZTSyWTAwuKSzRWfk.jpg",
+      "alt": "Two armchairs and a reading lamp around a wooden side table",
+      "file": "/templates/noirei/assets/5nmEGZ5RmZTSyWTAwuKSzRWfk.jpg",
+      "download": "https://framerusercontent.com/images/5nmEGZ5RmZTSyWTAwuKSzRWfk.jpg?scale-down-to=1600",
+      "bytes": 187395,
+      "sha256": "abe25a66eb70fed7c9985bf6f4843fae88eab550ac41a7cfe4d9be3d7488a7e3"
+    },
+    {
+      "source": "https://framerusercontent.com/images/5OqRJVbkNFDosoxoiY8jBRLM78.jpg",
+      "alt": "Sunset over the lake, seen from inside the suite",
+      "file": "/templates/noirei/assets/5OqRJVbkNFDosoxoiY8jBRLM78.jpg",
+      "download": "https://framerusercontent.com/images/5OqRJVbkNFDosoxoiY8jBRLM78.jpg?scale-down-to=1600",
+      "bytes": 260005,
+      "sha256": "437c3497fc343c4299ed17ea1b89084ae966af97040af404e05c18d80f2e6b42"
+    },
+    {
+      "source": "https://framerusercontent.com/images/65rLDnFoYXDPEmT4bGd3jH7BKAU.jpg",
+      "alt": "The villa's pool above the bay and the green cliffs",
+      "file": "/templates/noirei/assets/65rLDnFoYXDPEmT4bGd3jH7BKAU.jpg",
+      "download": "https://framerusercontent.com/images/65rLDnFoYXDPEmT4bGd3jH7BKAU.jpg?scale-down-to=1600",
+      "bytes": 410733,
+      "sha256": "f1312b041e97bc7ee3d4fa49adbebc7fb8b6862a07a4c4cbe8ac919f86991a60"
+    },
+    {
+      "source": "https://framerusercontent.com/images/6tTnMxfEG4cIcd3iLtbTLOPo2Dc.jpg",
+      "alt": "Stone house on a dirt road framed by tall trees",
+      "file": "/templates/noirei/assets/6tTnMxfEG4cIcd3iLtbTLOPo2Dc.jpg",
+      "download": "https://framerusercontent.com/images/6tTnMxfEG4cIcd3iLtbTLOPo2Dc.jpg?scale-down-to=1600",
+      "bytes": 565475,
+      "sha256": "7b7a0c27e5cbb6465578741375564d79323f3f45bfebd72c464100c16ea59db4"
+    },
+    {
+      "source": "https://framerusercontent.com/images/6xjA9wXQoYmJOFWX61rtRfH4.jpg",
+      "alt": "A turquoise lake in a mountain valley",
+      "file": "/templates/noirei/assets/6xjA9wXQoYmJOFWX61rtRfH4.jpg",
+      "download": "https://framerusercontent.com/images/6xjA9wXQoYmJOFWX61rtRfH4.jpg?scale-down-to=1600",
+      "bytes": 450383,
+      "sha256": "face45490a8c1f4987c4079fdf160f1241c8ded70c585551bb487e9107bc15c5"
+    },
+    {
+      "source": "https://framerusercontent.com/images/8dSVozWJEEBpfYCVdi9kc8uryI4.jpg",
+      "alt": "Breakfast and a bottle of sparkling wine laid out on the balcony",
+      "file": "/templates/noirei/assets/8dSVozWJEEBpfYCVdi9kc8uryI4.jpg",
+      "download": "https://framerusercontent.com/images/8dSVozWJEEBpfYCVdi9kc8uryI4.jpg?scale-down-to=1600",
+      "bytes": 245155,
+      "sha256": "394d2e3dfd1243a1bd1bb4afd1613b963c5da9a7c42c0f147efafbbde4725952"
+    },
+    {
+      "source": "https://framerusercontent.com/images/8JQERRgSXSc0mPEIoz2Hp8RY4I.jpg",
+      "alt": "Open doors to the water, boats moored off the far shore",
+      "file": "/templates/noirei/assets/8JQERRgSXSc0mPEIoz2Hp8RY4I.jpg",
+      "download": "https://framerusercontent.com/images/8JQERRgSXSc0mPEIoz2Hp8RY4I.jpg?scale-down-to=1600",
+      "bytes": 241791,
+      "sha256": "000ba7ac0ab540aadd2a4cdedccc25fd698293cd666acfa2664b3eb7138fa4ba"
+    },
+    {
+      "source": "https://framerusercontent.com/images/9qAchNzvZwGoO9KH4Rt4Vy5nr6o.jpg",
+      "alt": "A tunnel with several wine barrels in it",
+      "file": "/templates/noirei/assets/9qAchNzvZwGoO9KH4Rt4Vy5nr6o.jpg",
+      "download": "https://framerusercontent.com/images/9qAchNzvZwGoO9KH4Rt4Vy5nr6o.jpg?scale-down-to=1600",
+      "bytes": 406246,
+      "sha256": "b016759cfb5cc29526b433c4488d8fb5da08a12f452739a01d5f6d84c219f4e5"
+    },
+    {
+      "source": "https://framerusercontent.com/images/a01Lm3iobgGjq51Pse46vvDnvUE.jpg",
+      "alt": "Barrels of liquor in a basement",
+      "file": "/templates/noirei/assets/a01Lm3iobgGjq51Pse46vvDnvUE.jpg",
+      "download": "https://framerusercontent.com/images/a01Lm3iobgGjq51Pse46vvDnvUE.jpg?scale-down-to=1600",
+      "bytes": 455929,
+      "sha256": "14a877f47656b7be8160cb13b17796d5fd1dab22ad70ce79653cb867bce33ae9"
+    },
+    {
+      "source": "https://framerusercontent.com/images/A2yGik9el1YILFdn2K73pbPrMic.jpg",
+      "alt": "A white basin beside a linen curtain",
+      "file": "/templates/noirei/assets/A2yGik9el1YILFdn2K73pbPrMic.jpg",
+      "download": "https://framerusercontent.com/images/A2yGik9el1YILFdn2K73pbPrMic.jpg?scale-down-to=1600",
+      "bytes": 363764,
+      "sha256": "a676f601e55b08daccac4d02776778a5a1836de639658fba215c3267b5f4a0d5"
+    },
+    {
+      "source": "https://framerusercontent.com/images/av4R2DovJcphwWr1vMkBqDdqE.jpg",
+      "alt": "An aerial view of a small town on a large body of water",
+      "file": "/templates/noirei/assets/av4R2DovJcphwWr1vMkBqDdqE.jpg",
+      "download": "https://framerusercontent.com/images/av4R2DovJcphwWr1vMkBqDdqE.jpg?scale-down-to=1600",
+      "bytes": 619235,
+      "sha256": "199a0cb92c49b2baa865f21569ba5ded5029695c7c1fd0d89bff67823170e084"
+    },
+    {
+      "source": "https://framerusercontent.com/images/aysxw21Y158rvvhVroANG0gEs.jpg",
+      "alt": "Elegant dining table overlooking a vibrant ocean sunset",
+      "file": "/templates/noirei/assets/aysxw21Y158rvvhVroANG0gEs.jpg",
+      "download": "https://framerusercontent.com/images/aysxw21Y158rvvhVroANG0gEs.jpg?scale-down-to=1600",
+      "bytes": 275207,
+      "sha256": "5e50f77d1156092b965d330a8b278720203f61cdf36d616d67ef15b621dba5f0"
+    },
+    {
+      "source": "https://framerusercontent.com/images/aZTRGJk2PP6ZDbD8RPsNizP2SgY.jpg",
+      "alt": "Colorful buildings nestled by a lush green mountainside on lake",
+      "file": "/templates/noirei/assets/aZTRGJk2PP6ZDbD8RPsNizP2SgY.jpg",
+      "download": "https://framerusercontent.com/images/aZTRGJk2PP6ZDbD8RPsNizP2SgY.jpg?scale-down-to=1600",
+      "bytes": 658530,
+      "sha256": "0734de706b4dead54f526eaf4e5959b35baa0f9929643199dbcfdc5f8a21ec52"
+    },
+    {
+      "source": "https://framerusercontent.com/images/b3IROcGPZ2IssBGAQkmhF1OXZo.jpg",
+      "alt": "A boat crossing the lake below the mountains",
+      "file": "/templates/noirei/assets/b3IROcGPZ2IssBGAQkmhF1OXZo.jpg",
+      "download": "https://framerusercontent.com/images/b3IROcGPZ2IssBGAQkmhF1OXZo.jpg?scale-down-to=1600",
+      "bytes": 327741,
+      "sha256": "9ecb5bdff52f6d60b8204117f4c12d6bfbcbef18ca5b2a6d8d6f9fd6ce02c350"
+    },
+    {
+      "source": "https://framerusercontent.com/images/bSDTbpaXQDkkOVXgjOuPgtFFfFw.jpg",
+      "alt": "Red white and black striped textile",
+      "file": "/templates/noirei/assets/bSDTbpaXQDkkOVXgjOuPgtFFfFw.jpg",
+      "download": "https://framerusercontent.com/images/bSDTbpaXQDkkOVXgjOuPgtFFfFw.jpg?scale-down-to=1600",
+      "bytes": 515238,
+      "sha256": "8263ddf1f1a13ce581658c14f28ab8102ce742f926c1ccb592dd1af6fa3032f6"
+    },
+    {
+      "source": "https://framerusercontent.com/images/bZ4XzbgDWgR0Y7LJs39v8hx2Vk.jpg",
+      "alt": "Armchairs and a low table by sunlit windows",
+      "file": "/templates/noirei/assets/bZ4XzbgDWgR0Y7LJs39v8hx2Vk.jpg",
+      "download": "https://framerusercontent.com/images/bZ4XzbgDWgR0Y7LJs39v8hx2Vk.jpg?scale-down-to=1600",
+      "bytes": 455005,
+      "sha256": "dd02aa43cf216ebe4a3f6b432a5a87647c6a10bfa7e3d9f5481dfb2e251e3bda"
+    },
+    {
+      "source": "https://framerusercontent.com/images/cLjLli5LVHiIjOWbgj2HrKZ0Xm4.jpg",
+      "alt": "Buildings and mountains beside a blue lake",
+      "file": "/templates/noirei/assets/cLjLli5LVHiIjOWbgj2HrKZ0Xm4.jpg",
+      "download": "https://framerusercontent.com/images/cLjLli5LVHiIjOWbgj2HrKZ0Xm4.jpg?scale-down-to=1600",
+      "bytes": 412185,
+      "sha256": "b7ddaf1b5ee5a3a08139f3296db927dde0724a9cd360f95413b7b3cc7f66b674"
+    },
+    {
+      "source": "https://framerusercontent.com/images/cMKulavz2dNZf88WYmwrwXFAdHM.jpg",
+      "alt": "A wooden boat moored at the boathouse pier",
+      "file": "/templates/noirei/assets/cMKulavz2dNZf88WYmwrwXFAdHM.jpg",
+      "download": "https://framerusercontent.com/images/cMKulavz2dNZf88WYmwrwXFAdHM.jpg?scale-down-to=1600",
+      "bytes": 393839,
+      "sha256": "472ad38380d626f97fe6ddc58f6f1abdd1cde6f915c0ef6b1f16ab7b1c51bdc2"
+    },
+    {
+      "source": "https://framerusercontent.com/images/dMEbXpUOUBxGh5tWunr9C1ko18k.jpg",
+      "alt": "A boat with a flag on the back of it",
+      "file": "/templates/noirei/assets/dMEbXpUOUBxGh5tWunr9C1ko18k.jpg",
+      "download": "https://framerusercontent.com/images/dMEbXpUOUBxGh5tWunr9C1ko18k.jpg?scale-down-to=1600",
+      "bytes": 376363,
+      "sha256": "853a8ec612d23d0a4b7767ed268c7dfbb89276eb3a43c674b02d74c2948be44d"
+    },
+    {
+      "source": "https://framerusercontent.com/images/Drau5TAEE848qCWGdQOHpg3feg.jpg",
+      "alt": "Spools of silk thread stacked in rows",
+      "file": "/templates/noirei/assets/Drau5TAEE848qCWGdQOHpg3feg.jpg",
+      "download": "https://framerusercontent.com/images/Drau5TAEE848qCWGdQOHpg3feg.jpg?scale-down-to=1600",
+      "bytes": 247120,
+      "sha256": "62e03362bd305011f5a7ccc6732f10dc4b9c3e8058b0ffa4ea7412d8fda7573f"
+    },
+    {
+      "source": "https://framerusercontent.com/images/eBgxLbUNu1RiZsigMIUbKkLCwI.jpg",
+      "alt": "a black and white photo of a house",
+      "file": "/templates/noirei/assets/eBgxLbUNu1RiZsigMIUbKkLCwI.jpg",
+      "download": "https://framerusercontent.com/images/eBgxLbUNu1RiZsigMIUbKkLCwI.jpg?scale-down-to=1600",
+      "bytes": 446762,
+      "sha256": "de40dac4111aca55e08a226f5bd059d800646f4e9aacecd26b8bf9314f87ddb5"
+    },
+    {
+      "source": "https://framerusercontent.com/images/ei9Vm0bfdMyAAPdyLKsKpBc9I.jpg",
+      "alt": "A private pool in a walled garden above the lake",
+      "file": "/templates/noirei/assets/ei9Vm0bfdMyAAPdyLKsKpBc9I.jpg",
+      "download": "https://framerusercontent.com/images/ei9Vm0bfdMyAAPdyLKsKpBc9I.jpg?scale-down-to=1600",
+      "bytes": 468391,
+      "sha256": "fa9a8e28253ea9cb34173c61de032f86d0b156bccce4fe3c4e81066f60751221"
+    },
+    {
+      "source": "https://framerusercontent.com/images/EoLj51LRPi8siJmQ754tptJeI.jpg",
+      "alt": "Tuscan villa facade with shutters and urns",
+      "file": "/templates/noirei/assets/EoLj51LRPi8siJmQ754tptJeI.jpg",
+      "download": "https://framerusercontent.com/images/EoLj51LRPi8siJmQ754tptJeI.jpg?scale-down-to=1600",
+      "bytes": 419780,
+      "sha256": "6a530f568c548831920bf49098406b5d8bf23f277517961dd92dcaddf3573759"
+    },
+    {
+      "source": "https://framerusercontent.com/images/f9rXu8EDuxphrkKv30zl9bpsZbo.jpg",
+      "alt": "Panoramic view of a serene blue lake surrounded by mountains",
+      "file": "/templates/noirei/assets/f9rXu8EDuxphrkKv30zl9bpsZbo.jpg",
+      "download": "https://framerusercontent.com/images/f9rXu8EDuxphrkKv30zl9bpsZbo.jpg?scale-down-to=1600",
+      "bytes": 358378,
+      "sha256": "931ae13486dd969ffe84db7a656b9e07dde8b54262501eeaf4ae07a816240f08"
+    },
+    {
+      "source": "https://framerusercontent.com/images/GJRlOxbrsueSeNX9hjfRGhAIpw.jpg",
+      "alt": "A warm plunge pool under a stone arch",
+      "file": "/templates/noirei/assets/GJRlOxbrsueSeNX9hjfRGhAIpw.jpg",
+      "download": "https://framerusercontent.com/images/GJRlOxbrsueSeNX9hjfRGhAIpw.jpg?scale-down-to=1600",
+      "bytes": 233081,
+      "sha256": "2ee0c27e290e788567589ca48d6d2cc4c0e04c844c4874b5317a3a88b23b8a43"
+    },
+    {
+      "source": "https://framerusercontent.com/images/GPozbLHvSME4q6EvuBtVxi31KaE.jpg",
+      "alt": "A balcony with a view of the ocean",
+      "file": "/templates/noirei/assets/GPozbLHvSME4q6EvuBtVxi31KaE.jpg",
+      "download": "https://framerusercontent.com/images/GPozbLHvSME4q6EvuBtVxi31KaE.jpg?scale-down-to=1600",
+      "bytes": 261502,
+      "sha256": "5b56e9d517a78a5de6d7071e114072fe147adb44f6a0d14f9f29ba6296fe7088"
+    },
+    {
+      "source": "https://framerusercontent.com/images/hiMLIZext0NRluTvQMDVDZ4Wk.jpg",
+      "alt": "Colorful buildings line a lake with green hills behind",
+      "file": "/templates/noirei/assets/hiMLIZext0NRluTvQMDVDZ4Wk.jpg",
+      "download": "https://framerusercontent.com/images/hiMLIZext0NRluTvQMDVDZ4Wk.jpg?scale-down-to=1600",
+      "bytes": 363328,
+      "sha256": "ac813e444491dba37dfff2e0f503a2d8698ecb85d3c928425183d00c33dad90f"
+    },
+    {
+      "source": "https://framerusercontent.com/images/hsGenlrGKioS5tDiJsKATRfeavo.jpg",
+      "alt": "A freestanding white bath beside a black side table",
+      "file": "/templates/noirei/assets/hsGenlrGKioS5tDiJsKATRfeavo.jpg",
+      "download": "https://framerusercontent.com/images/hsGenlrGKioS5tDiJsKATRfeavo.jpg?scale-down-to=1600",
+      "bytes": 244694,
+      "sha256": "c957c30e5a51c459645f1a5e7a35941403dbac0e927148446ddd8c2f7e0aa841"
+    },
+    {
+      "source": "https://framerusercontent.com/images/HZRCEkiCOAZECgbLnjafVjHKT2k.jpg",
+      "alt": "The sitting area in afternoon sun, an armchair and a sofa",
+      "file": "/templates/noirei/assets/HZRCEkiCOAZECgbLnjafVjHKT2k.jpg",
+      "download": "https://framerusercontent.com/images/HZRCEkiCOAZECgbLnjafVjHKT2k.jpg?scale-down-to=1600",
+      "bytes": 283425,
+      "sha256": "19fcb047d8cf043e482bb5e03710fa98f0db5bb66d3355623b8600056f22c3f8"
+    },
+    {
+      "source": "https://framerusercontent.com/images/ih5swgsDvi4o3iK7yqXnwB6DkZo.jpg",
+      "alt": "A boat traveling on a body of water near a mountain",
+      "file": "/templates/noirei/assets/ih5swgsDvi4o3iK7yqXnwB6DkZo.jpg",
+      "download": "https://framerusercontent.com/images/ih5swgsDvi4o3iK7yqXnwB6DkZo.jpg?scale-down-to=1600",
+      "bytes": 350757,
+      "sha256": "1ca28244dfdb6b7232af60e951cb138b2d1319906ac464d0f09ed9e45186ae7c"
+    },
+    {
+      "source": "https://framerusercontent.com/images/Ixt3WrbepIOFprb4wxGxRPsqnU.jpg",
+      "alt": "Two clear wine glass beside tealight candle on table",
+      "file": "/templates/noirei/assets/Ixt3WrbepIOFprb4wxGxRPsqnU.jpg",
+      "download": "https://framerusercontent.com/images/Ixt3WrbepIOFprb4wxGxRPsqnU.jpg?scale-down-to=1600",
+      "bytes": 210084,
+      "sha256": "ef5469a8712eaa35673f84d2d9fac06acce38d18a82364301ea682aa9dc4b6ce"
+    },
+    {
+      "source": "https://framerusercontent.com/images/JHVrgerPRkgsbIgaXUkZMgNFerk.jpg",
+      "alt": "A stone bench at the edge of the water",
+      "file": "/templates/noirei/assets/JHVrgerPRkgsbIgaXUkZMgNFerk.jpg",
+      "download": "https://framerusercontent.com/images/JHVrgerPRkgsbIgaXUkZMgNFerk.jpg?scale-down-to=1600",
+      "bytes": 448895,
+      "sha256": "7a951112a7e4179b1d5c84c3ee973eb1a2177859abf18c5a0f84ecce3418517e"
+    },
+    {
+      "source": "https://framerusercontent.com/images/jn8m3K9n20iTNIIX22KOjsgZ79E.jpg",
+      "alt": "Two small boats are docked at a pier",
+      "file": "/templates/noirei/assets/jn8m3K9n20iTNIIX22KOjsgZ79E.jpg",
+      "download": "https://framerusercontent.com/images/jn8m3K9n20iTNIIX22KOjsgZ79E.jpg?scale-down-to=1600",
+      "bytes": 192734,
+      "sha256": "450fdb45b9222f2a8c1686cc9d635f57db25dff43546dffc9a44ede580a206ad"
+    },
+    {
+      "source": "https://framerusercontent.com/images/jYA11Oj7UJwx9l0Z2tCUsnQKHo.jpg",
+      "alt": "A white porcelain bath in the suite's bathroom",
+      "file": "/templates/noirei/assets/jYA11Oj7UJwx9l0Z2tCUsnQKHo.jpg",
+      "download": "https://framerusercontent.com/images/jYA11Oj7UJwx9l0Z2tCUsnQKHo.jpg?scale-down-to=1600",
+      "bytes": 370920,
+      "sha256": "0517a97daec5d7739e25bfb7158ce9eb1aa8562764c3600ace2d46a03c225125"
+    },
+    {
+      "source": "https://framerusercontent.com/images/JZ7pvQGqzItueQQRO2jjMxXctAg.jpg",
+      "alt": "Colorful buildings along the shore of Lake Como beneath a steep mountain",
+      "file": "/templates/noirei/assets/JZ7pvQGqzItueQQRO2jjMxXctAg.jpg",
+      "download": "https://framerusercontent.com/images/JZ7pvQGqzItueQQRO2jjMxXctAg.jpg?scale-down-to=1600",
+      "bytes": 434158,
+      "sha256": "2fa3a4e3e84e364465d17519649641659614d6937697b2d333223fe632d3f10d"
+    },
+    {
+      "source": "https://framerusercontent.com/images/KjyGkNbkFSy1hiujAjybDze73Cs.jpg",
+      "alt": "",
+      "file": "/templates/noirei/assets/KjyGkNbkFSy1hiujAjybDze73Cs.jpg",
+      "download": "https://framerusercontent.com/images/KjyGkNbkFSy1hiujAjybDze73Cs.jpg?scale-down-to=1600",
+      "bytes": 270810,
+      "sha256": "7a42be06ffb685399fbd0c8d5370ae802716c15f0004c974dc94020be40e6518"
+    },
+    {
+      "source": "https://framerusercontent.com/images/KKff6WEtNAhSjrZ7iD5HNcZztQU.jpg",
+      "alt": "Threads on a textile loom",
+      "file": "/templates/noirei/assets/KKff6WEtNAhSjrZ7iD5HNcZztQU.jpg",
+      "download": "https://framerusercontent.com/images/KKff6WEtNAhSjrZ7iD5HNcZztQU.jpg?scale-down-to=1600",
+      "bytes": 290882,
+      "sha256": "966ccc0a4318e79c2646da15bd609ecd4f242fbb9a063af2b32fd791cc1317f1"
+    },
+    {
+      "source": "https://framerusercontent.com/images/KTdQuh9pBdokmGEz5larM5o3vU.jpg",
+      "alt": "Clipped hedges and cypress trees at la foce, tuscany",
+      "file": "/templates/noirei/assets/KTdQuh9pBdokmGEz5larM5o3vU.jpg",
+      "download": "https://framerusercontent.com/images/KTdQuh9pBdokmGEz5larM5o3vU.jpg?scale-down-to=1600",
+      "bytes": 611821,
+      "sha256": "70d8614b35c0e5c6ea671b5d82402dae3cd564e87583d81e6edd321e2effe9d5"
+    },
+    {
+      "source": "https://framerusercontent.com/images/KZAMMe3JTJe48nwdBzaRyES30.jpg",
+      "alt": "An ivy-covered archway opens to a lush garden path",
+      "file": "/templates/noirei/assets/KZAMMe3JTJe48nwdBzaRyES30.jpg",
+      "download": "https://framerusercontent.com/images/KZAMMe3JTJe48nwdBzaRyES30.jpg?scale-down-to=1600",
+      "bytes": 444049,
+      "sha256": "fe454e7e7c6bc3f5d043a7f67262cf34781ffd1bd9fe477e544e3202bf445526"
+    },
+    {
+      "source": "https://framerusercontent.com/images/l0UCxm4VON02fw5oYqFizXfhfk.jpg",
+      "alt": "Cypress trees above the lake on a cloudy evening",
+      "file": "/templates/noirei/assets/l0UCxm4VON02fw5oYqFizXfhfk.jpg",
+      "download": "https://framerusercontent.com/images/l0UCxm4VON02fw5oYqFizXfhfk.jpg?scale-down-to=1600",
+      "bytes": 235049,
+      "sha256": "d8fe9c09ec5f79afe72697e31a1c192549108f4f5685b940e287834fe9c9b0a5"
+    },
+    {
+      "source": "https://framerusercontent.com/images/l7OTf0mm4JLiYpUZmUeTDfQzlpg.jpg",
+      "alt": "A wine glass on a terracotta plate",
+      "file": "/templates/noirei/assets/l7OTf0mm4JLiYpUZmUeTDfQzlpg.jpg",
+      "download": "https://framerusercontent.com/images/l7OTf0mm4JLiYpUZmUeTDfQzlpg.jpg?scale-down-to=1600",
+      "bytes": 410476,
+      "sha256": "862a93c068e93c0f772bbc133d79d88bd91ec85e15d40f8ef8d664fb8fbc4550"
+    },
+    {
+      "source": "https://framerusercontent.com/images/LljpUxndMsDHf1zVIgMVmr31l88.jpg",
+      "alt": "A floating dock on misty water",
+      "file": "/templates/noirei/assets/LljpUxndMsDHf1zVIgMVmr31l88.jpg",
+      "download": "https://framerusercontent.com/images/LljpUxndMsDHf1zVIgMVmr31l88.jpg?scale-down-to=1600",
+      "bytes": 155264,
+      "sha256": "ea62c003442d03878593adcaaf7953873f3cccabbb8b80da255e88e7cd3c65ed"
+    },
+    {
+      "source": "https://framerusercontent.com/images/lqtNLe25LnDmMUnceSAJSQarAPE.jpg",
+      "alt": "A white ceramic basin with a brushed steel tap",
+      "file": "/templates/noirei/assets/lqtNLe25LnDmMUnceSAJSQarAPE.jpg",
+      "download": "https://framerusercontent.com/images/lqtNLe25LnDmMUnceSAJSQarAPE.jpg?scale-down-to=1600",
+      "bytes": 397543,
+      "sha256": "ea674fae0c9fd73a7135584a8241c61bd2c9060c88d03a249e7053143bf4732d"
+    },
+    {
+      "source": "https://framerusercontent.com/images/Ltllw9P6M0TIxUjEWs2WJbTN8Bw.jpg",
+      "alt": "The indoor pool under hanging lights",
+      "file": "/templates/noirei/assets/Ltllw9P6M0TIxUjEWs2WJbTN8Bw.jpg",
+      "download": "https://framerusercontent.com/images/Ltllw9P6M0TIxUjEWs2WJbTN8Bw.jpg?scale-down-to=1600",
+      "bytes": 206968,
+      "sha256": "8b47cfa15e6118e5d765fbe6078c611da0a4e35a5df30894e6b28351484668e6"
+    },
+    {
+      "source": "https://framerusercontent.com/images/m8xluGYfc5asdxekRtYH2XCZsg.jpg",
+      "alt": "Sunset view from a balcony with chairs and table",
+      "file": "/templates/noirei/assets/m8xluGYfc5asdxekRtYH2XCZsg.jpg",
+      "download": "https://framerusercontent.com/images/m8xluGYfc5asdxekRtYH2XCZsg.jpg?scale-down-to=1600",
+      "bytes": 285293,
+      "sha256": "bb1f069cefac3e2df3466eb15b91ad84f6e1dad54aa34925f738d9932004cdc5"
+    },
+    {
+      "source": "https://framerusercontent.com/images/mDRYVAxXtT9jT3pjQAs5cpHOOVA.jpg",
+      "alt": "Lake Como under a soft grey sky, the headland and the far shore in the distance",
+      "file": "/templates/noirei/assets/mDRYVAxXtT9jT3pjQAs5cpHOOVA.jpg",
+      "download": "https://framerusercontent.com/images/mDRYVAxXtT9jT3pjQAs5cpHOOVA.jpg?scale-down-to=1600",
+      "bytes": 242062,
+      "sha256": "7e95059bcfa7769a370dd00414469c943caef615b1fd78c9840f2bae69aec1f3"
+    },
+    {
+      "source": "https://framerusercontent.com/images/mmUIhb0eFXcLDquK6GbIZsoUqN8.jpg",
+      "alt": "Still water ringed by forest",
+      "file": "/templates/noirei/assets/mmUIhb0eFXcLDquK6GbIZsoUqN8.jpg",
+      "download": "https://framerusercontent.com/images/mmUIhb0eFXcLDquK6GbIZsoUqN8.jpg?scale-down-to=1600",
+      "bytes": 465746,
+      "sha256": "42bb9e672707157554290aaf7eb212da7418c84154f9a5e94f7970be9d2892f2"
+    },
+    {
+      "source": "https://framerusercontent.com/images/mnJiN6o4FD0Tm1X4c9GXiMmVxg.jpg",
+      "alt": "Wine bottle and two wine glass on top of table",
+      "file": "/templates/noirei/assets/mnJiN6o4FD0Tm1X4c9GXiMmVxg.jpg",
+      "download": "https://framerusercontent.com/images/mnJiN6o4FD0Tm1X4c9GXiMmVxg.jpg?scale-down-to=1600",
+      "bytes": 231330,
+      "sha256": "ae8ba3e35eaf5e5e1c24a9f7c4e1afe3dd9dd2fc42e3a20eeb78896b9ecb8f15"
+    },
+    {
+      "source": "https://framerusercontent.com/images/mXm5eGPfcGDMkAFhmjgtrH71M.jpg",
+      "alt": "Pendant lamps glowing over a bed in a dark, quiet room",
+      "file": "/templates/noirei/assets/mXm5eGPfcGDMkAFhmjgtrH71M.jpg",
+      "download": "https://framerusercontent.com/images/mXm5eGPfcGDMkAFhmjgtrH71M.jpg?scale-down-to=1600",
+      "bytes": 156750,
+      "sha256": "04023b832bfd0ba424c9501b00d842d453a70ec5afd3b39f388476a698dbbe78"
+    },
+    {
+      "source": "https://framerusercontent.com/images/n5ReXKPPRyOtrQDnFJNSOo2RNE.jpg",
+      "alt": "Clipped box hedges and a statue in the formal garden",
+      "file": "/templates/noirei/assets/n5ReXKPPRyOtrQDnFJNSOo2RNE.jpg",
+      "download": "https://framerusercontent.com/images/n5ReXKPPRyOtrQDnFJNSOo2RNE.jpg?scale-down-to=1600",
+      "bytes": 621991,
+      "sha256": "7f874d2da18f802ed451cae41b76046ea611f3ddaef3278e44c917247d0c3bf5"
+    },
+    {
+      "source": "https://framerusercontent.com/images/nFLM9p94rLyicLuDXcla8mj3s8.jpg",
+      "alt": "An old brick building with green shutters and a staircase",
+      "file": "/templates/noirei/assets/nFLM9p94rLyicLuDXcla8mj3s8.jpg",
+      "download": "https://framerusercontent.com/images/nFLM9p94rLyicLuDXcla8mj3s8.jpg?scale-down-to=1600",
+      "bytes": 416149,
+      "sha256": "d41326262a69bb8e40d920eb168e8767be16bb7b4be97433d1d30a8ac74b699b"
+    },
+    {
+      "source": "https://framerusercontent.com/images/nhYJB7Ya8Q9G83T8u2u5Kp7J5JY.jpg",
+      "alt": "Tall doors open onto a stone balcony above the lake",
+      "file": "/templates/noirei/assets/nhYJB7Ya8Q9G83T8u2u5Kp7J5JY.jpg",
+      "download": "https://framerusercontent.com/images/nhYJB7Ya8Q9G83T8u2u5Kp7J5JY.jpg?scale-down-to=1600",
+      "bytes": 406769,
+      "sha256": "bfbf3196bc574e7fea3d819a84bedff787ac0a55a509eaa0de202bbcf8a33d24"
+    },
+    {
+      "source": "https://framerusercontent.com/images/nnhnHKIxKL8Is9zVrpifFpfT3x8.jpg",
+      "alt": "A reading chair in a corner suite with windows to the mountains",
+      "file": "/templates/noirei/assets/nnhnHKIxKL8Is9zVrpifFpfT3x8.jpg",
+      "download": "https://framerusercontent.com/images/nnhnHKIxKL8Is9zVrpifFpfT3x8.jpg?scale-down-to=1600",
+      "bytes": 266006,
+      "sha256": "560cd13b6ba6bf545b6ea72c8ff29887dc0460cf9e36c48acea3b66e209227b4"
+    },
+    {
+      "source": "https://framerusercontent.com/images/OD6O3nItYN6GQTg0a0YJLchK5w.jpg",
+      "alt": "A pool with a stone wall",
+      "file": "/templates/noirei/assets/OD6O3nItYN6GQTg0a0YJLchK5w.jpg",
+      "download": "https://framerusercontent.com/images/OD6O3nItYN6GQTg0a0YJLchK5w.jpg?scale-down-to=1600",
+      "bytes": 518251,
+      "sha256": "af756dac0389b6939f4eea07c84a0ca687600293890f95c500f918e2da31e30e"
+    },
+    {
+      "source": "https://framerusercontent.com/images/oL2OseK9ICnhETyqs0g7yLMs.jpg",
+      "alt": "A large indoor swimming pool with blue water",
+      "file": "/templates/noirei/assets/oL2OseK9ICnhETyqs0g7yLMs.jpg",
+      "download": "https://framerusercontent.com/images/oL2OseK9ICnhETyqs0g7yLMs.jpg?scale-down-to=1600",
+      "bytes": 536550,
+      "sha256": "3e68fa21e886e47b94a3f24ebf60785cbb94094fae50d19edc0f3e7d96abc24d"
+    },
+    {
+      "source": "https://framerusercontent.com/images/PaZLDh8mqKoSQX4AQfFGEkG4268.jpg",
+      "alt": "Close up of an old weaving loom",
+      "file": "/templates/noirei/assets/PaZLDh8mqKoSQX4AQfFGEkG4268.jpg",
+      "download": "https://framerusercontent.com/images/PaZLDh8mqKoSQX4AQfFGEkG4268.jpg?scale-down-to=1600",
+      "bytes": 553478,
+      "sha256": "38b774d55d1dfd9ce6c7d8c97347448bd2269093ae5260e9afdfb7a65baa6e93"
+    },
+    {
+      "source": "https://framerusercontent.com/images/Pg32dQmpIWYDPlRU3OGYxIi7SNo.jpg",
+      "alt": "Cooked pasta",
+      "file": "/templates/noirei/assets/Pg32dQmpIWYDPlRU3OGYxIi7SNo.jpg",
+      "download": "https://framerusercontent.com/images/Pg32dQmpIWYDPlRU3OGYxIi7SNo.jpg?scale-down-to=1600",
+      "bytes": 239997,
+      "sha256": "010d1b9bfff729269d851350a9d32242a392ece9d0d24e86b780a4767634de4d"
+    },
+    {
+      "source": "https://framerusercontent.com/images/pZU2Y1cK9U3eCMCmgmvYw1xtMUM.jpg",
+      "alt": "Old barrels racked along the cellar wall",
+      "file": "/templates/noirei/assets/pZU2Y1cK9U3eCMCmgmvYw1xtMUM.jpg",
+      "download": "https://framerusercontent.com/images/pZU2Y1cK9U3eCMCmgmvYw1xtMUM.jpg?scale-down-to=1600",
+      "bytes": 429665,
+      "sha256": "627b8ac85c8f48baeebebcf4eab216f5c68627c535192b7fca14b9b52b8f5e33"
+    },
+    {
+      "source": "https://framerusercontent.com/images/qetrpudwSDAD7FiUAv201EEMYy4.jpg",
+      "alt": "The villa's sitting room, a chandelier above a sofa and armchairs",
+      "file": "/templates/noirei/assets/qetrpudwSDAD7FiUAv201EEMYy4.jpg",
+      "download": "https://framerusercontent.com/images/qetrpudwSDAD7FiUAv201EEMYy4.jpg?scale-down-to=1600",
+      "bytes": 285225,
+      "sha256": "48ac87a82d4ada3eb05c54fc21991665ceec7be669728740282e8720cf92715b"
+    },
+    {
+      "source": "https://framerusercontent.com/images/rdYhUpa0wjeT6UEkmmyg9T1PR6w.jpg",
+      "alt": "A freestanding bath beside a tall window",
+      "file": "/templates/noirei/assets/rdYhUpa0wjeT6UEkmmyg9T1PR6w.jpg",
+      "download": "https://framerusercontent.com/images/rdYhUpa0wjeT6UEkmmyg9T1PR6w.jpg?scale-down-to=1600",
+      "bytes": 164387,
+      "sha256": "e43350646be5836cd2dc731655f657c99ab7b88f839c86f1e47e6e05d130584d"
+    },
+    {
+      "source": "https://framerusercontent.com/images/rjFxOVzedJVq6MxkRVluqtwlpsY.jpg",
+      "alt": "A long glass living room facing the lake and the mountains",
+      "file": "/templates/noirei/assets/rjFxOVzedJVq6MxkRVluqtwlpsY.jpg",
+      "download": "https://framerusercontent.com/images/rjFxOVzedJVq6MxkRVluqtwlpsY.jpg?scale-down-to=1600",
+      "bytes": 384345,
+      "sha256": "4424818bc84e428f3a114d6614bfc153ebd0f2a227038eedb525e78ec947d82f"
+    },
+    {
+      "source": "https://framerusercontent.com/images/RxQa10RFK873k6EQpBt9FojCY.jpg",
+      "alt": "Oak barrels stacked in the dark cellar",
+      "file": "/templates/noirei/assets/RxQa10RFK873k6EQpBt9FojCY.jpg",
+      "download": "https://framerusercontent.com/images/RxQa10RFK873k6EQpBt9FojCY.jpg?scale-down-to=1600",
+      "bytes": 198440,
+      "sha256": "519e2316f1501caaa1a3eb6f417d994a0b610d3b146940dc95d0bde94ad34ba3"
+    },
+    {
+      "source": "https://framerusercontent.com/images/SAHT3xhVjrAX10hej70QQmceXI.jpg",
+      "alt": "The hotel boat moored at the pier",
+      "file": "/templates/noirei/assets/SAHT3xhVjrAX10hej70QQmceXI.jpg",
+      "download": "https://framerusercontent.com/images/SAHT3xhVjrAX10hej70QQmceXI.jpg?scale-down-to=1600",
+      "bytes": 423430,
+      "sha256": "587b5309833c02eaf69cbf4cc5736525b0728b7002ecf11133e83ef53b62ca8f"
+    },
+    {
+      "source": "https://framerusercontent.com/images/SQ4oQD8FVpdW3hlWdwMeiJnYIA.jpg",
+      "alt": "A lakeside village at dusk with lights on the water",
+      "file": "/templates/noirei/assets/SQ4oQD8FVpdW3hlWdwMeiJnYIA.jpg",
+      "download": "https://framerusercontent.com/images/SQ4oQD8FVpdW3hlWdwMeiJnYIA.jpg?scale-down-to=1600",
+      "bytes": 374703,
+      "sha256": "b154d2df3412c3723fa0f53a1465a7d2e84f0599c4c282daf63f1771330c89ef"
+    },
+    {
+      "source": "https://framerusercontent.com/images/tcBLqftjMqorQ3iJyN880KUSkpQ.jpg",
+      "alt": "A villa on a lake shore surrounded by trees and mountains in Lake Como",
+      "file": "/templates/noirei/assets/tcBLqftjMqorQ3iJyN880KUSkpQ.jpg",
+      "download": "https://framerusercontent.com/images/tcBLqftjMqorQ3iJyN880KUSkpQ.jpg?scale-down-to=1600",
+      "bytes": 347999,
+      "sha256": "288d953a64cff106de846d1d0911d78ba19764d3e99ca41181890208e0ab615f"
+    },
+    {
+      "source": "https://framerusercontent.com/images/ugBPhIjdhBRxfjpYkXwzUoJiFA.jpg",
+      "alt": "A wooden jetty on the lake in daylight",
+      "file": "/templates/noirei/assets/ugBPhIjdhBRxfjpYkXwzUoJiFA.jpg",
+      "download": "https://framerusercontent.com/images/ugBPhIjdhBRxfjpYkXwzUoJiFA.jpg?scale-down-to=1600",
+      "bytes": 253520,
+      "sha256": "280cc386cc06fcf60059e8b9a0806b6a55e01145fae2cf7b1f12c9aef019bdcb"
+    },
+    {
+      "source": "https://framerusercontent.com/images/vRUGcgEMpqwJ5nYqYOWmikHUEi8.jpg",
+      "alt": "Empty dock",
+      "file": "/templates/noirei/assets/vRUGcgEMpqwJ5nYqYOWmikHUEi8.jpg",
+      "download": "https://framerusercontent.com/images/vRUGcgEMpqwJ5nYqYOWmikHUEi8.jpg?scale-down-to=1600",
+      "bytes": 389768,
+      "sha256": "92951ea2c1f835bbdae036e04ab444e4f0d45f7065397221bc072b904057e346"
+    },
+    {
+      "source": "https://framerusercontent.com/images/wGC265eMX9A1UxTqIIVSBODfQfc.jpg",
+      "alt": "",
+      "file": "/templates/noirei/assets/wGC265eMX9A1UxTqIIVSBODfQfc.jpg",
+      "download": "https://framerusercontent.com/images/wGC265eMX9A1UxTqIIVSBODfQfc.jpg?scale-down-to=1600",
+      "bytes": 362858,
+      "sha256": "8e0c55659940001dd20b3007d82b3b7fa5175af16d0cb057364b3f5cad3dd3ca"
+    },
+    {
+      "source": "https://framerusercontent.com/images/xXlmpH6LBTUwdpfMRG1bb3roFDk.jpg",
+      "alt": "The living room's antique furniture and the view over the water",
+      "file": "/templates/noirei/assets/xXlmpH6LBTUwdpfMRG1bb3roFDk.jpg",
+      "download": "https://framerusercontent.com/images/xXlmpH6LBTUwdpfMRG1bb3roFDk.jpg?scale-down-to=1600",
+      "bytes": 428775,
+      "sha256": "44a8f68b2495d5ecaea232b07c008a2556c2acdd407fc656577cfa33aece924e"
+    },
+    {
+      "source": "https://framerusercontent.com/images/ZKJCWFs4RbmdzYLWNrIn9k9j074.jpg",
+      "alt": "A chair and table on the balcony above the lake",
+      "file": "/templates/noirei/assets/ZKJCWFs4RbmdzYLWNrIn9k9j074.jpg",
+      "download": "https://framerusercontent.com/images/ZKJCWFs4RbmdzYLWNrIn9k9j074.jpg?scale-down-to=1600",
+      "bytes": 327795,
+      "sha256": "c8da4d3990da9628075a419f9a6df3c48fdfa4d1a3058928b60714eda5538c74"
+    },
+    {
+      "source": "https://framerusercontent.com/images/zukugWLcjgLISe4CFWbpc9Nm6M.jpg",
+      "alt": "Autumn path covered in fallen leaves with trees",
+      "file": "/templates/noirei/assets/zukugWLcjgLISe4CFWbpc9Nm6M.jpg",
+      "download": "https://framerusercontent.com/images/zukugWLcjgLISe4CFWbpc9Nm6M.jpg?scale-down-to=1600",
+      "bytes": 776742,
+      "sha256": "99570e0200e6255c46a136d8ffbaa440ef42acde4df192b55daea12c295a32a1"
+    }
+  ],
+  "fonts": {
+    "source": "/styles/brand-fonts.css",
+    "families": [
+      "Weelume MiSans 400/700",
+      "Weelume Poppins 400/600/700"
+    ],
+    "license": "沿用项目本地字体及许可记录"
+  },
+  "license": "源站公开展示未提供素材商业再分发授权；仅作参考模板演示，交付或商用前确认授权或替换。"
+}

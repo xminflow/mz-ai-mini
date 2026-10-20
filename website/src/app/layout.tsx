@@ -1,30 +1,8 @@
 import type { Metadata } from 'next'
-import localFont from 'next/font/local'
+import { headers } from 'next/headers'
 import Script from 'next/script'
+import { ThemePageTransition } from '@/features/site-navigation/ThemePageTransition'
 import './globals.css'
-
-/**
- * 首页 Hero 的阿里巴巴普惠体，两个字重各自子集到只剩用到的那几十个字，
- * 合计不到 12KB——全量字库单字重约 9MB，不子集不可能上线。
- *
- * 只给 Hero 用：按钮、导航、正文这些地方文案会变，无法预先子集，仍走系统字体栈。
- *
- * 改了 Hero 文案就必须重跑 scripts/subset-hero-fonts.sh，否则新字不在子集里，
- * 会静默掉回微软雅黑，表现为「个别字忽然变了个样」。
- */
-const puhuitiTitle = localFont({
-  src: './fonts/puhuiti-title.woff2',
-  weight: '700',
-  display: 'swap',
-  variable: '--font-puhuiti-title',
-})
-
-const puhuitiSub = localFont({
-  src: './fonts/puhuiti-sub.woff2',
-  weight: '500',
-  display: 'swap',
-  variable: '--font-puhuiti-sub',
-})
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.trim() || 'https://weelume.com'
 const OG_IMAGE_PATH = '/og/cover.png'
@@ -137,12 +115,14 @@ const WEBSITE_JSON_LD = {
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = (await headers()).get('x-site-locale') === 'en' ? 'en' : 'zh-CN'
   const isProd = process.env.NODE_ENV === 'production'
   return (
     <html
-      lang="zh-CN"
-      className={`scroll-smooth ${puhuitiTitle.variable} ${puhuitiSub.variable}`}
+      lang={locale}
+      data-scroll-behavior="smooth"
+      className="scroll-smooth"
     >
       <head>
         <script
@@ -151,7 +131,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSON_LD) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({ ...WEBSITE_JSON_LD, inLanguage: ['zh-CN', 'en'] }) }}
         />
       </head>
       {isProd && (
@@ -165,7 +145,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 })();`}
         </Script>
       )}
-      <body className="relative min-h-screen bg-paper font-sans text-graphite">{children}</body>
+      <body className="relative min-h-screen bg-paper font-sans text-graphite"><ThemePageTransition />{children}</body>
     </html>
   )
 }

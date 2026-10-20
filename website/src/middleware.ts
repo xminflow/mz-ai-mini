@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { isTemplatesModuleEnabled } from '@/features/site-templates/config'
 
-// 官网当前只对外开放首页，其余路径统一 307 回首页。页面与组件代码均保留未删。
+// 官网当前开放中英文首页，其余路径统一 307 回首页。页面与组件代码均保留未删。
 //
 // 恢复某个板块时：
 //   1. 把它的路径前缀加进 PUBLIC_PATH_PREFIXES，例如 '/library'
@@ -15,26 +15,30 @@ import { isTemplatesModuleEnabled } from '@/features/site-templates/config'
 //
 // 这里在模块顶层求值，即每个 middleware 冷启动只算一次。改了环境变量必须重启 dev 才生效。
 //
-// 官网自身的白名单条目（目前只有 '/'）与模板模块的白名单条目分开维护、再拼接，
+// 官网自身的白名单条目（'/' 与 '/en' 精确匹配）与模板模块的白名单条目分开维护、再拼接，
 // 不共用同一个三元分支：避免恢复/关闭某个板块时需要同时改两支，漏改一支会静默丢条目。
 // /cases 与 /templates 共用同一个开关，不新增第二个门禁：
 // 前者是模板模块对外的陈列面，后者是内部调试用的工作台，两者要么一起可达要么一起消失。
 const TEMPLATE_PATH_PREFIXES: string[] = isTemplatesModuleEnabled()
   ? ['/templates', '/cases']
   : []
-const PUBLIC_PATH_PREFIXES: string[] = ['/', ...TEMPLATE_PATH_PREFIXES]
+const PUBLIC_PATH_PREFIXES: string[] = ['/', '/en', ...TEMPLATE_PATH_PREFIXES]
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATH_PREFIXES.some((prefix) => {
     // '/' 只按精确匹配，否则会把所有路径都放行
-    if (prefix === '/') return pathname === '/'
+    if (prefix === '/' || prefix === '/en') return pathname === prefix
     return pathname === prefix || pathname.startsWith(`${prefix}/`)
   })
 }
 
 export function middleware(request: NextRequest) {
   if (isPublicPath(request.nextUrl.pathname)) {
-    return NextResponse.next()
+    // 覆盖客户端同名头，确保初次服务端渲染的文档语言只由实际路径决定。
+    const requestHeaders = new Headers(request.headers)
+    const isEnglishPath = request.nextUrl.pathname === '/en' || /^\/templates\/[^/]+\/[^/]+\/en(?:\/|$)/.test(request.nextUrl.pathname)
+    requestHeaders.set('x-site-locale', isEnglishPath ? 'en' : 'zh')
+    return NextResponse.next({ request: { headers: requestHeaders } })
   }
 
   // Next.js 15 的 middleware adapter 会用 new URL(Location) 解析响应头，相对路径会抛 Invalid URL → 500。

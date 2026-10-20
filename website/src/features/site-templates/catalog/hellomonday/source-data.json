@@ -1,0 +1,1373 @@
+{
+  "reference": "https://www.hellomonday.com/",
+  "projects": [
+    {
+      "path": "/work/signs",
+      "title": "Signs - Expanding access to language",
+      "tags": "Products,Experiences,Branding,Platform",
+      "image": "/templates/hellomonday/assets/2884c39cf27630.webp",
+      "landscape": "/templates/hellomonday/assets/de72353e0569b1.webp",
+      "id": "signs",
+      "gallery": [
+        "/templates/hellomonday/assets/2884c39cf27630.webp",
+        "/templates/hellomonday/assets/823a131636523f.webp",
+        "/templates/hellomonday/assets/1533ce7fb3d504.webp",
+        "/templates/hellomonday/assets/e9f07bf5faee83.webp",
+        "/templates/hellomonday/assets/52e64653ab91f1.webp"
+      ]
+    },
+    {
+      "path": "/work/gemini-developer-competition",
+      "title": "Google - Gemini Developer Competition",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/0d4415719c12a4.webp",
+      "landscape": "/templates/hellomonday/assets/b383e8cc03fdc5.webp",
+      "id": "gemini-developer-competition",
+      "gallery": [
+        "/templates/hellomonday/assets/4c1e255cd41545.webp",
+        "/templates/hellomonday/assets/99cef347e52668.webp",
+        "/templates/hellomonday/assets/304350e1851de0.webp",
+        "/templates/hellomonday/assets/e3e3692c5e36bf.webp"
+      ]
+    },
+    {
+      "path": "/work/zipline",
+      "title": "The best delivery experience not on earth.",
+      "tags": "Platform,Experiences",
+      "image": "/templates/hellomonday/assets/601ae84cefcb46.webp",
+      "landscape": "/templates/hellomonday/assets/891a514ed649b6.webp",
+      "id": "zipline",
+      "gallery": [
+        "/templates/hellomonday/assets/89d3ecd0c8ab58.webp",
+        "/templates/hellomonday/assets/55b747643aa181.webp",
+        "/templates/hellomonday/assets/b9ebfa6550dbb4.webp",
+        "/templates/hellomonday/assets/7de8eb482f899b.webp",
+        "/templates/hellomonday/assets/0cc32fcc42d96c.webp"
+      ]
+    },
+    {
+      "path": "/work/gemini",
+      "title": "Gemini - AI for Every Developer",
+      "tags": "Experiences,Branding,Platform",
+      "image": "/templates/hellomonday/assets/af10017adc891c.webp",
+      "landscape": "/templates/hellomonday/assets/764a8d3250d390.webp",
+      "id": "gemini",
+      "gallery": [
+        "/templates/hellomonday/assets/1201942cc1b482.webp",
+        "/templates/hellomonday/assets/b53c2b1684415d.webp",
+        "/templates/hellomonday/assets/13340845991dd1.webp",
+        "/templates/hellomonday/assets/22cfdd58353470.webp",
+        "/templates/hellomonday/assets/8ee361f0f2f4f9.webp"
+      ]
+    },
+    {
+      "path": "/work/ramasjang-krea-app",
+      "title": "Ramasjang Krea App",
+      "tags": "Products",
+      "image": "/templates/hellomonday/assets/33191e6d5eca20.webp",
+      "landscape": "/templates/hellomonday/assets/7c8daf0eb997f2.webp",
+      "id": "ramasjang-krea-app",
+      "gallery": [
+        "/templates/hellomonday/assets/d3e25edd45b21a.webp",
+        "/templates/hellomonday/assets/e61d283a021f86.webp",
+        "/templates/hellomonday/assets/ba8987813e6f4a.webp"
+      ]
+    },
+    {
+      "path": "/work/strava-year-in-sport-2023",
+      "title": "Strava - Year In Sport",
+      "tags": "Platform,Products,Experiences",
+      "image": "/templates/hellomonday/assets/b0b6551803ea3a.webp",
+      "landscape": "/templates/hellomonday/assets/2a6cc5f9a01d37.webp",
+      "id": "strava-year-in-sport-2023",
+      "gallery": [
+        "/templates/hellomonday/assets/251f5273cd9ce5.webp"
+      ]
+    },
+    {
+      "path": "/work/the-web-can-do-what",
+      "title": "The Web Can Do What?! with Google",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/69abc9bddd2a51.webp",
+      "landscape": "/templates/hellomonday/assets/5ec0e8a46d9a96.webp",
+      "id": "the-web-can-do-what",
+      "gallery": []
+    },
+    {
+      "path": "/work/bang&olufsen",
+      "title": "Bang & Olufsen - See yourself in Sound",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/9f07b4d8d74b86.webp",
+      "landscape": "/templates/hellomonday/assets/8278c403ea38ca.webp",
+      "id": "bang-and-olufsen",
+      "gallery": [
+        "/templates/hellomonday/assets/6761265394ea6a.webp",
+        "/templates/hellomonday/assets/651196656028b5.webp",
+        "/templates/hellomonday/assets/7534440d9a1d43.webp"
+      ]
+    },
+    {
+      "path": "/work/fingerspelling",
+      "title": "Fingerspelling with Machine Learning",
+      "tags": "Experiences,Products",
+      "image": "/templates/hellomonday/assets/b0969b72020c54.webp",
+      "landscape": "/templates/hellomonday/assets/6ffdf84b7ddb95.webp",
+      "id": "fingerspelling",
+      "gallery": [
+        "/templates/hellomonday/assets/5567ea1d18159b.webp"
+      ]
+    },
+    {
+      "path": "/work/universal-music-for-creators",
+      "title": "Universal Music for Creators - Putting Creators in the Spotlight",
+      "tags": "Branding",
+      "image": "/templates/hellomonday/assets/edc727ef4e3fa8.webp",
+      "landscape": "/templates/hellomonday/assets/7700561cc4399d.webp",
+      "id": "universal-music-for-creators",
+      "gallery": [
+        "/templates/hellomonday/assets/a976dbf6dd0864.webp",
+        "/templates/hellomonday/assets/cff5d42cf26f40.webp",
+        "/templates/hellomonday/assets/44e159e1831af0.webp",
+        "/templates/hellomonday/assets/bd36979057ba9f.webp"
+      ]
+    },
+    {
+      "path": "/work/simplethings",
+      "title": "The best things are the Simple Things",
+      "tags": "Branding,E-commerce,Platform",
+      "image": "/templates/hellomonday/assets/28cde910509051.webp",
+      "landscape": "/templates/hellomonday/assets/22f5c38978f7e2.webp",
+      "id": "simplethings",
+      "gallery": [
+        "/templates/hellomonday/assets/5015b28de12328.webp",
+        "/templates/hellomonday/assets/407890a99ed684.webp",
+        "/templates/hellomonday/assets/4795a265edc539.webp",
+        "/templates/hellomonday/assets/35c8c0ba640e6e.webp",
+        "/templates/hellomonday/assets/084bed92c7dc51.webp"
+      ]
+    },
+    {
+      "path": "/work/netflix-kids-and-family",
+      "title": "A delightful, welcoming, and adventurous identity for Netflix",
+      "tags": "Branding",
+      "image": "/templates/hellomonday/assets/f04a06d07bc905.webp",
+      "landscape": "/templates/hellomonday/assets/90b3e7e5105ebe.webp",
+      "id": "netflix-kids-and-family",
+      "gallery": [
+        "/templates/hellomonday/assets/a339b8e8d79a8a.webp",
+        "/templates/hellomonday/assets/d85bf107e5a5ec.webp",
+        "/templates/hellomonday/assets/36f48c9d0f1c04.webp",
+        "/templates/hellomonday/assets/71cbfc03110049.webp",
+        "/templates/hellomonday/assets/db12caf54c6233.webp"
+      ]
+    },
+    {
+      "path": "/work/gemini-apps",
+      "title": "Google Gemini - Generative AI Apps",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/0e04eee320114e.webp",
+      "landscape": "/templates/hellomonday/assets/e496d9f406664c.webp",
+      "id": "gemini-apps",
+      "gallery": [
+        "/templates/hellomonday/assets/df34cb7e51c104.webp",
+        "/templates/hellomonday/assets/3656c5b6b859c8.webp"
+      ]
+    },
+    {
+      "path": "/work/undo-the-firewall",
+      "title": "Undo the Firewall - Bring Independent News to Russians",
+      "tags": "Experiences,Products",
+      "image": "/templates/hellomonday/assets/3d7e9e45d7bf4c.webp",
+      "landscape": "/templates/hellomonday/assets/0e9171b0fd25ae.webp",
+      "id": "undo-the-firewall",
+      "gallery": [
+        "/templates/hellomonday/assets/cb3556a5d18d4c.webp"
+      ]
+    },
+    {
+      "path": "/work/aurorasolar",
+      "title": "Aurora Solar - Hitting fast-forward on the solar future",
+      "tags": "Branding",
+      "image": "/templates/hellomonday/assets/8bff863dc8806c.webp",
+      "landscape": "/templates/hellomonday/assets/4422f2026e8f1e.webp",
+      "id": "aurorasolar",
+      "gallery": [
+        "/templates/hellomonday/assets/9186396b9fdfb4.webp",
+        "/templates/hellomonday/assets/b865370509592a.webp",
+        "/templates/hellomonday/assets/613d2c03114357.webp",
+        "/templates/hellomonday/assets/1170bbafb41b4a.webp",
+        "/templates/hellomonday/assets/a994fcfe0c80bc.webp"
+      ]
+    },
+    {
+      "path": "/work/strava-2022",
+      "title": "Strava - Year In Sport",
+      "tags": "Products,Experiences,Platform",
+      "image": "/templates/hellomonday/assets/61e8ed351c003d.webp",
+      "landscape": "/templates/hellomonday/assets/ad4fd0cec98325.webp",
+      "id": "strava-2022",
+      "gallery": [
+        "/templates/hellomonday/assets/643a49be4b6551.webp"
+      ]
+    },
+    {
+      "path": "/work/staratlas",
+      "title": "Star Atlas - Experience a virtual gaming metaverse",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/eac12932b1618e.webp",
+      "landscape": "/templates/hellomonday/assets/a30c1529d893bb.webp",
+      "id": "staratlas",
+      "gallery": []
+    },
+    {
+      "path": "/work/the-bartlett-school-of-architecture-summer-show-2020",
+      "title": "A state-of-the-art virtual exhibition",
+      "tags": "Experiences,Platform",
+      "image": "/templates/hellomonday/assets/8afee1eb55e73d.webp",
+      "landscape": "/templates/hellomonday/assets/d4f98858e4b94f.webp",
+      "id": "the-bartlett-school-of-architecture-summer-show-2020",
+      "gallery": [
+        "/templates/hellomonday/assets/8062fbb66d5d11.webp",
+        "/templates/hellomonday/assets/30382261e1aef0.webp",
+        "/templates/hellomonday/assets/7e593cba54dc6e.webp"
+      ]
+    },
+    {
+      "path": "/work/dig-cloud-castles",
+      "title": "DIG: Cloud Castles",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/a56aadff4d57a0.webp",
+      "landscape": "/templates/hellomonday/assets/c520ec8fcfb2c2.webp",
+      "id": "dig-cloud-castles",
+      "gallery": [
+        "/templates/hellomonday/assets/e38081266a49ef.webp",
+        "/templates/hellomonday/assets/1f304fba9466ed.webp",
+        "/templates/hellomonday/assets/a30325850b0885.webp",
+        "/templates/hellomonday/assets/0f608dff53788e.webp",
+        "/templates/hellomonday/assets/7a7f7e7143eb20.webp"
+      ]
+    },
+    {
+      "path": "/work/google-kids-space-illustrations",
+      "title": "Illustrating Google Kids Space",
+      "tags": "Branding",
+      "image": "/templates/hellomonday/assets/961b36246411a2.webp",
+      "landscape": "/templates/hellomonday/assets/f9e9466b04f469.webp",
+      "id": "google-kids-space-illustrations",
+      "gallery": [
+        "/templates/hellomonday/assets/295d3d0811848e.webp",
+        "/templates/hellomonday/assets/fde7399e5be7c6.webp"
+      ]
+    },
+    {
+      "path": "/work/metamansions",
+      "title": "Meta Mansions - Powered by KEYS Token.",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/9c10eb3eef9940.webp",
+      "landscape": "/templates/hellomonday/assets/50e2df41b79ed8.webp",
+      "id": "metamansions",
+      "gallery": [
+        "/templates/hellomonday/assets/30c618291dd74d.webp",
+        "/templates/hellomonday/assets/1f299b3142cdea.webp",
+        "/templates/hellomonday/assets/ae2bbf8b0a6dcc.webp",
+        "/templates/hellomonday/assets/9a2be14e019330.webp",
+        "/templates/hellomonday/assets/ab679251687dc7.webp"
+      ]
+    },
+    {
+      "path": "/work/how-to-talk-to-white-kids-about-racism",
+      "title": "How to Talk to White Kids About Racism",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/f3a9292f853b40.webp",
+      "landscape": "/templates/hellomonday/assets/499fa1573c709c.webp",
+      "id": "how-to-talk-to-white-kids-about-racism",
+      "gallery": [
+        "/templates/hellomonday/assets/b86384218e5ae1.webp",
+        "/templates/hellomonday/assets/39e8698d00e21a.webp",
+        "/templates/hellomonday/assets/ae24c1a0b6b64c.webp",
+        "/templates/hellomonday/assets/c3ef3e5744674e.webp",
+        "/templates/hellomonday/assets/ca477a1681c6d7.webp"
+      ]
+    },
+    {
+      "path": "/work/alan-menken",
+      "title": "Alan Menken - A Whole New World",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/c6d701ce0f0c2f.webp",
+      "landscape": "/templates/hellomonday/assets/45a2c92a34fd96.webp",
+      "id": "alan-menken",
+      "gallery": [
+        "/templates/hellomonday/assets/06af2ea9d4831e.webp",
+        "/templates/hellomonday/assets/81ba5878939c9c.webp"
+      ]
+    },
+    {
+      "path": "/work/google-kids-space-branding",
+      "title": "Designing the Kids Space Universe",
+      "tags": "Branding,Products",
+      "image": "/templates/hellomonday/assets/38701e49ae10ed.webp",
+      "landscape": "/templates/hellomonday/assets/9aa4f702ffdf27.webp",
+      "id": "google-kids-space-branding",
+      "gallery": [
+        "/templates/hellomonday/assets/918d39cb272c4a.webp",
+        "/templates/hellomonday/assets/77b8627b3a4d0f.webp",
+        "/templates/hellomonday/assets/b7dd2797fb10fe.webp",
+        "/templates/hellomonday/assets/9973f12508953f.webp",
+        "/templates/hellomonday/assets/f84d3c254edd46.webp"
+      ]
+    },
+    {
+      "path": "/work/google-most-searched",
+      "title": "Google - Celebrating the Most Searched in History",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/5ca966665fafe2.webp",
+      "landscape": "/templates/hellomonday/assets/b19322184393ce.webp",
+      "id": "google-most-searched",
+      "gallery": [
+        "/templates/hellomonday/assets/f738b044a5fd6a.webp",
+        "/templates/hellomonday/assets/7fb05d320cbdfa.webp",
+        "/templates/hellomonday/assets/67ca780c72db53.webp",
+        "/templates/hellomonday/assets/3e8ff50696fc9a.webp",
+        "/templates/hellomonday/assets/b2e796f05c5f6f.webp"
+      ]
+    },
+    {
+      "path": "/work/erika-senft-miller",
+      "title": "Artist. Creator. Performer. Collaborator. Human.",
+      "tags": "Experiences,Branding",
+      "image": "/templates/hellomonday/assets/d531dfc8053cf0.webp",
+      "landscape": "/templates/hellomonday/assets/3be37fa36dbdcd.webp",
+      "id": "erika-senft-miller",
+      "gallery": [
+        "/templates/hellomonday/assets/67df9f6e1242cf.webp",
+        "/templates/hellomonday/assets/ae24f8a28a6536.webp",
+        "/templates/hellomonday/assets/b06706fbfb6388.webp",
+        "/templates/hellomonday/assets/8238c313390cc3.webp",
+        "/templates/hellomonday/assets/6c3e38bc182cf4.webp"
+      ]
+    },
+    {
+      "path": "/work/oppo",
+      "title": "OPPO - A unified design system for a truly global brand",
+      "tags": "Platform,Branding",
+      "image": "/templates/hellomonday/assets/4dd23c3df25189.webp",
+      "landscape": "/templates/hellomonday/assets/a7fbf1deef1aee.webp",
+      "id": "oppo",
+      "gallery": [
+        "/templates/hellomonday/assets/4dd23c3df25189.webp",
+        "/templates/hellomonday/assets/db6329bded7aa8.webp",
+        "/templates/hellomonday/assets/4a6ef2cf49b986.webp",
+        "/templates/hellomonday/assets/eca39d9e17d9b4.webp",
+        "/templates/hellomonday/assets/8424bcd88db7b7.webp"
+      ]
+    },
+    {
+      "path": "/work/soestrene-grene",
+      "title": "Søstrene Grene - Helping a worldwide retailer go digital",
+      "tags": "E-commerce,Platform",
+      "image": "/templates/hellomonday/assets/dbbf6b08066036.webp",
+      "landscape": "/templates/hellomonday/assets/bb2a73fa3a2ea0.webp",
+      "id": "soestrene-grene",
+      "gallery": [
+        "/templates/hellomonday/assets/d09d00223252fb.webp",
+        "/templates/hellomonday/assets/7d54795eda4115.webp",
+        "/templates/hellomonday/assets/803e6bb97a94e3.webp",
+        "/templates/hellomonday/assets/4325f4085a533c.webp",
+        "/templates/hellomonday/assets/93406971a15433.webp"
+      ]
+    },
+    {
+      "path": "/work/wongle",
+      "title": "Wongle - An alphabet adventure",
+      "tags": "Products",
+      "image": "/templates/hellomonday/assets/a22a6417378218.webp",
+      "landscape": "/templates/hellomonday/assets/168f0c4f0dd38e.webp",
+      "id": "wongle",
+      "gallery": [
+        "/templates/hellomonday/assets/a22a6417378218.webp",
+        "/templates/hellomonday/assets/8ffa83da62c9f7.webp",
+        "/templates/hellomonday/assets/ca095811f4ce66.webp"
+      ]
+    },
+    {
+      "path": "/work/lyft",
+      "title": "Lyft - America is an idea. Not a geography.",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/a9e6e29e84901f.webp",
+      "landscape": "/templates/hellomonday/assets/ca1d0b4f7e75ca.webp",
+      "id": "lyft",
+      "gallery": [
+        "/templates/hellomonday/assets/bb3834af6419df.webp",
+        "/templates/hellomonday/assets/19af904a84e152.webp",
+        "/templates/hellomonday/assets/88de295d352774.webp",
+        "/templates/hellomonday/assets/96a3f4f056ec50.webp"
+      ]
+    },
+    {
+      "path": "/work/nomo",
+      "title": "T-Mobile’s little device that sets you free",
+      "tags": "Products",
+      "image": "/templates/hellomonday/assets/97d3f1dc62e336.webp",
+      "landscape": "/templates/hellomonday/assets/c820b2ddca7498.webp",
+      "id": "nomo",
+      "gallery": [
+        "/templates/hellomonday/assets/2a10ee4ff75ce7.webp",
+        "/templates/hellomonday/assets/cd9c88cbafa71c.webp",
+        "/templates/hellomonday/assets/26fa25548f5a01.webp",
+        "/templates/hellomonday/assets/50f00e147ee3c0.webp",
+        "/templates/hellomonday/assets/cc87c96373efa1.webp"
+      ]
+    },
+    {
+      "path": "/work/bearaby",
+      "title": "Bearaby - Weighted bedding reinvented",
+      "tags": "Branding",
+      "image": "/templates/hellomonday/assets/b42670b5709917.webp",
+      "landscape": "/templates/hellomonday/assets/e561ab32d40335.webp",
+      "id": "bearaby",
+      "gallery": [
+        "/templates/hellomonday/assets/be7d3356d02340.webp",
+        "/templates/hellomonday/assets/eba5e8153966ed.webp",
+        "/templates/hellomonday/assets/01cd790ceefb17.webp",
+        "/templates/hellomonday/assets/6ed78c2e596bda.webp",
+        "/templates/hellomonday/assets/aeda13a20f64bb.webp"
+      ]
+    },
+    {
+      "path": "/work/jeans-for-refugees",
+      "title": "Jeans for Refugees - Inspiring positive change",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/43c11217d0c875.webp",
+      "landscape": "/templates/hellomonday/assets/de29ca2b7b5fe9.webp",
+      "id": "jeans-for-refugees",
+      "gallery": [
+        "/templates/hellomonday/assets/b4594ff4547bb9.webp",
+        "/templates/hellomonday/assets/a6ce6c819586b0.webp",
+        "/templates/hellomonday/assets/f205d9e79022aa.webp",
+        "/templates/hellomonday/assets/a1f1236820f1d0.webp"
+      ]
+    },
+    {
+      "path": "/work/google-search-on",
+      "title": "Google’s Search On - A series of inspiring stories",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/cbac683a4e5d18.webp",
+      "landscape": "/templates/hellomonday/assets/66fce9bb2e37d1.webp",
+      "id": "google-search-on",
+      "gallery": [
+        "/templates/hellomonday/assets/b448a9264118ed.webp",
+        "/templates/hellomonday/assets/98830839aff4ca.webp",
+        "/templates/hellomonday/assets/3f8f824d169338.webp",
+        "/templates/hellomonday/assets/446d798dd04bab.webp",
+        "/templates/hellomonday/assets/b88fd4a4e64747.webp"
+      ]
+    },
+    {
+      "path": "/work/residente-branding",
+      "title": "Residente - Reimagining an artist’s identity",
+      "tags": "Branding",
+      "image": "/templates/hellomonday/assets/2a8d3068bc02eb.webp",
+      "landscape": "/templates/hellomonday/assets/c14be15a4dc1c7.webp",
+      "id": "residente-branding",
+      "gallery": [
+        "/templates/hellomonday/assets/925211e03123a4.webp",
+        "/templates/hellomonday/assets/0def18b7e112f3.webp",
+        "/templates/hellomonday/assets/763af3397c58d2.webp",
+        "/templates/hellomonday/assets/96cffd76f169c6.webp",
+        "/templates/hellomonday/assets/869c9ddc46036f.webp"
+      ]
+    },
+    {
+      "path": "/work/sideways-dictionary",
+      "title": "Google Jigsaw - A tool to explain technology",
+      "tags": "Products",
+      "image": "/templates/hellomonday/assets/d002fb09216ca1.webp",
+      "landscape": "/templates/hellomonday/assets/dfcb76ed4f905f.webp",
+      "id": "sideways-dictionary",
+      "gallery": [
+        "/templates/hellomonday/assets/b3107fb0545de7.webp",
+        "/templates/hellomonday/assets/3466faf67fae35.webp"
+      ]
+    },
+    {
+      "path": "/work/epos-branding-meets-ecommerce",
+      "title": "EPOS – branding meets ecommerce",
+      "tags": "Branding,Platform,E-commerce",
+      "image": "/templates/hellomonday/assets/63fd0b87e4a97e.webp",
+      "landscape": "/templates/hellomonday/assets/d05453b31cc0a3.webp",
+      "id": "epos-branding-meets-ecommerce",
+      "gallery": [
+        "/templates/hellomonday/assets/8b32bc46a2ebbd.webp",
+        "/templates/hellomonday/assets/ba7b1b61570779.webp",
+        "/templates/hellomonday/assets/efd71832816f5f.webp",
+        "/templates/hellomonday/assets/8b7ece515c88d5.webp"
+      ]
+    },
+    {
+      "path": "/work/youtube-cfc",
+      "title": "YouTube creates a new generation",
+      "tags": "Branding",
+      "image": "/templates/hellomonday/assets/f28f11f916cb72.webp",
+      "landscape": "/templates/hellomonday/assets/3d6ceb547565ce.webp",
+      "id": "youtube-cfc",
+      "gallery": [
+        "/templates/hellomonday/assets/80361bdca8ded4.webp",
+        "/templates/hellomonday/assets/5ae526b93c1d0e.webp",
+        "/templates/hellomonday/assets/2b841df13b6f20.webp",
+        "/templates/hellomonday/assets/4a3f4963fa7fc9.webp",
+        "/templates/hellomonday/assets/4e39474bae7b43.webp"
+      ]
+    },
+    {
+      "path": "/work/driver",
+      "title": "Driver - Identity design for a new cancer crusader",
+      "tags": "Branding",
+      "image": "/templates/hellomonday/assets/7319ab45b8dd87.webp",
+      "landscape": "/templates/hellomonday/assets/de4edaf9aa7963.webp",
+      "id": "driver",
+      "gallery": [
+        "/templates/hellomonday/assets/8b5c2356287683.webp",
+        "/templates/hellomonday/assets/700a0937420a0f.webp",
+        "/templates/hellomonday/assets/fede4851e472d3.webp",
+        "/templates/hellomonday/assets/e1026b5d00c356.webp",
+        "/templates/hellomonday/assets/0a878e1f08f56a.webp"
+      ]
+    },
+    {
+      "path": "/work/moog",
+      "title": "Moog - A platform for the godfather of synthesizers",
+      "tags": "Experiences,Platform",
+      "image": "/templates/hellomonday/assets/829f0c3c927509.webp",
+      "landscape": "/templates/hellomonday/assets/425a507c098df8.webp",
+      "id": "moog",
+      "gallery": [
+        "/templates/hellomonday/assets/74196677017d22.webp",
+        "/templates/hellomonday/assets/18e8fd1ed1a819.webp",
+        "/templates/hellomonday/assets/0245f6e3f28e81.webp",
+        "/templates/hellomonday/assets/5ba72d8e521872.webp",
+        "/templates/hellomonday/assets/3fa4e8d01b240e.webp"
+      ]
+    },
+    {
+      "path": "/work/google-cloud-platform-website",
+      "title": "Google Cloud - A 3D experience",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/8aa50ac8e2d2b4.webp",
+      "landscape": "/templates/hellomonday/assets/a644ec273b5c9a.webp",
+      "id": "google-cloud-platform-website",
+      "gallery": [
+        "/templates/hellomonday/assets/5541076a934660.webp",
+        "/templates/hellomonday/assets/96aac9b7fc57ef.webp",
+        "/templates/hellomonday/assets/c51853822bf064.webp",
+        "/templates/hellomonday/assets/e0438d60b2301d.webp",
+        "/templates/hellomonday/assets/8e88a4a0eb9e20.webp"
+      ]
+    },
+    {
+      "path": "/work/espn-wethefans",
+      "title": "ESPN celebrates super fans of the Chicago Bears",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/a17bf801d81830.webp",
+      "landscape": "/templates/hellomonday/assets/1d458e1933b937.webp",
+      "id": "espn-wethefans",
+      "gallery": [
+        "/templates/hellomonday/assets/a4f484068739fa.webp",
+        "/templates/hellomonday/assets/b3db9ca1725ad7.webp",
+        "/templates/hellomonday/assets/7d4e35723fb6e0.webp",
+        "/templates/hellomonday/assets/444aa2d94c21a6.webp",
+        "/templates/hellomonday/assets/2727ba2c2e737a.webp"
+      ]
+    },
+    {
+      "path": "/work/youtube-kids-02",
+      "title": "Character design for YouTube Kids",
+      "tags": "Branding",
+      "image": "/templates/hellomonday/assets/6e9c698f676bb8.webp",
+      "landscape": "/templates/hellomonday/assets/9cd0870d8fc76e.webp",
+      "id": "youtube-kids-02",
+      "gallery": [
+        "/templates/hellomonday/assets/499cf5f227f5b7.webp",
+        "/templates/hellomonday/assets/3f35669fa50c46.webp",
+        "/templates/hellomonday/assets/217d228ff5ae0c.webp",
+        "/templates/hellomonday/assets/a771e0952404fb.webp",
+        "/templates/hellomonday/assets/bd97ccaf096dfb.webp"
+      ]
+    },
+    {
+      "path": "/work/resilio",
+      "title": "Resilio - A playful new app for stress prevention",
+      "tags": "Branding,Products",
+      "image": "/templates/hellomonday/assets/1319abb4499ae6.webp",
+      "landscape": "/templates/hellomonday/assets/04aa8ddc2fc68e.webp",
+      "id": "resilio",
+      "gallery": [
+        "/templates/hellomonday/assets/4698f4fdab8f06.webp",
+        "/templates/hellomonday/assets/f7f592ccdebced.webp",
+        "/templates/hellomonday/assets/e5a34b2e3b35d2.webp",
+        "/templates/hellomonday/assets/db5c8dca854fb7.webp",
+        "/templates/hellomonday/assets/a16e8df645de46.webp"
+      ]
+    },
+    {
+      "path": "/work/jviews-almost-forgot",
+      "title": "J. Views - A new kind of music video",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/e4665b3b7aac58.webp",
+      "landscape": "/templates/hellomonday/assets/fe14ebba795dee.webp",
+      "id": "jviews-almost-forgot",
+      "gallery": [
+        "/templates/hellomonday/assets/aac000c3443f44.webp",
+        "/templates/hellomonday/assets/e688afe8597de3.webp",
+        "/templates/hellomonday/assets/77b1390125cdb8.webp",
+        "/templates/hellomonday/assets/57afb0eca68b27.webp",
+        "/templates/hellomonday/assets/73a9e86e487e74.webp"
+      ]
+    },
+    {
+      "path": "/work/virunga",
+      "title": "Virunga National Park - Saving the gorillas of Congo",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/e5c650b1ab3ed2.webp",
+      "landscape": "/templates/hellomonday/assets/53af80cc401b0f.webp",
+      "id": "virunga",
+      "gallery": [
+        "/templates/hellomonday/assets/0f0523d0468197.webp",
+        "/templates/hellomonday/assets/407a2ac1742b9f.webp",
+        "/templates/hellomonday/assets/533c2757848ab0.webp",
+        "/templates/hellomonday/assets/cb5cb02c3e2220.webp",
+        "/templates/hellomonday/assets/5fc94c72ec85c5.webp"
+      ]
+    },
+    {
+      "path": "/work/nat-geo",
+      "title": "National Geographic - A bear’s-eye view of Yellowstone",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/8231c4be8fe5ab.webp",
+      "landscape": "/templates/hellomonday/assets/fbb8c69db5fb08.webp",
+      "id": "nat-geo",
+      "gallery": [
+        "/templates/hellomonday/assets/b531c1da1b3cd1.webp",
+        "/templates/hellomonday/assets/b6f8def62128e3.webp",
+        "/templates/hellomonday/assets/640cbbd9c6abcd.webp",
+        "/templates/hellomonday/assets/f3e9d0275d3fe3.webp",
+        "/templates/hellomonday/assets/22dcd0725f9a79.webp"
+      ]
+    },
+    {
+      "path": "/work/headbanger",
+      "title": "Head Banger - an AI experiment",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/9da5204fb11ca3.webp",
+      "landscape": "/templates/hellomonday/assets/b29b71f6e53527.webp",
+      "id": "headbanger",
+      "gallery": [
+        "/templates/hellomonday/assets/9da5204fb11ca3.webp",
+        "/templates/hellomonday/assets/d3194837714267.webp",
+        "/templates/hellomonday/assets/2e442d5a38ea7c.webp"
+      ]
+    },
+    {
+      "path": "/work/essential",
+      "title": "Essential - Founder of Android gives birth to a new brand",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/e13b5e0d9a5759.webp",
+      "landscape": "/templates/hellomonday/assets/81ebca25be8bf5.webp",
+      "id": "essential",
+      "gallery": [
+        "/templates/hellomonday/assets/8738992908238c.webp",
+        "/templates/hellomonday/assets/674a9649fcbce5.webp",
+        "/templates/hellomonday/assets/4d60211431bb77.webp",
+        "/templates/hellomonday/assets/1d6c106697d3ed.webp",
+        "/templates/hellomonday/assets/a944f8d19db774.webp"
+      ]
+    },
+    {
+      "path": "/work/youtube-kids-01",
+      "title": "YouTube’s having a baby!",
+      "tags": "Products,Branding",
+      "image": "/templates/hellomonday/assets/49a3bd5cabce8c.webp",
+      "landscape": "/templates/hellomonday/assets/ac49143c1a251c.webp",
+      "id": "youtube-kids-01",
+      "gallery": [
+        "/templates/hellomonday/assets/2463f15d4fa9b0.webp",
+        "/templates/hellomonday/assets/90235177f881ce.webp",
+        "/templates/hellomonday/assets/872fc967e665be.webp",
+        "/templates/hellomonday/assets/3dc008724fc24f.webp",
+        "/templates/hellomonday/assets/7c3789449e7cc4.webp"
+      ]
+    },
+    {
+      "path": "/work/future-library",
+      "title": "Katie Paterson - The hundred year artwork",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/2e88e5575984ed.webp",
+      "landscape": "/templates/hellomonday/assets/abd44f44677f9d.webp",
+      "id": "future-library",
+      "gallery": [
+        "/templates/hellomonday/assets/5014bb8b3849ea.webp",
+        "/templates/hellomonday/assets/3ff554c458bfcc.webp",
+        "/templates/hellomonday/assets/be66118c195b8c.webp",
+        "/templates/hellomonday/assets/b881eee42dbfe7.webp",
+        "/templates/hellomonday/assets/e4e8a490ed1a5f.webp"
+      ]
+    },
+    {
+      "path": "/work/the-fwa",
+      "title": "Revamping the FWA",
+      "tags": "Products",
+      "image": "/templates/hellomonday/assets/e9163bc372bda3.webp",
+      "landscape": "/templates/hellomonday/assets/1aa210b77c3f70.webp",
+      "id": "the-fwa",
+      "gallery": [
+        "/templates/hellomonday/assets/ba6ccaa1f0c6d1.webp",
+        "/templates/hellomonday/assets/72e979a39b284c.webp",
+        "/templates/hellomonday/assets/3c7ebab7ecf514.webp",
+        "/templates/hellomonday/assets/53cbb4b8af4f93.webp",
+        "/templates/hellomonday/assets/3a40118eadc0e7.webp"
+      ]
+    },
+    {
+      "path": "/work/deshaw",
+      "title": "D.E. Shaw - Finance made innovative & fun",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/d1fd8ee214ea55.webp",
+      "landscape": "/templates/hellomonday/assets/48e3a7ba159381.webp",
+      "id": "deshaw",
+      "gallery": [
+        "/templates/hellomonday/assets/13044590b3d68a.webp",
+        "/templates/hellomonday/assets/b11b6ff08f9637.webp"
+      ]
+    },
+    {
+      "path": "/work/witness-change",
+      "title": "Witness Change - Raising awareness about mental health",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/b5b3f62bca097d.webp",
+      "landscape": "/templates/hellomonday/assets/43d3760dbe12e9.webp",
+      "id": "witness-change",
+      "gallery": [
+        "/templates/hellomonday/assets/acdf17eacdc971.webp",
+        "/templates/hellomonday/assets/27a939b2f5e83a.webp",
+        "/templates/hellomonday/assets/3f9912521f3882.webp",
+        "/templates/hellomonday/assets/149d18129ea4a5.webp",
+        "/templates/hellomonday/assets/8df59f5cb6c329.webp"
+      ]
+    },
+    {
+      "path": "/work/youtubego",
+      "title": "Branding for YouTube Go",
+      "tags": "Branding",
+      "image": "/templates/hellomonday/assets/31e8de2a6da07f.webp",
+      "landscape": "/templates/hellomonday/assets/cbc3bb1f3ced84.webp",
+      "id": "youtubego",
+      "gallery": [
+        "/templates/hellomonday/assets/97c976e27770f9.webp"
+      ]
+    },
+    {
+      "path": "/work/youtube-gaming",
+      "title": "A new brand for YouTube Gaming",
+      "tags": "Branding",
+      "image": "/templates/hellomonday/assets/542b98337fbde7.webp",
+      "landscape": "/templates/hellomonday/assets/8850118496c856.webp",
+      "id": "youtube-gaming",
+      "gallery": [
+        "/templates/hellomonday/assets/36a2cd838d6369.webp",
+        "/templates/hellomonday/assets/b0348660aaf943.webp",
+        "/templates/hellomonday/assets/6ef63c10ee9a1e.webp",
+        "/templates/hellomonday/assets/d072c6f1f416d4.webp",
+        "/templates/hellomonday/assets/9634c6e4fe59f0.webp"
+      ]
+    },
+    {
+      "path": "/work/residente-website",
+      "title": "Documenting a global journey with Residente",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/54ae6dacd438b3.webp",
+      "landscape": "/templates/hellomonday/assets/2750244ba18c7e.webp",
+      "id": "residente-website",
+      "gallery": [
+        "/templates/hellomonday/assets/695e9fce84705b.webp",
+        "/templates/hellomonday/assets/38a35b0842f24e.webp",
+        "/templates/hellomonday/assets/c84d8eb9cb87b5.webp",
+        "/templates/hellomonday/assets/4931d1ba7d296d.webp"
+      ]
+    },
+    {
+      "path": "/work/hollow",
+      "title": "Katie Paterson - 10,000 trees made digital",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/118b8a9feab244.webp",
+      "landscape": "/templates/hellomonday/assets/d0414ab0a57746.webp",
+      "id": "hollow",
+      "gallery": [
+        "/templates/hellomonday/assets/0061e1648fb848.webp",
+        "/templates/hellomonday/assets/7d728c36ae3405.webp",
+        "/templates/hellomonday/assets/19458be05604ef.webp",
+        "/templates/hellomonday/assets/77a3b71e0f16c4.webp",
+        "/templates/hellomonday/assets/d2de15782e13da.webp"
+      ]
+    },
+    {
+      "path": "/work/garderobe",
+      "title": "Garderobe - Fashion meets social media app",
+      "tags": "Products",
+      "image": "/templates/hellomonday/assets/10d574a8602c80.webp",
+      "landscape": "/templates/hellomonday/assets/01413e859fa3ea.webp",
+      "id": "garderobe",
+      "gallery": [
+        "/templates/hellomonday/assets/008c2dcae73d4a.webp",
+        "/templates/hellomonday/assets/1024bf15b1fbbb.webp",
+        "/templates/hellomonday/assets/66563a4ac6337b.webp",
+        "/templates/hellomonday/assets/5c510379303894.webp",
+        "/templates/hellomonday/assets/f69e8769fc81c1.webp"
+      ]
+    },
+    {
+      "path": "/work/collective-health",
+      "title": "Reinventing the US healthcare industry",
+      "tags": "Branding",
+      "image": "/templates/hellomonday/assets/73d2c7564628ba.webp",
+      "landscape": "/templates/hellomonday/assets/a35f74082be802.webp",
+      "id": "collective-health",
+      "gallery": [
+        "/templates/hellomonday/assets/9839e4180b0fff.webp",
+        "/templates/hellomonday/assets/05c8c6b838a157.webp",
+        "/templates/hellomonday/assets/bcecf45f678e8a.webp",
+        "/templates/hellomonday/assets/71e3919d8b319f.webp",
+        "/templates/hellomonday/assets/de7ba940135596.webp"
+      ]
+    },
+    {
+      "path": "/work/google-spell-up",
+      "title": "Making spelling F-U-N with Google",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/06062ba56deccc.webp",
+      "landscape": "/templates/hellomonday/assets/96322ee24680b3.webp",
+      "id": "google-spell-up",
+      "gallery": [
+        "/templates/hellomonday/assets/06062ba56deccc.webp",
+        "/templates/hellomonday/assets/1cd3255d73a7ca.webp",
+        "/templates/hellomonday/assets/4d19f18566dc3b.webp",
+        "/templates/hellomonday/assets/ec2d98bdc333c3.webp",
+        "/templates/hellomonday/assets/69d798d0efa428.webp"
+      ]
+    },
+    {
+      "path": "/work/bendy",
+      "title": "Bendy 10 - Posters for the self-obsessed",
+      "tags": "Experiences,Branding",
+      "image": "/templates/hellomonday/assets/caac330f5b51f4.webp",
+      "landscape": "/templates/hellomonday/assets/8a37c9e3ddafe2.webp",
+      "id": "bendy",
+      "gallery": [
+        "/templates/hellomonday/assets/caac330f5b51f4.webp",
+        "/templates/hellomonday/assets/ead42f13b40b5a.webp",
+        "/templates/hellomonday/assets/e34029b2412e2b.webp",
+        "/templates/hellomonday/assets/e200b4d749aebb.webp",
+        "/templates/hellomonday/assets/0e8769f67acd53.webp"
+      ]
+    },
+    {
+      "path": "/work/jviews",
+      "title": "J.Views - Experience the making of an album",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/800d46111bf587.webp",
+      "landscape": "/templates/hellomonday/assets/7d15e7ea398412.webp",
+      "id": "jviews",
+      "gallery": [
+        "/templates/hellomonday/assets/ef7c6e1ac644ec.webp",
+        "/templates/hellomonday/assets/09a0266e3df4da.webp",
+        "/templates/hellomonday/assets/dff3eec732d31d.webp",
+        "/templates/hellomonday/assets/d760f74166584a.webp",
+        "/templates/hellomonday/assets/b7af84d99eca23.webp"
+      ]
+    },
+    {
+      "path": "/work/nasa-genelab",
+      "title": "NASA - Visualizing biology in microgravity",
+      "tags": "Experiences,Branding",
+      "image": "/templates/hellomonday/assets/4e5d070b1cfbc5.webp",
+      "landscape": "/templates/hellomonday/assets/2d3d1b7594eea1.webp",
+      "id": "nasa-genelab",
+      "gallery": [
+        "/templates/hellomonday/assets/8ace6bd2a7cf62.webp",
+        "/templates/hellomonday/assets/5d3e08dbdcc8e6.webp",
+        "/templates/hellomonday/assets/6ee0ec1b4c28de.webp",
+        "/templates/hellomonday/assets/8d08503383b638.webp",
+        "/templates/hellomonday/assets/f419ec12c03f9b.webp"
+      ]
+    },
+    {
+      "path": "/work/wove",
+      "title": "Wove - The future gets flexible",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/830006527a5c1c.webp",
+      "landscape": "/templates/hellomonday/assets/f03ef03fe1e4bf.webp",
+      "id": "wove",
+      "gallery": [
+        "/templates/hellomonday/assets/4e9e9a01a3767f.webp",
+        "/templates/hellomonday/assets/0437a593c96b67.webp",
+        "/templates/hellomonday/assets/fd9fc832a49ee7.webp",
+        "/templates/hellomonday/assets/cdc782fd520bb4.webp",
+        "/templates/hellomonday/assets/73cedc9e38924d.webp"
+      ]
+    },
+    {
+      "path": "/work/tnc",
+      "title": "The Nature Conservancy - Where nature and people can thrive",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/51c09872755118.webp",
+      "landscape": "/templates/hellomonday/assets/8ab71769300dc4.webp",
+      "id": "tnc",
+      "gallery": [
+        "/templates/hellomonday/assets/44d86084b4584c.webp",
+        "/templates/hellomonday/assets/2d50626f5dd633.webp",
+        "/templates/hellomonday/assets/23b8474aa67c60.webp",
+        "/templates/hellomonday/assets/120c5d7b68f7c8.webp",
+        "/templates/hellomonday/assets/8cd70ee247cd77.webp"
+      ]
+    },
+    {
+      "path": "/work/google-cloud-platform",
+      "title": "Visualizing how Google Cloud works",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/f9c095ef8e5265.webp",
+      "landscape": "/templates/hellomonday/assets/99c19f0d8d2078.webp",
+      "id": "google-cloud-platform",
+      "gallery": [
+        "/templates/hellomonday/assets/076ef1554aa398.webp",
+        "/templates/hellomonday/assets/c3fb5af8ab69e7.webp",
+        "/templates/hellomonday/assets/c3d6005a4e019f.webp",
+        "/templates/hellomonday/assets/5d015d35babf18.webp",
+        "/templates/hellomonday/assets/40cd50124b8e4e.webp"
+      ]
+    },
+    {
+      "path": "/work/moma-magritte",
+      "title": "MoMA takes you through a surreal digital exhibition",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/2932de9d4d1353.webp",
+      "landscape": "/templates/hellomonday/assets/ed0470e77b1bb6.webp",
+      "id": "moma-magritte",
+      "gallery": [
+        "/templates/hellomonday/assets/e5255df9942903.webp",
+        "/templates/hellomonday/assets/b137bb386d4f99.webp",
+        "/templates/hellomonday/assets/9576850bdf91c1.webp",
+        "/templates/hellomonday/assets/b2510ef05d1dd9.webp",
+        "/templates/hellomonday/assets/0b876fdc2c5981.webp"
+      ]
+    },
+    {
+      "path": "/work/greenpeace",
+      "title": "Greenpeace - Into the Arctic",
+      "tags": "Experiences",
+      "image": "/templates/hellomonday/assets/a323fee49af0f6.webp",
+      "landscape": "/templates/hellomonday/assets/337cba9f7cb481.webp",
+      "id": "greenpeace",
+      "gallery": [
+        "/templates/hellomonday/assets/3b569d35e3e351.webp",
+        "/templates/hellomonday/assets/fb1e90208e8c00.webp",
+        "/templates/hellomonday/assets/cf2ba6835b70f4.webp",
+        "/templates/hellomonday/assets/e63a7543f4baeb.webp",
+        "/templates/hellomonday/assets/7f7841bcd18da5.webp"
+      ]
+    },
+    {
+      "path": "/work/issuu",
+      "title": "Issuu modernizes how people consume published content",
+      "tags": "Products",
+      "image": "/templates/hellomonday/assets/fabcb20cc6ab40.webp",
+      "landscape": "/templates/hellomonday/assets/c5b17470db280f.webp",
+      "id": "issuu",
+      "gallery": [
+        "/templates/hellomonday/assets/51241b9a2b83cf.webp",
+        "/templates/hellomonday/assets/266544888bf6a5.webp",
+        "/templates/hellomonday/assets/e5442bb64d31e1.webp",
+        "/templates/hellomonday/assets/3749f46dc38437.webp",
+        "/templates/hellomonday/assets/022948ce8acb12.webp"
+      ]
+    }
+  ],
+  "articles": [
+    {
+      "id": "generative-ai-ideas-for-e-commerce",
+      "title": "16 Ideas for AI-powered E-Commerce With Our Friends at Burrow",
+      "gallery": [
+        "/templates/hellomonday/assets/e9cfa24be7da7f.webp",
+        "/templates/hellomonday/assets/0b96e3da333e5a.webp",
+        "/templates/hellomonday/assets/cfa5447d130188.webp",
+        "/templates/hellomonday/assets/0a079469e6bba7.webp"
+      ]
+    },
+    {
+      "id": "the-web-can-do-what",
+      "title": "The web can do what?! with Google",
+      "gallery": [
+        "/templates/hellomonday/assets/6bbb13f67221d4.webp",
+        "/templates/hellomonday/assets/ae8bc7b173ecf8.webp",
+        "/templates/hellomonday/assets/ffb95efe3c38d0.webp",
+        "/templates/hellomonday/assets/4086b91c584a8f.webp"
+      ]
+    },
+    {
+      "id": "eating-together",
+      "title": "Why eating together is important (and delicious)",
+      "gallery": [
+        "/templates/hellomonday/assets/b7dcaeb76bbdf5.webp",
+        "/templates/hellomonday/assets/449c501fa4cf5b.webp",
+        "/templates/hellomonday/assets/1d746576a2966d.webp",
+        "/templates/hellomonday/assets/4700bca89c7764.webp"
+      ]
+    },
+    {
+      "id": "sesame-workshop",
+      "title": "The brains behind Sesame Street",
+      "gallery": [
+        "/templates/hellomonday/assets/814d7dfa9765b0.webp",
+        "/templates/hellomonday/assets/d9b8082d083aa6.webp",
+        "/templates/hellomonday/assets/7828022c010fb2.webp",
+        "/templates/hellomonday/assets/f9b3067344aa0c.webp"
+      ]
+    },
+    {
+      "id": "designing-for-kids",
+      "title": "A hands-on approach to designing for kids",
+      "gallery": [
+        "/templates/hellomonday/assets/d6c0b377d5c759.webp",
+        "/templates/hellomonday/assets/4af45a2b978703.webp",
+        "/templates/hellomonday/assets/fea48d10644a2c.webp",
+        "/templates/hellomonday/assets/a620e09d509017.webp"
+      ]
+    },
+    {
+      "id": "secret-ingredients",
+      "title": "The secret ingredients of a great project",
+      "gallery": [
+        "/templates/hellomonday/assets/c720f2331884da.webp",
+        "/templates/hellomonday/assets/4a3b6669258350.webp",
+        "/templates/hellomonday/assets/5f8cff99167855.webp",
+        "/templates/hellomonday/assets/87a0c1618730f2.webp"
+      ]
+    },
+    {
+      "id": "google-cloud",
+      "title": "How we built the Google Cloud Infrastructure WebGL experience",
+      "gallery": [
+        "/templates/hellomonday/assets/03d9102febc0d3.webp",
+        "/templates/hellomonday/assets/f31d2c31b7424d.webp",
+        "/templates/hellomonday/assets/f67d0e7d60e386.webp",
+        "/templates/hellomonday/assets/9983eb87cd151a.webp"
+      ]
+    }
+  ],
+  "extras": {
+    "about": [
+      "/templates/hellomonday/assets/6feb392228913f.webp",
+      "/templates/hellomonday/assets/18a74400b53e26.webp",
+      "/templates/hellomonday/assets/60e119332b5167.webp",
+      "/templates/hellomonday/assets/f963b5edb8388d.webp",
+      "/templates/hellomonday/assets/39810f224a599c.webp",
+      "/templates/hellomonday/assets/21596d07f79b83.webp",
+      "/templates/hellomonday/assets/73327c1c213011.webp",
+      "/templates/hellomonday/assets/0a45715bbd99b3.webp",
+      "/templates/hellomonday/assets/255fbf6d3e2d8f.webp",
+      "/templates/hellomonday/assets/b55667d5199b3e.webp",
+      "/templates/hellomonday/assets/e77fa29bd9b619.webp",
+      "/templates/hellomonday/assets/ada16f5a38aba1.webp",
+      "/templates/hellomonday/assets/d38ed584026336.webp",
+      "/templates/hellomonday/assets/5038e01bf5c685.webp",
+      "/templates/hellomonday/assets/1da0987d0a86dc.webp",
+      "/templates/hellomonday/assets/4d383f01ce5bfa.webp",
+      "/templates/hellomonday/assets/fa0b6ab3e98acf.webp",
+      "/templates/hellomonday/assets/f6994dff2445f1.webp",
+      "/templates/hellomonday/assets/6343e0a94a51f1.webp",
+      "/templates/hellomonday/assets/00bef9852845a8.webp",
+      "/templates/hellomonday/assets/ae9055e2b6e946.webp",
+      "/templates/hellomonday/assets/5fb1d7c0616340.webp",
+      "/templates/hellomonday/assets/bcf0122c571da8.webp",
+      "/templates/hellomonday/assets/90015baa715528.webp",
+      "/templates/hellomonday/assets/e84fb2c0b1c936.webp",
+      "/templates/hellomonday/assets/c7677024a97796.webp",
+      "/templates/hellomonday/assets/db595f20a9c9a5.webp",
+      "/templates/hellomonday/assets/24b0fb264a35d1.webp",
+      "/templates/hellomonday/assets/6a23e0991be1a2.webp"
+    ],
+    "services": [
+      "/templates/hellomonday/assets/94cc19e7fd5e16.gif",
+      "/templates/hellomonday/assets/c820b2ddca7498.webp",
+      "/templates/hellomonday/assets/ac49143c1a251c.webp",
+      "/templates/hellomonday/assets/307b67756fe8e7.gif",
+      "/templates/hellomonday/assets/fbb8c69db5fb08.webp",
+      "/templates/hellomonday/assets/1d458e1933b937.webp",
+      "/templates/hellomonday/assets/5602f0c7839118.gif",
+      "/templates/hellomonday/assets/a35f74082be802.webp",
+      "/templates/hellomonday/assets/c14be15a4dc1c7.webp"
+    ],
+    "hero": "/templates/hellomonday/assets/ec59979ed072a0.mp4",
+    "productHero": "/templates/hellomonday/assets/edfb6a1b004ce7.mp4"
+  },
+  "team": [
+    {
+      "name": "Lasse",
+      "city": "Aarhus",
+      "images": [
+        "/templates/hellomonday/assets/73327c1c213011.webp",
+        "/templates/hellomonday/assets/2d12106090ecca.webp",
+        "/templates/hellomonday/assets/08645424b3d43d.webp"
+      ]
+    },
+    {
+      "name": "Jeppe",
+      "city": "Aarhus",
+      "images": [
+        "/templates/hellomonday/assets/f6994dff2445f1.webp",
+        "/templates/hellomonday/assets/635f73ac9de60e.webp",
+        "/templates/hellomonday/assets/8f0fd8002fc8b2.webp"
+      ]
+    },
+    {
+      "name": "Saskia",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/ae9055e2b6e946.webp",
+        "/templates/hellomonday/assets/69f4b6a2d4c751.webp",
+        "/templates/hellomonday/assets/5cd44a1cfed8d1.webp"
+      ]
+    },
+    {
+      "name": "Sindy",
+      "city": "New York",
+      "images": [
+        "/templates/hellomonday/assets/39810f224a599c.webp",
+        "/templates/hellomonday/assets/0ccc6fe47a3859.webp",
+        "/templates/hellomonday/assets/410612377b51fb.webp"
+      ]
+    },
+    {
+      "name": "Jenny",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/c7677024a97796.webp",
+        "/templates/hellomonday/assets/96492eebbb9ec2.webp",
+        "/templates/hellomonday/assets/da16241dfdf5d6.webp"
+      ]
+    },
+    {
+      "name": "Nathan",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/db595f20a9c9a5.webp",
+        "/templates/hellomonday/assets/b70700de6813a0.webp",
+        "/templates/hellomonday/assets/6c7d9fa4fbcc8c.webp"
+      ]
+    },
+    {
+      "name": "Nicole",
+      "city": "New York",
+      "images": [
+        "/templates/hellomonday/assets/bcf0122c571da8.webp",
+        "/templates/hellomonday/assets/ef672f58970dba.webp",
+        "/templates/hellomonday/assets/2f780aa93f493a.webp"
+      ]
+    },
+    {
+      "name": "Rikke",
+      "city": "Aarhus",
+      "images": [
+        "/templates/hellomonday/assets/ada16f5a38aba1.webp",
+        "/templates/hellomonday/assets/f5573afc32e436.webp",
+        "/templates/hellomonday/assets/b9f79e66dec683.webp"
+      ]
+    },
+    {
+      "name": "Andreas",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/4d383f01ce5bfa.webp",
+        "/templates/hellomonday/assets/5d65bf5814202f.webp",
+        "/templates/hellomonday/assets/a38d9373409b44.webp"
+      ]
+    },
+    {
+      "name": "Victor",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/18a74400b53e26.webp",
+        "/templates/hellomonday/assets/34687e0a957dc3.webp",
+        "/templates/hellomonday/assets/5c13e35cdcb0e1.webp"
+      ]
+    },
+    {
+      "name": "Anders",
+      "city": "Aarhus",
+      "images": [
+        "/templates/hellomonday/assets/21596d07f79b83.webp",
+        "/templates/hellomonday/assets/e04a558347571d.webp",
+        "/templates/hellomonday/assets/7fee7e2a2423b7.webp"
+      ]
+    },
+    {
+      "name": "Nicolai",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/0a45715bbd99b3.webp",
+        "/templates/hellomonday/assets/1073cfdd2ebe79.webp",
+        "/templates/hellomonday/assets/78b4d655b5f09d.webp"
+      ]
+    },
+    {
+      "name": "Serge",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/255fbf6d3e2d8f.webp",
+        "/templates/hellomonday/assets/2284fc109e3e38.webp",
+        "/templates/hellomonday/assets/2754a854dc5c80.webp"
+      ]
+    },
+    {
+      "name": "Rikke",
+      "city": "Aarhus",
+      "images": [
+        "/templates/hellomonday/assets/90015baa715528.webp",
+        "/templates/hellomonday/assets/fa65d220b72ee3.webp",
+        "/templates/hellomonday/assets/4b9a6c7afa9b93.webp"
+      ]
+    },
+    {
+      "name": "Shai",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/6a23e0991be1a2.webp",
+        "/templates/hellomonday/assets/fa1cbbabd54e39.webp",
+        "/templates/hellomonday/assets/496dd1a7ab4905.webp"
+      ]
+    },
+    {
+      "name": "Esben",
+      "city": "Aarhus",
+      "images": [
+        "/templates/hellomonday/assets/f963b5edb8388d.webp",
+        "/templates/hellomonday/assets/2ae64a8fb2a074.webp",
+        "/templates/hellomonday/assets/a124850cfc901e.webp"
+      ]
+    },
+    {
+      "name": "Maja",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/5fb1d7c0616340.webp",
+        "/templates/hellomonday/assets/b567e65f95a7dc.webp",
+        "/templates/hellomonday/assets/b648803ce1486c.webp"
+      ]
+    },
+    {
+      "name": "Johanne",
+      "city": "Aarhus",
+      "images": [
+        "/templates/hellomonday/assets/1da0987d0a86dc.webp",
+        "/templates/hellomonday/assets/ebc639935fe0fe.webp",
+        "/templates/hellomonday/assets/ddc6c07701edc7.webp"
+      ]
+    },
+    {
+      "name": "Anders M",
+      "city": "Aarhus",
+      "images": [
+        "/templates/hellomonday/assets/e77fa29bd9b619.webp",
+        "/templates/hellomonday/assets/4eea13faffbd4b.webp",
+        "/templates/hellomonday/assets/73f198d62ba904.webp"
+      ]
+    },
+    {
+      "name": "Ellen",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/b55667d5199b3e.webp",
+        "/templates/hellomonday/assets/547462fbb0870b.webp",
+        "/templates/hellomonday/assets/62990176528b11.webp"
+      ]
+    },
+    {
+      "name": "Sarah",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/24b0fb264a35d1.webp",
+        "/templates/hellomonday/assets/54c4c2c9b3f838.webp",
+        "/templates/hellomonday/assets/51076cefc7f98f.webp"
+      ]
+    },
+    {
+      "name": "Casper",
+      "city": "Aarhus",
+      "images": [
+        "/templates/hellomonday/assets/6343e0a94a51f1.webp",
+        "/templates/hellomonday/assets/fad8f417269681.webp",
+        "/templates/hellomonday/assets/34de80e3f4ae31.webp"
+      ]
+    },
+    {
+      "name": "David",
+      "city": "New York",
+      "images": [
+        "/templates/hellomonday/assets/e84fb2c0b1c936.webp",
+        "/templates/hellomonday/assets/858d2e14b1145e.webp",
+        "/templates/hellomonday/assets/efdaa14a2c782a.webp"
+      ]
+    },
+    {
+      "name": "Kim",
+      "city": "Aarhus",
+      "images": [
+        "/templates/hellomonday/assets/5038e01bf5c685.webp",
+        "/templates/hellomonday/assets/171e7446eb866d.webp",
+        "/templates/hellomonday/assets/6afd4f2e919647.webp"
+      ]
+    },
+    {
+      "name": "Karin",
+      "city": "Aarhus",
+      "images": [
+        "/templates/hellomonday/assets/fa0b6ab3e98acf.webp",
+        "/templates/hellomonday/assets/f1f1a8a08753fa.webp",
+        "/templates/hellomonday/assets/536ca5d19b190b.webp"
+      ]
+    },
+    {
+      "name": "Torben",
+      "city": "Aarhus",
+      "images": [
+        "/templates/hellomonday/assets/6feb392228913f.webp",
+        "/templates/hellomonday/assets/bb621dad54acb5.webp",
+        "/templates/hellomonday/assets/d223a865f74350.webp"
+      ]
+    },
+    {
+      "name": "Mie",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/d38ed584026336.webp",
+        "/templates/hellomonday/assets/feba7a5d3790cd.webp",
+        "/templates/hellomonday/assets/49d191cfed3fd0.webp"
+      ]
+    },
+    {
+      "name": "Miguel",
+      "city": "New York",
+      "images": [
+        "/templates/hellomonday/assets/00bef9852845a8.webp",
+        "/templates/hellomonday/assets/394525c8660e97.webp",
+        "/templates/hellomonday/assets/4117a172658bd9.webp"
+      ]
+    },
+    {
+      "name": "Sangmin",
+      "city": "Copenhagen",
+      "images": [
+        "/templates/hellomonday/assets/60e119332b5167.webp",
+        "/templates/hellomonday/assets/5926825b32f015.webp",
+        "/templates/hellomonday/assets/d18bb7e6876235.webp"
+      ]
+    }
+  ]
+}

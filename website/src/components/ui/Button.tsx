@@ -47,7 +47,7 @@ export const Button = ({
   type = 'button',
   ...rest
 }: ButtonProps) => (
-  <button type={type} className={buttonClassName(variant, className)} {...rest}>
+  <button type={type} data-button-variant={variant} className={buttonClassName(variant, className)} {...rest}>
     {children}
   </button>
 )
@@ -61,7 +61,7 @@ export const ButtonLink = ({
   href,
   ...rest
 }: ButtonLinkProps) => (
-  <a href={href} className={buttonClassName(variant, className)} {...rest}>
+  <a href={href} data-button-variant={variant} className={buttonClassName(variant, className)} {...rest}>
     {children}
   </a>
 )

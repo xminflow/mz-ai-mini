@@ -1,0 +1,440 @@
+{
+  "reference": "https://nubo.framer.website/",
+  "license": "参考站素材，仅用于内部复刻演示；商业发布前需取得原作者及素材权利人许可。共享字体许可证沿用 lunera/fonts。",
+  "video": "https://framerusercontent.com/assets/Q2DKMhSOptiVNCBb9PEzxJGqUSQ.mp4",
+  "capabilityVideo": "https://framerusercontent.com/assets/x8b2649ZG1Q5jZczpQ86ny436Qg.mp4",
+  "images": [
+    {
+      "file": "0MwqppnigTZLAWvCcVydrTCXZCw.webp",
+      "source": "https://framerusercontent.com/images/0MwqppnigTZLAWvCcVydrTCXZCw.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "2PST26I62okWoueHV1GVacx2Mo.webp",
+      "source": "https://framerusercontent.com/images/2PST26I62okWoueHV1GVacx2Mo.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "2SI2XKuW8EvnDbjuCzCZ0wFDZk.webp",
+      "source": "https://framerusercontent.com/images/2SI2XKuW8EvnDbjuCzCZ0wFDZk.jpg",
+      "width": 280,
+      "height": 400
+    },
+    {
+      "file": "3NXoXQzx96IaN9rFZi45Cwh8A.webp",
+      "source": "https://framerusercontent.com/images/3NXoXQzx96IaN9rFZi45Cwh8A.jpg",
+      "width": 1000,
+      "height": 667
+    },
+    {
+      "file": "3VIglJhUObdpgghYlY45YqNKE.webp",
+      "source": "https://framerusercontent.com/images/3VIglJhUObdpgghYlY45YqNKE.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "4UQo4Rt5ASmR1vAHCKW2PJW2bk.webp",
+      "source": "https://framerusercontent.com/images/4UQo4Rt5ASmR1vAHCKW2PJW2bk.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "5VO9mzGI3gqMY9ORdJKW6YyvuiE.webp",
+      "source": "https://framerusercontent.com/images/5VO9mzGI3gqMY9ORdJKW6YyvuiE.jpg",
+      "width": 977,
+      "height": 1086
+    },
+    {
+      "file": "5yLhhzdGWqIfbKXuaatpceIfays.webp",
+      "source": "https://framerusercontent.com/images/5yLhhzdGWqIfbKXuaatpceIfays.jpg",
+      "width": 432,
+      "height": 600
+    },
+    {
+      "file": "75ZtRlnerTt54xOvYuN6jwyLX7M.webp",
+      "source": "https://framerusercontent.com/images/75ZtRlnerTt54xOvYuN6jwyLX7M.jpg",
+      "width": 1402,
+      "height": 1122
+    },
+    {
+      "file": "7bdsxktA8TA18dvBB8qT3K4jBzM.webp",
+      "source": "https://framerusercontent.com/images/7bdsxktA8TA18dvBB8qT3K4jBzM.jpg",
+      "width": 280,
+      "height": 400
+    },
+    {
+      "file": "7zvJcZFEoNeRM7azD4VctYeHHk8.webp",
+      "source": "https://framerusercontent.com/images/7zvJcZFEoNeRM7azD4VctYeHHk8.jpeg",
+      "width": 1500,
+      "height": 1062
+    },
+    {
+      "file": "8tfa3xP0HQmTfYBoSlOJp7diPnY.webp",
+      "source": "https://framerusercontent.com/images/8tfa3xP0HQmTfYBoSlOJp7diPnY.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "92rcfs7KQc6SbN12YQxjpMpHMo.webp",
+      "source": "https://framerusercontent.com/images/92rcfs7KQc6SbN12YQxjpMpHMo.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "9BvSPEtkD9pFd9WOAs9hZkarfA.webp",
+      "source": "https://framerusercontent.com/images/9BvSPEtkD9pFd9WOAs9hZkarfA.jpg",
+      "width": 450,
+      "height": 600
+    },
+    {
+      "file": "A5pSvgr3CkfRQuR9FWYEsJHDRV0.webp",
+      "source": "https://framerusercontent.com/images/A5pSvgr3CkfRQuR9FWYEsJHDRV0.jpg",
+      "width": 400,
+      "height": 400
+    },
+    {
+      "file": "AK8K9thEM4ccTOcaKCxrHUqs0g.webp",
+      "source": "https://framerusercontent.com/images/AK8K9thEM4ccTOcaKCxrHUqs0g.jpg",
+      "width": 1402,
+      "height": 1122
+    },
+    {
+      "file": "AezYeaUC8DVKEnzisFc9DHQOM.webp",
+      "source": "https://framerusercontent.com/images/AezYeaUC8DVKEnzisFc9DHQOM.jpeg",
+      "width": 1000,
+      "height": 750
+    },
+    {
+      "file": "AkfqDuVkjktmahEsR0a0ezx9rlE.webp",
+      "source": "https://framerusercontent.com/images/AkfqDuVkjktmahEsR0a0ezx9rlE.jpeg",
+      "width": 1000,
+      "height": 750
+    },
+    {
+      "file": "CVVlOgRCvoT9Fmob3rgBrs6XY.webp",
+      "source": "https://framerusercontent.com/images/CVVlOgRCvoT9Fmob3rgBrs6XY.jpeg",
+      "width": 600,
+      "height": 450
+    },
+    {
+      "file": "Dgm6Igb1ILHAcV1byT8aBfJmo8.webp",
+      "source": "https://framerusercontent.com/images/Dgm6Igb1ILHAcV1byT8aBfJmo8.png",
+      "width": 619,
+      "height": 954
+    },
+    {
+      "file": "E2n5khFlJdULm3BD8fX00lMpFo0.webp",
+      "source": "https://framerusercontent.com/images/E2n5khFlJdULm3BD8fX00lMpFo0.jpg",
+      "width": 1000,
+      "height": 750
+    },
+    {
+      "file": "FEC00aJXEqbNB2IKFqC4wmuh8.webp",
+      "source": "https://framerusercontent.com/images/FEC00aJXEqbNB2IKFqC4wmuh8.jpg",
+      "width": 320,
+      "height": 400
+    },
+    {
+      "file": "GS8IcmAlI6p9E5I7KI5QghKG4.webp",
+      "source": "https://framerusercontent.com/images/GS8IcmAlI6p9E5I7KI5QghKG4.png",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "file": "If4pRssEcvthH3fHnvDMdCuvCY.webp",
+      "source": "https://framerusercontent.com/images/If4pRssEcvthH3fHnvDMdCuvCY.jpg",
+      "width": 900,
+      "height": 1200
+    },
+    {
+      "file": "JMZeDArAPMmVlXUSb59AM4S6Y.webp",
+      "source": "https://framerusercontent.com/images/JMZeDArAPMmVlXUSb59AM4S6Y.jpeg",
+      "width": 600,
+      "height": 450
+    },
+    {
+      "file": "LwXdOQrg9Njn933qmQhTtuROFa8.webp",
+      "source": "https://framerusercontent.com/images/LwXdOQrg9Njn933qmQhTtuROFa8.png",
+      "width": 1024,
+      "height": 1024
+    },
+    {
+      "file": "Md3q1RGOYG9CcpulAe8AcSrg4xc.webp",
+      "source": "https://framerusercontent.com/images/Md3q1RGOYG9CcpulAe8AcSrg4xc.jpg",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "file": "Ne9ae1q4leSMRZWX0PzfwvhL1So.webp",
+      "source": "https://framerusercontent.com/images/Ne9ae1q4leSMRZWX0PzfwvhL1So.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "Nr2QL5KepfsOCmTOEveYMqp7lo.webp",
+      "source": "https://framerusercontent.com/images/Nr2QL5KepfsOCmTOEveYMqp7lo.jpeg",
+      "width": 1000,
+      "height": 750
+    },
+    {
+      "file": "O6C7Z246k2zfinDbSoGdBz6WQ.webp",
+      "source": "https://framerusercontent.com/images/O6C7Z246k2zfinDbSoGdBz6WQ.png",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "OMxT7VxFxEPzPiX1lkTp6jw51Q.webp",
+      "source": "https://framerusercontent.com/images/OMxT7VxFxEPzPiX1lkTp6jw51Q.jpg",
+      "width": 377,
+      "height": 500
+    },
+    {
+      "file": "ORC919ko6vIFOwECMaQE4MDx3g.webp",
+      "source": "https://framerusercontent.com/images/ORC919ko6vIFOwECMaQE4MDx3g.jpg",
+      "width": 308,
+      "height": 400
+    },
+    {
+      "file": "P5cy1VkhJ4S2KVDcitkQ4mJNRa8.webp",
+      "source": "https://framerusercontent.com/images/P5cy1VkhJ4S2KVDcitkQ4mJNRa8.jpg",
+      "width": 1402,
+      "height": 1122
+    },
+    {
+      "file": "Qfi9siVKv6V0VwgyWgTSWxJg.webp",
+      "source": "https://framerusercontent.com/images/Qfi9siVKv6V0VwgyWgTSWxJg.jpg",
+      "width": 90,
+      "height": 72
+    },
+    {
+      "file": "Rp50382nl4MlTtEW6DKbCXt39uE.webp",
+      "source": "https://framerusercontent.com/images/Rp50382nl4MlTtEW6DKbCXt39uE.jpeg",
+      "width": 600,
+      "height": 450
+    },
+    {
+      "file": "RrgCiNevI7EEVFx6WfT7IAqm2K8.webp",
+      "source": "https://framerusercontent.com/images/RrgCiNevI7EEVFx6WfT7IAqm2K8.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "RsmD0uXOZJYBslfUERbIV3G8gI.webp",
+      "source": "https://framerusercontent.com/images/RsmD0uXOZJYBslfUERbIV3G8gI.jpeg",
+      "width": 1600,
+      "height": 1133
+    },
+    {
+      "file": "S2FubOroGW9HrPJVkBaF3N2AEM.webp",
+      "source": "https://framerusercontent.com/images/S2FubOroGW9HrPJVkBaF3N2AEM.png",
+      "width": 376,
+      "height": 407
+    },
+    {
+      "file": "S4oLeqj0sxUIqgM2rpSfZv66U.webp",
+      "source": "https://framerusercontent.com/images/S4oLeqj0sxUIqgM2rpSfZv66U.jpg",
+      "width": 800,
+      "height": 1000
+    },
+    {
+      "file": "S6MonN8QAN4EvEe9An5bTm4i8.webp",
+      "source": "https://framerusercontent.com/images/S6MonN8QAN4EvEe9An5bTm4i8.jpg",
+      "width": 400,
+      "height": 400
+    },
+    {
+      "file": "TdxnsVxJyv3GWx8JjF9eZnotVto.webp",
+      "source": "https://framerusercontent.com/images/TdxnsVxJyv3GWx8JjF9eZnotVto.jpg",
+      "width": 270,
+      "height": 406
+    },
+    {
+      "file": "Tqh6zD7hedoY6F0tygTvJaOF35U.webp",
+      "source": "https://framerusercontent.com/images/Tqh6zD7hedoY6F0tygTvJaOF35U.jpg",
+      "width": 437,
+      "height": 600
+    },
+    {
+      "file": "UKKIKujtOxyDBm3UI2gwbsBFhlA.webp",
+      "source": "https://framerusercontent.com/images/UKKIKujtOxyDBm3UI2gwbsBFhlA.jpg",
+      "width": 1200,
+      "height": 630
+    },
+    {
+      "file": "VvAV5s1odu91BXUwqucczGPJrOg.webp",
+      "source": "https://framerusercontent.com/images/VvAV5s1odu91BXUwqucczGPJrOg.png",
+      "width": 1254,
+      "height": 1254
+    },
+    {
+      "file": "VwGa2WDbjstdCTUYXdTpM8Mz1Jw.webp",
+      "source": "https://framerusercontent.com/images/VwGa2WDbjstdCTUYXdTpM8Mz1Jw.jpg",
+      "width": 1402,
+      "height": 1122
+    },
+    {
+      "file": "X1Yp7G74eARHNGA83c73sk9Crw.webp",
+      "source": "https://framerusercontent.com/images/X1Yp7G74eARHNGA83c73sk9Crw.png",
+      "width": 284,
+      "height": 971
+    },
+    {
+      "file": "Xx2LmnG1YXgOw3GPqhbOj30qJQ.webp",
+      "source": "https://framerusercontent.com/images/Xx2LmnG1YXgOw3GPqhbOj30qJQ.jpeg",
+      "width": 600,
+      "height": 450
+    },
+    {
+      "file": "YRQ6KPzA3mnznHpTGnPS2O8dk.webp",
+      "source": "https://framerusercontent.com/images/YRQ6KPzA3mnznHpTGnPS2O8dk.jpg",
+      "width": 844,
+      "height": 1500
+    },
+    {
+      "file": "YetUAup4jptITWPYGrWTFFSrdhY.webp",
+      "source": "https://framerusercontent.com/images/YetUAup4jptITWPYGrWTFFSrdhY.jpg",
+      "width": 563,
+      "height": 1000
+    },
+    {
+      "file": "dUxknXEnhnPMWPNWP3wyz2ifW1M.webp",
+      "source": "https://framerusercontent.com/images/dUxknXEnhnPMWPNWP3wyz2ifW1M.png",
+      "width": 1402,
+      "height": 1122
+    },
+    {
+      "file": "dcuiKNSc8SydChsjGWkmUcxpJwA.webp",
+      "source": "https://framerusercontent.com/images/dcuiKNSc8SydChsjGWkmUcxpJwA.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "e2S4653OKsU5wtORxoBK7vx4.webp",
+      "source": "https://framerusercontent.com/images/e2S4653OKsU5wtORxoBK7vx4.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "fZp1kVpgnNfuCmjoSrNAD4j9tMc.webp",
+      "source": "https://framerusercontent.com/images/fZp1kVpgnNfuCmjoSrNAD4j9tMc.jpg",
+      "width": 400,
+      "height": 400
+    },
+    {
+      "file": "gLSHsAiXoBeDO7bNDlSHwQ6ROtc.webp",
+      "source": "https://framerusercontent.com/images/gLSHsAiXoBeDO7bNDlSHwQ6ROtc.jpg",
+      "width": 1200,
+      "height": 900
+    },
+    {
+      "file": "jeplaMV5DSqGLRib90xEleN4GE.webp",
+      "source": "https://framerusercontent.com/images/jeplaMV5DSqGLRib90xEleN4GE.jpg",
+      "width": 1104,
+      "height": 832
+    },
+    {
+      "file": "kTdPeclJZi7ZYDDvtSEP6zqkfo.webp",
+      "source": "https://framerusercontent.com/images/kTdPeclJZi7ZYDDvtSEP6zqkfo.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "kavii0GKxxNk9mnoHIgcJUTHsRM.webp",
+      "source": "https://framerusercontent.com/images/kavii0GKxxNk9mnoHIgcJUTHsRM.jpeg",
+      "width": 1100,
+      "height": 733
+    },
+    {
+      "file": "l0BNLkwPj3UsIppzyAImGxnaB4Y.webp",
+      "source": "https://framerusercontent.com/images/l0BNLkwPj3UsIppzyAImGxnaB4Y.png",
+      "width": 1600,
+      "height": 1086
+    },
+    {
+      "file": "lQDR7PiV2XIKtse5MuNREtJgFM.webp",
+      "source": "https://framerusercontent.com/images/lQDR7PiV2XIKtse5MuNREtJgFM.png",
+      "width": 180,
+      "height": 180
+    },
+    {
+      "file": "lS4cpiho6YlqOMVE6lKBQnJSM4.webp",
+      "source": "https://framerusercontent.com/images/lS4cpiho6YlqOMVE6lKBQnJSM4.png",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "lc5QJyCJidbJ6gINzBqVUpF717I.webp",
+      "source": "https://framerusercontent.com/images/lc5QJyCJidbJ6gINzBqVUpF717I.png",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "file": "m5hKny2C72B88X8rBcJojO9Vws.webp",
+      "source": "https://framerusercontent.com/images/m5hKny2C72B88X8rBcJojO9Vws.jpg",
+      "width": 1402,
+      "height": 1122
+    },
+    {
+      "file": "nyO5Isu6JYyNy1MMnr3MbKvguo.webp",
+      "source": "https://framerusercontent.com/images/nyO5Isu6JYyNy1MMnr3MbKvguo.jpg",
+      "width": 1000,
+      "height": 750
+    },
+    {
+      "file": "oKpeb310naStQqMMXajv7LX28.webp",
+      "source": "https://framerusercontent.com/images/oKpeb310naStQqMMXajv7LX28.jpg",
+      "width": 1402,
+      "height": 1122
+    },
+    {
+      "file": "pOwsNjCcWaEIKiueOwbrOFtMkYY.webp",
+      "source": "https://framerusercontent.com/images/pOwsNjCcWaEIKiueOwbrOFtMkYY.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "qERgS8RwzCF29uMNs0IqZi6dKA.webp",
+      "source": "https://framerusercontent.com/images/qERgS8RwzCF29uMNs0IqZi6dKA.jpg",
+      "width": 433,
+      "height": 600
+    },
+    {
+      "file": "qPEWq9SJLmV3AALrm6vUsLuqYA.webp",
+      "source": "https://framerusercontent.com/images/qPEWq9SJLmV3AALrm6vUsLuqYA.jpg",
+      "width": 320,
+      "height": 400
+    },
+    {
+      "file": "qd4gM5krrDfPSJ05Fg8CYcXz304.webp",
+      "source": "https://framerusercontent.com/images/qd4gM5krrDfPSJ05Fg8CYcXz304.jpeg",
+      "width": 1000,
+      "height": 800
+    },
+    {
+      "file": "vd2qjCg4yrshiOJhibVl4IDPD0.webp",
+      "source": "https://framerusercontent.com/images/vd2qjCg4yrshiOJhibVl4IDPD0.png",
+      "width": 877,
+      "height": 512
+    },
+    {
+      "file": "wDnx0a64qhbvVP3gO7VIbLt37pU.webp",
+      "source": "https://framerusercontent.com/images/wDnx0a64qhbvVP3gO7VIbLt37pU.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "xKSEviCkA9W32EBCPeuGUDGWbwY.webp",
+      "source": "https://framerusercontent.com/images/xKSEviCkA9W32EBCPeuGUDGWbwY.jpg",
+      "width": 1448,
+      "height": 1086
+    },
+    {
+      "file": "xvQquwp7jTsxqU2y2aC02BJaTvE.webp",
+      "source": "https://framerusercontent.com/images/xvQquwp7jTsxqU2y2aC02BJaTvE.png",
+      "width": 1448,
+      "height": 1086
+    }
+  ]
+}

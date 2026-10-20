@@ -1,0 +1,29 @@
+@import './brand-fonts.css';
+
+/* 与 yiliart 一致：拉丁字符使用 Poppins，中文使用按 Unicode 分片的 MiSans。 */
+.home-typography {
+  --font-sans: 'Weelume Poppins', 'Weelume MiSans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: 'Weelume Poppins', 'Weelume MiSans', sans-serif;
+  font-family: var(--font-sans);
+  font-synthesis: none;
+}
+
+/* 英文书脊保留完整单词，横向排版旋转，避免逐字竖排。 */
+.home-typography[lang='en'] #process .flow-spine {
+  writing-mode: horizontal-tb;
+  transform: rotate(90deg);
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+  font-size: 15px;
+}
+
+/* 首次水合时系统减弱动态偏好可能已生效，CSS 同步保证首屏文字可见。 */
+@media (prefers-reduced-motion: reduce) {
+  .home-typography #top h1 span,
+  .home-typography #top [data-hero-tail] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

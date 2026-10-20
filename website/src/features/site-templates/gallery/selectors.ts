@@ -1,4 +1,4 @@
-import { SITE_TEMPLATES } from '../registry'
+import { getTemplatesNewestFirst } from '../registry'
 import { TEMPLATE_SCENES } from '../taxonomy'
 import type { SiteTemplate } from '../types'
 
@@ -21,7 +21,7 @@ export interface SidebarScene {
  * 因此这里按 listed 过滤，而不是直接用 SITE_TEMPLATES。
  */
 export function getListedTemplates(): SiteTemplate[] {
-  return SITE_TEMPLATES.filter((template) => template.listed)
+  return getTemplatesNewestFirst().filter((template) => template.listed)
 }
 
 export function getTemplatesByScene(sceneId: string): SiteTemplate[] {

@@ -1,0 +1,2 @@
+/* 官网与模板共用本地字体声明，保持构建时内联。 */
+@import '../../../styles/brand-fonts.css';

@@ -5,11 +5,13 @@ import { motion, useReducedMotion, type PanInfo } from 'framer-motion'
 
 import { Reveal } from '@/components/motion/Reveal'
 import { SectionHeading } from '@/components/ui'
+import { useSiteLocale } from '@/features/site-i18n/SiteLocaleProvider'
+import { EN_SERVICES } from './home.en'
 
-import { SERVICES, THEMES } from './service-data'
+import { SERVICES as ZH_SERVICES, THEMES } from './service-data'
 import { ServiceArtwork } from './ServiceArtwork'
 
-const COUNT = SERVICES.length
+const COUNT = ZH_SERVICES.length
 const LAST_INDEX = COUNT - 1
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max)
@@ -32,7 +34,7 @@ const OFFSCREEN_DELTA = 3
 const geometry = (width: number) => {
   if (width < 640) return { cardW: clamp(width * 0.72, 232, 300) }
   if (width < 1024) return { cardW: clamp(width * 0.4, 272, 330) }
-  return { cardW: clamp(width * 0.24, 288, 336) }
+  return { cardW: clamp(width * 0.24, 288, 400) }
 }
 
 /**
@@ -106,6 +108,8 @@ const UNFOLD_TOTAL_MS = UNFOLD.duration * 1000 + UNFOLD_STEP_MS * (STAGE.length 
 const AUTOPLAY_MS = 4500
 
 export const ServiceTypes = () => {
+  const { locale, copy } = useSiteLocale()
+  const SERVICES = locale === 'en' ? EN_SERVICES : ZH_SERVICES
   const reduce = useReducedMotion()
   const trackRef = useRef<HTMLDivElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
@@ -229,7 +233,7 @@ export const ServiceTypes = () => {
   const { cardW } = geometry(width || 1200)
   // 比原先的 1.24 更竖长，接近参考站 450×660 的比例：3D 舞台上矮胖的卡转起来像牌，
   // 竖长的才像一块板
-  const cardH = Math.round(cardW * 1.4)
+  const cardH = Math.round(cardW * (locale === 'en' ? 1.6 : 1.4))
   const ready = width > 0
   const folded = phase === 'idle'
 
@@ -244,7 +248,7 @@ export const ServiceTypes = () => {
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
         {/* once=false：卡片每次经过都重播，标题跟着一起，不然滚回来只有卡片在动 */}
         <Reveal once={false}>
-          <SectionHeading eyebrow="Services" title="我们做过的软件类型" />
+          <SectionHeading eyebrow="Services" title={copy.services} />
         </Reveal>
       </div>
 
@@ -252,8 +256,8 @@ export const ServiceTypes = () => {
       <div
         ref={trackRef}
         role="group"
-        aria-roledescription="轮播"
-        aria-label="软件类型"
+        aria-roledescription={copy.carousel}
+        aria-label={copy.serviceGroup}
         tabIndex={0}
         onKeyDown={handleKeyDown}
         className="relative w-full overflow-hidden transition-opacity duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue"
@@ -298,7 +302,7 @@ export const ServiceTypes = () => {
                 key={service.code}
                 role={isActive ? 'group' : 'button'}
                 tabIndex={isActive ? -1 : 0}
-                aria-label={isActive ? service.title : `查看 ${service.title}`}
+                aria-label={isActive ? service.title : `${copy.view} ${service.title}`}
                 aria-hidden={hidden ? true : undefined}
                 onClick={() => !isActive && goTo(index)}
                 onKeyDown={(event) => {
@@ -368,29 +372,18 @@ export const ServiceTypes = () => {
                     放大幅度受轨道高度约束：轨道只比卡高 56px，1.09 已经吃掉大半余量，再大就会被裁 */}
                 <div
                   className={[
-                    'group/card glass-thin relative flex h-full w-full flex-col overflow-hidden rounded-[3px] p-5 sm:p-6',
+                    'group/card glass-thin relative flex h-full w-full flex-col overflow-hidden rounded-card p-5 sm:p-6',
                     'transition-transform duration-300 ease-out',
                     isActive ? 'hover:scale-[1.04]' : 'cursor-pointer hover:scale-[1.09]',
                   ].join(' ')}
                 >
-                {/* 品牌色只作为卡片顶部的一层薄染，到文字区之前退成纸白，不额外套一层面板 */}
-                <motion.span
-                  aria-hidden
-                  animate={{ opacity: isActive ? 1 : 0.45 }}
-                  transition={reduce ? { duration: 0 } : TRANSITION}
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background: `linear-gradient(172deg, rgb(${theme.rgb} / 0.14) 0%, rgb(${theme.rgb} / 0.04) 45%, rgb(${theme.rgb} / 0) 72%)`,
-                  }}
-                />
-
                 <motion.div
                   animate={{ opacity: contentOpacityFor(distance) }}
                   transition={reduce ? { duration: 0 } : TRANSITION}
                   className="relative flex h-full flex-col"
                 >
                   <div className="flex min-h-0 flex-1 items-center justify-center px-1 text-graphite-dim">
-                    <ServiceArtwork code={service.code} accent={theme.hex} />
+                    <ServiceArtwork code={service.code} />
                   </div>
 
                   <h3 className="pt-4 text-[16.5px] font-semibold leading-snug tracking-[-0.01em] text-graphite sm:text-[17.5px]">
@@ -458,19 +451,9 @@ export const ServiceTypes = () => {
           160px 以上，那两块渐变本来就什么都没遮；窄屏上裁切点正好落在屏幕边缘，
           与常规轮播的读法一致。 */}
 
-      {/* 箭头贴着侧卡外缘、垂直居中，是转盘的读法。
-          z-[70] 是为了压过卡片（卡片是 50 - distance，最高 50）。
-          循环之后位置刻度没有意义——没有第一张也没有最后一张，所以只留翻动方向，不做圆点 */}
-      {/* 容器比版心（max-w-6xl）宽一档：舞台摊到五张后外缘已经超出版心，
-          按版心摆箭头会正好压在最外侧那对卡上。1280 以下仍会轻微相叠——
-          那个宽度下五张卡加两侧箭头本来就排不开，而被叠住的是最暗、最不吃重的一张 */}
-      <div className="pointer-events-none absolute inset-y-0 left-1/2 z-[70] flex w-full max-w-7xl -translate-x-1/2 items-center justify-between px-3 sm:px-6">
-        <PagerButton label="上一类" onClick={() => step(-1)}>
-          <path d="M10 3 L5 8 L10 13" />
-        </PagerButton>
-        <PagerButton label="下一类" onClick={() => step(1)}>
-          <path d="M6 3 L11 8 L6 13" />
-        </PagerButton>
+      <div className="mt-6 flex items-center justify-center gap-3">
+        <PagerButton label={copy.previousService} direction="previous" onClick={() => step(-1)} />
+        <PagerButton label={copy.nextService} direction="next" onClick={() => step(1)} />
       </div>
       </div>
     </section>
@@ -479,22 +462,22 @@ export const ServiceTypes = () => {
 
 const PagerButton = ({
   label,
+  direction,
   onClick,
-  children,
 }: {
   label: string
+  direction: 'previous' | 'next'
   onClick: () => void
-  children: React.ReactNode
 }) => (
   <button
     type="button"
     aria-label={label}
+    title={label}
     onClick={onClick}
-    // pointer-events-auto 抵消父层的 none：父层铺满整个舞台，不关掉指针会挡住卡片的点击
-    className="glass-medium pointer-events-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-btn text-graphite-soft transition-colors duration-200 hover:bg-white/75 hover:text-graphite focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+    className="home-pager glass-medium flex size-11 shrink-0 items-center justify-center rounded-btn text-graphite-soft transition-colors duration-200 hover:bg-white/75 hover:text-graphite focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
   >
-    <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round">
-      {children}
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className="size-5" aria-hidden="true">
+      <path d={direction === 'previous' ? 'M14 6l-6 6 6 6' : 'M10 6l6 6-6 6'} />
     </svg>
   </button>
 )

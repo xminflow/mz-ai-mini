@@ -4,10 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "node scripts/next-with-templates.mjs dev",
+    "build": "node scripts/next-with-templates.mjs build",
+    "start": "node scripts/next-with-templates.mjs start",
+    "lint": "next lint",
+    "template:local": "node scripts/deformo-package.mjs local",
+    "template:update": "node scripts/deformo-package.mjs snapshot",
+    "template:assets": "node scripts/deformo-package.mjs assets",
+    "template:check": "node scripts/deformo-package.mjs check"
   },
   "dependencies": {
     "echarts": "^6.1.0",
@@ -15,7 +19,12 @@
     "next": "^15.3.3",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "deformo-template": "file:./vendor/deformo-template-1.2.0-b0b72814139c.tgz",
+    "uiuxfolio-template": "file:./vendor/uiuxfolio-template-1.0.0-4ce4f9e603c6.tgz",
+    "latte-template": "file:./vendor/latte-template-1.0.0-d38b81861d24.tgz",
+    "foldex-template": "file:./vendor/foldex-template-1.0.0-5d78779a7c61.tgz",
+    "cerno-template": "file:./vendor/cerno-template-1.0.0-e7210d77cba0.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
@@ -30,5 +39,6 @@
     "tailwindcss": "^4.2.2",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.0"
-  }
+  },
+  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
 }

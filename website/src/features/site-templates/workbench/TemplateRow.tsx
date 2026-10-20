@@ -17,7 +17,9 @@ export function TemplateRow({ template }: { template: SiteTemplate }) {
 
   return (
     <Link
-      href={`/templates/${template.id}/preview`}
+      href={`/templates/${template.id}/${template.surfaces[0].id}`}
+      target="_blank"
+      rel="noopener noreferrer"
       className="group relative block border-t border-rule py-12 lg:py-16"
     >
       {/* 分隔线左端这一小段用的是模板自己的强调色——整个目录页唯一的彩色来源是它陈列的模板，

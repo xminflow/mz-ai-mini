@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="163" viewBox="0 0 280 163" fill="none">
+  <title>五月财务趋势，最高金额 4,890 美元</title>
+  <defs><linearGradient id="panel" x2="0" y2="1"><stop stop-color="#f8faff"/><stop offset="1" stop-color="#f0f5ff"/></linearGradient></defs>
+  <rect width="280" height="163" rx="16" fill="#fff"/>
+  <path d="M12 12h256v139H12z" fill="url(#panel)"/>
+  <path d="M197 12h35v139h-35z" fill="#e0ebff"/>
+  <path d="M48 12v139m36-139v139m37-139v139m37-139v139m37-139v139m37-139v139" stroke="#fff" stroke-width="2"/>
+  <path d="M30 139c6-97 26-106 37-56s17-4 31 7 17 43 27 40 10-60 24-51 10-16 24-17 14 47 27 39 14 22 48 36" stroke="#4686fe" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="177" cy="62" r="5" fill="#fff" stroke="#4686fe" stroke-width="2"/>
+  <rect x="114" y="26" width="136" height="23" rx="7" fill="#fff" stroke="#eee"/>
+  <g font-family="'Microsoft YaHei','PingFang SC',sans-serif" font-size="10"><text x="121" y="41" fill="#4686fe">$4,890</text><text x="166" y="41" fill="#444">五月最高金额</text></g>
+</svg>

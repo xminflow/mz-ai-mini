@@ -1,0 +1,46 @@
+'use client'
+
+import { useState } from 'react'
+import { Button } from '@/components/ui'
+import type { TemplatePresentation } from '../types'
+import { TemplateCard } from './TemplateCard'
+import { WorkBuddyIntro } from './WorkBuddyIntro'
+
+export function TemplateCatalog({ templates }: { templates: TemplatePresentation[] }) {
+  const [scene, setScene] = useState('all')
+  const categories = [...new Map(templates.map((template) => [template.sceneId, template.category])).entries()]
+  const visible = templates.filter((template) => scene === 'all' || template.sceneId === scene)
+
+  return (
+    <>
+      <header className="market-catalog-hero">
+        <div className="market-catalog-intro">
+          <p className="market-eyebrow">THE TEMPLATE COLLECTION</p>
+          <h1>好设计，让想法<span>先一步成形<i aria-hidden="true" /></span></h1>
+          <WorkBuddyIntro />
+        </div>
+      </header>
+
+      <section aria-label="模板集合" className="pb-24">
+        <div className="market-filter-bar">
+          <div className="flex flex-wrap gap-2" role="group" aria-label="按业务场景筛选">
+            {[['all', '全部模板'], ...categories].map(([id, name]) => (
+              <button key={id} type="button" onClick={() => setScene(id)} aria-pressed={scene === id} className={`market-filter ${scene === id ? 'is-active' : ''}`}>{name}</button>
+            ))}
+          </div>
+        </div>
+        {visible.length > 0 ? (
+          <div className="market-card-grid">
+            {visible.map((template) => <TemplateCard key={template.id} template={template} />)}
+          </div>
+        ) : (
+          <div className="py-24 text-center">
+            <h2 className="text-xl">没有匹配的模板</h2>
+            <p className="mb-7 mt-3 text-sm text-muted">请选择其他业务场景，或查看全部模板。</p>
+            <Button className="market-secondary" onClick={() => setScene('all')}>重置筛选</Button>
+          </div>
+        )}
+      </section>
+    </>
+  )
+}

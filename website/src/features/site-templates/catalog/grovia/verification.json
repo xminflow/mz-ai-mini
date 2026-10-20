@@ -1,0 +1,1612 @@
+{
+  "verifiedAt": "2026-10-15T07:15:53.656Z",
+  "environment": "Next.js local development",
+  "checks": 80,
+  "notes": [
+    "Browser runtime checks after final font and footer updates.",
+    "Navigation height, fonts, content language, image decoding, title punctuation and filing verified for all viewports.",
+    "Production build and real service integrations not executed."
+  ],
+  "pages": [
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/about",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/pluto",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/vitahealth",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/boxmedia",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/novatech",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/naviai",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/lumora",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/design-system",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/about",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/pluto",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/vitahealth",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/boxmedia",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/novatech",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/naviai",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/lumora",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/design-system",
+      "viewport": [
+        1440,
+        1000
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/about",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/pluto",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/vitahealth",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/boxmedia",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/novatech",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/naviai",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/lumora",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/design-system",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/about",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/pluto",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/vitahealth",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/boxmedia",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/novatech",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/naviai",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/lumora",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/design-system",
+      "viewport": [
+        834,
+        1180
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/about",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/pluto",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/vitahealth",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/boxmedia",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/novatech",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/naviai",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/lumora",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/design-system",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/about",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/pluto",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/vitahealth",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/boxmedia",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/novatech",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/naviai",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/lumora",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/design-system",
+      "viewport": [
+        390,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/about",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/pluto",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/vitahealth",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/boxmedia",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/novatech",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/naviai",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/case-studies/lumora",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向",
+      "path": "/templates/grovia/site/design-system",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "zh-CN"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/about",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/pluto",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/vitahealth",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/boxmedia",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/novatech",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/naviai",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/case-studies/lumora",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    },
+    {
+      "fontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "Give your team a clearer path to growth",
+      "path": "/templates/grovia/site/en/design-system",
+      "viewport": [
+        320,
+        844
+      ],
+      "h1": 1,
+      "overflow": false,
+      "broken": [],
+      "duplicates": [],
+      "navHeight": 54,
+      "headingPunctuation": [],
+      "filing": true,
+      "lang": "en"
+    }
+  ]
+}

@@ -1,0 +1,939 @@
+{
+  "verifiedAt": "2026-10-15T11:56:17.571Z",
+  "base": "http://127.0.0.1:3002",
+  "viewports": [
+    {
+      "mode": "no-preference",
+      "start": {
+        "width": 1440,
+        "height": 1000,
+        "scroll": 0,
+        "heroHeight": 1000,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 110,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": false
+      },
+      "quarter": {
+        "width": 1440,
+        "height": 1000,
+        "scroll": 250,
+        "heroHeight": 1000,
+        "heroTop": 0,
+        "titleY": -75,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0.5,
+        "introY": 50,
+        "overflow": false,
+        "titleFont": 110,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": false
+      }
+    },
+    {
+      "mode": "no-preference",
+      "start": {
+        "width": 834,
+        "height": 1180,
+        "scroll": 0,
+        "heroHeight": 1180,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 72,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": false
+      },
+      "quarter": {
+        "width": 834,
+        "height": 1180,
+        "scroll": 295,
+        "heroHeight": 1180,
+        "heroTop": 0,
+        "titleY": -88.5,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0.5,
+        "introY": 59,
+        "overflow": false,
+        "titleFont": 72,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": false
+      }
+    },
+    {
+      "mode": "no-preference",
+      "start": {
+        "width": 390,
+        "height": 844,
+        "scroll": 0,
+        "heroHeight": 844,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 52,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": false
+      },
+      "quarter": {
+        "width": 390,
+        "height": 844,
+        "scroll": 211,
+        "heroHeight": 844,
+        "heroTop": 0,
+        "titleY": -63.3,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0.5,
+        "introY": 32.2661,
+        "overflow": false,
+        "titleFont": 52,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": false
+      }
+    },
+    {
+      "mode": "no-preference",
+      "start": {
+        "width": 1440,
+        "height": 650,
+        "scroll": 0,
+        "heroHeight": 650,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 78,
+        "bodyFont": 14,
+        "actionsVisible": true,
+        "reduced": false
+      },
+      "quarter": {
+        "width": 1440,
+        "height": 650,
+        "scroll": 163,
+        "heroHeight": 650,
+        "heroTop": 0,
+        "titleY": -48.9,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0.501538,
+        "introY": 32.6,
+        "overflow": false,
+        "titleFont": 78,
+        "bodyFont": 14,
+        "actionsVisible": true,
+        "reduced": false
+      }
+    },
+    {
+      "mode": "no-preference",
+      "start": {
+        "width": 1440,
+        "height": 1400,
+        "scroll": 0,
+        "heroHeight": 1400,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 110,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": false
+      },
+      "quarter": {
+        "width": 1440,
+        "height": 1400,
+        "scroll": 350,
+        "heroHeight": 1400,
+        "heroTop": 0,
+        "titleY": -105,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0.5,
+        "introY": 70,
+        "overflow": false,
+        "titleFont": 110,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": false
+      }
+    },
+    {
+      "mode": "no-preference",
+      "start": {
+        "width": 390,
+        "height": 600,
+        "scroll": 0,
+        "heroHeight": 600,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 52,
+        "bodyFont": 14,
+        "actionsVisible": true,
+        "reduced": false
+      },
+      "quarter": {
+        "width": 390,
+        "height": 600,
+        "scroll": 150,
+        "heroHeight": 600,
+        "heroTop": 0,
+        "titleY": -45,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0.5,
+        "introY": 22.9412,
+        "overflow": false,
+        "titleFont": 52,
+        "bodyFont": 14,
+        "actionsVisible": true,
+        "reduced": false
+      }
+    },
+    {
+      "mode": "no-preference",
+      "start": {
+        "width": 320,
+        "height": 568,
+        "scroll": 0,
+        "heroHeight": 568,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 42.6688,
+        "bodyFont": 14,
+        "actionsVisible": true,
+        "reduced": false
+      },
+      "quarter": {
+        "width": 320,
+        "height": 568,
+        "scroll": 142,
+        "heroHeight": 568,
+        "heroTop": 0,
+        "titleY": -42.6,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0.5,
+        "introY": 21.7087,
+        "overflow": false,
+        "titleFont": 42.6688,
+        "bodyFont": 14,
+        "actionsVisible": true,
+        "reduced": false
+      }
+    },
+    {
+      "mode": "reduce",
+      "start": {
+        "width": 1440,
+        "height": 1000,
+        "scroll": 0,
+        "heroHeight": 1000,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 110,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": true
+      },
+      "quarter": {
+        "width": 1440,
+        "height": 1000,
+        "scroll": 250,
+        "heroHeight": 1000,
+        "heroTop": -250,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 110,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": true
+      }
+    },
+    {
+      "mode": "reduce",
+      "start": {
+        "width": 834,
+        "height": 1180,
+        "scroll": 0,
+        "heroHeight": 1180,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 72,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": true
+      },
+      "quarter": {
+        "width": 834,
+        "height": 1180,
+        "scroll": 295,
+        "heroHeight": 1180,
+        "heroTop": -295,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 72,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": true
+      }
+    },
+    {
+      "mode": "reduce",
+      "start": {
+        "width": 390,
+        "height": 844,
+        "scroll": 0,
+        "heroHeight": 844,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 52,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": true
+      },
+      "quarter": {
+        "width": 390,
+        "height": 844,
+        "scroll": 211,
+        "heroHeight": 844,
+        "heroTop": -211,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 52,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": true
+      }
+    },
+    {
+      "mode": "reduce",
+      "start": {
+        "width": 1440,
+        "height": 650,
+        "scroll": 0,
+        "heroHeight": 650,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 78,
+        "bodyFont": 14,
+        "actionsVisible": true,
+        "reduced": true
+      },
+      "quarter": {
+        "width": 1440,
+        "height": 650,
+        "scroll": 163,
+        "heroHeight": 650,
+        "heroTop": -163,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 78,
+        "bodyFont": 14,
+        "actionsVisible": true,
+        "reduced": true
+      }
+    },
+    {
+      "mode": "reduce",
+      "start": {
+        "width": 1440,
+        "height": 1400,
+        "scroll": 0,
+        "heroHeight": 1400,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 110,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": true
+      },
+      "quarter": {
+        "width": 1440,
+        "height": 1400,
+        "scroll": 350,
+        "heroHeight": 1400,
+        "heroTop": -350,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 110,
+        "bodyFont": 18,
+        "actionsVisible": true,
+        "reduced": true
+      }
+    },
+    {
+      "mode": "reduce",
+      "start": {
+        "width": 390,
+        "height": 600,
+        "scroll": 0,
+        "heroHeight": 600,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 52,
+        "bodyFont": 14,
+        "actionsVisible": true,
+        "reduced": true
+      },
+      "quarter": {
+        "width": 390,
+        "height": 600,
+        "scroll": 150,
+        "heroHeight": 600,
+        "heroTop": -150,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 52,
+        "bodyFont": 14,
+        "actionsVisible": true,
+        "reduced": true
+      }
+    },
+    {
+      "mode": "reduce",
+      "start": {
+        "width": 320,
+        "height": 568,
+        "scroll": 0,
+        "heroHeight": 568,
+        "heroTop": 0,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 42.6688,
+        "bodyFont": 14,
+        "actionsVisible": true,
+        "reduced": true
+      },
+      "quarter": {
+        "width": 320,
+        "height": 568,
+        "scroll": 142,
+        "heroHeight": 568,
+        "heroTop": -142,
+        "titleY": 0,
+        "titleOpacity": [
+          1,
+          1
+        ],
+        "portraitOpacity": 0,
+        "introY": 0,
+        "overflow": false,
+        "titleFont": 42.6688,
+        "bodyFont": 14,
+        "actionsVisible": true,
+        "reduced": true
+      }
+    }
+  ],
+  "carousel": [
+    {
+      "mode": "no-preference",
+      "width": 1440,
+      "manualSelection": true,
+      "paused": true,
+      "autoplay": true,
+      "drag": true
+    },
+    {
+      "mode": "no-preference",
+      "width": 834,
+      "manualSelection": true,
+      "paused": true,
+      "autoplay": true,
+      "drag": true
+    },
+    {
+      "mode": "no-preference",
+      "width": 390,
+      "manualSelection": true,
+      "paused": true,
+      "autoplay": true,
+      "drag": true
+    },
+    {
+      "mode": "reduce",
+      "width": 1440,
+      "manualSelection": true,
+      "paused": true,
+      "autoplay": false,
+      "drag": false
+    },
+    {
+      "mode": "reduce",
+      "width": 834,
+      "manualSelection": true,
+      "paused": true,
+      "autoplay": false,
+      "drag": false
+    },
+    {
+      "mode": "reduce",
+      "width": 390,
+      "manualSelection": true,
+      "paused": true,
+      "autoplay": false,
+      "drag": false
+    }
+  ],
+  "showreels": [
+    {
+      "mode": "no-preference",
+      "width": 1440,
+      "cover": true,
+      "aspectRatio": 1.5,
+      "clickPlayback": true
+    },
+    {
+      "mode": "no-preference",
+      "width": 834,
+      "cover": true,
+      "aspectRatio": 1.5,
+      "clickPlayback": true
+    },
+    {
+      "mode": "no-preference",
+      "width": 390,
+      "cover": true,
+      "aspectRatio": 1.5,
+      "clickPlayback": true
+    },
+    {
+      "mode": "reduce",
+      "width": 1440,
+      "cover": true,
+      "aspectRatio": 1.5,
+      "clickPlayback": true
+    },
+    {
+      "mode": "reduce",
+      "width": 834,
+      "cover": true,
+      "aspectRatio": 1.5,
+      "clickPlayback": true
+    },
+    {
+      "mode": "reduce",
+      "width": 390,
+      "cover": true,
+      "aspectRatio": 1.5,
+      "clickPlayback": true
+    }
+  ],
+  "frames": [
+    {
+      "file": "1440-start.webp",
+      "width": 1440,
+      "height": 1000,
+      "scroll": 0,
+      "heroHeight": 1000,
+      "heroTop": 0,
+      "titleY": 0,
+      "titleOpacity": [
+        1,
+        1
+      ],
+      "portraitOpacity": 0,
+      "introY": 0,
+      "overflow": false,
+      "titleFont": 110,
+      "bodyFont": 18,
+      "actionsVisible": true,
+      "reduced": false
+    },
+    {
+      "file": "1440-quarter.webp",
+      "width": 1440,
+      "height": 1000,
+      "scroll": 250,
+      "heroHeight": 1000,
+      "heroTop": 0,
+      "titleY": -75,
+      "titleOpacity": [
+        1,
+        1
+      ],
+      "portraitOpacity": 0.5,
+      "introY": 50,
+      "overflow": false,
+      "titleFont": 110,
+      "bodyFont": 18,
+      "actionsVisible": true,
+      "reduced": false
+    },
+    {
+      "file": "1440-middle.webp",
+      "width": 1440,
+      "height": 1000,
+      "scroll": 500,
+      "heroHeight": 1000,
+      "heroTop": 0,
+      "titleY": -150,
+      "titleOpacity": [
+        1,
+        1
+      ],
+      "portraitOpacity": 1,
+      "introY": 100,
+      "overflow": false,
+      "titleFont": 110,
+      "bodyFont": 18,
+      "actionsVisible": true,
+      "reduced": false
+    },
+    {
+      "file": "1440-showreel.webp",
+      "width": 1440,
+      "height": 1000,
+      "scroll": 1000,
+      "heroHeight": 1000,
+      "heroTop": 0,
+      "titleY": -300,
+      "titleOpacity": [
+        1,
+        1
+      ],
+      "portraitOpacity": 1,
+      "introY": 200,
+      "overflow": false,
+      "titleFont": 110,
+      "bodyFont": 18,
+      "actionsVisible": true,
+      "reduced": false
+    },
+    {
+      "file": "834-start.webp",
+      "width": 834,
+      "height": 1180,
+      "scroll": 0,
+      "heroHeight": 1180,
+      "heroTop": 0,
+      "titleY": 0,
+      "titleOpacity": [
+        1,
+        1
+      ],
+      "portraitOpacity": 0,
+      "introY": 0,
+      "overflow": false,
+      "titleFont": 72,
+      "bodyFont": 18,
+      "actionsVisible": true,
+      "reduced": false
+    },
+    {
+      "file": "834-quarter.webp",
+      "width": 834,
+      "height": 1180,
+      "scroll": 295,
+      "heroHeight": 1180,
+      "heroTop": 0,
+      "titleY": -88.5,
+      "titleOpacity": [
+        1,
+        1
+      ],
+      "portraitOpacity": 0.5,
+      "introY": 59,
+      "overflow": false,
+      "titleFont": 72,
+      "bodyFont": 18,
+      "actionsVisible": true,
+      "reduced": false
+    },
+    {
+      "file": "834-middle.webp",
+      "width": 834,
+      "height": 1180,
+      "scroll": 590,
+      "heroHeight": 1180,
+      "heroTop": 0,
+      "titleY": -177,
+      "titleOpacity": [
+        1,
+        1
+      ],
+      "portraitOpacity": 1,
+      "introY": 118,
+      "overflow": false,
+      "titleFont": 72,
+      "bodyFont": 18,
+      "actionsVisible": true,
+      "reduced": false
+    },
+    {
+      "file": "834-showreel.webp",
+      "width": 834,
+      "height": 1180,
+      "scroll": 1180,
+      "heroHeight": 1180,
+      "heroTop": 0,
+      "titleY": -354,
+      "titleOpacity": [
+        1,
+        1
+      ],
+      "portraitOpacity": 1,
+      "introY": 236,
+      "overflow": false,
+      "titleFont": 72,
+      "bodyFont": 18,
+      "actionsVisible": true,
+      "reduced": false
+    },
+    {
+      "file": "390-start.webp",
+      "width": 390,
+      "height": 844,
+      "scroll": 0,
+      "heroHeight": 844,
+      "heroTop": 0,
+      "titleY": 0,
+      "titleOpacity": [
+        1,
+        1
+      ],
+      "portraitOpacity": 0,
+      "introY": 0,
+      "overflow": false,
+      "titleFont": 52,
+      "bodyFont": 18,
+      "actionsVisible": true,
+      "reduced": false
+    },
+    {
+      "file": "390-quarter.webp",
+      "width": 390,
+      "height": 844,
+      "scroll": 211,
+      "heroHeight": 844,
+      "heroTop": 0,
+      "titleY": -63.3,
+      "titleOpacity": [
+        1,
+        1
+      ],
+      "portraitOpacity": 0.5,
+      "introY": 32.2661,
+      "overflow": false,
+      "titleFont": 52,
+      "bodyFont": 18,
+      "actionsVisible": true,
+      "reduced": false
+    },
+    {
+      "file": "390-middle.webp",
+      "width": 390,
+      "height": 844,
+      "scroll": 422,
+      "heroHeight": 844,
+      "heroTop": 0,
+      "titleY": -126.6,
+      "titleOpacity": [
+        1,
+        1
+      ],
+      "portraitOpacity": 1,
+      "introY": 64.5322,
+      "overflow": false,
+      "titleFont": 52,
+      "bodyFont": 18,
+      "actionsVisible": true,
+      "reduced": false
+    },
+    {
+      "file": "390-showreel.webp",
+      "width": 390,
+      "height": 844,
+      "scroll": 844,
+      "heroHeight": 844,
+      "heroTop": 0,
+      "titleY": -253.2,
+      "titleOpacity": [
+        1,
+        1
+      ],
+      "portraitOpacity": 1,
+      "introY": 129.064,
+      "overflow": false,
+      "titleFont": 52,
+      "bodyFont": 18,
+      "actionsVisible": false,
+      "reduced": false
+    }
+  ],
+  "previews": [
+    {
+      "device": "tablet",
+      "width": 834,
+      "height": 1180,
+      "heroHeight": 1180,
+      "heroTop": 0,
+      "titleY": -88.5,
+      "portraitOpacity": 0.5,
+      "errors": []
+    },
+    {
+      "device": "mobile",
+      "width": 390,
+      "height": 844,
+      "heroHeight": 844,
+      "heroTop": 0,
+      "titleY": -63.3,
+      "portraitOpacity": 0.5,
+      "errors": []
+    }
+  ],
+  "runtimeErrors": []
+}

@@ -1,0 +1,41 @@
+import type { SiteTemplate } from '../../types'
+
+export const conicornTemplate: SiteTemplate = {
+  id: 'conicorn',
+  name: '微域生光 · AI 自动化',
+  localizedNames: { en: 'Weelume · AI automation' },
+  sceneId: 'corporate-site',
+  listed: false,
+  tags: ['黑白渐变', 'AI 自动化', '增长系统', 'PC / iPad / H5', '中英文官网'],
+  summary: '参考 Conicorn 的 AI 自动化机构官网，完整呈现首屏、能力、流程、案例、集成、客户评价、价格、团队与 FAQ。',
+  accentColor: '#b5a5ff',
+  cover: '/templates/conicorn/assets/about-us.png',
+  screenshots: [
+    { src: '/templates/conicorn/screenshots/home.webp', alt: 'Conicorn 首页桌面端', device: 'desktop', width: 1440, height: 1000 },
+    { src: '/templates/conicorn/screenshots/tablet-home.webp', alt: 'Conicorn 首页平板端', device: 'tablet', width: 834, height: 1180 },
+    { src: '/templates/conicorn/screenshots/mobile-home.webp', alt: 'Conicorn 首页移动端', device: 'mobile', width: 390, height: 844 },
+    { src: '/templates/conicorn/screenshots/capabilities.webp', alt: 'Conicorn 能力模块桌面端', device: 'desktop', width: 1440, height: 1000 },
+    { src: '/templates/conicorn/screenshots/tablet-capabilities.webp', alt: 'Conicorn 能力模块平板端', device: 'tablet', width: 834, height: 1180 },
+    { src: '/templates/conicorn/screenshots/mobile-capabilities.webp', alt: 'Conicorn 能力模块移动端', device: 'mobile', width: 390, height: 844 },
+    { src: '/templates/conicorn/screenshots/cases.webp', alt: 'Conicorn 案例桌面端', device: 'desktop', width: 1440, height: 1000 },
+    { src: '/templates/conicorn/screenshots/tablet-cases.webp', alt: 'Conicorn 案例平板端', device: 'tablet', width: 834, height: 1180 },
+    { src: '/templates/conicorn/screenshots/mobile-cases.webp', alt: 'Conicorn 案例移动端', device: 'mobile', width: 390, height: 844 },
+    { src: '/templates/conicorn/screenshots/contact.webp', alt: 'Conicorn 联系桌面端', device: 'desktop', width: 1440, height: 1000 },
+    { src: '/templates/conicorn/screenshots/tablet-contact.webp', alt: 'Conicorn 联系平板端', device: 'tablet', width: 834, height: 1180 },
+    { src: '/templates/conicorn/screenshots/mobile-contact.webp', alt: 'Conicorn 联系移动端', device: 'mobile', width: 390, height: 844 },
+  ],
+  surfaces: [{
+    id: 'site', name: 'AI 自动化官网', platform: 'pc', locales: ['zh', 'en'],
+    pages: [
+      { slug: '', title: '首页', localizedTitles: { en: 'Home' }, load: () => import('./pages/HomePage') },
+      { slug: 'case-studies', title: '案例', localizedTitles: { en: 'Case studies' }, load: () => import('./pages/CaseStudiesPage') },
+      { slug: 'case-studies/ai-property-inquiry-chatbot-for-real-estate-firms', title: '房地产询盘机器人', localizedTitles: { en: 'AI Property Inquiry Chatbot' }, load: () => import('./pages/CasePropertyPage') },
+      { slug: 'case-studies/ai-project-management-automation-for-creative-teams', title: '创意团队项目管理自动化', localizedTitles: { en: 'AI Project Management Automation' }, load: () => import('./pages/CaseProjectPage') },
+      { slug: 'case-studies/ai-workflow-automation-for-finance-saas-company', title: '金融 SaaS 工作流自动化', localizedTitles: { en: 'AI Workflow Automation for Finance SaaS' }, load: () => import('./pages/CaseFinancePage') },
+      { slug: 'contact', title: '联系', localizedTitles: { en: 'Contact' }, load: () => import('./pages/ContactPage') },
+      { slug: 'terms-of-service', title: '服务条款', localizedTitles: { en: 'Terms of Service' }, load: () => import('./pages/TermsPage') },
+      { slug: 'privacy-policy', title: '隐私政策', localizedTitles: { en: 'Privacy Policy' }, load: () => import('./pages/PrivacyPage') },
+      { slug: '404', title: '404', localizedTitles: { en: '404' }, load: () => import('./pages/NotFoundPage') },
+    ],
+  }],
+}

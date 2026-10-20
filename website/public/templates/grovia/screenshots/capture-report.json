@@ -1,0 +1,163 @@
+{
+  "capturedAt": "2026-10-15T07:10:43.455Z",
+  "base": "http://127.0.0.1:3000",
+  "reducedMotion": true,
+  "shots": [
+    {
+      "file": "home.webp",
+      "width": 1440,
+      "height": 1000,
+      "broken": [],
+      "overflow": false,
+      "scroll": 0,
+      "chineseFontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向"
+    },
+    {
+      "file": "features.webp",
+      "width": 1440,
+      "height": 1000,
+      "broken": [],
+      "overflow": false,
+      "scroll": 1545,
+      "chineseFontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向"
+    },
+    {
+      "file": "cases.webp",
+      "width": 1440,
+      "height": 1000,
+      "broken": [],
+      "overflow": false,
+      "scroll": 0,
+      "chineseFontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向"
+    },
+    {
+      "file": "contact.webp",
+      "width": 1440,
+      "height": 1000,
+      "broken": [],
+      "overflow": false,
+      "scroll": 6311,
+      "chineseFontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向"
+    },
+    {
+      "file": "tablet-home.webp",
+      "width": 834,
+      "height": 1180,
+      "broken": [],
+      "overflow": false,
+      "scroll": 0,
+      "chineseFontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向"
+    },
+    {
+      "file": "tablet-features.webp",
+      "width": 834,
+      "height": 1180,
+      "broken": [],
+      "overflow": false,
+      "scroll": 1471,
+      "chineseFontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向"
+    },
+    {
+      "file": "tablet-cases.webp",
+      "width": 834,
+      "height": 1180,
+      "broken": [],
+      "overflow": false,
+      "scroll": 0,
+      "chineseFontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向"
+    },
+    {
+      "file": "tablet-contact.webp",
+      "width": 834,
+      "height": 1180,
+      "broken": [],
+      "overflow": false,
+      "scroll": 6441,
+      "chineseFontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向"
+    },
+    {
+      "file": "mobile-home.webp",
+      "width": 390,
+      "height": 844,
+      "broken": [],
+      "overflow": false,
+      "scroll": 0,
+      "chineseFontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向"
+    },
+    {
+      "file": "mobile-features.webp",
+      "width": 390,
+      "height": 844,
+      "broken": [],
+      "overflow": false,
+      "scroll": 2003,
+      "chineseFontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向"
+    },
+    {
+      "file": "mobile-cases.webp",
+      "width": 390,
+      "height": 844,
+      "broken": [],
+      "overflow": false,
+      "scroll": 0,
+      "chineseFontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向"
+    },
+    {
+      "file": "mobile-contact.webp",
+      "width": 390,
+      "height": 844,
+      "broken": [],
+      "overflow": false,
+      "scroll": 9103,
+      "chineseFontWeights": [
+        "400",
+        "700"
+      ],
+      "footerSlogan": "让团队成长更有方向"
+    }
+  ]
+}

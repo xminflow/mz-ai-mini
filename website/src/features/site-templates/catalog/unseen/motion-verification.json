@@ -1,0 +1,193 @@
+{
+  "testedAt": "2026-10-16T00:49:01.427Z",
+  "checks": [
+    {
+      "name": "GPU scene is running",
+      "passed": true
+    },
+    {
+      "name": "Water changes between real frames",
+      "passed": true
+    },
+    {
+      "name": "Pointer changes the GPU camera in both directions",
+      "passed": true
+    },
+    {
+      "name": "Title follows in the opposite direction",
+      "passed": true
+    },
+    {
+      "name": "Moving over water creates ripple impulses",
+      "passed": true
+    },
+    {
+      "name": "Clicking water creates another ripple",
+      "passed": true
+    },
+    {
+      "name": "Reduced motion freezes the rendered water",
+      "passed": true
+    },
+    {
+      "name": "Reduced motion disables pointer ripples",
+      "passed": true
+    },
+    {
+      "name": "Menu has an intermediate reveal frame",
+      "passed": true
+    },
+    {
+      "name": "Menu locks the background document",
+      "passed": true
+    },
+    {
+      "name": "Modal hides the document scrollbar",
+      "passed": true
+    },
+    {
+      "name": "Animated menu closes and restores focus",
+      "passed": true
+    },
+    {
+      "name": "Desktop wheel interpolates without replacing document scrolling",
+      "passed": true
+    },
+    {
+      "name": "Scrollbar follows the actual scroll position",
+      "passed": true
+    },
+    {
+      "name": "No reserved white gutter or horizontal overflow",
+      "passed": true
+    },
+    {
+      "name": "Scrollbar is visible while scrolling",
+      "passed": true
+    },
+    {
+      "name": "Scrollbar fades out when idle",
+      "passed": true
+    },
+    {
+      "name": "Thumb drag reaches lower content and releases capture",
+      "passed": true
+    },
+    {
+      "name": "Scrollbar End reaches the page footer",
+      "passed": true
+    },
+    {
+      "name": "Scrollbar Home reaches the top",
+      "passed": true
+    },
+    {
+      "name": "Scrollbar PageDown advances one viewport",
+      "passed": true
+    },
+    {
+      "name": "Clicking the rail seeks the document",
+      "passed": true
+    },
+    {
+      "name": "Offscreen GPU scene pauses",
+      "passed": true
+    },
+    {
+      "name": "834px: no gutter or overflow",
+      "passed": true
+    },
+    {
+      "name": "834px: document scrollbar synchronized",
+      "passed": true
+    },
+    {
+      "name": "390px: no gutter or overflow",
+      "passed": true
+    },
+    {
+      "name": "390px: document scrollbar synchronized",
+      "passed": true
+    },
+    {
+      "name": "390px: real touch scroll remains native",
+      "passed": true
+    },
+    {
+      "name": "320px: no gutter or overflow",
+      "passed": true
+    },
+    {
+      "name": "320px: document scrollbar synchronized",
+      "passed": true
+    },
+    {
+      "name": "320px: real touch scroll remains native",
+      "passed": true
+    },
+    {
+      "name": "English contact uses the interactive scene",
+      "passed": true
+    },
+    {
+      "name": "Visible World video previews play automatically",
+      "passed": true
+    },
+    {
+      "name": "Reduced motion pauses all World previews",
+      "passed": true
+    },
+    {
+      "name": "Existing Nubo keeps its visible scrollbar",
+      "passed": true
+    },
+    {
+      "name": "Shared scrollbar preserves Nubo behavior",
+      "passed": true
+    },
+    {
+      "name": "Leaving Unseen restores document scrollbar styles",
+      "passed": true
+    },
+    {
+      "name": "No uncaught browser exceptions",
+      "passed": true
+    },
+    {
+      "name": "No browser console errors",
+      "passed": true
+    },
+    {
+      "name": "Scene state is observable in debug logs",
+      "passed": true
+    }
+  ],
+  "evidence": [
+    ".local/unseen-motion/desktop-pointer-left.webp",
+    ".local/unseen-motion/desktop-pointer-right.webp",
+    ".local/unseen-motion/desktop-menu-open.webp",
+    ".local/unseen-motion/desktop-scrolling.webp",
+    ".local/unseen-motion/834px-scroll.webp",
+    ".local/unseen-motion/390px-scroll.webp",
+    ".local/unseen-motion/320px-scroll.webp"
+  ],
+  "debug": [
+    "[unseen/scene] visibility Object",
+    "[unseen/scene] image-ready Object",
+    "[unseen/scene] motion-preference Object",
+    "[unseen/scene] visibility Object",
+    "[unseen/scene] visibility Object",
+    "[unseen/scene] visibility Object",
+    "[unseen/scene] image-ready Object",
+    "[unseen/scene] image-ready Object",
+    "[unseen/scene] visibility Object",
+    "[unseen/scene] image-ready Object",
+    "[unseen/scene] visibility Object",
+    "[unseen/scene] image-ready Object",
+    "[unseen/scene] image-ready Object",
+    "[unseen/scene] visibility Object",
+    "[unseen/scene] image-ready Object",
+    "[unseen/scene] visibility Object",
+    "[unseen/scene] image-ready Object"
+  ]
+}

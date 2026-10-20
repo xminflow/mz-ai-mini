@@ -1,0 +1,98 @@
+{
+  "reference": "https://viral-sma.framer.website/",
+  "license": "参考站页面结构与图片仅用于本项目内部模板复刻演示；正式对外发布前需取得原作者及素材权利人许可。",
+  "assets": [
+    {
+      "local": "assets/hero.jpg",
+      "source": "https://framerusercontent.com/images/Ze2Z3GdVZQYVGrkE4Px3n4CTSL8.jpg?width=1200&height=1200"
+    },
+    {
+      "local": "assets/hero-1.mp4",
+      "source": "https://framerusercontent.com/assets/9BKR8n5yij6np4F4fhXpbwixLWI.mp4"
+    },
+    {
+      "local": "assets/hero-2.mp4",
+      "source": "https://framerusercontent.com/assets/0oniLdlZhN2RUR1zCzsqMbMHfQ8.mp4"
+    },
+    {
+      "local": "assets/hero-3.mp4",
+      "source": "https://framerusercontent.com/assets/TR9SXrUqMBTLyfoDFBPUh4qvHfE.mp4"
+    },
+    {
+      "local": "assets/service-content.mp4",
+      "source": "https://framerusercontent.com/assets/SCuqi0qyfpukKLtZm0jURfE.mp4"
+    },
+    {
+      "local": "assets/service-social.mp4",
+      "source": "https://framerusercontent.com/assets/64ZMhO5aQtuzPw6cPEGQKIEos.mp4"
+    },
+    {
+      "local": "assets/service-paid.mp4",
+      "source": "https://framerusercontent.com/assets/u0e0HQVXrB8r4Av9RYEjAmZ7rw.mp4"
+    },
+    {
+      "local": "assets/case-glowhaus.mp4",
+      "source": "https://framerusercontent.com/assets/FaxcwHWdhZxkAcLltQoQxhlJciw.mp4"
+    },
+    {
+      "local": "assets/case-theo.mp4",
+      "source": "https://framerusercontent.com/assets/EnIr8BLCc5cHl97sMAoX13URc.mp4"
+    },
+    {
+      "local": "assets/team-sofia.png",
+      "source": "https://framerusercontent.com/images/pKvsoBw7PzMwvEKRY0A10BwE.png?scale-down-to=1024&width=800&height=1200"
+    },
+    {
+      "local": "assets/team-james.png",
+      "source": "https://framerusercontent.com/images/uJwKxRho34Dyfp9eIo59t8wvMzc.png?scale-down-to=1024&width=800&height=1200"
+    },
+    {
+      "local": "assets/team-maya.png",
+      "source": "https://framerusercontent.com/images/Stt4Tl0zY1ga9S38HEpPTJMrWH0.png?scale-down-to=1024&width=800&height=1200"
+    },
+    {
+      "local": "assets/mark.png",
+      "source": "https://framerusercontent.com/images/LFas6lcLm3H2glSteWdgbxz1dk.png"
+    },
+    {
+      "local": "assets/avatar.png",
+      "source": "https://framerusercontent.com/images/Rbw6rvapFkrGEhgPd2cq4ZKqX2M.png"
+    },
+    {
+      "local": "assets/inter.woff2",
+      "source": "https://framerusercontent.com/assets/UjlFhCnUjxhNfep4oYBPqnEssyo.woff2"
+    },
+    {
+      "local": "assets/source-serif.woff2",
+      "source": "https://fonts.gstatic.com/s/sourceserif4/v14/vEFH2_tTDB4M7-auWDN0ahZJW1ge6NmXpVAHV83Bfb_US0r6aX0.woff2"
+    },
+    {
+      "local": "assets/havana.woff",
+      "source": "https://framerusercontent.com/assets/NTEnJcEEABFtqGxUPX0Rx53TXi8.woff"
+    },
+    {
+      "local": "assets/logo-milano.svg",
+      "source": "https://viral-sma.framer.website/#svg8872744044"
+    },
+    {
+      "local": "assets/logo-venice.svg",
+      "source": "https://viral-sma.framer.website/#svg12046384785"
+    },
+    {
+      "local": "assets/logo-theo.svg",
+      "source": "https://viral-sma.framer.website/#svg11878651108"
+    },
+    {
+      "local": "assets/logo-amsterdam.svg",
+      "source": "https://viral-sma.framer.website/#svg11128975556"
+    },
+    {
+      "local": "assets/inter-semibold.woff2",
+      "source": "https://framerusercontent.com/assets/1ZFS7N918ojhhd0nQWdj3jz4w.woff2"
+    },
+    {
+      "local": "assets/testimonial.mp4",
+      "source": "https://framerusercontent.com/assets/6XfEmiD6m02yjpZAyc2nDmmOA.mp4"
+    }
+  ]
+}

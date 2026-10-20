@@ -62,6 +62,9 @@ yarn-error.log*
 coverage/
 dist/
 /website/.next/
+/website/.next-*/
+/website/.work/
+/website/public/templates/deformo/
 /website/dist-ssr/
 /website/*.local
 /website/*.tsbuildinfo
@@ -113,3 +116,21 @@ ua-agent/checkpoints/
 .local-screenshots/
 /website/_*.txt
 /website/resp-*.txt
+/website/uiuxfolio.local
+/website/latte.local
+/website/cerno.local
+/website/foldex.local
+/artifacts/cerno/source/
+/artifacts/uiuxfolio/source/
+
+# 本机验收、发布归档与运行状态不属于源码交付
+/artifacts/
+/hm-dev.*.log
+/website/.tmp-page.js
+/.claude/scheduled_tasks.lock
+
+# 共享模板素材由 vendor 固定包生成，避免与包重复提交
+/website/public/templates/uiuxfolio/
+/website/public/templates/latte/
+/website/public/templates/cerno/
+/website/public/templates/foldex/

@@ -117,9 +117,6 @@ const HandoverDiagram = ({ className }: DiagramProps) => (
   <svg {...SVG_PROPS} className={className}>
     <path d="M24 44l38-20 38 20v44l-38 20-38-20z" fill={FILL.red} fillOpacity={0.14} />
     <path d="M24 44l38 20 38-20M62 64v44" />
-    {/* 交付箭头指向钥匙，用主色把「交出去」这个动作串起来 */}
-    <path d="M112 66h50" stroke={FILL.blue} strokeWidth={2} />
-    <path d="M152 56l12 10-12 10" stroke={FILL.blue} strokeWidth={2} />
     <circle cx="182" cy="40" r="9" fill={FILL.blue} fillOpacity={0.22} />
     <path d="M182 49v20M176 62h6M176 68h6" />
   </svg>

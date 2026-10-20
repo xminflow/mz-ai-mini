@@ -1,0 +1,139 @@
+{
+  "capturedAt": "2026-10-19T18:18:21.053Z",
+  "base": "http://localhost:3000",
+  "reducedMotion": true,
+  "shots": [
+    {
+      "file": "home.webp",
+      "width": 1440,
+      "height": 1000,
+      "broken": [],
+      "overflow": false,
+      "title": "首页 · 微域生光 · 社媒增长",
+      "titleFilter": "blur(0px)",
+      "titleOpacity": "1",
+      "mainOpacity": "1"
+    },
+    {
+      "file": "features.webp",
+      "width": 1440,
+      "height": 1000,
+      "broken": [],
+      "overflow": false,
+      "title": "关于微域生光 · 微域生光 · 社媒增长",
+      "titleFilter": "none",
+      "titleOpacity": "1",
+      "mainOpacity": "1"
+    },
+    {
+      "file": "blog.webp",
+      "width": 1440,
+      "height": 1000,
+      "broken": [],
+      "overflow": false,
+      "title": "博客 · 微域生光 · 社媒增长",
+      "titleFilter": "none",
+      "titleOpacity": "1",
+      "mainOpacity": "1"
+    },
+    {
+      "file": "contact.webp",
+      "width": 1440,
+      "height": 1000,
+      "broken": [],
+      "overflow": false,
+      "title": "预约通话 · 微域生光 · 社媒增长",
+      "titleFilter": "none",
+      "titleOpacity": "1",
+      "mainOpacity": "1"
+    },
+    {
+      "file": "tablet-home.webp",
+      "width": 834,
+      "height": 1180,
+      "broken": [],
+      "overflow": false,
+      "title": "首页 · 微域生光 · 社媒增长",
+      "titleFilter": "blur(0px)",
+      "titleOpacity": "1",
+      "mainOpacity": "1"
+    },
+    {
+      "file": "tablet-features.webp",
+      "width": 834,
+      "height": 1180,
+      "broken": [],
+      "overflow": false,
+      "title": "关于微域生光 · 微域生光 · 社媒增长",
+      "titleFilter": "none",
+      "titleOpacity": "1",
+      "mainOpacity": "1"
+    },
+    {
+      "file": "tablet-blog.webp",
+      "width": 834,
+      "height": 1180,
+      "broken": [],
+      "overflow": false,
+      "title": "博客 · 微域生光 · 社媒增长",
+      "titleFilter": "none",
+      "titleOpacity": "1",
+      "mainOpacity": "1"
+    },
+    {
+      "file": "tablet-contact.webp",
+      "width": 834,
+      "height": 1180,
+      "broken": [],
+      "overflow": false,
+      "title": "预约通话 · 微域生光 · 社媒增长",
+      "titleFilter": "none",
+      "titleOpacity": "1",
+      "mainOpacity": "1"
+    },
+    {
+      "file": "mobile-home.webp",
+      "width": 390,
+      "height": 844,
+      "broken": [],
+      "overflow": false,
+      "title": "首页 · 微域生光 · 社媒增长",
+      "titleFilter": "blur(0px)",
+      "titleOpacity": "1",
+      "mainOpacity": "1"
+    },
+    {
+      "file": "mobile-features.webp",
+      "width": 390,
+      "height": 844,
+      "broken": [],
+      "overflow": false,
+      "title": "关于微域生光 · 微域生光 · 社媒增长",
+      "titleFilter": "none",
+      "titleOpacity": "1",
+      "mainOpacity": "1"
+    },
+    {
+      "file": "mobile-blog.webp",
+      "width": 390,
+      "height": 844,
+      "broken": [],
+      "overflow": false,
+      "title": "博客 · 微域生光 · 社媒增长",
+      "titleFilter": "none",
+      "titleOpacity": "1",
+      "mainOpacity": "1"
+    },
+    {
+      "file": "mobile-contact.webp",
+      "width": 390,
+      "height": 844,
+      "broken": [],
+      "overflow": false,
+      "title": "预约通话 · 微域生光 · 社媒增长",
+      "titleFilter": "none",
+      "titleOpacity": "1",
+      "mainOpacity": "1"
+    }
+  ]
+}

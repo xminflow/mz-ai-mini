@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="309" height="180" viewBox="0 0 309 180" fill="none">
+  <title>休闲娱乐支出分析</title>
+  <g font-family="'Microsoft YaHei','PingFang SC',sans-serif">
+    <rect x="23.5" y=".5" width="262" height="115" rx="23.5" fill="#fff" stroke="#eee"/>
+    <circle cx="96" cy="56" r="34" stroke="#e9ecf1" stroke-width="6"/>
+    <path d="M96 22a34 34 0 0 1 29 52" stroke="#ffbf42" stroke-width="6" stroke-linecap="round"/>
+    <text x="158" y="50" fill="#111" font-size="21">$257</text><text x="158" y="77" fill="#888" font-size="16">日常采购</text>
+    <rect x=".5" y="40.5" width="308" height="139" rx="23.5" fill="#fff" stroke="#eee"/>
+    <circle cx="82" cy="110" r="41" stroke="#e9ecf1" stroke-width="6"/>
+    <path d="M82 69a41 41 0 1 1 0 82" stroke="#4686fe" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="82" cy="110" r="23" fill="#f1f6ff"/>
+    <path d="M79 116V99l14-3v15m-14 5c-8-5-12 7-4 7 4 0 4-4 4-7m14-5c-8-5-12 7-4 7 4 0 4-4 4-7" fill="#4686fe"/>
+    <text x="153" y="103" fill="#050505" font-size="24" font-weight="500">$1,235</text>
+    <text x="153" y="136" fill="#777" font-size="18">休闲娱乐支出</text>
+  </g>
+</svg>

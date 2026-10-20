@@ -7,6 +7,7 @@ import { HomeContent } from '@/components/pages/home/HomeContent'
 export const metadata: Metadata = {
   // 后缀「· 微域生光」由根 layout 的 title.template 统一追加，这里不能再自带，否则会拼成两遍。
   title: '软件定制服务',
+  alternates: { canonical: '/', languages: { 'zh-CN': '/', en: '/en', 'x-default': '/' } },
   description:
     '官网、企业级管理系统、小程序、AI 智能体、AI 知识库、数据分析看板、SaaS 平台、电商系统、桌面客户端、系统集成——AI 原生全栈自研，设计到交互全流程闭环，高效高质量交付。',
 }

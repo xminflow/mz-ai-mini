@@ -1,0 +1,90 @@
+/* 模板预览台的视觉令牌，作用域锁在 [data-preview-stage] 子树内。
+
+   这是工作台里唯一脱离官网浅色体系的页面。理由不是喜好：它不是内容页，是一个取景器，
+   全部职责就是让人看清框里那套模板。深色环境为此服务——任何模板放上去都成为画面里
+   唯一的光源；而浅色页面会与浅色模板糊在一起，那正是套浏览器窗口壳想解决、
+   却又用一条横贯整宽的实心标题栏把注意力抢回去的老问题。
+
+   令牌一律以 --stage- / --osd- 开头，与官网 --color-* 和模板 --tpl-* 都不重叠。 */
+[data-preview-stage] {
+  /* 棚内两档暗部：四周的虚空与被灯照到的地面 */
+  --stage-void: #0b0b0d;
+  --stage-glow: rgb(255 255 255 / 0.12);
+
+  /* OSD（屏幕菜单）配色。控制条要能读，但不能比棚里那块屏还亮 */
+  --osd-fg: #ededea;
+  --osd-dim: #76767c;
+  --osd-rule: rgb(255 255 255 / 0.09);
+
+  background-color: var(--stage-void);
+  color: var(--osd-fg);
+}
+
+/* 追光。
+   光池宽度由组件按当前视口档位写进 inline style，切档时只有这一层在动。
+   刻意不给 iframe 宽度加过渡：模板里的图表接了 ResizeObserver，
+   过渡期间会被连续触发重绘，卡顿换不来什么。灯先到位，屏瞬时就位，
+   反而更像摄影棚里重新打光。 */
+[data-preview-stage] .stage-beam {
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  translate: -50% 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    ellipse closest-side at 50% 44%,
+    var(--stage-glow) 0%,
+    rgb(255 255 255 / 0.035) 58%,
+    transparent 100%
+  );
+  transition: width 420ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-preview-stage] .stage-beam {
+    transition: none;
+  }
+}
+
+/* 那块屏。
+   暗底上黑投影本来是看不见的——这里能看见，是因为它落在追光照亮的那片地面上，
+   把光池啃掉一块。所以投影与追光是同一件事的两半，改一个必须回头看另一个。
+   顶端那道内高光负责把屏的上边缘从背景里切出来。 */
+[data-preview-stage] .stage-screen {
+  position: absolute;
+  inset: 0;
+  transform-origin: top left;
+  border-style: solid;
+  border-color: #26262b;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--stage-void);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.09),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.07),
+    0 24px 60px -12px rgb(0 0 0 / 0.7),
+    0 60px 120px -40px rgb(0 0 0 / 0.9);
+}
+
+[data-preview-stage] .stage-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; min-height: 56px; flex-shrink: 0; padding: 10px 24px; border-bottom: 1px solid var(--osd-rule); font-size: 12px; }
+[data-preview-stage] .stage-back { color: var(--osd-dim); }
+[data-preview-stage] .stage-surfaces { display: flex; gap: 16px; }
+[data-preview-stage] .stage-surfaces a { color: var(--osd-dim); }
+[data-preview-stage] .stage-surfaces [aria-current] { color: var(--osd-fg); }
+[data-preview-stage] .stage-device-controls { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+[data-preview-stage] .stage-device-controls button { min-height: 32px; padding: 4px 8px; border-bottom: 1px solid transparent; color: var(--osd-dim); cursor: pointer; }
+[data-preview-stage] .stage-device-controls [aria-pressed='true'] { color: var(--osd-fg); }
+[data-preview-stage] .stage-dimensions { color: var(--osd-dim); font-variant-numeric: tabular-nums; }
+[data-preview-stage] .stage-direct { padding-left: 20px; border-left: 1px solid var(--osd-rule); color: var(--osd-dim); }
+[data-preview-stage] :focus-visible { outline: 2px solid var(--osd-fg); outline-offset: 4px; }
+[data-preview-stage] .stage-canvas { position: relative; display: grid; place-items: center; flex: 1; min-height: 0; padding: 24px; overflow: hidden; }
+[data-preview-stage] .stage-device-holder { position: relative; z-index: 1; }
+[data-preview-stage] .stage-device-tablet { border-radius: 36px; }
+[data-preview-stage] .stage-device-mobile { border-radius: 42px; }
+[data-preview-stage] .stage-device-tablet::after, [data-preview-stage] .stage-device-mobile::after { content: ''; position: absolute; top: -8px; left: calc(50% - 3px); width: 6px; height: 6px; border-radius: 50%; background: #09090c; box-shadow: inset 0 0 0 1px #484850; pointer-events: none; }
+@media (max-width: 680px) {
+  [data-preview-stage] .stage-toolbar { gap: 8px 12px; padding: 10px 14px; }
+  [data-preview-stage] .stage-device-controls { order: 3; justify-content: center; width: 100%; margin-left: 0; }
+  [data-preview-stage] .stage-direct { margin-left: auto; padding-left: 0; border-left: 0; }
+  [data-preview-stage] .stage-canvas { padding: 16px; }
+}

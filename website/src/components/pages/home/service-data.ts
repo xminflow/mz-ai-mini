@@ -19,25 +19,24 @@ export type ThemeKey =
 
 export type Theme = {
   hex: string;
-  rgb: string;
 };
 
-// 复用官网既有品牌色板，本页独立维护一份，避免跨 feature 页面互相引用。
-// 浅色站点只允许红黄蓝三支彩色，所以这十个主题的 hex / rgb 全部收敛到三原色上。
-// 分配按 SERVICES 里卡片的出场顺序轮转，让相邻两张不同色：
-//   01 蓝 · 02 红 · 03 黄 · 04 蓝 · 05 蓝 · 06 红 · 07 黄 · 08 蓝 · 09 红 · 10 黄 · 11 红 · 12 蓝
-// 04 与 05 同为蓝是数据本身的语义——它们共用 agent 主题，同类同色反而正确。
+// 服务卡沿用类别映射，视觉统一读取首页品牌黄色令牌，避免数据层再次引入多套配色。
+const SERVICE_THEME: Theme = {
+  hex: "var(--home-brand-yellow)",
+};
+
 export const THEMES: Record<ThemeKey, Theme> = {
-  cognition: { hex: "#0f5fd8", rgb: "15, 95, 216" },
-  frontend: { hex: "#e8b21c", rgb: "232, 178, 28" },
-  backend: { hex: "#c8202c", rgb: "200, 32, 44" },
-  agent: { hex: "#0f5fd8", rgb: "15, 95, 216" },
-  launch: { hex: "#c8202c", rgb: "200, 32, 44" },
-  mobile: { hex: "#0f5fd8", rgb: "15, 95, 216" },
-  mindset: { hex: "#c8202c", rgb: "200, 32, 44" },
-  advance: { hex: "#e8b21c", rgb: "232, 178, 28" },
-  enterprise: { hex: "#e8b21c", rgb: "232, 178, 28" },
-  career: { hex: "#c8202c", rgb: "200, 32, 44" },
+  cognition: SERVICE_THEME,
+  frontend: SERVICE_THEME,
+  backend: SERVICE_THEME,
+  agent: SERVICE_THEME,
+  launch: SERVICE_THEME,
+  mobile: SERVICE_THEME,
+  mindset: SERVICE_THEME,
+  advance: SERVICE_THEME,
+  enterprise: SERVICE_THEME,
+  career: SERVICE_THEME,
 };
 
 export type ServiceItem = {

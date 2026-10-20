@@ -1,0 +1,64 @@
+{
+  "reference": "https://unseen.co/",
+  "observedAt": "2026-10-16",
+  "referenceTitle": "Unseen Studio — Brand, Digital & Motion",
+  "primarySections": [
+    "/",
+    "/projects/",
+    "/contact/",
+    "/world/"
+  ],
+  "structure": "4 个主要页面，36 个本地化项目解读页面，2 个模板专用政策说明。参考站未发现独立博客或独立功能页，因此四组截图对应实际的首页、作品、World 与联系。",
+  "branding": "微域生光 / Weelume；参考案例保留项目专名和创作者归属，不表示微域生光真实客户。",
+  "assets": "/templates/unseen/asset-sources.json",
+  "assetRights": "图片、视频及场景影像归原作者所有，未发现公开的商用再分发许可。listed:false，仅用于内部预览。正式交付前需取得许可或替换素材。",
+  "fonts": "复用项目本地 MiSans Regular/Bold 与 Poppins 400/600/700；许可说明见 public/templates/lunera/fonts/README.md 与 Poppins-OFL.txt。",
+  "sceneImplementation": "参考站空间在 1440×1000、834×1180、390×844 下的干净场景截图，结合自主实现的原生 WebGL 透视位移、连续折射水面和四组衰减交互涟漪；联系场景为独立影像。建筑仍为预渲染影像，未加载原站几何模型或复制其完整三维引擎。",
+  "sceneFiles": [
+    {
+      "path": "/templates/unseen/scenes/home-desktop.webp",
+      "source": "https://unseen.co/",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "path": "/templates/unseen/scenes/home-tablet.webp",
+      "source": "https://unseen.co/",
+      "width": 834,
+      "height": 1180
+    },
+    {
+      "path": "/templates/unseen/scenes/home-mobile.webp",
+      "source": "https://unseen.co/",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "path": "/templates/unseen/scenes/contact-desktop.webp",
+      "source": "https://unseen.co/contact/",
+      "width": 1440,
+      "height": 1000
+    }
+  ],
+  "adaptations": [
+    "默认中文，英文位于端路径后的 /en，切换保留当前页、查询参数和锚点。",
+    "原站 WebGL 项目展厅采用可筛选的响应式图文目录，保留所有 36 个项目入口。",
+    "参考站项目的文字与媒体经选编，模板详情为双语解读，并非原站所有视频、模型与段落的逐项复制。",
+    "原站的实验项目提供本地详情、材质交互演示和原始来源入口，未重建各自完整 WebGL 实验。",
+    "World 保留全部 58 个媒体条目，采用可拖拽缩放画布和可键盘访问的列表，而非原站三维球面。",
+    "音频为浏览器合成的低音量和声，仅点击后启用；不复用原站音轨。",
+    "联系区域提供本地演示表单、明确状态提示和 FAQ，不连接邮件或数据库。"
+  ],
+  "motionRevision": {
+    "reason": "首版仅有轻微横移、条带水纹和普通淡入，未覆盖参考站的明显镜头跟随、动态材质与菜单转场；文档根节点缺少滚动条处理。",
+    "motion": [
+      "原生 WebGL 水面折射、双轴视差及指针涟漪",
+      "标题分行入场、反向跟随与滚动淡出",
+      "页面遮罩过渡、菜单裁切展开与逐项入场",
+      "作品图像滚动视差、卡片错峰入场与画廊漂浮",
+      "World 视频按可见性自动播放；离屏、后台和减少动态偏好下暂停"
+    ],
+    "scrollbar": "从既有 Nubo 滚动条提取共享 PageScrollbar。Unseen 使用悬浮细滑块、活动时显示、闲置隐藏；支持拖动、点击定位、键盘与触屏，保留 document 原生滚动来源。样式仅作用于本模板。",
+    "dependenciesAdded": false
+  }
+}

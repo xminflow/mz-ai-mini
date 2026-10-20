@@ -1,5 +1,21 @@
 import type { SiteTemplate, SiteTemplatePage, TemplateSurface } from './types'
-import { aegisTemplate } from './catalog/aegis/meta'
+import { liubaiTemplate } from './catalog/liubai/meta'
+import { luneraTemplate } from './catalog/lunera/meta'
+import { groviaTemplate } from './catalog/grovia/meta'
+import { nuboTemplate } from './catalog/nubo/meta'
+import { studiothinkTemplate } from './catalog/studiothink/meta'
+import { conicornTemplate } from './catalog/conicorn/meta'
+import { deformoTemplate } from './catalog/deformo/meta'
+import { unseenTemplate } from './catalog/unseen/meta'
+import { viralTemplate } from './catalog/viral/meta'
+import { tabfolioTemplate } from './catalog/tabfolio/meta'
+import { hellomondayTemplate } from './catalog/hellomonday/meta'
+import { noireiTemplate } from './catalog/noirei/meta'
+import { recueilTemplate } from './catalog/recueil/meta'
+import { uiuxfolioTemplate } from './catalog/uiuxfolio/meta'
+import { latteTemplate } from './catalog/latte/meta'
+import { cernoTemplate } from './catalog/cerno/meta'
+import { foldexTemplate } from './catalog/foldex/meta'
 import { getSceneById } from './taxonomy'
 
 /**
@@ -18,7 +34,12 @@ const KEBAB_CASE_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const KEBAB_CASE_SLUG = /^[a-z0-9]+(?:[-/][a-z0-9]+)*$/
 
 /** 新增模板的唯一注册入口：建好 catalog/<id>/ 目录后在这里加一行。 */
-export const SITE_TEMPLATES: SiteTemplate[] = [aegisTemplate]
+export const SITE_TEMPLATES: SiteTemplate[] = [liubaiTemplate, luneraTemplate, groviaTemplate, nuboTemplate, studiothinkTemplate, conicornTemplate, deformoTemplate, unseenTemplate, viralTemplate, tabfolioTemplate, hellomondayTemplate, noireiTemplate, recueilTemplate, uiuxfolioTemplate, latteTemplate, cernoTemplate, foldexTemplate]
+
+/** 注册表按添加顺序追加；陈列使用倒序副本，避免就地反转影响其他调用方。 */
+export function getTemplatesNewestFirst(): SiteTemplate[] {
+  return SITE_TEMPLATES.toReversed()
+}
 
 /** 校验单个端的结构。抽出来是因为端内的规则与模板级规则是两回事，混在一个循环里读不清。 */
 function assertSurfaceValid(templateId: string, surface: TemplateSurface): void {

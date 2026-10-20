@@ -1,0 +1,41 @@
+import type { SiteTemplate } from '../../types'
+
+export const viralTemplate: SiteTemplate = {
+  id: 'viral',
+  name: '微域生光 · 社媒增长',
+  localizedNames: { en: '微域生光 · Social growth' },
+  sceneId: 'corporate-site',
+  listed: false,
+  tags: ['米白黑色', '社交媒体营销', '案例与 FAQ', 'PC / iPad / H5', '中英文官网'],
+  summary: '微域生光社交媒体增长官网模板，包含完整信息架构：内容创作、社媒管理、付费媒体、增长案例、团队、FAQ、联系与政策页面，支持中文默认路径与英文 /en 路径。',
+  accentColor: '#111111',
+  cover: '/templates/viral/assets/hero.jpg',
+  screenshots: [
+    { src: '/templates/viral/screenshots/home.webp', alt: '微域生光 首页桌面端', device: 'desktop', width: 1440, height: 1000 },
+    { src: '/templates/viral/screenshots/features.webp', alt: '微域生光 关于与服务桌面端', device: 'desktop', width: 1440, height: 1000 },
+    { src: '/templates/viral/screenshots/blog.webp', alt: '微域生光 博客桌面端', device: 'desktop', width: 1440, height: 1000 },
+    { src: '/templates/viral/screenshots/contact.webp', alt: '微域生光 联系桌面端', device: 'desktop', width: 1440, height: 1000 },
+    { src: '/templates/viral/screenshots/tablet-home.webp', alt: '微域生光 首页平板端', device: 'tablet', width: 834, height: 1180 },
+    { src: '/templates/viral/screenshots/tablet-features.webp', alt: '微域生光 关于与服务平板端', device: 'tablet', width: 834, height: 1180 },
+    { src: '/templates/viral/screenshots/tablet-blog.webp', alt: '微域生光 博客平板端', device: 'tablet', width: 834, height: 1180 },
+    { src: '/templates/viral/screenshots/tablet-contact.webp', alt: '微域生光 联系平板端', device: 'tablet', width: 834, height: 1180 },
+    { src: '/templates/viral/screenshots/mobile-home.webp', alt: '微域生光 首页移动端', device: 'mobile', width: 390, height: 844 },
+    { src: '/templates/viral/screenshots/mobile-features.webp', alt: '微域生光 关于与服务移动端', device: 'mobile', width: 390, height: 844 },
+    { src: '/templates/viral/screenshots/mobile-blog.webp', alt: '微域生光 博客移动端', device: 'mobile', width: 390, height: 844 },
+    { src: '/templates/viral/screenshots/mobile-contact.webp', alt: '微域生光 联系移动端', device: 'mobile', width: 390, height: 844 },
+  ],
+  surfaces: [{
+    id: 'site', name: '社媒增长官网', platform: 'pc', locales: ['zh', 'en'],
+    pages: [
+      { slug: '', title: '首页', localizedTitles: { en: 'Home' }, load: () => import('./pages/HomePage') },
+      { slug: 'about', title: '关于微域生光', localizedTitles: { en: 'About 微域生光' }, load: () => import('./pages/AboutPage') },
+      { slug: 'case-studies', title: '客户案例', localizedTitles: { en: 'Case studies' }, load: () => import('./pages/CasesPage') },
+      { slug: 'blog', title: '博客', localizedTitles: { en: 'Blog' }, load: () => import('./pages/BlogPage') },
+      { slug: 'blog/short-form-playbook', title: '短视频增长方法', localizedTitles: { en: 'The short-form playbook' }, load: () => import('./pages/ArticlePage') },
+      { slug: 'book-a-call', title: '预约通话', localizedTitles: { en: 'Book a call' }, load: () => import('./pages/ContactPage') },
+      { slug: 'privacy-policy', title: '隐私政策', localizedTitles: { en: 'Privacy policy' }, load: () => import('./pages/PrivacyPage') },
+      { slug: 'terms-of-service', title: '服务条款', localizedTitles: { en: 'Terms of service' }, load: () => import('./pages/TermsPage') },
+      { slug: '404', title: '404', localizedTitles: { en: '404' }, load: () => import('./pages/NotFoundPage') },
+    ],
+  }],
+}

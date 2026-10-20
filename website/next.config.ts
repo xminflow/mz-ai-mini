@@ -1,4 +1,7 @@
 import type { NextConfig } from 'next'
+import { PHASE_DEVELOPMENT_SERVER } from 'next/constants'
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve, join } from 'node:path'
 
 const API_PREFIX = '/api/v1'
 const LOCAL_API_ORIGIN = 'http://127.0.0.1:8000'
@@ -21,6 +24,8 @@ const resolveInternalApiOrigin = (): string => {
 
 const config: NextConfig = {
   output: 'standalone',
+  outputFileTracingRoot: resolve(process.cwd()),
+  transpilePackages: ['deformo-template', 'uiuxfolio-template', 'latte-template', 'cerno-template', 'foldex-template'],
   env: {
     NEXT_PUBLIC_API_BASE_URL: API_PREFIX,
   },
@@ -47,4 +52,31 @@ const config: NextConfig = {
   },
 }
 
-export default config
+export default function nextConfig(phase: string): NextConfig {
+  // 本地路径仅用于 dev；生产构建一律读取锁定的随仓模板运行包。
+  if (phase !== PHASE_DEVELOPMENT_SERVER) return config
+  const aliases: Record<string, string> = {}
+  for (const id of ['deformo', 'uiuxfolio', 'latte', 'cerno', 'foldex']) {
+    const localFile = resolve(id + '.local')
+    if (!existsSync(localFile)) continue
+    const { source } = JSON.parse(readFileSync(localFile, 'utf8')) as { source: string }
+    const manifest = JSON.parse(readFileSync(join(source, 'package.json'), 'utf8')) as { name: string; exports: Record<string, string> }
+    if (manifest.name !== id + '-template') throw new Error(id + '.local 指向了错误的模板')
+    for (const entry of ['template', 'host']) aliases[id + '-template/' + entry + '$'] = resolve(source, manifest.exports['./' + entry])
+  }
+  if (Object.keys(aliases).length === 0) return config
+  return {
+    ...config,
+    // 按预览端口隔离缓存，避免多个开发服务并发覆盖客户端模块清单。
+    distDir: process.env.WEBSITE_DEV_PORT ? `.next-templates-dev-${process.env.WEBSITE_DEV_PORT}` : '.next-templates-dev',
+    webpack(webpackConfig) {
+      webpackConfig.resolve.alias = {
+        ...webpackConfig.resolve.alias,
+        ...aliases,
+      }
+      // 模板与主站版本可能不同，开发时统一优先使用宿主依赖。
+      webpackConfig.resolve.modules = [resolve('node_modules'), ...webpackConfig.resolve.modules]
+      return webpackConfig
+    },
+  }
+}

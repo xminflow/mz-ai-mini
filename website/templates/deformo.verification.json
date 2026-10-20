@@ -1,0 +1,124 @@
+{
+  "status": "passed",
+  "checkedAt": "2026-10-19T15:26:07.604Z",
+  "scope": "Deformo shared package host integration only",
+  "bundle": {
+    "name": "deformo-template",
+    "version": "1.2.0",
+    "archive": "vendor/deformo-template-1.2.0-519e5ee53fdc.tgz",
+    "sha256": "519e5ee53fdc04b14344d02e9ebba5017c0b827982a16a943ffb9983e6a79f60",
+    "sourceCommit": "25aa8d7ae0b3ef56e5dbea15e41c156bc4ffce2d",
+    "sourceDirty": false
+  },
+  "environment": {
+    "platform": "win32",
+    "node": "v22.13.1",
+    "packageManager": "pnpm@9.15.4",
+    "isolatedCopy": true,
+    "secretsCopied": false
+  },
+  "checks": {
+    "assetSyncRegression": {
+      "status": "passed",
+      "command": [
+        "node",
+        "--test",
+        "scripts/tests/deformo-package.test.mjs"
+      ]
+    },
+    "snapshotIntegrity": {
+      "status": "passed",
+      "command": [
+        "node",
+        "scripts/deformo-package.mjs",
+        "check"
+      ]
+    },
+    "install": {
+      "status": "passed",
+      "command": [
+        "corepack",
+        "pnpm@9.15.4",
+        "--ignore-workspace",
+        "install",
+        "--frozen-lockfile",
+        "--offline",
+        "--node-linker=hoisted"
+      ],
+      "note": "Windows standalone output requires avoiding local symlink permission restrictions; production Linux pnpm layout was not changed."
+    },
+    "productionBuild": {
+      "status": "passed",
+      "command": [
+        "corepack",
+        "pnpm@9.15.4",
+        "--ignore-workspace",
+        "run",
+        "build"
+      ],
+      "output": "standalone",
+      "usesLocalSource": false
+    },
+    "localDevelopment": {
+      "status": "passed",
+      "origin": "http://127.0.0.1:43122",
+      "host": {
+        "market": "/templates",
+        "filing": true
+      },
+      "sourceHotReload": true,
+      "sourceRestored": true,
+      "assetCreateAndDelete": true,
+      "browserErrors": 0,
+      "checkedAt": "2026-10-19T15:15:23.601Z"
+    },
+    "standaloneBrowser": {
+      "status": "passed",
+      "base": "http://localhost:43123",
+      "templatesModuleEnabled": true,
+      "routeViewportChecks": 160,
+      "interactions": [
+        "mobile-menu-and-client-side-navigation",
+        "language-retains-article-query-anchor-and-client-routing",
+        "article-table-of-contents",
+        "escape-closes-menu",
+        "faq-expand-collapse",
+        "service-accordion",
+        "testimonial-carousel",
+        "zh-contact-validation-and-demo-status",
+        "zh-newsletter-consent-and-demo-status",
+        "en-contact-validation-and-demo-status",
+        "en-newsletter-consent-and-demo-status",
+        "desktop-real-viewport-preview",
+        "tablet-real-viewport-preview",
+        "mobile-real-viewport-preview",
+        "template-details-gallery-and-new-tab-preview"
+      ],
+      "browserErrors": [],
+      "screenshots": 12,
+      "verifiedAt": "2026-10-19T15:25:36.654Z"
+    },
+    "dockerImage": {
+      "status": "not-executed",
+      "reason": "Docker engine is not installed on this machine."
+    }
+  },
+  "runtimeFilesSha256": {
+    "package.json": "0a761c3c7a98ff2f09d32518a490490160da8c0884f727d6f7709528f7c4cf1e",
+    "pnpm-lock.yaml": "31ae376794565a46b98b5f3b7c0f0a08250c89817f74207ba2ff4ea87c820ee3",
+    "next.config.ts": "88c5ab2077e65a212fdf120ba435d0ec35a995658ce44b60d9abcbc110c97ea4",
+    "Dockerfile": "fbbe202e89f85cee5fc31e28bc39056654d98420d5b852a27986c2213af5106b",
+    ".dockerignore": "d4902e7fa58be4b7daaee7d5696949a4cd8a01d513dab788f8319e696ee06e2d",
+    "pnpm-workspace.yaml": "ed6862b311630a25c44e665816393120ab7cb1d44cb6920a5898250051c99297",
+    "scripts/deformo-package.mjs": "c589b05dfe4e676b26f94d1eb52c4c87456dfbb473c07066edd1a8c94f1ca2f3",
+    "scripts/lib/deformo-package.mjs": "c09e4a2c655bc2448727f20faa770a050c30eacc1f1aaf5d02dd268c1acfc7e6",
+    "scripts/next-with-templates.mjs": "4dd99f0fdab40b0b9d37f3d3470b5f11eeb2a67a3113472da09f033261a65c47",
+    "scripts/tests/deformo-package.test.mjs": "c32c4d9f84d0f59ed85c89db7faa1b79a6da740e40bfd70a2492de5ca77468bb",
+    "src/features/site-templates/catalog/deformo/meta.ts": "ab74c5f431f700cb9f86088e85c3bf765ffe74d0d4406e9563bb64307907b348",
+    "src/features/site-templates/catalog/deformo/weelume.tsx": "3fa948ac9cb08078c62e52c7ecb55b3bb296123149c185d24de098fe78102f56"
+  },
+  "notes": [
+    "Production template visibility retains the host TEMPLATES_MODULE_ENABLED switch (default disabled).",
+    "No deployment, publishing, Git push, or changes to other templates were performed."
+  ]
+}

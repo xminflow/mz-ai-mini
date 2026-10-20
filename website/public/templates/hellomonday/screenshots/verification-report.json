@@ -1,0 +1,1923 @@
+{
+  "base": "http://localhost:3000",
+  "checkedAt": "2026-10-18T23:57:40.778Z",
+  "checks": [
+    {
+      "name": "All referenced media are nonempty local files",
+      "passed": true
+    },
+    {
+      "name": "desktop/ images",
+      "passed": true
+    },
+    {
+      "name": "desktop/ no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/work images",
+      "passed": true
+    },
+    {
+      "name": "desktop/work no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/services images",
+      "passed": true
+    },
+    {
+      "name": "desktop/services no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/about images",
+      "passed": true
+    },
+    {
+      "name": "desktop/about no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/stories images",
+      "passed": true
+    },
+    {
+      "name": "desktop/stories no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/product images",
+      "passed": true
+    },
+    {
+      "name": "desktop/product no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop product dark text inherits theme",
+      "passed": true
+    },
+    {
+      "name": "desktop product light footer keeps dark text",
+      "passed": true
+    },
+    {
+      "name": "desktop footer uses reference margins and centered container",
+      "passed": true
+    },
+    {
+      "name": "desktop/contact images",
+      "passed": true
+    },
+    {
+      "name": "desktop/contact no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/careers images",
+      "passed": true
+    },
+    {
+      "name": "desktop/careers no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/internship images",
+      "passed": true
+    },
+    {
+      "name": "desktop/internship no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/privacy images",
+      "passed": true
+    },
+    {
+      "name": "desktop/privacy no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/terms images",
+      "passed": true
+    },
+    {
+      "name": "desktop/terms no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/work/signs images",
+      "passed": true
+    },
+    {
+      "name": "desktop/work/signs no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/stories/generative-ai-ideas-for-e-commerce images",
+      "passed": true
+    },
+    {
+      "name": "desktop/stories/generative-ai-ideas-for-e-commerce no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/ images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/ no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/work images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/work no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/services images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/services no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/about images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/about no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/stories images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/stories no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/product images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/product no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en product dark text inherits theme",
+      "passed": true
+    },
+    {
+      "name": "desktop/en product light footer keeps dark text",
+      "passed": true
+    },
+    {
+      "name": "desktop/en footer uses reference margins and centered container",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/contact images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/contact no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/careers images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/careers no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/internship images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/internship no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/privacy images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/privacy no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/terms images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/terms no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/work/signs images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/work/signs no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/stories/generative-ai-ideas-for-e-commerce images",
+      "passed": true
+    },
+    {
+      "name": "desktop/en/stories/generative-ai-ideas-for-e-commerce no overflow",
+      "passed": true
+    },
+    {
+      "name": "desktop menu opens",
+      "passed": true
+    },
+    {
+      "name": "desktop Escape restores focus",
+      "passed": true
+    },
+    {
+      "name": "tablet/ images",
+      "passed": true
+    },
+    {
+      "name": "tablet/ no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/work images",
+      "passed": true
+    },
+    {
+      "name": "tablet/work no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/services images",
+      "passed": true
+    },
+    {
+      "name": "tablet/services no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/about images",
+      "passed": true
+    },
+    {
+      "name": "tablet/about no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/stories images",
+      "passed": true
+    },
+    {
+      "name": "tablet/stories no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/product images",
+      "passed": true
+    },
+    {
+      "name": "tablet/product no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet product dark text inherits theme",
+      "passed": true
+    },
+    {
+      "name": "tablet product light footer keeps dark text",
+      "passed": true
+    },
+    {
+      "name": "tablet footer uses reference margins and centered container",
+      "passed": true
+    },
+    {
+      "name": "tablet/contact images",
+      "passed": true
+    },
+    {
+      "name": "tablet/contact no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/careers images",
+      "passed": true
+    },
+    {
+      "name": "tablet/careers no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/internship images",
+      "passed": true
+    },
+    {
+      "name": "tablet/internship no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/privacy images",
+      "passed": true
+    },
+    {
+      "name": "tablet/privacy no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/terms images",
+      "passed": true
+    },
+    {
+      "name": "tablet/terms no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/work/signs images",
+      "passed": true
+    },
+    {
+      "name": "tablet/work/signs no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/stories/generative-ai-ideas-for-e-commerce images",
+      "passed": true
+    },
+    {
+      "name": "tablet/stories/generative-ai-ideas-for-e-commerce no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/ images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/ no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/work images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/work no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/services images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/services no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/about images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/about no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/stories images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/stories no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/product images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/product no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en product dark text inherits theme",
+      "passed": true
+    },
+    {
+      "name": "tablet/en product light footer keeps dark text",
+      "passed": true
+    },
+    {
+      "name": "tablet/en footer uses reference margins and centered container",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/contact images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/contact no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/careers images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/careers no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/internship images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/internship no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/privacy images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/privacy no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/terms images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/terms no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/work/signs images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/work/signs no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/stories/generative-ai-ideas-for-e-commerce images",
+      "passed": true
+    },
+    {
+      "name": "tablet/en/stories/generative-ai-ideas-for-e-commerce no overflow",
+      "passed": true
+    },
+    {
+      "name": "tablet menu opens",
+      "passed": true
+    },
+    {
+      "name": "tablet Escape restores focus",
+      "passed": true
+    },
+    {
+      "name": "mobile/ images",
+      "passed": true
+    },
+    {
+      "name": "mobile/ no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/work images",
+      "passed": true
+    },
+    {
+      "name": "mobile/work no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/services images",
+      "passed": true
+    },
+    {
+      "name": "mobile/services no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/about images",
+      "passed": true
+    },
+    {
+      "name": "mobile/about no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/stories images",
+      "passed": true
+    },
+    {
+      "name": "mobile/stories no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/product images",
+      "passed": true
+    },
+    {
+      "name": "mobile/product no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile product dark text inherits theme",
+      "passed": true
+    },
+    {
+      "name": "mobile product light footer keeps dark text",
+      "passed": true
+    },
+    {
+      "name": "mobile footer uses reference margins and centered container",
+      "passed": true
+    },
+    {
+      "name": "mobile/contact images",
+      "passed": true
+    },
+    {
+      "name": "mobile/contact no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/careers images",
+      "passed": true
+    },
+    {
+      "name": "mobile/careers no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/internship images",
+      "passed": true
+    },
+    {
+      "name": "mobile/internship no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/privacy images",
+      "passed": true
+    },
+    {
+      "name": "mobile/privacy no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/terms images",
+      "passed": true
+    },
+    {
+      "name": "mobile/terms no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/work/signs images",
+      "passed": true
+    },
+    {
+      "name": "mobile/work/signs no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/stories/generative-ai-ideas-for-e-commerce images",
+      "passed": true
+    },
+    {
+      "name": "mobile/stories/generative-ai-ideas-for-e-commerce no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/ images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/ no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/work images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/work no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/services images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/services no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/about images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/about no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/stories images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/stories no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/product images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/product no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en product dark text inherits theme",
+      "passed": true
+    },
+    {
+      "name": "mobile/en product light footer keeps dark text",
+      "passed": true
+    },
+    {
+      "name": "mobile/en footer uses reference margins and centered container",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/contact images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/contact no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/careers images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/careers no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/internship images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/internship no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/privacy images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/privacy no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/terms images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/terms no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/work/signs images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/work/signs no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/stories/generative-ai-ideas-for-e-commerce images",
+      "passed": true
+    },
+    {
+      "name": "mobile/en/stories/generative-ai-ideas-for-e-commerce no overflow",
+      "passed": true
+    },
+    {
+      "name": "mobile menu opens",
+      "passed": true
+    },
+    {
+      "name": "mobile Escape restores focus",
+      "passed": true
+    },
+    {
+      "name": "narrow/ images",
+      "passed": true
+    },
+    {
+      "name": "narrow/ no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/work images",
+      "passed": true
+    },
+    {
+      "name": "narrow/work no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/services images",
+      "passed": true
+    },
+    {
+      "name": "narrow/services no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/about images",
+      "passed": true
+    },
+    {
+      "name": "narrow/about no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/stories images",
+      "passed": true
+    },
+    {
+      "name": "narrow/stories no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/product images",
+      "passed": true
+    },
+    {
+      "name": "narrow/product no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow product dark text inherits theme",
+      "passed": true
+    },
+    {
+      "name": "narrow product light footer keeps dark text",
+      "passed": true
+    },
+    {
+      "name": "narrow footer uses reference margins and centered container",
+      "passed": true
+    },
+    {
+      "name": "narrow/contact images",
+      "passed": true
+    },
+    {
+      "name": "narrow/contact no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/careers images",
+      "passed": true
+    },
+    {
+      "name": "narrow/careers no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/internship images",
+      "passed": true
+    },
+    {
+      "name": "narrow/internship no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/privacy images",
+      "passed": true
+    },
+    {
+      "name": "narrow/privacy no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/terms images",
+      "passed": true
+    },
+    {
+      "name": "narrow/terms no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/work/signs images",
+      "passed": true
+    },
+    {
+      "name": "narrow/work/signs no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/stories/generative-ai-ideas-for-e-commerce images",
+      "passed": true
+    },
+    {
+      "name": "narrow/stories/generative-ai-ideas-for-e-commerce no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/ images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/ no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/work images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/work no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/services images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/services no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/about images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/about no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/stories images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/stories no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/product images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/product no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en product dark text inherits theme",
+      "passed": true
+    },
+    {
+      "name": "narrow/en product light footer keeps dark text",
+      "passed": true
+    },
+    {
+      "name": "narrow/en footer uses reference margins and centered container",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/contact images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/contact no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/careers images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/careers no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/internship images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/internship no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/privacy images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/privacy no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/terms images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/terms no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/work/signs images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/work/signs no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/stories/generative-ai-ideas-for-e-commerce images",
+      "passed": true
+    },
+    {
+      "name": "narrow/en/stories/generative-ai-ideas-for-e-commerce no overflow",
+      "passed": true
+    },
+    {
+      "name": "narrow menu opens",
+      "passed": true
+    },
+    {
+      "name": "narrow Escape restores focus",
+      "passed": true
+    },
+    {
+      "name": "Incoming filter query is applied",
+      "passed": true
+    },
+    {
+      "name": "Language preserves current route, query and anchor",
+      "passed": true
+    },
+    {
+      "name": "Language switches back",
+      "passed": true
+    },
+    {
+      "name": "Filter all returns correct count",
+      "passed": true
+    },
+    {
+      "name": "Filter Products returns correct count",
+      "passed": true
+    },
+    {
+      "name": "Filter Experiences returns correct count",
+      "passed": true
+    },
+    {
+      "name": "Filter Branding returns correct count",
+      "passed": true
+    },
+    {
+      "name": "Filter Platform returns correct count",
+      "passed": true
+    },
+    {
+      "name": "Filter E-commerce returns correct count",
+      "passed": true
+    },
+    {
+      "name": "Search has an explicit empty state",
+      "passed": true
+    },
+    {
+      "name": "/contact empty form invalid",
+      "passed": true
+    },
+    {
+      "name": "/contact explicitly reports local validation only",
+      "passed": true
+    },
+    {
+      "name": "/careers empty form invalid",
+      "passed": true
+    },
+    {
+      "name": "/careers explicitly reports local validation only",
+      "passed": true
+    },
+    {
+      "name": "/internship empty form invalid",
+      "passed": true
+    },
+    {
+      "name": "/internship explicitly reports local validation only",
+      "passed": true
+    },
+    {
+      "name": "Forms made no submission requests",
+      "passed": true
+    },
+    {
+      "name": "FAQ expands",
+      "passed": true
+    },
+    {
+      "name": "Team portrait changes on keyboard-accessible button",
+      "passed": true
+    },
+    {
+      "name": "Case lightbox opens",
+      "passed": true
+    },
+    {
+      "name": "Case lightbox keyboard next image",
+      "passed": true
+    },
+    {
+      "name": "Case lightbox closes",
+      "passed": true
+    },
+    {
+      "name": "Product perspectives carousel changes",
+      "passed": true
+    },
+    {
+      "name": "Reduced motion pauses hero video",
+      "passed": true
+    },
+    {
+      "name": "Hero animation plays",
+      "passed": true
+    },
+    {
+      "name": "Hero animation can be paused",
+      "passed": true
+    },
+    {
+      "name": "Title carousel can be paused",
+      "passed": true
+    },
+    {
+      "name": "Internal navigation keeps the document",
+      "passed": true
+    },
+    {
+      "name": "tablet preview has real CSS dimensions",
+      "passed": true
+    },
+    {
+      "name": "tablet iframe menu works",
+      "passed": true
+    },
+    {
+      "name": "tablet iframe language works",
+      "passed": true
+    },
+    {
+      "name": "mobile preview has real CSS dimensions",
+      "passed": true
+    },
+    {
+      "name": "mobile iframe menu works",
+      "passed": true
+    },
+    {
+      "name": "mobile iframe language works",
+      "passed": true
+    },
+    {
+      "name": "Detail preview opens a new tab",
+      "passed": true
+    },
+    {
+      "name": "Clicking preview really creates a new page",
+      "passed": true
+    },
+    {
+      "name": "Gallery lists three devices",
+      "passed": true
+    },
+    {
+      "name": "Gallery includes 12 actual screenshots",
+      "passed": true
+    },
+    {
+      "name": "Unknown route /unknown returns 404",
+      "passed": true
+    },
+    {
+      "name": "Unknown route /work/unknown-case returns 404",
+      "passed": true
+    },
+    {
+      "name": "Unknown route /stories/unknown-story returns 404",
+      "passed": true
+    },
+    {
+      "name": "No uncaught browser exceptions",
+      "passed": true
+    },
+    {
+      "name": "No browser console errors",
+      "passed": true
+    }
+  ],
+  "routes": [
+    {
+      "path": "/templates/hellomonday/site",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/services",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/about",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/stories",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/product",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/contact",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/careers",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/internship",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/privacy",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/terms",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/signs",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/gemini-developer-competition",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/zipline",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/gemini",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/ramasjang-krea-app",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/strava-year-in-sport-2023",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/the-web-can-do-what",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/bang-and-olufsen",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/fingerspelling",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/universal-music-for-creators",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/simplethings",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/netflix-kids-and-family",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/gemini-apps",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/undo-the-firewall",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/aurorasolar",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/strava-2022",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/staratlas",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/the-bartlett-school-of-architecture-summer-show-2020",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/dig-cloud-castles",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/google-kids-space-illustrations",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/metamansions",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/how-to-talk-to-white-kids-about-racism",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/alan-menken",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/google-kids-space-branding",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/google-most-searched",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/erika-senft-miller",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/oppo",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/soestrene-grene",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/wongle",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/lyft",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/nomo",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/bearaby",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/jeans-for-refugees",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/google-search-on",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/residente-branding",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/sideways-dictionary",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/epos-branding-meets-ecommerce",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/youtube-cfc",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/driver",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/moog",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/google-cloud-platform-website",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/espn-wethefans",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/youtube-kids-02",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/resilio",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/jviews-almost-forgot",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/virunga",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/nat-geo",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/headbanger",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/essential",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/youtube-kids-01",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/future-library",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/the-fwa",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/deshaw",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/witness-change",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/youtubego",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/youtube-gaming",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/residente-website",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/hollow",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/garderobe",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/collective-health",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/google-spell-up",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/bendy",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/jviews",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/nasa-genelab",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/wove",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/tnc",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/google-cloud-platform",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/moma-magritte",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/greenpeace",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/work/issuu",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/stories/generative-ai-ideas-for-e-commerce",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/stories/the-web-can-do-what",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/stories/eating-together",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/stories/sesame-workshop",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/stories/designing-for-kids",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/stories/secret-ingredients",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/stories/google-cloud",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/services",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/about",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/stories",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/product",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/contact",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/careers",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/internship",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/privacy",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/terms",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/signs",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/gemini-developer-competition",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/zipline",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/gemini",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/ramasjang-krea-app",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/strava-year-in-sport-2023",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/the-web-can-do-what",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/bang-and-olufsen",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/fingerspelling",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/universal-music-for-creators",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/simplethings",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/netflix-kids-and-family",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/gemini-apps",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/undo-the-firewall",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/aurorasolar",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/strava-2022",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/staratlas",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/the-bartlett-school-of-architecture-summer-show-2020",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/dig-cloud-castles",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/google-kids-space-illustrations",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/metamansions",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/how-to-talk-to-white-kids-about-racism",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/alan-menken",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/google-kids-space-branding",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/google-most-searched",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/erika-senft-miller",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/oppo",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/soestrene-grene",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/wongle",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/lyft",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/nomo",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/bearaby",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/jeans-for-refugees",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/google-search-on",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/residente-branding",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/sideways-dictionary",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/epos-branding-meets-ecommerce",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/youtube-cfc",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/driver",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/moog",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/google-cloud-platform-website",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/espn-wethefans",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/youtube-kids-02",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/resilio",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/jviews-almost-forgot",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/virunga",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/nat-geo",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/headbanger",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/essential",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/youtube-kids-01",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/future-library",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/the-fwa",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/deshaw",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/witness-change",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/youtubego",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/youtube-gaming",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/residente-website",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/hollow",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/garderobe",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/collective-health",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/google-spell-up",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/bendy",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/jviews",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/nasa-genelab",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/wove",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/tnc",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/google-cloud-platform",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/moma-magritte",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/greenpeace",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/work/issuu",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/stories/generative-ai-ideas-for-e-commerce",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/stories/the-web-can-do-what",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/stories/eating-together",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/stories/sesame-workshop",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/stories/designing-for-kids",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/stories/secret-ingredients",
+      "status": 200
+    },
+    {
+      "path": "/templates/hellomonday/site/en/stories/google-cloud",
+      "status": 200
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "desktop-home.webp",
+      "path": "",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "file": "desktop-services.webp",
+      "path": "/services",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "file": "desktop-stories.webp",
+      "path": "/stories",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "file": "desktop-contact.webp",
+      "path": "/contact",
+      "width": 1440,
+      "height": 1000
+    },
+    {
+      "file": "tablet-home.webp",
+      "path": "",
+      "width": 834,
+      "height": 1180
+    },
+    {
+      "file": "tablet-services.webp",
+      "path": "/services",
+      "width": 834,
+      "height": 1180
+    },
+    {
+      "file": "tablet-stories.webp",
+      "path": "/stories",
+      "width": 834,
+      "height": 1180
+    },
+    {
+      "file": "tablet-contact.webp",
+      "path": "/contact",
+      "width": 834,
+      "height": 1180
+    },
+    {
+      "file": "mobile-home.webp",
+      "path": "",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "file": "mobile-services.webp",
+      "path": "/services",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "file": "mobile-stories.webp",
+      "path": "/stories",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "file": "mobile-contact.webp",
+      "path": "/contact",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "consoleErrors": []
+}

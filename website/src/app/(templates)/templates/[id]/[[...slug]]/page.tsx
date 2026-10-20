@@ -1,6 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { MarketplaceShell } from '@/features/site-templates/workbench/MarketplaceShell'
+import { TemplateDetails } from '@/features/site-templates/workbench/TemplateDetails'
+import { toTemplatePresentation } from '@/features/site-templates/workbench/presentation'
+import { resolveSurfaceLocale, surfaceLocalePath } from '@/features/site-templates/locale-routing'
 import {
+  getTemplatesNewestFirst,
   getSurfaceById,
   getSurfacePage,
   getTemplateById,
@@ -39,11 +44,14 @@ export async function generateMetadata({
 
   const route = resolveRoute(slug)
   const surface = route ? getSurfaceById(template, route.surfaceId) : undefined
-  const page = surface && route ? getSurfacePage(surface, route.pageSlug) : undefined
+  const localized = surface && route ? resolveSurfaceLocale(surface, route.pageSlug) : undefined
+  const page = surface && localized ? getSurfacePage(surface, localized.pageSlug) : undefined
+  const locale = localized?.locale ?? 'zh'
+  const name = template.localizedNames?.[locale] ?? template.name
 
   return {
     // 用 absolute 覆盖根 layout 的 title.template：模板站点不该被追加「· 微域生光」后缀。
-    title: { absolute: page ? `${page.title} · ${template.name}` : template.name },
+    title: { absolute: page ? `${page.localizedTitles?.[locale] ?? page.title} · ${name}` : name },
     robots: { index: false, follow: false },
   }
 }
@@ -54,15 +62,24 @@ export default async function TemplateSitePage({ params }: { params: Promise<Rou
   const template = getTemplateById(id)
   if (!template) notFound()
 
-  // 裸 /templates/<id> 不渲染任何东西：没有端片段就无从判断该展示哪个站。
-  // 入口一律由工作台的预览页给出，那里的链接始终带端。
+  // 裸模板路径承载详情；带端片段的真实模板路由继续按原规则解析。
   const route = resolveRoute(slug)
-  if (!route) notFound()
+  if (!route) {
+    return (
+      <MarketplaceShell>
+        <TemplateDetails
+          template={toTemplatePresentation(template)}
+          related={getTemplatesNewestFirst().filter((item) => item.id !== template.id).map(toTemplatePresentation)}
+        />
+      </MarketplaceShell>
+    )
+  }
 
   const surface = getSurfaceById(template, route.surfaceId)
   if (!surface) notFound()
 
-  const page = getSurfacePage(surface, route.pageSlug)
+  const { locale, pageSlug } = resolveSurfaceLocale(surface, route.pageSlug)
+  const page = getSurfacePage(surface, pageSlug)
   if (!page) notFound()
 
   const { default: PageComponent } = await page.load()
@@ -70,8 +87,8 @@ export default async function TemplateSitePage({ params }: { params: Promise<Rou
   // data-template 是该模板 theme.css 的作用域锚点：令牌与底色只在这个子树内生效。
   // basePath 交给模板自己拼站内链接，模板内部不感知自己被挂在 /templates 下。
   return (
-    <div data-template={template.id} className="min-h-screen">
-      <PageComponent basePath={`/templates/${template.id}/${surface.id}`} />
+    <div data-template={template.id} lang={locale === 'en' ? 'en' : 'zh-CN'} className="min-h-screen">
+      <PageComponent basePath={surfaceLocalePath(`/templates/${template.id}/${surface.id}`, locale)} locale={locale} />
     </div>
   )
 }

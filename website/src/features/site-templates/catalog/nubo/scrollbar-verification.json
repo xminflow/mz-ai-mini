@@ -1,0 +1,65 @@
+{
+  "verifiedAt": "2026-10-15T12:51:24.652Z",
+  "base": "http://127.0.0.1:3000",
+  "results": [
+    {
+      "width": 1440,
+      "height": 1000,
+      "wheel": true,
+      "drag": true,
+      "keyboard": true,
+      "touch": false,
+      "fullWidth": true
+    },
+    {
+      "width": 834,
+      "height": 1180,
+      "wheel": true,
+      "drag": true,
+      "keyboard": true,
+      "touch": false,
+      "fullWidth": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "mobile": true,
+      "wheel": true,
+      "drag": true,
+      "keyboard": true,
+      "touch": true,
+      "fullWidth": true
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "mobile": true,
+      "wheel": true,
+      "drag": true,
+      "keyboard": true,
+      "touch": true,
+      "fullWidth": true
+    },
+    {
+      "width": 1440,
+      "height": 1000,
+      "locale": "/en",
+      "wheel": true,
+      "drag": true,
+      "keyboard": true,
+      "touch": false,
+      "fullWidth": true
+    },
+    {
+      "width": 1440,
+      "height": 1000,
+      "reduced": true,
+      "wheel": true,
+      "drag": true,
+      "keyboard": true,
+      "touch": false,
+      "fullWidth": true
+    }
+  ],
+  "hostRestored": true
+}

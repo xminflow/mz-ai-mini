@@ -1,0 +1,19 @@
+/* 不对称浪沿从左向右推移，曲率随推进舒展，旧画面保持静止。 */
+html[data-theme-transition='curtain']::view-transition-old(root),
+html[data-theme-transition='curtain']::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+html[data-theme-transition='curtain']::view-transition-new(root) {
+  animation: theme-curtain-reveal 1000ms cubic-bezier(.65, 0, .25, 1) both;
+}
+html[data-theme-transition='curtain']::view-transition-group(root) {
+  animation-duration: 1000ms;
+}
+@keyframes theme-curtain-reveal {
+  from { clip-path: var(--theme-wave-start); }
+  to { clip-path: var(--theme-wave-end); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme-transition='curtain']::view-transition-new(root) { animation: none; }
+}

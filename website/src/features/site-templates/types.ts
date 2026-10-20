@@ -1,8 +1,11 @@
 import type { ComponentType } from 'react'
 
+export type TemplateLocale = 'zh' | 'en'
+
 export interface SiteTemplatePageProps {
+  locale?: TemplateLocale
   /**
-   * 该端在当前挂载点下的根路径，如 `/templates/aegis/console`。
+   * 该端在当前挂载点下的根路径，如 `/templates/liubai/site`。
    *
    * 模板内部所有站内链接都必须基于它拼接，禁止硬编码 `/templates` 前缀——
    * 将来模板换挂载点（独立域名、上架后的预览页）时才不用逐套改。
@@ -14,6 +17,7 @@ export interface SiteTemplatePageProps {
 export interface SiteTemplatePage {
   slug: string
   title: string
+  localizedTitles?: Partial<Record<TemplateLocale, string>>
   /**
    * 用 import() 缩略函数而非直接引用组件：Next.js 能静态分析这种写法做代码分割。
    * 意图是让每套模板独立分包，模板数量增长时不互相拖累首屏体积——但这只是设计意图，
@@ -46,6 +50,8 @@ export const TEMPLATE_PLATFORM_LABELS: Record<TemplatePlatform, string> = {
  * 硬塞进同一个扁平的 pages 数组，客户在预览里会看到官网和后台的页面混在一排。
  */
 export interface TemplateSurface {
+  /** 开启后，在端路径之后用 /en 表示英文；默认中文路径保持兼容。 */
+  locales?: readonly TemplateLocale[]
   /** kebab-case，URL 片段：`/templates/<模板 id>/<端 id>/<页面 slug>` */
   id: string
   /** 展示名，如「官网」「管理后台」「商城小程序」 */
@@ -55,13 +61,34 @@ export interface TemplateSurface {
   pages: SiteTemplatePage[]
 }
 
-/**
- * 模板元数据。字段按「将来上架的模板列表页需要什么」来定，
- * 而不是按「现在开发调试需要什么」——上架时不该再改一遍数据结构。
- */
+/** 响应式视口，与独立业务站点（surface）分开管理。 */
+export type TemplateDevice = 'desktop' | 'tablet' | 'mobile'
+
+/** 模板页面的真实截图，由目录与详情画廊共用。 */
+export interface TemplateScreenshot {
+  src: string
+  alt: string
+  /** 未标注设备的既有截图按 PC 展示；新截图需登记实际拍摄尺寸。 */
+  device?: TemplateDevice
+  width?: number
+  height?: number
+}
+
+/** 客户端展示数据：排除页面加载函数，避免函数跨越服务端与客户端边界。 */
+export type TemplatePresentation = Omit<SiteTemplate, 'surfaces'> & {
+  category: string
+  surfaces: Array<Omit<TemplateSurface, 'pages'> & {
+    pages: Array<Pick<SiteTemplatePage, 'slug' | 'title'>>
+  }>
+}
+
+/** 模板元数据，供注册表、展示目录与真实站点路由共用。 */
 export interface SiteTemplate {
   id: string
+  /** 已确认的独立模板 Git 地址；尚未提供独立工程的模板不填写。 */
+  gitUrl?: string
   name: string
+  localizedNames?: Partial<Record<TemplateLocale, string>>
   /**
    * 所属场景，取值必须是 taxonomy.ts 里定义的 scene id，注册表会校验。
    * 它决定模板出现在案例页的哪个分类下。
@@ -85,6 +112,8 @@ export interface SiteTemplate {
   accentColor: string
   /** 封面图路径，位于 public/templates/<id>/ 下 */
   cover: string
+  /** 实际页面截图，第一张用于模板目录封面；按展示顺序排列。 */
+  screenshots: [TemplateScreenshot, ...TemplateScreenshot[]]
   /** 这套交付包含的端，数组顺序即预览页的端切换顺序，第一个是默认端 */
   surfaces: TemplateSurface[]
 }
