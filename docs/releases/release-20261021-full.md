@@ -35,7 +35,7 @@
 已完成发布，版本为 `release-20261021-full`：
 
 - 官网：<https://weelume.com>；AI 营：<https://ai.weelume.com>；后端：<https://api.weelume.com>。三个正式容器均运行新版本并配置 always 自动重启。
-- 业务源码提交 `1a3aff8`，后端测试/初始化/发布脚本修复提交 `d5f4afa`，均已推送 origin/dev。仅保留本机运行锁、自动生成类型引用及未引用旧归档，不包含未交付业务改动。
+- 业务源码提交 `1a3aff8`，后端测试/初始化/发布脚本修复提交 `d5f4afa`，均已推送 origin/dev。本次构建冻结的业务源码已交付，运行锁、自动生成类型引用及未引用旧归档未入库。构建后另行新增的工作树改动不包含在此冻结版本。
 - 实际构建位置：本地 WSL `/home/xmin/workspace/weelume-releases/release-20261021-full/`；服务器未构建。公共镜像 DNS 故障时复用本机 Node 基底；后端基底从生产镜像导出到本机已获得用户单独明确授权，仅用于本地构建。
 - 三服务部署包 SHA256：`62863fa57311e05c4fcfe255323ecfc31b19429d286e0f61ea22741f7accba71`。上传后再次核验摘要，三个远端镜像的所有层摘要均与本地验收镜像一致。
 - 后端 `server/.venv/Scripts/python.exe -m pytest server/api/tests -q`：299 通过、0 跳过；真实数据库集成测试使用本次专用 PostgreSQL 实例。另有 1 项既有 httpx 弃用警告。
