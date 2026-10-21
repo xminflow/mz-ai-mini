@@ -1,0 +1,182 @@
+{
+  "cerno": {
+    "version": "1.0.0",
+    "sourceCommit": "c33f4ef5b3009df38c5f6d68a6223f67f4c0997f",
+    "sha256": "d6deef7c349870eb1b4b15d9400f3fd71216d06c611f767ef9db847305eabcef",
+    "size": 44876601,
+    "file": "cerno-1.0.0-c33f4ef5b3009df38c5f6d68a6223f67f4c0997f.zip",
+    "snapshotSha256": "21fabe392fd3841b81584aba3bdf180ea1c6f47b9075049364c4fa56e4aa5d03",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/cerno/1.0.0-c33f4ef5b3009df38c5f6d68a6223f67f4c0997f/d6deef7c349870eb1b4b15d9400f3fd71216d06c611f767ef9db847305eabcef.zip"
+  },
+  "conicorn": {
+    "version": "1.0.0",
+    "sourceCommit": "071ec137aad0575cc3ec6159697462d4c65f6a00",
+    "sha256": "565836e12c4469155eb3f955eda38e1a5a1475231aed7e7b9c2e52cec66c1ddb",
+    "size": 11944220,
+    "file": "conicorn-1.0.0-071ec137aad0575cc3ec6159697462d4c65f6a00.zip",
+    "snapshotSha256": "1e2d2a634d32b19e06cf8180cc442a0507488035c6cfd97eb2a0888faf32dffc",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/conicorn/1.0.0-071ec137aad0575cc3ec6159697462d4c65f6a00/565836e12c4469155eb3f955eda38e1a5a1475231aed7e7b9c2e52cec66c1ddb.zip"
+  },
+  "deformo": {
+    "version": "1.2.0",
+    "sourceCommit": "8018ee8696d0456a909e1b14c18ba4aa39025f86",
+    "sha256": "5d0eea3348e1f6ab3e7787d8f485a4d0793bc30b67429d3e2fc1b7f7862600ef",
+    "size": 14132370,
+    "file": "deformo-1.2.0-8018ee8696d0456a909e1b14c18ba4aa39025f86.zip",
+    "snapshotSha256": "b47eb1d90968316453ea95b618b5fa214e46000b412f6297181aad5d3fa895bd",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/deformo/1.2.0-8018ee8696d0456a909e1b14c18ba4aa39025f86/5d0eea3348e1f6ab3e7787d8f485a4d0793bc30b67429d3e2fc1b7f7862600ef.zip"
+  },
+  "foldex": {
+    "version": "1.0.0",
+    "sourceCommit": "54e9b26c47beb45a569c14e80b079eab85c3f5a9",
+    "sha256": "9a849dbf70ec2faaa62e04271e5ea436bcd3ef6983acc0108f0ed3cccc6043fa",
+    "size": 32509108,
+    "file": "foldex-1.0.0-54e9b26c47beb45a569c14e80b079eab85c3f5a9.zip",
+    "snapshotSha256": "515096413b7f9627bc5cf42758cae486b292f99a63c3efa4f94f80e4368cefb9",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/foldex/1.0.0-54e9b26c47beb45a569c14e80b079eab85c3f5a9/9a849dbf70ec2faaa62e04271e5ea436bcd3ef6983acc0108f0ed3cccc6043fa.zip"
+  },
+  "furnexa": {
+    "version": "1.0.0",
+    "sourceCommit": "e51b2433ba4c41f3c7b82ad42d73d081bfb1dede",
+    "sha256": "80c285d3308bcf50c9a8fa318ea4f026b13420c0e5df4c98422b4d5a736e8a09",
+    "size": 28727543,
+    "file": "furnexa-1.0.0-e51b2433ba4c41f3c7b82ad42d73d081bfb1dede.zip",
+    "snapshotSha256": "ab4268e4976bd9916b1bbc04fbee3bb24a202a2bddf01e9cbdac16aabcd16c68",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/furnexa/1.0.0-e51b2433ba4c41f3c7b82ad42d73d081bfb1dede/80c285d3308bcf50c9a8fa318ea4f026b13420c0e5df4c98422b4d5a736e8a09.zip"
+  },
+  "grovia": {
+    "version": "1.0.0",
+    "sourceCommit": "6a84dc3186bf5988d3c34d0eaabdefb580047be1",
+    "sha256": "01dd0bc6c1847a16b442c62f035898f405efb38d8862e120ce1cea60e04a5348",
+    "size": 7813803,
+    "file": "grovia-1.0.0-6a84dc3186bf5988d3c34d0eaabdefb580047be1.zip",
+    "snapshotSha256": "18cd7e1f4e0756ef88eac3343a57485344013d28dbde144a4f13fc9c86c14bf7",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/grovia/1.0.0-6a84dc3186bf5988d3c34d0eaabdefb580047be1/01dd0bc6c1847a16b442c62f035898f405efb38d8862e120ce1cea60e04a5348.zip"
+  },
+  "latte": {
+    "version": "1.0.0",
+    "sourceCommit": "f6bad2150078d913e7014e3b78ab8f49221ec334",
+    "sha256": "76e52cea3c98954053ea76d87802b1354352213f0155f547d786a4369b55b8e7",
+    "size": 22194346,
+    "file": "latte-1.0.0-f6bad2150078d913e7014e3b78ab8f49221ec334.zip",
+    "snapshotSha256": "0e9917ea1f70fecebfcdec4ff6d141f4185a279ec0fb0b6a96219372d15228e6",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/latte/1.0.0-f6bad2150078d913e7014e3b78ab8f49221ec334/76e52cea3c98954053ea76d87802b1354352213f0155f547d786a4369b55b8e7.zip"
+  },
+  "mondragon": {
+    "version": "1.0.0",
+    "sourceCommit": "a5c6af4dfae1f739f4b1b4453e0c65f0a8e5d17e",
+    "sha256": "461cd5446788b8b8b4815e95502a4a24fded43ae1bf1266f3d9eabb71235d191",
+    "size": 30104205,
+    "file": "mondragon-1.0.0-a5c6af4dfae1f739f4b1b4453e0c65f0a8e5d17e.zip",
+    "snapshotSha256": "e1dcfa698f8571beb6a693d761f51a274dc4e10bf48c6497bec4782338c3e217",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/mondragon/1.0.0-a5c6af4dfae1f739f4b1b4453e0c65f0a8e5d17e/461cd5446788b8b8b4815e95502a4a24fded43ae1bf1266f3d9eabb71235d191.zip"
+  },
+  "souma": {
+    "version": "1.0.0",
+    "sourceCommit": "b0a7ba99fb17a39fd2fb3efee0e36dd9a0b91bee",
+    "sha256": "529144afaa40c5b07ef296ad892051bee95a50db98733b181cbfc8693bb5481b",
+    "size": 9405176,
+    "file": "souma-1.0.0-b0a7ba99fb17a39fd2fb3efee0e36dd9a0b91bee.zip",
+    "snapshotSha256": "833f12922252a9c7979c2be5bdb9aafac191f1cada9d317c837c19ab1c7f949d",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/souma/1.0.0-b0a7ba99fb17a39fd2fb3efee0e36dd9a0b91bee/529144afaa40c5b07ef296ad892051bee95a50db98733b181cbfc8693bb5481b.zip"
+  },
+  "uiuxfolio": {
+    "version": "1.0.0",
+    "sourceCommit": "0a0ddcf9b9795f4bae1170b55ba478b7d14c601c",
+    "sha256": "565fffdaf8755c8ff0fb6489cc6dd9de5776a16593921126a9a795d3a8c4548c",
+    "size": 43369706,
+    "file": "uiuxfolio-1.0.0-0a0ddcf9b9795f4bae1170b55ba478b7d14c601c.zip",
+    "snapshotSha256": "ee3da1ea6b1ea0f12eb153dc6f126a029fa567481cb692a28410c256e7bc8afe",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/uiuxfolio/1.0.0-0a0ddcf9b9795f4bae1170b55ba478b7d14c601c/565fffdaf8755c8ff0fb6489cc6dd9de5776a16593921126a9a795d3a8c4548c.zip"
+  },
+  "viral": {
+    "version": "1.1.0",
+    "sourceCommit": "3dbf24b5a86f6c4eb7f47a9858e8b99f8930ba6a",
+    "sha256": "af9e90f81da000bbda4a36e3d9a7e7098d6372f324dd6bfa54e300a9ff8a4079",
+    "size": 25542170,
+    "file": "viral-1.1.0-3dbf24b5a86f6c4eb7f47a9858e8b99f8930ba6a.zip",
+    "snapshotSha256": null,
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/viral/1.1.0-3dbf24b5a86f6c4eb7f47a9858e8b99f8930ba6a/af9e90f81da000bbda4a36e3d9a7e7098d6372f324dd6bfa54e300a9ff8a4079.zip"
+  },
+  "lunera": {
+    "version": "1.0.0",
+    "sourceCommit": "c21387da5fc1f8b6376926bed4b231ee4714077f",
+    "sha256": "53577db048fa72183f9eeca520c8acf8e43f6f868016d199a285540862aa1822",
+    "size": 6886270,
+    "file": "lunera-1.0.0-c21387da5fc1f8b6376926bed4b231ee4714077f.zip",
+    "snapshotSha256": "67565951110312aae4a840fbfd336a225adf58043aba71d0bc5aac63867fdf9b",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/lunera/1.0.0-c21387da5fc1f8b6376926bed4b231ee4714077f/53577db048fa72183f9eeca520c8acf8e43f6f868016d199a285540862aa1822.zip"
+  },
+  "noirei": {
+    "version": "1.0.0",
+    "sourceCommit": "184f80cce54b859e39734b8e606f79f01d4e46c0",
+    "sha256": "c77ee4003c7fbfc9cc970da88167ec1cfc36f91c0cdc748c572540987f59a4d2",
+    "size": 34051466,
+    "file": "noirei-1.0.0-184f80cce54b859e39734b8e606f79f01d4e46c0.zip",
+    "snapshotSha256": "12aa379d6f21f53a37d2287e2f321e96ace73b5308474154672a7aedccb37cb6",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/noirei/1.0.0-184f80cce54b859e39734b8e606f79f01d4e46c0/c77ee4003c7fbfc9cc970da88167ec1cfc36f91c0cdc748c572540987f59a4d2.zip"
+  },
+  "hellomonday": {
+    "version": "1.0.0",
+    "sourceCommit": "ae22ade9e5c7264fdbc05b2f78e8039786362df4",
+    "sha256": "fcc680d30eb688d036cd70426efd9a20564b56d09e7b9fa75d5dded9cc74db53",
+    "size": 71218837,
+    "file": "hellomonday-1.0.0-ae22ade9e5c7264fdbc05b2f78e8039786362df4.zip",
+    "snapshotSha256": "63ae2703814526f6761696c6b4a69323882392e9fa004534f4d49e28c1eeb2d2",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/hellomonday/1.0.0-ae22ade9e5c7264fdbc05b2f78e8039786362df4/fcc680d30eb688d036cd70426efd9a20564b56d09e7b9fa75d5dded9cc74db53.zip"
+  },
+  "liubai": {
+    "version": "1.0.0",
+    "sourceCommit": "48a04153daf553bb77ddd16f2f8b280d45df445d",
+    "sha256": "9304704c4c55c79c1b5dbbf6a2750968a213700f69047681b6051354dd2116f4",
+    "size": 6376057,
+    "file": "liubai-1.0.0-48a04153daf553bb77ddd16f2f8b280d45df445d.zip",
+    "snapshotSha256": "af57c354ecd60d6f958047581f37b742c766b101e1080ea0143c1f5e101970c7",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/liubai/1.0.0-48a04153daf553bb77ddd16f2f8b280d45df445d/9304704c4c55c79c1b5dbbf6a2750968a213700f69047681b6051354dd2116f4.zip"
+  },
+  "nubo": {
+    "version": "1.0.0",
+    "sourceCommit": "3e82b931c8ffcb7d1c9fe38476b3e36c9f5146b5",
+    "sha256": "aeeb3e65de73244989791c450f6a167b6ac5ee5883230fc46823959a563b5825",
+    "size": 16569408,
+    "file": "nubo-1.0.0-3e82b931c8ffcb7d1c9fe38476b3e36c9f5146b5.zip",
+    "snapshotSha256": "6c34f152cd3078f1ff382be0edbfd4a40e970e4175ca22a2d240e32245953ab5",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/nubo/1.0.0-3e82b931c8ffcb7d1c9fe38476b3e36c9f5146b5/aeeb3e65de73244989791c450f6a167b6ac5ee5883230fc46823959a563b5825.zip"
+  },
+  "recueil": {
+    "version": "1.0.0",
+    "sourceCommit": "a9bae6c51a4b1679b4f01dad7ceecc738532ea4a",
+    "sha256": "77f23dcccae64790fcbc43b4f4c2dac95c886633c718b1c80d7349b5c690c304",
+    "size": 45981724,
+    "file": "recueil-1.0.0-a9bae6c51a4b1679b4f01dad7ceecc738532ea4a.zip",
+    "snapshotSha256": "cd550dcf0cda2f5bf1303e22088941a67bb31560b5bcd2ba5fa2984648dbb789",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/recueil/1.0.0-a9bae6c51a4b1679b4f01dad7ceecc738532ea4a/77f23dcccae64790fcbc43b4f4c2dac95c886633c718b1c80d7349b5c690c304.zip"
+  },
+  "studiothink": {
+    "version": "1.0.0",
+    "sourceCommit": "532b4173b98da1fe87ea2596ce15c5b1fd4b7585",
+    "sha256": "45f76c79b7953113ee456e22c4b8f6a0b733634b3ac97cb7789f09dad362bda9",
+    "size": 11248384,
+    "file": "studiothink-1.0.0-532b4173b98da1fe87ea2596ce15c5b1fd4b7585.zip",
+    "snapshotSha256": "4a8d22d6efccda1a0d04457844f5e6cba2cc50e519b295c1772fd0464d005faf",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/studiothink/1.0.0-532b4173b98da1fe87ea2596ce15c5b1fd4b7585/45f76c79b7953113ee456e22c4b8f6a0b733634b3ac97cb7789f09dad362bda9.zip"
+  },
+  "tabfolio": {
+    "version": "1.0.0",
+    "sourceCommit": "2055eb9ecbb630003a5b820b0e75351031888334",
+    "sha256": "f3c9fcf6fe3c6c6d22ff7cbdfac0c0a79394dd2d9ae9796ded809b4f2c970a6d",
+    "size": 15629111,
+    "file": "tabfolio-1.0.0-2055eb9ecbb630003a5b820b0e75351031888334.zip",
+    "snapshotSha256": "5a720f7947e26c2d0be8b1d899db7218308f96e3d4ba9d5a3403812461dc4156",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/tabfolio/1.0.0-2055eb9ecbb630003a5b820b0e75351031888334/f3c9fcf6fe3c6c6d22ff7cbdfac0c0a79394dd2d9ae9796ded809b4f2c970a6d.zip"
+  },
+  "unseen": {
+    "version": "1.0.0",
+    "sourceCommit": "c9f996f65538d02d6722ceb64403785e64dea8b2",
+    "sha256": "f3618133bd654f7c9bd777e39e735e4f8be9420cea6f554d5c1d75bc74deae9f",
+    "size": 58747348,
+    "file": "unseen-1.0.0-c9f996f65538d02d6722ceb64403785e64dea8b2.zip",
+    "snapshotSha256": "46bda9ae0670edbd2d3b6d4f630057c7cddc803307fc54f5187a9f45e71980f0",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/unseen/1.0.0-c9f996f65538d02d6722ceb64403785e64dea8b2/f3618133bd654f7c9bd777e39e735e4f8be9420cea6f554d5c1d75bc74deae9f.zip"
+  }
+}

@@ -7,7 +7,7 @@
 
 详情页的“如何在 WorkBuddy 中使用”由 workbench/WorkBuddyGuide.tsx 统一提供，默认收起，展开后仅展示“提示词”和“如何修改”两部分。提示词支持一键复制，使用当前模板名称，具体命令由工程自身说明决定。
 
-已确认的独立工程地址填在 SiteTemplate.gitUrl，提示词固定为“使用（实际 Git 地址），按照项目要求启动工程，并给我实际访问地址。”；未配置地址时显示未配置提示并禁用复制，不生成猜测的仓库链接。当前 Deformo 地址在宿主适配中声明。此教程属于市场展示，不回写到独立模板的页面代码。
+SiteTemplate.gitUrl 保留源码追溯用途。提示词读取 templates/releases.json 中经公开下载验证的 COS 源码 ZIP 地址，要求下载解压并阅读工程规则后启动。未发布 ZIP 时明确提示并禁用复制，不回退到 Git 地址。执行 `pnpm template:release` 打包上传，`pnpm template:release:check` 检查与生产快照的一致性，build 同样强制检查。流程见主站 docs/template-zip-release.md；此教程属于市场展示，不回写到独立模板页面。
 
 ## 可见性
 

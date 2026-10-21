@@ -1,0 +1,821 @@
+{
+  "updatedAt": "2026-10-21T03:14:08.300Z",
+  "scope": "全部新版独立模板；不含协议工具工程和主站仓库",
+  "repositories": [
+    {
+      "id": "cerno",
+      "gitUrl": "https://github.com/weelume/cerno-template",
+      "branch": "main",
+      "commit": "c33f4ef5b3009df38c5f6d68a6223f67f4c0997f",
+      "remoteCommit": "c33f4ef5b3009df38c5f6d68a6223f67f4c0997f",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-20T11:17:33.429Z",
+      "localPath": "D:/code/code-tpl/cerno-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/cerno/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "missing",
+        "claimedStatus": null,
+        "sourceMatches": false
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "conicorn",
+      "gitUrl": "https://github.com/weelume/conicorn-template",
+      "branch": "main",
+      "commit": "071ec137aad0575cc3ec6159697462d4c65f6a00",
+      "remoteCommit": "071ec137aad0575cc3ec6159697462d4c65f6a00",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-20T11:17:43.127Z",
+      "localPath": "D:/code/code-tpl/conicorn-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/conicorn/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "deformo",
+      "gitUrl": "https://github.com/weelume/deformo-template",
+      "branch": "main",
+      "commit": "814a874794b899df1f1d6c3f92f76e8fd9765817",
+      "remoteCommit": "814a874794b899df1f1d6c3f92f76e8fd9765817",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-20T11:17:48.962Z",
+      "localPath": "D:/code/code-tpl/deformo-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/deformo/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "stale",
+        "claimedStatus": "passed",
+        "sourceMatches": false
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "foldex",
+      "gitUrl": "https://github.com/weelume/foldex-template",
+      "branch": "master",
+      "commit": "54e9b26c47beb45a569c14e80b079eab85c3f5a9",
+      "remoteCommit": "54e9b26c47beb45a569c14e80b079eab85c3f5a9",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-20T11:18:05.323Z",
+      "localPath": "D:/code/code-tpl/foldex-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/foldex/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "scaffold",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "stale",
+        "claimedStatus": "passed",
+        "sourceMatches": false
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "furnexa",
+      "gitUrl": "https://github.com/weelume/furnexa-template",
+      "branch": "main",
+      "commit": "e51b2433ba4c41f3c7b82ad42d73d081bfb1dede",
+      "remoteCommit": "e51b2433ba4c41f3c7b82ad42d73d081bfb1dede",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-20T11:18:20.930Z",
+      "localPath": "D:/code/code-tpl/furnexa-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/furnexa/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "scaffold",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "missing",
+        "claimedStatus": null,
+        "sourceMatches": false
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "grovia",
+      "gitUrl": "https://github.com/weelume/grovia-template",
+      "branch": "main",
+      "commit": "6a84dc3186bf5988d3c34d0eaabdefb580047be1",
+      "remoteCommit": "6a84dc3186bf5988d3c34d0eaabdefb580047be1",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-20T11:18:30.031Z",
+      "localPath": "D:/code/code-tpl/grovia-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/grovia/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "latte",
+      "gitUrl": "https://github.com/weelume/latte-template",
+      "branch": "master",
+      "commit": "f6bad2150078d913e7014e3b78ab8f49221ec334",
+      "remoteCommit": "f6bad2150078d913e7014e3b78ab8f49221ec334",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-20T11:18:40.613Z",
+      "localPath": "D:/code/code-tpl/latte-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/latte/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "scaffold",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "missing",
+        "claimedStatus": null,
+        "sourceMatches": false
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "mondragon",
+      "gitUrl": "https://github.com/weelume/mondragon-template",
+      "branch": "main",
+      "commit": "a5c6af4dfae1f739f4b1b4453e0c65f0a8e5d17e",
+      "remoteCommit": "a5c6af4dfae1f739f4b1b4453e0c65f0a8e5d17e",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-20T11:18:55.444Z",
+      "localPath": "D:/code/code-tpl/mondragon-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/mondragon/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "stale",
+        "claimedStatus": "passed",
+        "sourceMatches": false
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "souma",
+      "gitUrl": "https://github.com/weelume/souma-template",
+      "branch": "master",
+      "commit": "b0a7ba99fb17a39fd2fb3efee0e36dd9a0b91bee",
+      "remoteCommit": "b0a7ba99fb17a39fd2fb3efee0e36dd9a0b91bee",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-20T11:18:58.919Z",
+      "localPath": "D:/code/code-tpl/souma-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/souma/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "scaffold",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "stale",
+        "claimedStatus": "passed",
+        "sourceMatches": false
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "uiuxfolio",
+      "gitUrl": "https://github.com/weelume/uiuxfolio-template",
+      "branch": "main",
+      "commit": "0a0ddcf9b9795f4bae1170b55ba478b7d14c601c",
+      "remoteCommit": "0a0ddcf9b9795f4bae1170b55ba478b7d14c601c",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-20T11:19:23.958Z",
+      "localPath": "D:/code/code-tpl/uiuxfolio-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/uiuxfolio/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "scaffold",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "missing",
+        "claimedStatus": null,
+        "sourceMatches": false
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "viral",
+      "gitUrl": "https://github.com/weelume/viral-template",
+      "branch": "main",
+      "commit": "3dbf24b5a86f6c4eb7f47a9858e8b99f8930ba6a",
+      "remoteCommit": "3dbf24b5a86f6c4eb7f47a9858e8b99f8930ba6a",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-20T11:19:39.022Z",
+      "localPath": "D:/code/code-tpl/viral-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/viral/meta.ts",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "stale",
+        "claimedStatus": "passed",
+        "sourceMatches": false
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "lunera",
+      "gitUrl": "https://github.com/weelume/lunera-template",
+      "branch": "main",
+      "commit": "c21387da5fc1f8b6376926bed4b231ee4714077f",
+      "remoteCommit": "c21387da5fc1f8b6376926bed4b231ee4714077f",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-21T01:36:09.401Z",
+      "localPath": "D:/code/code-tpl/lunera-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/lunera/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "buildLocation": "本地 WSL Ubuntu 的 Linux 文件系统",
+      "browserVerification": {
+        "pages": 80,
+        "interactions": 5,
+        "errors": 0
+      }
+    },
+    {
+      "id": "noirei",
+      "gitUrl": "https://github.com/weelume/noirei-template",
+      "branch": "main",
+      "commit": "184f80cce54b859e39734b8e606f79f01d4e46c0",
+      "remoteCommit": "184f80cce54b859e39734b8e606f79f01d4e46c0",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-21T01:36:44.838Z",
+      "localPath": "D:/code/code-tpl/noirei-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/noirei/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "buildLocation": "本地 WSL Ubuntu 的 Linux 文件系统",
+      "browserVerification": {
+        "pages": 224,
+        "interactions": 8,
+        "errors": 0
+      }
+    },
+    {
+      "id": "hellomonday",
+      "gitUrl": "https://github.com/weelume/hellomonday-template",
+      "branch": "main",
+      "commit": "ae22ade9e5c7264fdbc05b2f78e8039786362df4",
+      "remoteCommit": "ae22ade9e5c7264fdbc05b2f78e8039786362df4",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-21T02:53:25.742Z",
+      "previousCommit": "99013317e3a6b153cac883fdcd0029fbf8971aeb",
+      "localPath": "D:/code/code-tpl/hellomonday-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/hellomonday/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "buildLocation": "本地 WSL Ubuntu 的 Linux 文件系统",
+      "browserVerification": {
+        "httpRoutes": 176,
+        "pageCombinations": 52,
+        "interactions": 4,
+        "errors": 0,
+        "scope": "本批迁移增量：不同页面实现与生成详情样本，桌面及手机；不重验历史模板"
+      }
+    },
+    {
+      "id": "liubai",
+      "gitUrl": "https://github.com/weelume/liubai-template",
+      "branch": "main",
+      "commit": "48a04153daf553bb77ddd16f2f8b280d45df445d",
+      "remoteCommit": "48a04153daf553bb77ddd16f2f8b280d45df445d",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-21T02:44:26.688Z",
+      "localPath": "D:/code/code-tpl/liubai-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/liubai/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "buildLocation": "本地 WSL Ubuntu 的 Linux 文件系统",
+      "browserVerification": {
+        "httpRoutes": 11,
+        "pageCombinations": 20,
+        "interactions": 2,
+        "errors": 0,
+        "scope": "本批迁移增量：不同页面实现与生成详情样本，桌面及手机；不重验历史模板"
+      }
+    },
+    {
+      "id": "nubo",
+      "gitUrl": "https://github.com/weelume/nubo-template",
+      "branch": "main",
+      "commit": "3e82b931c8ffcb7d1c9fe38476b3e36c9f5146b5",
+      "remoteCommit": "3e82b931c8ffcb7d1c9fe38476b3e36c9f5146b5",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-21T03:13:12.593Z",
+      "previousCommit": "accb29368e359c81a79b4b1b4d852caf2d7773d1",
+      "localPath": "D:/code/code-tpl/nubo-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/nubo/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "buildLocation": "本地 WSL Ubuntu 的 Linux 文件系统",
+      "browserVerification": {
+        "httpRoutes": 26,
+        "pageCombinations": 36,
+        "interactions": 4,
+        "errors": 0,
+        "scope": "本批迁移增量：不同页面实现与生成详情样本，桌面及手机；不重验历史模板"
+      }
+    },
+    {
+      "id": "recueil",
+      "gitUrl": "https://github.com/weelume/recueil-template",
+      "branch": "main",
+      "commit": "a9bae6c51a4b1679b4f01dad7ceecc738532ea4a",
+      "remoteCommit": "a9bae6c51a4b1679b4f01dad7ceecc738532ea4a",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-21T02:53:41.956Z",
+      "previousCommit": "9d75390341d3539adf63c892c12a210a205fb9e8",
+      "localPath": "D:/code/code-tpl/recueil-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/recueil/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "buildLocation": "本地 WSL Ubuntu 的 Linux 文件系统",
+      "browserVerification": {
+        "httpRoutes": 6,
+        "pageCombinations": 12,
+        "interactions": 2,
+        "errors": 0,
+        "scope": "本批迁移增量：不同页面实现与生成详情样本，桌面及手机；不重验历史模板"
+      }
+    },
+    {
+      "id": "studiothink",
+      "gitUrl": "https://github.com/weelume/studiothink-template",
+      "branch": "main",
+      "commit": "532b4173b98da1fe87ea2596ce15c5b1fd4b7585",
+      "remoteCommit": "532b4173b98da1fe87ea2596ce15c5b1fd4b7585",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-21T03:13:21.170Z",
+      "localPath": "D:/code/code-tpl/studiothink-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/studiothink/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "buildLocation": "本地 WSL Ubuntu 的 Linux 文件系统",
+      "browserVerification": {
+        "httpRoutes": 8,
+        "pageCombinations": 16,
+        "interactions": 4,
+        "errors": 0,
+        "scope": "本批迁移增量：不同页面实现与生成详情样本，桌面及手机；不重验历史模板"
+      },
+      "previousCommit": "62904e4fb4efcb9ab4bb941d8ba9beacd20553cf"
+    },
+    {
+      "id": "tabfolio",
+      "gitUrl": "https://github.com/weelume/tabfolio-template",
+      "branch": "main",
+      "commit": "2055eb9ecbb630003a5b820b0e75351031888334",
+      "remoteCommit": "2055eb9ecbb630003a5b820b0e75351031888334",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-21T02:53:50.491Z",
+      "previousCommit": "b29e5421b4be556a068e71276732609edde765b2",
+      "localPath": "D:/code/code-tpl/tabfolio-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/tabfolio/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "buildLocation": "本地 WSL Ubuntu 的 Linux 文件系统",
+      "browserVerification": {
+        "httpRoutes": 22,
+        "pageCombinations": 32,
+        "interactions": 3,
+        "errors": 0,
+        "scope": "本批迁移增量：不同页面实现与生成详情样本，桌面及手机；不重验历史模板"
+      }
+    },
+    {
+      "id": "unseen",
+      "gitUrl": "https://github.com/weelume/unseen-template",
+      "branch": "main",
+      "commit": "c9f996f65538d02d6722ceb64403785e64dea8b2",
+      "remoteCommit": "c9f996f65538d02d6722ceb64403785e64dea8b2",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-21T02:47:55.667Z",
+      "localPath": "D:/code/code-tpl/unseen-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/unseen/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "buildLocation": "本地 WSL Ubuntu 的 Linux 文件系统",
+      "browserVerification": {
+        "httpRoutes": 84,
+        "pageCombinations": 28,
+        "interactions": 4,
+        "errors": 0,
+        "scope": "本批迁移增量：不同页面实现与生成详情样本，桌面及手机；不重验历史模板"
+      }
+    }
+  ],
+  "limitations": [
+    "前 11 套保留上一批 Git 交付检查状态；本批 Lunera、Noirei 另完成独立及主站增量页面验收和本地 WSL 生产构建。",
+    "部分历史应用报告为 stale 或 missing，逐仓保留真实状态；未据本次 Git 推送伪造应用验收通过。",
+    "本批已更新 Lunera、Noirei 主站固定运行包与锁文件；未更新其他模板快照、推送主站仓库或部署网站。",
+    "本批新增剩余 7 套旧模板的独立工程、Git 交付及 ZIP 发布；留白仅保留官网，管理后台已按用户要求删除。历史 13 套页面未重新验收，旧记录保持原状。"
+  ]
+}

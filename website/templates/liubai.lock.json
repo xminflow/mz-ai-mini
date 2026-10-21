@@ -1,0 +1,8 @@
+{
+  "name": "liubai-template",
+  "version": "1.0.0",
+  "archive": "vendor/liubai-template-1.0.0-af57c354ecd6.tgz",
+  "sha256": "af57c354ecd60d6f958047581f37b742c766b101e1080ea0143c1f5e101970c7",
+  "sourceCommit": "48a04153daf553bb77ddd16f2f8b280d45df445d",
+  "sourceDirty": false
+}

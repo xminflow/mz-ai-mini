@@ -5,6 +5,7 @@ import type { SiteTemplate, SiteTemplatePageProps } from '../../types'
 
 export const foldexTemplate: SiteTemplate = {
   ...sourceTemplate,
+  gitUrl: 'https://github.com/weelume/foldex-template',
   name: 'Foldex · 微域生光创意工作室',
   localizedNames: { en: 'Foldex · Weelume creative studio' },
   surfaces: sourceTemplate.surfaces.map(surface => ({

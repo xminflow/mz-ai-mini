@@ -1,0 +1,322 @@
+{
+  "checkedAt": "2026-10-21T01:53:15.602Z",
+  "scope": "仅 Lunera、Noirei 增量迁移与验收；不回归其他旧模板页面",
+  "templates": [
+    {
+      "id": "lunera",
+      "git": {
+        "id": "lunera",
+        "gitUrl": "https://github.com/weelume/lunera-template",
+        "branch": "main",
+        "commit": "c21387da5fc1f8b6376926bed4b231ee4714077f",
+        "remoteCommit": "c21387da5fc1f8b6376926bed4b231ee4714077f",
+        "pushed": true,
+        "clean": true,
+        "verifiedAt": "2026-10-21T01:36:09.401Z"
+      },
+      "format": {
+        "id": "lunera",
+        "stage": "ready",
+        "files": 339,
+        "sourceDigest": "04db2f0e5f22c658a28adae84f89eddbcd11e0d4d871ba75c60132ff6f22bd19",
+        "verification": {
+          "state": "passed",
+          "claimedStatus": "passed",
+          "sourceMatches": true
+        },
+        "formatCheck": "passed",
+        "applicationChecks": "not-executed"
+      },
+      "lock": {
+        "name": "lunera-template",
+        "version": "1.0.0",
+        "archive": "vendor/lunera-template-1.0.0-675659511103.tgz",
+        "sha256": "67565951110312aae4a840fbfd336a225adf58043aba71d0bc5aac63867fdf9b",
+        "sourceCommit": "c21387da5fc1f8b6376926bed4b231ee4714077f",
+        "sourceDirty": false
+      },
+      "independent": {
+        "pages": 80,
+        "interactions": 5,
+        "errors": 0,
+        "checkedAt": "2026-10-21T01:32:08.292Z"
+      },
+      "host": {
+        "pages": 80,
+        "interactions": 5,
+        "errors": 0,
+        "checkedAt": "2026-10-21T01:48:21.852Z"
+      }
+    },
+    {
+      "id": "noirei",
+      "git": {
+        "id": "noirei",
+        "gitUrl": "https://github.com/weelume/noirei-template",
+        "branch": "main",
+        "commit": "184f80cce54b859e39734b8e606f79f01d4e46c0",
+        "remoteCommit": "184f80cce54b859e39734b8e606f79f01d4e46c0",
+        "pushed": true,
+        "clean": true,
+        "verifiedAt": "2026-10-21T01:36:44.838Z"
+      },
+      "format": {
+        "id": "noirei",
+        "stage": "ready",
+        "files": 373,
+        "sourceDigest": "5927c1e2db84ff387cdd49ccb340977fdba64ac9daf46615950ea09a27fbf5dc",
+        "verification": {
+          "state": "passed",
+          "claimedStatus": "passed",
+          "sourceMatches": true
+        },
+        "formatCheck": "passed",
+        "applicationChecks": "not-executed"
+      },
+      "lock": {
+        "name": "noirei-template",
+        "version": "1.0.0",
+        "archive": "vendor/noirei-template-1.0.0-12aa379d6f21.tgz",
+        "sha256": "12aa379d6f21f53a37d2287e2f321e96ace73b5308474154672a7aedccb37cb6",
+        "sourceCommit": "184f80cce54b859e39734b8e606f79f01d4e46c0",
+        "sourceDirty": false
+      },
+      "independent": {
+        "pages": 224,
+        "interactions": 8,
+        "errors": 0,
+        "checkedAt": "2026-10-21T01:33:02.400Z"
+      },
+      "host": {
+        "pages": 224,
+        "interactions": 8,
+        "errors": 0,
+        "checkedAt": "2026-10-21T01:50:19.205Z"
+      }
+    }
+  ],
+  "development": {
+    "checkedAt": "2026-10-21T01:47:52.782Z",
+    "checks": [
+      {
+        "id": "lunera",
+        "ready": true,
+        "brand": true,
+        "moduleError": false
+      },
+      {
+        "id": "noirei",
+        "ready": true,
+        "brand": true,
+        "moduleError": false
+      }
+    ],
+    "errors": []
+  },
+  "marketplace": {
+    "checks": 6,
+    "runtimeErrors": 0,
+    "checkedAt": "2026-10-21T01:47:33.997Z"
+  },
+  "snapshots": {
+    "checkedAt": "2026-10-21T01:42:49.337Z",
+    "results": [
+      {
+        "id": "lunera",
+        "files": 296,
+        "archive": "vendor/lunera-template-1.0.0-675659511103.tgz",
+        "sha256": "67565951110312aae4a840fbfd336a225adf58043aba71d0bc5aac63867fdf9b",
+        "screenshots": [
+          {
+            "name": "home.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "ed82f79333f9620206f7698fe05bad3e12c784c34c318a4b44991ad8e38ddc80"
+          },
+          {
+            "name": "features.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "6a5bd52db8033fed63c763978aa82640e6791407b7b966be09cbda33bc470897"
+          },
+          {
+            "name": "blog.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "3c056469746a5b5c37fe65972f85846f042ac7b7d8db29f4f8e8abd0f924055e"
+          },
+          {
+            "name": "contact.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "77081a301b2c7fdae40105fb49f30f8b81f998d4dfce41004bff8bfb8bf3a394"
+          },
+          {
+            "name": "tablet-home.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "4b840221eacb21d68c69500f86548eedf101578180389de330366b7b06ab5133"
+          },
+          {
+            "name": "tablet-features.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "1cc405aeb8cec27987d7644247c7d283da86be6a06b18e1ab929faed33f3a404"
+          },
+          {
+            "name": "tablet-blog.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "80e6955f8febed0515f3124a24a18f59b1289e0244b99f86c53912b23703ef40"
+          },
+          {
+            "name": "tablet-contact.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "ce15e12ff99f14332acb9c03ff19a1f49875c9831590a24592d0bec621868c83"
+          },
+          {
+            "name": "mobile-home.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "6fbf68508e83f329ea683ecfaf6035375495c6d3eed71ec302711442149aa6e5"
+          },
+          {
+            "name": "mobile-features.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "b2aa4808b17d6093aa49d12ab101947bf29fb33ffb8ed1788055d0b17f041698"
+          },
+          {
+            "name": "mobile-blog.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "e087f013e0cda71902b50023c5ee59da441432be0bcebd8ec892c96195437ed1"
+          },
+          {
+            "name": "mobile-contact.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "53f927ae5f331f376f491090eff53ceb293ba4dd4adff84316af81bd2791df64"
+          }
+        ]
+      },
+      {
+        "id": "noirei",
+        "files": 330,
+        "archive": "vendor/noirei-template-1.0.0-12aa379d6f21.tgz",
+        "sha256": "12aa379d6f21f53a37d2287e2f321e96ace73b5308474154672a7aedccb37cb6",
+        "screenshots": [
+          {
+            "name": "desktop-home.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "e72d32131e45d3aee38f59bd779f8de1bd926ad028423ebc7e9ef74f3ee56bce"
+          },
+          {
+            "name": "desktop-rooms.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "9373c50d79937e03ae303f884e604cf45449c6aeaf5e75306036a56d0ac5febc"
+          },
+          {
+            "name": "desktop-journal.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "4c52b7f6d3ef2829e5be0586d72430ee030ce5b64107112f67959f034c110f55"
+          },
+          {
+            "name": "desktop-contact.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "b06134c2f89924bef26346b92663639216bb88bee817d82e31f10a64cee103aa"
+          },
+          {
+            "name": "tablet-home.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "1fca86655ed470bd94f310154e4803ebe5b227985c3da866131ca945549c79c7"
+          },
+          {
+            "name": "tablet-rooms.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "bd86a82c4204485d4d96781fbf39a8f99ac9cbda94b44c82d59f0fdc1b3f7d24"
+          },
+          {
+            "name": "tablet-journal.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "a14fcad4ed80d86157ecea213f0b0acb6b130fa2d1b6f6f2fb472e0c00b93be7"
+          },
+          {
+            "name": "tablet-contact.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "cc7ac7794b85c7e7955de045080f95099bc615294314eeb1c0fb50c3d7221ae8"
+          },
+          {
+            "name": "mobile-home.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "9d6df1ecb39859dd0649c443bac262ca8a2cb9859adcdb47487e46396898dcfb"
+          },
+          {
+            "name": "mobile-rooms.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "f5b3347ec0867afc2c21719ee7e0571665d76c6cfc5d06e46c1d6e6d4b64f30c"
+          },
+          {
+            "name": "mobile-journal.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "c55bdc4253232069148d75c7283ffb25bde77f3e2be8b977157582d2366bd2bd"
+          },
+          {
+            "name": "mobile-contact.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "85516fe3d8e09f2baa872d243aec59449ff9d048677a3573d0ad843444d6a816"
+          }
+        ]
+      }
+    ]
+  },
+  "sharedFonts": {
+    "files": 206,
+    "contentMatchesOriginal": true,
+    "oldPagesVisited": false
+  },
+  "hostChecks": {
+    "typecheck": "passed",
+    "changedFileLint": "passed",
+    "assetTests": {
+      "passed": 2,
+      "failed": 0
+    },
+    "standaloneBuild": "passed"
+  },
+  "artifact": {
+    "checkedAt": "2026-10-21T01:51:54.843Z",
+    "buildLocation": "/home/xmin/workspace/template-migration-20261021/website",
+    "standaloneDirectory": "/home/xmin/workspace/template-migration-20261021/website/.next-lunera-noirei/standalone",
+    "platform": "linux",
+    "arch": "x64",
+    "node": "24.16.0",
+    "buildId": "WR6bywQJHwy8kazidK6l-",
+    "serverSha256": "bb48095ed355b467fb698c0971983e17d066cc37650540df05bb458d7479d427",
+    "treeSha256": "432a23f2c5bf9c63fb5df9f016a5abd3ffd792e2813aef9b483da8028c9fbbe7",
+    "filesAndLinks": 7501,
+    "packageLockSha256": "cc4ebaa1d04389473aa3f09a3b8d832a2b213b0755cbf08d5f152d70ce4c9a00",
+    "templatesModuleEnabledForVerification": true,
+    "deployed": false
+  },
+  "temporaryVerificationServiceStopped": true,
+  "limitations": [
+    "未部署、未推送主站仓库或改变模板默认上架开关。",
+    "未执行远端重新克隆安装、Docker 镜像构建或真实业务发送。",
+    "实际验收运行时为本地 WSL Linux / Node 24.16.0；源码声明及锁文件随独立仓库交付。",
+    "原始参考素材的商业使用及再分发许可仍待确认。"
+  ]
+}

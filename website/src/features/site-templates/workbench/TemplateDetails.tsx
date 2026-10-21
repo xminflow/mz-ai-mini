@@ -8,6 +8,7 @@ import { TEMPLATE_PLATFORM_LABELS, type TemplatePresentation } from '../types'
 import { TemplateCard } from './TemplateCard'
 import { TemplateGallery } from './TemplateGallery'
 import { WorkBuddyGuide } from './WorkBuddyGuide'
+import releases from '../../../../templates/releases.json'
 
 export function TemplateDetails({ template, related }: { template: TemplatePresentation; related: TemplatePresentation[] }) {
   const { openContact } = useContact()
@@ -31,7 +32,7 @@ export function TemplateDetails({ template, related }: { template: TemplatePrese
         </div>
       </header>
 
-      <WorkBuddyGuide templateName={template.name} gitUrl={template.gitUrl} />
+      <WorkBuddyGuide key={template.id} templateName={template.name} downloadUrl={(releases as Record<string, { url: string }>)[template.id]?.url} />
 
       <TemplateGallery template={template} />
 

@@ -16,6 +16,9 @@ import { uiuxfolioTemplate } from './catalog/uiuxfolio/meta'
 import { latteTemplate } from './catalog/latte/meta'
 import { cernoTemplate } from './catalog/cerno/meta'
 import { foldexTemplate } from './catalog/foldex/meta'
+import { furnexaTemplate } from './catalog/furnexa/meta'
+import { soumaTemplate } from './catalog/souma/meta'
+import { mondragonTemplate } from './catalog/mondragon/meta'
 import { getSceneById } from './taxonomy'
 
 /**
@@ -34,7 +37,7 @@ const KEBAB_CASE_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const KEBAB_CASE_SLUG = /^[a-z0-9]+(?:[-/][a-z0-9]+)*$/
 
 /** 新增模板的唯一注册入口：建好 catalog/<id>/ 目录后在这里加一行。 */
-export const SITE_TEMPLATES: SiteTemplate[] = [liubaiTemplate, luneraTemplate, groviaTemplate, nuboTemplate, studiothinkTemplate, conicornTemplate, deformoTemplate, unseenTemplate, viralTemplate, tabfolioTemplate, hellomondayTemplate, noireiTemplate, recueilTemplate, uiuxfolioTemplate, latteTemplate, cernoTemplate, foldexTemplate]
+export const SITE_TEMPLATES: SiteTemplate[] = [liubaiTemplate, luneraTemplate, groviaTemplate, nuboTemplate, studiothinkTemplate, conicornTemplate, deformoTemplate, unseenTemplate, viralTemplate, tabfolioTemplate, hellomondayTemplate, noireiTemplate, recueilTemplate, uiuxfolioTemplate, latteTemplate, cernoTemplate, foldexTemplate, soumaTemplate, furnexaTemplate, mondragonTemplate]
 
 /** 注册表按添加顺序追加；陈列使用倒序副本，避免就地反转影响其他调用方。 */
 export function getTemplatesNewestFirst(): SiteTemplate[] {

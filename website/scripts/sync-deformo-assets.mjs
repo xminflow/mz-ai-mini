@@ -30,4 +30,4 @@ for (const [source, pages] of images) {
   sources.push({ file, source, pages, bytes: bytes.length, sha256: createHash('sha256').update(bytes).digest('hex'), license: '参考站公开展示素材；未发现明确再分发或商业授权，上架前须确认授权或替换。' })
   console.log(`Downloaded ${file} (${bytes.length} bytes)`)
 }
-await writeFile(join(output, 'sources.json'), JSON.stringify({ reference: origin, inspectedAt: new Date().toISOString(), pages: urls, fonts: '复用项目本地 MiSans 400/700、Poppins 400/600/700，许可见 templates/lunera/fonts。', gradient: '本模板 CSS 渐变与 SVG 颗粒为自主实现，无外部 shader 依赖。', assets: sources }, null, 2))
+await writeFile(join(output, 'sources.json'), JSON.stringify({ reference: origin, inspectedAt: new Date().toISOString(), pages: urls, fonts: '复用项目本地 MiSans 400/700、Poppins 400/600/700，许可见 fonts/brand。', gradient: '本模板 CSS 渐变与 SVG 颗粒为自主实现，无外部 shader 依赖。', assets: sources }, null, 2))

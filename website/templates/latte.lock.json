@@ -1,8 +1,8 @@
 {
   "name": "latte-template",
   "version": "1.0.0",
-  "archive": "vendor/latte-template-1.0.0-d38b81861d24.tgz",
-  "sha256": "d38b81861d24aea08ebe57328c6160813f5c15790dfb88fc9f1a7645c315422b",
-  "sourceCommit": null,
-  "sourceDirty": true
+  "archive": "vendor/latte-template-1.0.0-0e9917ea1f70.tgz",
+  "sha256": "0e9917ea1f70fecebfcdec4ff6d141f4185a279ec0fb0b6a96219372d15228e6",
+  "sourceCommit": "f6bad2150078d913e7014e3b78ab8f49221ec334",
+  "sourceDirty": false
 }

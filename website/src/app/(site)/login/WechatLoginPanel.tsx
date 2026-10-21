@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Button, buttonClassName } from '@/components/ui'
 
 import type {
   ApiErrorPayload,
@@ -203,22 +204,21 @@ export function WechatLoginPanel({ onSuccess }: WechatLoginPanelProps) {
   const bizmid = process.env.NEXT_PUBLIC_WECHAT_OFFICIAL_BIZMID
 
   return (
-    <div>
+    <div aria-live="polite" aria-atomic="true" aria-busy={panelState.phase === 'loading' || panelState.phase === 'exchanging'} className="flex min-h-64 items-center justify-center rounded-card border border-rule bg-paper p-5">
       {panelState.phase === 'loading' && (
         <div className="flex h-44 items-center justify-center">
-          <p className="text-sm text-muted">正在生成二维码...</p>
+          <p className="text-sm text-graphite-soft">正在生成二维码...</p>
         </div>
       )}
 
       {panelState.phase === 'ready' && (
         <div className="flex flex-col items-center gap-3 py-2">
-          <p className="text-sm text-ink-soft">扫码关注微信公众号即可登录</p>
           {isMobile && bizmid ? (
             <a
               href={`https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=${encodeURIComponent(bizmid)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-11 w-full items-center justify-center rounded-[6px] bg-[#07C160] px-4 text-sm font-medium text-white transition-opacity hover:opacity-90"
+              className={buttonClassName('primary', 'min-h-11')}
             >
               在微信中打开
             </a>
@@ -226,31 +226,30 @@ export function WechatLoginPanel({ onSuccess }: WechatLoginPanelProps) {
             <img
               src={panelState.session.qr_code_url}
               alt="微信登录二维码"
-              width={144}
-              height={144}
-              className="rounded-[6px]"
+              width={192}
+              height={192}
+              className="max-w-full rounded-btn border border-rule bg-white p-2"
             />
           )}
-          <p className="text-xs text-muted">二维码将在 {panelState.secondsLeft} 秒后刷新</p>
+          <p className="text-xs text-graphite-dim">二维码将在 {panelState.secondsLeft} 秒后刷新</p>
         </div>
       )}
 
       {panelState.phase === 'exchanging' && (
         <div className="flex h-44 items-center justify-center">
-          <p className="text-sm text-muted">正在登录...</p>
+          <p className="text-sm text-graphite-soft">正在登录...</p>
         </div>
       )}
 
       {panelState.phase === 'error' && (
-        <div className="flex h-44 flex-col items-center justify-center gap-3">
-          <p className="text-sm text-red-100">{panelState.message}</p>
-          <button
-            type="button"
+        <div className="flex min-h-44 flex-col items-center justify-center gap-4 text-center">
+          <p className="text-sm font-medium text-graphite">二维码暂时无法加载</p>
+          <p role="alert" className="break-words text-sm text-red-700">{panelState.message}</p>
+          <Button
             onClick={() => setSessionKey((k) => k + 1)}
-            className="inline-flex h-9 items-center rounded-[6px] border border-hairline px-4 text-sm text-ink-soft transition-colors hover:text-ink"
           >
             重新获取二维码
-          </button>
+          </Button>
         </div>
       )}
     </div>

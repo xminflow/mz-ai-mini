@@ -5,6 +5,7 @@ import type { SiteTemplate, SiteTemplatePageProps } from '../../types'
 
 export const uiuxfolioTemplate: SiteTemplate = {
   ...sourceTemplate,
+  gitUrl: 'https://github.com/weelume/uiuxfolio-template',
   name: 'UIUXfolio · 微域生光设计师作品集',
   localizedNames: { en: 'UIUXfolio · Weelume designer portfolio' },
   surfaces: sourceTemplate.surfaces.map(surface => ({

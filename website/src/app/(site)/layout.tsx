@@ -1,4 +1,4 @@
-// 官网当前只对外开放首页（白名单见 middleware.ts）。
+// 官网当前对外开放首页与微信登录页（白名单见 middleware.ts）。
 // 首页套 components/layout/LightShell.tsx，浅色导航、页脚、底部 CTA 与咨询弹窗都由它提供，
 // 因此这里不再渲染全站深色 TopNav / SiteFooter，也不再读取登录态。
 //

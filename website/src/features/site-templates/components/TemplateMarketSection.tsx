@@ -16,6 +16,7 @@ const EN_SCENES: Record<string, string> = {
   'corporate-site': 'Business website',
   'landing-page': 'Product landing page',
   'brand-portfolio': 'Brand & portfolio',
+  'online-store': 'Online store',
   other: 'Other',
 }
 

@@ -1,0 +1,8 @@
+{
+  "name": "grovia-template",
+  "version": "1.0.0",
+  "archive": "vendor/grovia-template-1.0.0-18cd7e1f4e07.tgz",
+  "sha256": "18cd7e1f4e0756ef88eac3343a57485344013d28dbde144a4f13fc9c86c14bf7",
+  "sourceCommit": "6a84dc3186bf5988d3c34d0eaabdefb580047be1",
+  "sourceDirty": false
+}

@@ -1,8 +1,8 @@
 {
   "name": "uiuxfolio-template",
   "version": "1.0.0",
-  "archive": "vendor/uiuxfolio-template-1.0.0-4ce4f9e603c6.tgz",
-  "sha256": "4ce4f9e603c6a14dc036081fe25c72e482cacf779e04d54a0bfd825e0469a8f9",
-  "sourceCommit": null,
-  "sourceDirty": true
+  "archive": "vendor/uiuxfolio-template-1.0.0-ee3da1ea6b1e.tgz",
+  "sha256": "ee3da1ea6b1ea0f12eb153dc6f126a029fa567481cb692a28410c256e7bc8afe",
+  "sourceCommit": "0a0ddcf9b9795f4bae1170b55ba478b7d14c601c",
+  "sourceDirty": false
 }

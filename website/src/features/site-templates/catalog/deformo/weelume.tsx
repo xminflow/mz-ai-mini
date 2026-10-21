@@ -5,7 +5,7 @@ import type { SiteTemplate, SiteTemplatePageProps } from '../../types'
 
 export const deformoTemplate: SiteTemplate = {
   ...sourceTemplate,
-  gitUrl: 'https://github.com/weelume/deformo-template.git',
+  gitUrl: 'https://github.com/weelume/deformo-template',
   surfaces: sourceTemplate.surfaces.map(surface => ({
     ...surface,
     pages: surface.pages.map(page => ({

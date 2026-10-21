@@ -5,6 +5,7 @@ import type { SiteTemplate, SiteTemplatePageProps } from '../../types'
 
 export const latteTemplate: SiteTemplate = {
   ...sourceTemplate,
+  gitUrl: 'https://github.com/weelume/latte-template',
   name: 'Latte · 微域生光咖啡馆',
   localizedNames: { en: 'Latte · Weelume café' },
   surfaces: sourceTemplate.surfaces.map(surface => ({

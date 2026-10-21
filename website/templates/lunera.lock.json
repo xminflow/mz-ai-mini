@@ -1,0 +1,8 @@
+{
+  "name": "lunera-template",
+  "version": "1.0.0",
+  "archive": "vendor/lunera-template-1.0.0-675659511103.tgz",
+  "sha256": "67565951110312aae4a840fbfd336a225adf58043aba71d0bc5aac63867fdf9b",
+  "sourceCommit": "c21387da5fc1f8b6376926bed4b231ee4714077f",
+  "sourceDirty": false
+}

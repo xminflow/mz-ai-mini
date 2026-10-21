@@ -2,6 +2,7 @@ import type { SiteTemplate } from '../../types'
 
 export const viralTemplate: SiteTemplate = {
   id: 'viral',
+  gitUrl: 'https://github.com/weelume/viral-template',
   name: '微域生光 · 社媒增长',
   localizedNames: { en: '微域生光 · Social growth' },
   sceneId: 'corporate-site',

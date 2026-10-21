@@ -7,7 +7,7 @@ import { resolve, join, dirname, sep } from 'node:path'
 export const websiteRoot = resolve(import.meta.dirname, '../..')
 const require = createRequire(import.meta.url)
 export const localFile = join(websiteRoot, 'deformo.local')
-export const SHARED_TEMPLATE_IDS = ['deformo', 'uiuxfolio', 'latte', 'cerno', 'foldex']
+export const SHARED_TEMPLATE_IDS = ['deformo', 'uiuxfolio', 'latte', 'cerno', 'foldex', 'souma', 'furnexa', 'mondragon', 'conicorn', 'grovia', 'lunera', 'noirei', 'hellomonday', 'liubai', 'nubo', 'recueil', 'studiothink', 'tabfolio', 'unseen']
 export function templateLocalFile(id = 'deformo') {
   if (!SHARED_TEMPLATE_IDS.includes(id)) throw new Error('未登记的共享模板: ' + id)
   return join(websiteRoot, id + '.local')

@@ -1,0 +1,734 @@
+{
+  "checkedAt": "2026-10-20T10:52:15.456Z",
+  "independent": {
+    "conicorn": {
+      "pages": 72,
+      "interactions": [
+        {
+          "name": "手机菜单展开与 Escape 关闭",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "FAQ 切换",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "套餐切换",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "演示表单本地校验",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "语言切换保留页面查询锚点且无整页刷新",
+          "passed": true,
+          "result": true
+        }
+      ],
+      "runtimeErrors": 0,
+      "failures": 0,
+      "checkedAt": "2026-10-20T10:39:13.422Z",
+      "sourceDigest": "946db2820d7d8905d069b9947bc46349da5e82bfc60ebc9b02aa105616b1b24d",
+      "checks": [
+        {
+          "id": "typecheck",
+          "status": "passed",
+          "cwd": ".",
+          "argv": [
+            "pnpm",
+            "run",
+            "typecheck"
+          ],
+          "startedAt": "2026-10-20T10:34:03.979Z",
+          "finishedAt": "2026-10-20T10:34:05.882Z",
+          "exitCode": 0
+        },
+        {
+          "id": "lint",
+          "status": "passed",
+          "cwd": ".",
+          "argv": [
+            "pnpm",
+            "run",
+            "lint"
+          ],
+          "startedAt": "2026-10-20T10:34:05.892Z",
+          "finishedAt": "2026-10-20T10:34:09.624Z",
+          "exitCode": 0
+        },
+        {
+          "id": "test",
+          "status": "passed",
+          "cwd": ".",
+          "argv": [
+            "pnpm",
+            "run",
+            "test"
+          ],
+          "startedAt": "2026-10-20T10:34:09.635Z",
+          "finishedAt": "2026-10-20T10:34:09.952Z",
+          "exitCode": 0
+        },
+        {
+          "id": "build",
+          "status": "passed",
+          "cwd": ".",
+          "argv": [
+            "pnpm",
+            "run",
+            "build"
+          ],
+          "startedAt": "2026-10-20T10:34:09.963Z",
+          "finishedAt": "2026-10-20T10:34:28.209Z",
+          "exitCode": 0
+        }
+      ]
+    },
+    "grovia": {
+      "pages": 80,
+      "interactions": [
+        {
+          "name": "手机菜单展开与 Escape 关闭",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "FAQ 切换",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "功能选项切换",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "功能选项键盘导航",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "套餐切换",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "演示表单本地校验",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "语言切换保留页面查询锚点且无整页刷新",
+          "passed": true,
+          "result": true
+        }
+      ],
+      "runtimeErrors": 0,
+      "failures": 0,
+      "checkedAt": "2026-10-20T10:47:03.454Z",
+      "sourceDigest": "64851e619c8fcee484b56fd503f5802ff8a67e7d10d85570a89921136dcd4422",
+      "checks": [
+        {
+          "id": "typecheck",
+          "status": "passed",
+          "cwd": ".",
+          "argv": [
+            "pnpm",
+            "run",
+            "typecheck"
+          ],
+          "startedAt": "2026-10-20T10:46:40.823Z",
+          "finishedAt": "2026-10-20T10:46:42.541Z",
+          "exitCode": 0
+        },
+        {
+          "id": "lint",
+          "status": "passed",
+          "cwd": ".",
+          "argv": [
+            "pnpm",
+            "run",
+            "lint"
+          ],
+          "startedAt": "2026-10-20T10:46:42.550Z",
+          "finishedAt": "2026-10-20T10:46:46.048Z",
+          "exitCode": 0
+        },
+        {
+          "id": "test",
+          "status": "passed",
+          "cwd": ".",
+          "argv": [
+            "pnpm",
+            "run",
+            "test"
+          ],
+          "startedAt": "2026-10-20T10:46:46.058Z",
+          "finishedAt": "2026-10-20T10:46:46.332Z",
+          "exitCode": 0
+        },
+        {
+          "id": "build",
+          "status": "passed",
+          "cwd": ".",
+          "argv": [
+            "pnpm",
+            "run",
+            "build"
+          ],
+          "startedAt": "2026-10-20T10:46:46.341Z",
+          "finishedAt": "2026-10-20T10:47:07.426Z",
+          "exitCode": 0
+        }
+      ],
+      "finalHomeRegression": {
+        "pages": 8,
+        "interactions": [
+          {
+            "name": "手机菜单展开与 Escape 关闭",
+            "passed": true,
+            "result": true
+          },
+          {
+            "name": "FAQ 切换",
+            "passed": true,
+            "result": true
+          },
+          {
+            "name": "功能选项切换",
+            "passed": true,
+            "result": true
+          },
+          {
+            "name": "功能选项键盘导航",
+            "passed": true,
+            "result": true
+          },
+          {
+            "name": "套餐切换",
+            "passed": true,
+            "result": true
+          },
+          {
+            "name": "演示表单本地校验",
+            "passed": true,
+            "result": true
+          },
+          {
+            "name": "语言切换保留页面查询锚点且无整页刷新",
+            "passed": true,
+            "result": true
+          }
+        ],
+        "failures": 0
+      }
+    }
+  },
+  "host": {
+    "conicorn": {
+      "pages": 72,
+      "interactions": [
+        {
+          "name": "手机菜单展开与 Escape 关闭",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "FAQ 切换",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "套餐切换",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "演示表单本地校验",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "语言切换保留页面查询锚点且无整页刷新",
+          "passed": true,
+          "result": true
+        }
+      ],
+      "runtimeErrors": 0,
+      "failures": 0,
+      "checkedAt": "2026-10-20T10:40:40.791Z"
+    },
+    "grovia": {
+      "pages": 80,
+      "interactions": [
+        {
+          "name": "手机菜单展开与 Escape 关闭",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "FAQ 切换",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "功能选项切换",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "功能选项键盘导航",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "套餐切换",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "演示表单本地校验",
+          "passed": true,
+          "result": true
+        },
+        {
+          "name": "语言切换保留页面查询锚点且无整页刷新",
+          "passed": true,
+          "result": true
+        }
+      ],
+      "runtimeErrors": 0,
+      "failures": 0,
+      "checkedAt": "2026-10-20T10:49:21.723Z"
+    }
+  },
+  "marketplace": {
+    "checkedAt": "2026-10-20T10:47:20.247Z",
+    "checks": [
+      {
+        "template": "conicorn",
+        "detail": {
+          "href": "/templates/conicorn/site",
+          "newTab": true,
+          "images": [
+            {
+              "src": "http://127.0.0.1:3017/templates/conicorn/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/conicorn/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/conicorn/screenshots/capabilities.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/conicorn/screenshots/cases.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/conicorn/screenshots/contact.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/mondragon/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/furnexa/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/souma/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/foldex/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/cerno/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/latte/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/uiuxfolio/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/recueil/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/noirei/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/hellomonday/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/tabfolio/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/viral/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/unseen/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/deformo/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/studiothink/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/nubo/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/grovia/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/lunera/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/liubai/screenshots/home.webp",
+              "ok": true
+            }
+          ]
+        },
+        "newTab": true
+      },
+      {
+        "template": "conicorn",
+        "device": "tablet",
+        "width": 834,
+        "height": 1180,
+        "menu": true,
+        "language": true
+      },
+      {
+        "template": "conicorn",
+        "device": "mobile",
+        "width": 390,
+        "height": 844,
+        "menu": true,
+        "language": true
+      },
+      {
+        "template": "grovia",
+        "detail": {
+          "href": "/templates/grovia/site",
+          "newTab": true,
+          "images": [
+            {
+              "src": "http://127.0.0.1:3017/templates/grovia/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/grovia/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/grovia/screenshots/features.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/grovia/screenshots/cases.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/grovia/screenshots/contact.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/mondragon/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/furnexa/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/souma/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/foldex/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/cerno/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/latte/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/uiuxfolio/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/recueil/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/noirei/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/hellomonday/screenshots/desktop-home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/tabfolio/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/viral/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/unseen/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/deformo/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/conicorn/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/studiothink/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/nubo/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/lunera/screenshots/home.webp",
+              "ok": true
+            },
+            {
+              "src": "http://127.0.0.1:3017/templates/liubai/screenshots/home.webp",
+              "ok": true
+            }
+          ]
+        },
+        "newTab": true
+      },
+      {
+        "template": "grovia",
+        "device": "tablet",
+        "width": 834,
+        "height": 1180,
+        "menu": true,
+        "language": true
+      },
+      {
+        "template": "grovia",
+        "device": "mobile",
+        "width": 390,
+        "height": 844,
+        "menu": true,
+        "language": true
+      }
+    ],
+    "runtimeErrors": []
+  },
+  "snapshots": {
+    "checkedAt": "2026-10-20T10:50:18.702Z",
+    "results": [
+      {
+        "id": "conicorn",
+        "files": 259,
+        "archive": "vendor/conicorn-template-1.0.0-1e2d2a634d32.tgz",
+        "sha256": "1e2d2a634d32b19e06cf8180cc442a0507488035c6cfd97eb2a0888faf32dffc",
+        "screenshots": [
+          {
+            "name": "home.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "2bd771df2734cc464df24d4d146b164711a92f33553dcc8bd568a1974c74b6f2"
+          },
+          {
+            "name": "tablet-home.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "966f2fb6f795a9f8d75dc10d9ddb29e0274af269c270476c9cdd729d322f9c14"
+          },
+          {
+            "name": "mobile-home.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "87b91f0e526ef6662c6217ecf9c083e1a0e462b0fdf1c2747e2c0e269eee4490"
+          },
+          {
+            "name": "capabilities.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "eb9c733231f77bbfc2862e4d587c1963d5e147bd6e31eac68e8601b8a5ecd166"
+          },
+          {
+            "name": "tablet-capabilities.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "f9f0966a72532287dcce9aff41be1c82c3e278cde347212140db18cf3c88c20b"
+          },
+          {
+            "name": "mobile-capabilities.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "dbf89106347821307c1fb47c910e5475e8c6b4db979959007cf90103d2418b6b"
+          },
+          {
+            "name": "cases.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "b00c938eb4bebc0910a65044fcc506d5327b822cfcb43d492bd555531450c3b8"
+          },
+          {
+            "name": "tablet-cases.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "fd66d66c58aaacf48c306f40bc588d131c6c6eaa16a7f9b5e03dd1062be74e9c"
+          },
+          {
+            "name": "mobile-cases.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "1d59842caf6bb1694f7aa53bd9251c798002c740d24a2b4e773abb12244b7da7"
+          },
+          {
+            "name": "contact.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "22e082dd9cad2dc9136922f8daadf3a94f773651edfed46c869a382c424d0376"
+          },
+          {
+            "name": "tablet-contact.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "8642bb3ac245b13fa44c3e92f48cc9c7bff3e8cd2ceddb8b0b69687e191fe24a"
+          },
+          {
+            "name": "mobile-contact.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "b5f6619822b17a2c7b5c88e5845c57c0d98e89eda5ed3f011e78a08f32ef9e42"
+          }
+        ]
+      },
+      {
+        "id": "grovia",
+        "files": 319,
+        "archive": "vendor/grovia-template-1.0.0-18cd7e1f4e07.tgz",
+        "sha256": "18cd7e1f4e0756ef88eac3343a57485344013d28dbde144a4f13fc9c86c14bf7",
+        "screenshots": [
+          {
+            "name": "home.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "c377bf12989915207966c13f45380e38355a71b47f64b0b13eef67a56172a17f"
+          },
+          {
+            "name": "features.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "ca0a5c549e5d446da65dafe82ed45eb6141e14073629136c744a3dd2328f062d"
+          },
+          {
+            "name": "cases.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "5c6d08d2d29529a24a4cf6150d4589b6e2f96db41978b6cb76369f7694667297"
+          },
+          {
+            "name": "contact.webp",
+            "width": 1440,
+            "height": 1000,
+            "sha256": "49682d38be1046fbe164a91072e22f86d7f5059ba9bac3e00701327fb854fbd7"
+          },
+          {
+            "name": "tablet-home.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "3b7d82c27ba46d6ebd22308966c230bab31ee0776bf85646ea1bcd1ff42e2422"
+          },
+          {
+            "name": "tablet-features.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "bcc8c8fd771244c5b5e677a64bf52b3cdc49295184e970ed9f0880f441c4362d"
+          },
+          {
+            "name": "tablet-cases.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "81b10d2be3b0a1e03195b3375c106df6b8bc01b4e7fa3a552656884a3b9cb402"
+          },
+          {
+            "name": "tablet-contact.webp",
+            "width": 834,
+            "height": 1180,
+            "sha256": "c3703398d0ce35e8b05094c186c0732597047719a8c04da1bee79f4bcd7a76a2"
+          },
+          {
+            "name": "mobile-home.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "c414992c3893f6e7e454118e3d5e074b8c422ee82d3a015e3b9dfcfec2a1266b"
+          },
+          {
+            "name": "mobile-features.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "1d5cf5897812181e9a5228bf7fd67bd99630d8c866e5dc0043431b59a9db9a4c"
+          },
+          {
+            "name": "mobile-cases.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "6bfac601fe7c8ea700f6b6ddeaf2a04c6ff1d21c8c244931b6a4d739202791ff"
+          },
+          {
+            "name": "mobile-contact.webp",
+            "width": 390,
+            "height": 844,
+            "sha256": "d8da9bce83e95a8cb7f8cafb3fa7a105c7981d2960cff8d3e7c869382043f0ef"
+          }
+        ]
+      }
+    ]
+  },
+  "productionBuild": {
+    "command": "WEBSITE_BUILD_DIR=.next-conicorn-grovia-validation pnpm build",
+    "status": "failed",
+    "compilation": "passed",
+    "typecheck": "passed",
+    "pageGeneration": "passed",
+    "reason": "Windows standalone symlink EPERM",
+    "log": "artifacts/template-migration/host-build-isolated.log"
+  }
+}

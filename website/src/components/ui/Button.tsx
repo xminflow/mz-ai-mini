@@ -1,6 +1,6 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react'
 
-type ButtonVariant = 'primary' | 'secondary'
+type ButtonVariant = 'primary' | 'secondary' | 'outline'
 
 // 按钮规格集中在此：内边距取自参考站实测值（padding 14px 22px），圆角走全站统一的 --radius-btn。
 //
@@ -10,6 +10,7 @@ const BASE_CLASS =
   'inline-flex items-center justify-center gap-2 rounded-btn px-[22px] py-[14px] text-[14px] font-medium leading-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue'
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
+  outline: 'border border-rule bg-transparent text-graphite hover:border-graphite-soft hover:bg-graphite/[0.04]',
   // primary 走描边而非实心：站点整体是极简排版加毛玻璃，任何实心色块（原来的纯黑、
   // 试过的蓝底）都比周围重一大截，读起来突兀。
   // 彩色只给边框，文字保持中性黑——蓝字加蓝边两处上色会让按钮整体偏蓝、抢过版面，

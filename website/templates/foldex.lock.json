@@ -1,8 +1,8 @@
 {
   "name": "foldex-template",
   "version": "1.0.0",
-  "archive": "vendor/foldex-template-1.0.0-5d78779a7c61.tgz",
-  "sha256": "5d78779a7c61b5ef111a12eb252eb3321bb3bf19a1decea870b118cfb53ee425",
-  "sourceCommit": null,
-  "sourceDirty": true
+  "archive": "vendor/foldex-template-1.0.0-515096413b7f.tgz",
+  "sha256": "515096413b7f9627bc5cf42758cae486b292f99a63c3efa4f94f80e4368cefb9",
+  "sourceCommit": "54e9b26c47beb45a569c14e80b079eab85c3f5a9",
+  "sourceDirty": false
 }

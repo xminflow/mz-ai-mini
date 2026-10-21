@@ -2,10 +2,12 @@ import { createRequire } from 'node:module'
 import { spawn } from 'node:child_process'
 import { watch } from 'node:fs'
 import { join } from 'node:path'
+import { verifyTemplateReleases } from './lib/template-release.mjs'
 import { websiteRoot, localRoot, installedRoot, syncAssets, verifySnapshot, SHARED_TEMPLATE_IDS } from './lib/deformo-package.mjs'
 
 const command = process.argv[2]
 if (!['dev', 'build', 'start'].includes(command)) throw new Error('使用 dev、build 或 start')
+if (command === 'build') await verifyTemplateReleases()
 const watchers = []
 const timers = new Map()
 let queue = Promise.resolve()

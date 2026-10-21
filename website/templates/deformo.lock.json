@@ -1,8 +1,8 @@
 {
   "name": "deformo-template",
   "version": "1.2.0",
-  "archive": "vendor/deformo-template-1.2.0-b0b72814139c.tgz",
-  "sha256": "b0b72814139c1449444e3d89100d69755f241aadf27802bc362fd8e5c96d211a",
-  "sourceCommit": "279cc7af3611173d7c576090304896f6d7b5f7ac",
+  "archive": "vendor/deformo-template-1.2.0-b47eb1d90968.tgz",
+  "sha256": "b47eb1d90968316453ea95b618b5fa214e46000b412f6297181aad5d3fa895bd",
+  "sourceCommit": "8018ee8696d0456a909e1b14c18ba4aa39025f86",
   "sourceDirty": false
 }

@@ -11,7 +11,9 @@
     "template:local": "node scripts/deformo-package.mjs local",
     "template:update": "node scripts/deformo-package.mjs snapshot",
     "template:assets": "node scripts/deformo-package.mjs assets",
-    "template:check": "node scripts/deformo-package.mjs check"
+    "template:check": "node scripts/deformo-package.mjs check",
+    "template:release": "node scripts/template-release.mjs",
+    "template:release:check": "node scripts/template-release-check.mjs"
   },
   "dependencies": {
     "echarts": "^6.1.0",
@@ -20,11 +22,25 @@
     "qrcode.react": "^4.2.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
-    "deformo-template": "file:./vendor/deformo-template-1.2.0-b0b72814139c.tgz",
-    "uiuxfolio-template": "file:./vendor/uiuxfolio-template-1.0.0-4ce4f9e603c6.tgz",
-    "latte-template": "file:./vendor/latte-template-1.0.0-d38b81861d24.tgz",
-    "foldex-template": "file:./vendor/foldex-template-1.0.0-5d78779a7c61.tgz",
-    "cerno-template": "file:./vendor/cerno-template-1.0.0-e7210d77cba0.tgz"
+    "deformo-template": "file:./vendor/deformo-template-1.2.0-b47eb1d90968.tgz",
+    "uiuxfolio-template": "file:./vendor/uiuxfolio-template-1.0.0-ee3da1ea6b1e.tgz",
+    "latte-template": "file:./vendor/latte-template-1.0.0-0e9917ea1f70.tgz",
+    "foldex-template": "file:./vendor/foldex-template-1.0.0-515096413b7f.tgz",
+    "cerno-template": "file:./vendor/cerno-template-1.0.0-21fabe392fd3.tgz",
+    "souma-template": "file:./vendor/souma-template-1.0.0-833f12922252.tgz",
+    "furnexa-template": "file:./vendor/furnexa-template-1.0.0-ab4268e4976b.tgz",
+    "conicorn-template": "file:./vendor/conicorn-template-1.0.0-1e2d2a634d32.tgz",
+    "grovia-template": "file:./vendor/grovia-template-1.0.0-18cd7e1f4e07.tgz",
+    "mondragon-template": "file:./vendor/mondragon-template-1.0.0-e1dcfa698f85.tgz",
+    "lunera-template": "file:./vendor/lunera-template-1.0.0-675659511103.tgz",
+    "noirei-template": "file:./vendor/noirei-template-1.0.0-12aa379d6f21.tgz",
+    "hellomonday-template": "file:./vendor/hellomonday-template-1.0.0-63ae27038145.tgz",
+    "liubai-template": "file:./vendor/liubai-template-1.0.0-af57c354ecd6.tgz",
+    "studiothink-template": "file:./vendor/studiothink-template-1.0.0-4a8d22d6efcc.tgz",
+    "unseen-template": "file:./vendor/unseen-template-1.0.0-46bda9ae0670.tgz",
+    "nubo-template": "file:./vendor/nubo-template-1.0.0-6c34f152cd30.tgz",
+    "recueil-template": "file:./vendor/recueil-template-1.0.0-cd550dcf0cda.tgz",
+    "tabfolio-template": "file:./vendor/tabfolio-template-1.0.0-5a720f7947e2.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

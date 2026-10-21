@@ -1,0 +1,8 @@
+{
+  "name": "hellomonday-template",
+  "version": "1.0.0",
+  "archive": "vendor/hellomonday-template-1.0.0-63ae27038145.tgz",
+  "sha256": "63ae2703814526f6761696c6b4a69323882392e9fa004534f4d49e28c1eeb2d2",
+  "sourceCommit": "ae22ade9e5c7264fdbc05b2f78e8039786362df4",
+  "sourceDirty": false
+}

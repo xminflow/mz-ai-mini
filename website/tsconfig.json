@@ -35,13 +35,14 @@
   },
   "include": [
     ".next-deformo-dev/types/**/*.ts",
+    ".next-templates-dev-3000/types/**/*.ts",
+    ".next-templates-dev-3014/types/**/*.ts",
     ".next-templates-dev/types/**/*.ts",
     ".next/types/**/*.ts",
     "next-env.d.ts",
     "next.config.ts",
     "postcss.config.mjs",
-    "src",
-    ".next-templates-dev-3000/types/**/*.ts"
+    "src"
   ],
   "exclude": [
     "node_modules"

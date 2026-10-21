@@ -107,8 +107,19 @@ async function requestUpstream<T>(
       cache: 'no-store',
     })
   } catch (error) {
-    const message = error instanceof Error ? error.message : '认证服务暂时不可用'
-    throw new WebsiteAuthError(message, { code: 'AUTH.NETWORK_ERROR', status: 502 })
+    // 不向页面透传 fetch 的底层错误；日志保留调用路径与错误类型，避免记录请求中的凭证。
+    console.error('[website-auth] upstream connection failed', {
+      path,
+      origin: new URL(resolveApiBaseUrl()).origin,
+      errorType: error instanceof Error ? error.name : 'UnknownError',
+      causeCode: error instanceof Error && error.cause && typeof error.cause === 'object' && 'code' in error.cause
+        ? String(error.cause.code)
+        : undefined,
+    })
+    throw new WebsiteAuthError('无法连接认证服务，请检查后端是否启动及 API 地址配置', {
+      code: 'AUTH.NETWORK_ERROR',
+      status: 502,
+    })
   }
 
   let envelope: UpstreamEnvelope<T>

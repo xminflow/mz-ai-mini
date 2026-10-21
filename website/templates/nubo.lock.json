@@ -1,0 +1,8 @@
+{
+  "name": "nubo-template",
+  "version": "1.0.0",
+  "archive": "vendor/nubo-template-1.0.0-6c34f152cd30.tgz",
+  "sha256": "6c34f152cd3078f1ff382be0edbfd4a40e970e4175ca22a2d240e32245953ab5",
+  "sourceCommit": "3e82b931c8ffcb7d1c9fe38476b3e36c9f5146b5",
+  "sourceDirty": false
+}

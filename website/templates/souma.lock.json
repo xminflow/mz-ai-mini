@@ -1,0 +1,8 @@
+{
+  "name": "souma-template",
+  "version": "1.0.0",
+  "archive": "vendor/souma-template-1.0.0-833f12922252.tgz",
+  "sha256": "833f12922252a9c7979c2be5bdb9aafac191f1cada9d317c837c19ab1c7f949d",
+  "sourceCommit": "b0a7ba99fb17a39fd2fb3efee0e36dd9a0b91bee",
+  "sourceDirty": false
+}

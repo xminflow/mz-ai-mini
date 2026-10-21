@@ -15,7 +15,7 @@ export async function prepareHelloMondayMotion(browser, root, data, animations) 
   const manifestURL=new URL('public/templates/hellomonday/sources.json',root)
   const manifest=JSON.parse(await readFile(manifestURL,'utf8'))
   manifest.derived=derived
-  manifest.fonts={family:['Weelume MiSans','Weelume Poppins'],source:'/templates/lunera/fonts/',licences:['/templates/lunera/fonts/README.md','/templates/lunera/fonts/Poppins-OFL.txt']}
+  manifest.fonts={family:['Weelume MiSans','Weelume Poppins'],source:'/fonts/brand/',licences:['/fonts/brand/README.md','/fonts/brand/Poppins-OFL.txt']}
   await writeFile(manifestURL,JSON.stringify(manifest,null,2))
   return derived
 }

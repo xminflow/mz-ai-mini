@@ -37,6 +37,7 @@ test('新增共享模板使用独立素材目录，默认 Deformo 配置仍兼�
   assert.ok(templateLocalFile('uiuxfolio').endsWith('uiuxfolio.local'))
   assert.ok(templateLocalFile('latte').endsWith('latte.local'))
   assert.ok(templateLocalFile('cerno').endsWith('cerno.local'))
+  assert.ok(templateLocalFile('souma').endsWith('souma.local'))
   assert.throws(() => templateLocalFile('../other'), /未登记/)
   const root = await mkdtemp(join(tmpdir(), 'uiuxfolio-assets-'))
   try {

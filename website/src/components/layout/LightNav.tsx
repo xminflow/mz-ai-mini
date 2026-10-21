@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 
 import { useSiteLocale } from '@/features/site-i18n/SiteLocaleProvider'
 import { Button } from '@/components/ui'
+import { NavAuthControls } from '@/features/auth/components/NavAuthControls'
 import { useContact } from './contact-context'
 import '@/features/site-navigation/mobile-navigation.css'
 
@@ -132,9 +133,10 @@ export const LightNav = () => {
                 {locale === 'en' ? '中文' : 'EN'}
               </Link>
             )}
-            <Button onClick={() => { setMenuOpen(false); openContact() }} className="px-4 py-2.5 text-[13px]">
+            <Button variant="outline" onClick={() => { setMenuOpen(false); openContact() }}>
               {copy.contact}
             </Button>
+            <NavAuthControls />
             <button
               ref={menuButtonRef}
               type="button"

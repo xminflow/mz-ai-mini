@@ -120,6 +120,7 @@ ua-agent/checkpoints/
 /website/latte.local
 /website/cerno.local
 /website/foldex.local
+/website/furnexa.local
 /artifacts/cerno/source/
 /artifacts/uiuxfolio/source/
 
@@ -134,3 +135,36 @@ ua-agent/checkpoints/
 /website/public/templates/latte/
 /website/public/templates/cerno/
 /website/public/templates/foldex/
+/website/public/templates/souma/
+/website/souma.local
+
+# 已迁移模板的本地源码引用与生成素材
+/website/conicorn.local
+/website/grovia.local
+/website/public/templates/conicorn/
+/website/public/templates/grovia/
+
+# Mondragon 运行素材由固定共享包生成
+/website/public/templates/mondragon/
+
+# Lunera / Noirei 独立共享包生成资源
+/website/lunera.local
+/website/noirei.local
+/website/public/templates/lunera/
+/website/public/templates/noirei/
+
+# 本批独立模板生成资源与本机配置
+/website/hellomonday.local
+/website/public/templates/hellomonday/
+/website/liubai.local
+/website/public/templates/liubai/
+/website/nubo.local
+/website/public/templates/nubo/
+/website/recueil.local
+/website/public/templates/recueil/
+/website/studiothink.local
+/website/public/templates/studiothink/
+/website/tabfolio.local
+/website/public/templates/tabfolio/
+/website/unseen.local
+/website/public/templates/unseen/

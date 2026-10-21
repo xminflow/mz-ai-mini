@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { isTemplatesModuleEnabled } from '@/features/site-templates/config'
 
-// 官网当前开放中英文首页，其余路径统一 307 回首页。页面与组件代码均保留未删。
+// 官网开放中英文首页与微信登录页，其余路径统一 307 回首页。页面与组件代码均保留未删。
 //
 // 恢复某个板块时：
 //   1. 把它的路径前缀加进 PUBLIC_PATH_PREFIXES，例如 '/library'
@@ -22,12 +22,12 @@ import { isTemplatesModuleEnabled } from '@/features/site-templates/config'
 const TEMPLATE_PATH_PREFIXES: string[] = isTemplatesModuleEnabled()
   ? ['/templates', '/cases']
   : []
-const PUBLIC_PATH_PREFIXES: string[] = ['/', '/en', ...TEMPLATE_PATH_PREFIXES]
+const PUBLIC_PATH_PREFIXES: string[] = ['/', '/en', '/login', ...TEMPLATE_PATH_PREFIXES]
 
 function isPublicPath(pathname: string): boolean {
   return PUBLIC_PATH_PREFIXES.some((prefix) => {
-    // '/' 只按精确匹配，否则会把所有路径都放行
-    if (prefix === '/' || prefix === '/en') return pathname === prefix
+    // 独立页面只按精确匹配，避免意外开放其子路径。
+    if (prefix === '/' || prefix === '/en' || prefix === '/login') return pathname === prefix
     return pathname === prefix || pathname.startsWith(`${prefix}/`)
   })
 }

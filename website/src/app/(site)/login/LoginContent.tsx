@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import type { ApiErrorPayload, AuthState } from '@/features/auth/types'
+import { LightShell } from '@/components/layout/LightShell'
+import { Button, Card } from '@/components/ui'
 import { WechatLoginPanel } from './WechatLoginPanel'
 
 const IS_DEV_BUILD = process.env.NODE_ENV !== 'production'
@@ -37,8 +39,8 @@ export function LoginContent() {
 
   const handleLoginSuccess = (state: AuthState) => {
     if (state.authenticated) {
+      // 跳转目标页会重新校验会话；立即 refresh 会与 replace 竞争，可能刷新回登录页。
       router.replace(nextPath)
-      router.refresh()
     }
   }
 
@@ -67,29 +69,40 @@ export function LoginContent() {
   }
 
   return (
-    <section className="mx-auto flex min-h-[calc(100vh-9rem)] w-full max-w-6xl items-center px-4 py-16 sm:px-6">
-      <div className="grid w-full gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+    <LightShell glow="none" className="home-typography home-redesign">
+    <section aria-labelledby="login-heading" className="mx-auto flex min-h-[calc(100svh-14rem)] w-full max-w-6xl items-center px-4 py-12 sm:px-6 sm:py-20">
+      <div className="grid w-full items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
         <div className="max-w-xl">
-          <p className="font-mono text-xs uppercase tracking-[0.18em] text-accent-2">
+          <p className="text-xs font-medium uppercase tracking-[0.18em] text-blue">
             Weelume Account
           </p>
-          <h1 className="mt-5 text-4xl font-semibold leading-tight text-ink sm:text-5xl">
-            登录微域生光账号
+          <h1 id="login-heading" className="mt-5 text-4xl font-semibold leading-tight tracking-tight text-graphite sm:text-5xl">
+            欢迎回到<br />微域生光
           </h1>
-          <p className="mt-4 text-sm leading-relaxed text-muted">
-            扫码关注微信公众号即可登录；登录后可在个人信息中绑定邮箱与修改用户名。
+          <p className="mt-6 max-w-sm text-base leading-relaxed text-graphite-soft">
+            用微信扫一扫，关注公众号即可登录。
           </p>
+          <Link href="/" className="mt-8 inline-flex items-center gap-2 rounded-btn py-2 text-sm text-graphite-soft transition-colors hover:text-blue focus-visible:outline-2 focus-visible:outline-blue">
+            <span aria-hidden="true">←</span> 返回首页
+          </Link>
         </div>
 
-        <div className="rounded-[8px] border border-hairline bg-surface/80 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.32)] backdrop-blur-xl sm:p-6">
+        <Card className="w-full max-w-md justify-self-center border border-rule lg:justify-self-end" padClass="p-6 sm:p-10">
+          <div className="mb-6 text-center">
+            <h2 className="text-xl font-semibold tracking-tight text-graphite">微信扫码登录</h2>
+            <p className="mt-2 text-sm text-graphite-soft">打开微信，扫描下方二维码</p>
+          </div>
           <WechatLoginPanel onSuccess={handleLoginSuccess} />
+          <p className="mt-6 border-t border-rule pt-5 text-center text-xs leading-relaxed text-graphite-dim">
+            首次扫码关注后将自动创建账号，已关注用户直接扫码即可。
+          </p>
 
           {IS_DEV_BUILD && (
-            <div className="mt-5 rounded-[6px] border border-dashed border-hairline bg-surface/40 p-3">
-              <p className="text-[11px] font-mono uppercase tracking-[0.14em] text-muted">
+            <details className="mt-5 rounded-btn border border-dashed border-rule bg-paper p-3">
+              <summary className="cursor-pointer text-xs text-graphite-soft">
                 dev only · 本地快捷登录
-              </p>
-              <p className="mt-1 text-xs leading-relaxed text-muted">
+              </summary>
+              <p className="mt-2 text-xs leading-relaxed text-graphite-dim">
                 绕过微信扫码，按 username 直接拿 token（仅本地开发可用）。
               </p>
               <div className="mt-3 flex gap-2">
@@ -98,32 +111,26 @@ export function LoginContent() {
                   value={devUsername}
                   onChange={(e) => setDevUsername(e.target.value)}
                   placeholder="dev_local"
-                  className="h-9 flex-1 rounded-[6px] border border-hairline bg-surface px-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-accent-2"
+                  aria-label="本地开发用户名"
+                  className="h-10 min-w-0 flex-1 rounded-btn border border-rule bg-paper-raised px-3 text-sm text-graphite placeholder:text-graphite-dim focus:outline-2 focus:outline-blue"
                   disabled={devPending}
                 />
-                <button
-                  type="button"
+                <Button
                   onClick={handleDevLogin}
                   disabled={devPending || devUsername.trim() === ''}
-                  className="inline-flex h-9 items-center rounded-[6px] border border-hairline bg-surface px-4 text-sm font-medium text-ink transition-colors hover:bg-surface/60 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="shrink-0 px-3 py-2 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {devPending ? '登录中...' : '本地登录'}
-                </button>
+                </Button>
               </div>
               {devError !== null && (
-                <p className="mt-2 text-xs text-red-100">{devError}</p>
+                <p role="alert" className="mt-2 text-xs text-red-700">{devError}</p>
               )}
-            </div>
+            </details>
           )}
-
-          <Link
-            href="/"
-            className="mt-5 inline-flex text-sm text-muted transition-colors hover:text-ink"
-          >
-            返回首页
-          </Link>
-        </div>
+        </Card>
       </div>
     </section>
+    </LightShell>
   )
 }
