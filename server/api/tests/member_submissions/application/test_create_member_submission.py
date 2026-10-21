@@ -74,6 +74,7 @@ class StubMembershipStatusReader:
             account_id=account_id,
             is_active=self._is_active,
             expires_at=datetime(2027, 1, 1) if self._is_active else None,
+            tier="premium" if self._is_active else "none",
         )
 
 

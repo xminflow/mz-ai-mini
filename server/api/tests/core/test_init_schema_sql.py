@@ -29,3 +29,16 @@ def test_init_schema_keeps_business_case_documents_at_current_shape() -> None:
 
     assert "cover_image_url" not in documents_table_sql
     assert "case_id VARCHAR(128) NOT NULL" in documents_table_sql
+
+
+def test_init_schema_contains_current_membership_and_submission_schema() -> None:
+    sql = INIT_SCHEMA_SQL.read_text(encoding="utf-8")
+    for table in (
+        "account_membership_orders", "blogger_insights", "track_analyses",
+        "member_submissions", "camp_accounts", "camp_membership_orders",
+    ):
+        assert f"CREATE TABLE IF NOT EXISTS {table} (" in sql
+    assert "CREATE UNIQUE INDEX IF NOT EXISTS uk_member_submissions_active" not in sql
+    assert "avatar_url TEXT NULL" in sql
+    assert "DELETE FROM blogger_insights" not in sql
+    assert "SET membership_tier = 'premium'" not in sql

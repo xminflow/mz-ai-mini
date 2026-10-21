@@ -82,7 +82,7 @@ async def test_create_membership_order_creates_native_qr_order() -> None:
         snowflake_id_generator=Snowflake(),
         current_time_provider=Clock(),
         wechat_pay_gateway=gateway,
-        annual_amount_fen=50000,
+        sku_prices={MembershipSku.ANNUAL_NORMAL: 50000},
     )
 
     result = await use_case.execute(

@@ -12,6 +12,17 @@ from mz_ai_backend.modules.member_submissions.domain import (
     MemberSubmission,
     SubmissionType,
 )
+from mz_ai_backend.modules.member_submissions.application.ports import MembershipStatus
+
+
+class StubMembershipStatusReader:
+    async def get_status(self, *, account_id: int, now: datetime) -> MembershipStatus:
+        return MembershipStatus(
+            account_id=account_id,
+            is_active=True,
+            expires_at=datetime(2027, 1, 1),
+            tier="premium",
+        )
 
 
 class StubRepository:
@@ -54,6 +65,7 @@ async def test_returns_snapshot_for_every_submission_type() -> None:
     )
     use_case = GetMyQuotaUseCase(
         repository=repository,
+        membership_status_reader=StubMembershipStatusReader(),
         current_time_provider=StubTimeProvider(datetime(2026, 5, 21, 10, 0, 0)),
     )
 
@@ -76,6 +88,7 @@ async def test_queries_period_key_for_current_month_only() -> None:
     repository = StubRepository(consumed_by_type={})
     use_case = GetMyQuotaUseCase(
         repository=repository,
+        membership_status_reader=StubMembershipStatusReader(),
         current_time_provider=StubTimeProvider(datetime(2026, 7, 5, 10, 0, 0)),
     )
 

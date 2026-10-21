@@ -102,7 +102,7 @@ async def test_create_order_logs_context_without_full_code_url(caplog) -> None:
         snowflake_id_generator=Snowflake(),
         current_time_provider=Clock(),
         wechat_pay_gateway=Gateway(),
-        annual_amount_fen=50000,
+        sku_prices={MembershipSku.ANNUAL_NORMAL: 50000},
     )
 
     await use_case.execute(
