@@ -26,8 +26,13 @@ function isApiErrorPayload(value: unknown): value is ApiErrorPayload {
 async function parseApiError(response: Response): Promise<string> {
   try {
     const payload = (await response.json()) as unknown
-    if (isApiErrorPayload(payload)) return payload.error.message
+    if (isApiErrorPayload(payload)) {
+      // 公众号的配置、IP 和请求追踪信息留在服务日志；页面只提供可操作的错误提示。
+      console.error('[wechat-login] QR session request failed', { status: response.status, code: payload.error.code })
+      return '请稍后重试，或联系我们获取帮助。'
+    }
   } catch {
+    console.error('[wechat-login] invalid QR session error response', { status: response.status })
     return '请求失败，请稍后重试'
   }
   return '请求失败，请稍后重试'
@@ -204,15 +209,18 @@ export function WechatLoginPanel({ onSuccess }: WechatLoginPanelProps) {
   const bizmid = process.env.NEXT_PUBLIC_WECHAT_OFFICIAL_BIZMID
 
   return (
-    <div aria-live="polite" aria-atomic="true" aria-busy={panelState.phase === 'loading' || panelState.phase === 'exchanging'} className="flex min-h-64 items-center justify-center rounded-card border border-rule bg-paper p-5">
+    <div aria-live="polite" aria-atomic="true" aria-busy={panelState.phase === 'loading' || panelState.phase === 'exchanging'} className="mt-6 flex min-h-[244px] items-center justify-center">
       {panelState.phase === 'loading' && (
         <div className="flex h-44 items-center justify-center">
-          <p className="text-sm text-graphite-soft">正在生成二维码...</p>
+          <div className="flex flex-col items-center gap-4">
+            <span aria-hidden="true" className="h-6 w-6 animate-spin rounded-full border-2 border-rule border-t-graphite motion-reduce:animate-none" />
+            <p className="text-xs text-graphite-soft">正在生成二维码…</p>
+          </div>
         </div>
       )}
 
       {panelState.phase === 'ready' && (
-        <div className="flex flex-col items-center gap-3 py-2">
+        <div className="flex w-full flex-col items-center gap-4">
           {isMobile && bizmid ? (
             <a
               href={`https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=${encodeURIComponent(bizmid)}`}
@@ -226,26 +234,27 @@ export function WechatLoginPanel({ onSuccess }: WechatLoginPanelProps) {
             <img
               src={panelState.session.qr_code_url}
               alt="微信登录二维码"
-              width={192}
-              height={192}
-              className="max-w-full rounded-btn border border-rule bg-white p-2"
+              width={200}
+              height={200}
+              className="h-[200px] w-[200px] max-w-full bg-white object-contain"
             />
           )}
-          <p className="text-xs text-graphite-dim">二维码将在 {panelState.secondsLeft} 秒后刷新</p>
+          <p className="text-xs tabular-nums text-graphite-dim">{panelState.secondsLeft} 秒后自动刷新</p>
         </div>
       )}
 
       {panelState.phase === 'exchanging' && (
         <div className="flex h-44 items-center justify-center">
-          <p className="text-sm text-graphite-soft">正在登录...</p>
+          <p className="text-sm text-graphite-soft">扫码成功，正在登录…</p>
         </div>
       )}
 
       {panelState.phase === 'error' && (
-        <div className="flex min-h-44 flex-col items-center justify-center gap-4 text-center">
+        <div className="flex min-w-0 flex-col items-center justify-center gap-3 text-center">
           <p className="text-sm font-medium text-graphite">二维码暂时无法加载</p>
-          <p role="alert" className="break-words text-sm text-red-700">{panelState.message}</p>
+          <p role="alert" className="w-full break-words text-xs leading-relaxed text-red-700">{panelState.message}</p>
           <Button
+            variant="outline"
             onClick={() => setSessionKey((k) => k + 1)}
           >
             重新获取二维码

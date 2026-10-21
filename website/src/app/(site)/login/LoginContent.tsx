@@ -70,36 +70,23 @@ export function LoginContent() {
 
   return (
     <LightShell glow="none" className="home-typography home-redesign">
-    <section aria-labelledby="login-heading" className="mx-auto flex min-h-[calc(100svh-14rem)] w-full max-w-6xl items-center px-4 py-12 sm:px-6 sm:py-20">
-      <div className="grid w-full items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
-        <div className="max-w-xl">
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-blue">
-            Weelume Account
-          </p>
-          <h1 id="login-heading" className="mt-5 text-4xl font-semibold leading-tight tracking-tight text-graphite sm:text-5xl">
-            欢迎回到<br />微域生光
-          </h1>
-          <p className="mt-6 max-w-sm text-base leading-relaxed text-graphite-soft">
-            用微信扫一扫，关注公众号即可登录。
-          </p>
-          <Link href="/" className="mt-8 inline-flex items-center gap-2 rounded-btn py-2 text-sm text-graphite-soft transition-colors hover:text-blue focus-visible:outline-2 focus-visible:outline-blue">
-            <span aria-hidden="true">←</span> 返回首页
-          </Link>
-        </div>
-
-        <Card className="w-full max-w-md justify-self-center border border-rule lg:justify-self-end" padClass="p-6 sm:p-10">
-          <div className="mb-6 text-center">
-            <h2 className="text-xl font-semibold tracking-tight text-graphite">微信扫码登录</h2>
-            <p className="mt-2 text-sm text-graphite-soft">打开微信，扫描下方二维码</p>
+    <section aria-labelledby="login-heading" className="mx-auto flex min-h-[calc(100svh-18rem)] w-full max-w-[420px] flex-col items-center justify-center gap-5 px-5 py-10 sm:py-14">
+        <Card className="w-full border border-rule" padClass="px-6 py-8 sm:px-8 sm:py-9">
+          <div className="text-center">
+            <h1 id="login-heading" className="text-2xl font-semibold tracking-tight text-graphite">登录微域生光</h1>
+            <p className="mt-2 text-[13px] leading-relaxed text-graphite-soft">使用微信扫一扫，关注公众号即可登录</p>
           </div>
           <WechatLoginPanel onSuccess={handleLoginSuccess} />
-          <p className="mt-6 border-t border-rule pt-5 text-center text-xs leading-relaxed text-graphite-dim">
-            首次扫码关注后将自动创建账号，已关注用户直接扫码即可。
+          <p className="mt-5 text-center text-xs leading-relaxed text-graphite-dim">
+            首次关注将自动创建账号
           </p>
-
+        </Card>
+        <Link href="/" className="inline-flex items-center gap-2 rounded-btn px-3 py-2 text-xs text-graphite-soft transition-colors hover:text-graphite focus-visible:outline-2 focus-visible:outline-blue">
+          <span aria-hidden="true">←</span> 返回首页
+        </Link>
           {IS_DEV_BUILD && (
-            <details className="mt-5 rounded-btn border border-dashed border-rule bg-paper p-3">
-              <summary className="cursor-pointer text-xs text-graphite-soft">
+            <details className="w-full rounded-xl border border-dashed border-rule p-3">
+              <summary className="cursor-pointer text-center text-xs text-graphite-dim">
                 dev only · 本地快捷登录
               </summary>
               <p className="mt-2 text-xs leading-relaxed text-graphite-dim">
@@ -128,8 +115,6 @@ export function LoginContent() {
               )}
             </details>
           )}
-        </Card>
-      </div>
     </section>
     </LightShell>
   )
