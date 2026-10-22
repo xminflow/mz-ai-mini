@@ -6,7 +6,6 @@ import { getTemplatesNewestFirst } from '@/features/site-templates/registry'
 import { Advantages } from './Advantages'
 import { CapabilityBar } from './CapabilityBar'
 import { Hero } from './Hero'
-import { HomeContact } from './HomeContact'
 import { OpsPlatform } from './OpsPlatform'
 import { ServiceFlow } from './ServiceFlow'
 import { ServiceTypes } from './ServiceTypes'
@@ -26,6 +25,5 @@ export const HomeContent = ({ locale = 'zh' }: { locale?: SiteLocale }) => (
     <ServiceFlow />
     <Advantages />
     <OpsPlatform />
-    <HomeContact />
   </LightShell>
 )

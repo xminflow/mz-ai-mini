@@ -7,16 +7,14 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useSiteLocale } from '@/features/site-i18n/SiteLocaleProvider'
 import { Button } from '@/components/ui'
 import { NavAuthControls } from '@/features/auth/components/NavAuthControls'
-import { useContact } from './contact-context'
 import '@/features/site-navigation/mobile-navigation.css'
 
 const LINK_CLASS = 'rounded-btn px-3 py-2 text-[14px] transition-colors focus-visible:outline-2 focus-visible:outline-blue sm:px-4'
 
-export const LightNav = () => {
+export const LightNav = ({ onOpenCommunity }: { onOpenCommunity: () => void }) => {
   const pathname = usePathname()
   const router = useRouter()
   const { locale, copy } = useSiteLocale()
-  const { openContact } = useContact()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const headerRef = useRef<HTMLElement>(null)
@@ -133,8 +131,8 @@ export const LightNav = () => {
                 {locale === 'en' ? '中文' : 'EN'}
               </Link>
             )}
-            <Button variant="outline" onClick={() => { setMenuOpen(false); openContact() }}>
-              {copy.contact}
+            <Button variant="outline" aria-haspopup="dialog" onClick={() => { setMenuOpen(false); onOpenCommunity() }}>
+              {copy.navAiCommunity}
             </Button>
             <NavAuthControls />
             <button

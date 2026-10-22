@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState, type ReactNode } from 'react'
 
 import { SiteLocaleProvider } from '@/features/site-i18n/SiteLocaleProvider'
 import type { SiteLocale } from '@/features/site-i18n/copy'
+import { CommunityInvitationModal } from '@/features/site-community/CommunityInvitationModal'
 
 import { ContactContext } from './contact-context'
 import { GlowField } from './GlowField'
@@ -27,9 +28,11 @@ type LightShellProps = {
 // 浅色站点的共用外壳：背景光挂载点、导航、底部 CTA、页脚、咨询弹窗，
 // 以及弹窗开关的唯一持有者。每个对外开放的页面套一层即可，页面自身只负责自己的 section。
 export const LightShell = ({ children, glow = 'simple', locale = 'zh', className = '' }: LightShellProps) => {
-  const [contactOpen, setContactOpen] = useState(false)
-  const openContact = useCallback(() => setContactOpen(true), [])
-  const closeContact = useCallback(() => setContactOpen(false), [])
+  // 共用互斥状态，避免入群邀请与商务联系同时覆盖页面。
+  const [activeDialog, setActiveDialog] = useState<'contact' | 'community' | null>(null)
+  const openContact = useCallback(() => setActiveDialog('contact'), [])
+  const openCommunity = useCallback(() => setActiveDialog('community'), [])
+  const closeDialog = useCallback(() => setActiveDialog(null), [])
   const contactValue = useMemo(() => ({ openContact }), [openContact])
 
   return (
@@ -39,10 +42,11 @@ export const LightShell = ({ children, glow = 'simple', locale = 'zh', className
           让光只压在本外壳内部，不会钻到其他层之下 */}
       <div lang={locale === 'en' ? 'en' : 'zh-CN'} className={`relative isolate flex min-h-screen flex-col bg-paper text-graphite ${className}`}>
         {glow !== 'none' && <GlowField variant={glow} />}
-        <LightNav />
+        <LightNav onOpenCommunity={openCommunity} />
         <main className="flex-1">{children}</main>
         <LightFooter />
-        <LightContactModal open={contactOpen} onClose={closeContact} />
+        <LightContactModal open={activeDialog === 'contact'} onClose={closeDialog} />
+        <CommunityInvitationModal open={activeDialog === 'community'} onClose={closeDialog} />
       </div>
     </ContactContext.Provider>
     </SiteLocaleProvider>
