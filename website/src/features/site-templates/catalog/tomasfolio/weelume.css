@@ -1,0 +1,4 @@
+/* 注入品牌的字数与独立模板不同，字号在宿主主题中按实际视口约束。 */
+.tomasfolio-host{--tm-host-wordmark-en:18vw;--tm-host-wordmark-zh-mobile:22vw}
+.tomasfolio-host .tm-site[data-locale=en] .tm-wordmark{font-size:var(--tm-host-wordmark-en)}
+@media(max-width:600px){.tomasfolio-host{--tm-host-wordmark-en:19vw}.tomasfolio-host .tm-site[data-locale=zh] .tm-wordmark{font-size:var(--tm-host-wordmark-zh-mobile)}}

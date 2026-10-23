@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-21T03:14:08.300Z",
+  "updatedAt": "2026-10-23T02:18:01.823Z",
   "scope": "全部新版独立模板；不含协议工具工程和主站仓库",
   "repositories": [
     {
@@ -809,6 +809,104 @@
         "interactions": 4,
         "errors": 0,
         "scope": "本批迁移增量：不同页面实现与生成详情样本，桌面及手机；不重验历史模板"
+      }
+    },
+    {
+      "id": "tomasfolio",
+      "gitUrl": "https://github.com/weelume/tomasfolio-template",
+      "branch": "main",
+      "commit": "3dc2514a3b5385e3e7321b600a2789cdeb11ebd4",
+      "remoteCommit": "3dc2514a3b5385e3e7321b600a2789cdeb11ebd4",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-23T02:04:56.022Z",
+      "localPath": "D:/code/code-tpl/tomasfolio-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/tomasfolio/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ],
+      "browserVerification": {
+        "pageCombinations": 120,
+        "interactions": 7,
+        "errors": 0,
+        "scope": "15页 × 中英文 × 1440/834/390/320；12张真实三端截图。"
+      }
+    },
+    {
+      "id": "artemis",
+      "gitUrl": "https://github.com/weelume/artemis-template",
+      "branch": "main",
+      "commit": "baa54cb0733fb6888814bd080c8d11c6559f9ad1",
+      "remoteCommit": "baa54cb0733fb6888814bd080c8d11c6559f9ad1",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-23T02:18:01.823Z",
+      "localPath": "D:/code/code-tpl/artemis-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/artemis/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ],
+      "browserVerification": {
+        "pageCombinations": 120,
+        "interactions": 13,
+        "errors": 0,
+        "scope": "15 页 × 中英文 × 1440/834/390/320；12 张精确尺寸真实截图。"
       }
     }
   ],

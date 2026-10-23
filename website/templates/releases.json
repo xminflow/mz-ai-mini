@@ -178,5 +178,23 @@
     "file": "unseen-1.0.0-c9f996f65538d02d6722ceb64403785e64dea8b2.zip",
     "snapshotSha256": "46bda9ae0670edbd2d3b6d4f630057c7cddc803307fc54f5187a9f45e71980f0",
     "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/unseen/1.0.0-c9f996f65538d02d6722ceb64403785e64dea8b2/f3618133bd654f7c9bd777e39e735e4f8be9420cea6f554d5c1d75bc74deae9f.zip"
+  },
+  "tomasfolio": {
+    "version": "1.0.0",
+    "sourceCommit": "3dc2514a3b5385e3e7321b600a2789cdeb11ebd4",
+    "sha256": "cdf7287965dcf2cf31b4d0258a09c719319e05f2532bae42dcf4c89654f71905",
+    "size": 19721703,
+    "file": "tomasfolio-1.0.0-3dc2514a3b5385e3e7321b600a2789cdeb11ebd4.zip",
+    "snapshotSha256": "34e83906080adcc302e7f3c42cf51a74a79d24c75c86c5618761cc5c0ac0d54d",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/tomasfolio/1.0.0-3dc2514a3b5385e3e7321b600a2789cdeb11ebd4/cdf7287965dcf2cf31b4d0258a09c719319e05f2532bae42dcf4c89654f71905.zip"
+  },
+  "artemis": {
+    "version": "1.0.0",
+    "sourceCommit": "baa54cb0733fb6888814bd080c8d11c6559f9ad1",
+    "sha256": "c87b47ac486813390a366cc286a064e2cc8b79c4ca63c3e80ae0c5ac46fa448e",
+    "size": 20464663,
+    "file": "artemis-1.0.0-baa54cb0733fb6888814bd080c8d11c6559f9ad1.zip",
+    "snapshotSha256": "def4922ebed202652c52f068604fabbc7fb7504a50eab6a90a72becea98f7735",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/artemis/1.0.0-baa54cb0733fb6888814bd080c8d11c6559f9ad1/c87b47ac486813390a366cc286a064e2cc8b79c4ca63c3e80ae0c5ac46fa448e.zip"
   }
 }

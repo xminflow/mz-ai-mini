@@ -1,0 +1,1 @@
+export { tomasfolioTemplate } from './weelume'

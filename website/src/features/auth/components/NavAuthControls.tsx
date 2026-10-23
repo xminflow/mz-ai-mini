@@ -90,17 +90,17 @@ export function NavAuthControls({ onOpenProfile }: { onOpenProfile: (account: Au
   return <details ref={menuRef} className="nav-account relative">
     <summary data-button-variant="outline" className={buttonClassName('outline')} title={label} aria-label={`${english ? 'Signed in as' : '已登录：'} ${label}`}>
       <AccountAvatar avatarUrl={account.avatar_url} />
-      <span className="nav-account-label">{label}</span><span aria-hidden="true">⌄</span>
+      <span className="nav-account-label">{label}</span>
     </summary>
     <div className="nav-account-panel absolute right-0 top-full z-40 mt-2 min-w-44 rounded-card border border-rule bg-paper-raised p-4 shadow-soft">
       <p className="break-all text-sm text-graphite">{label}</p>
-      <button type="button" aria-haspopup="dialog" className="mt-3 block w-full rounded-btn border border-rule px-3 py-2 text-left text-sm text-graphite transition-colors hover:bg-graphite/[0.04]" onClick={() => {
+      <Button variant="outline" aria-haspopup="dialog" className="mt-3 w-full" onClick={() => {
         if (menuRef.current) {
           menuRef.current.open = false
           menuRef.current.querySelector('summary')?.focus()
         }
         onOpenProfile(account)
-      }}>{english ? 'Personal information' : '个人信息'}</button>
+      }}>{english ? 'Personal information' : '个人信息'}</Button>
       {account.email && <p className="mt-1 break-all text-xs text-graphite-soft">{account.email}</p>}
       <Button variant="outline" className="mt-3 w-full disabled:opacity-50" onClick={logout} disabled={loggingOut}>{loggingOut ? (english ? 'Signing out…' : '退出中…') : (english ? 'Sign out' : '退出登录')}</Button>
       {logoutError && <p role="alert" className="mt-2 text-xs text-red-700">{logoutError}</p>}

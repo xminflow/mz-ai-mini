@@ -18,10 +18,6 @@ export const LightFooter = () => {
             <img src="/logo/weiyu-logo-web-dark.svg" alt={copy.brand} className="h-8 w-8" />
             <span className="text-[14px] font-semibold tracking-tight text-graphite">{copy.brand}</span>
           </div>
-          <span className="inline-flex items-center gap-2 text-[12px] text-graphite-dim">
-            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-red" />
-            {copy.availability}
-          </span>
         </div>
 
         <div className="flex flex-col gap-2 border-t border-rule pt-4 text-[12px] text-graphite-dim sm:flex-row sm:items-center sm:gap-5">

@@ -1,6 +1,6 @@
 # 新版独立模板 Git 地址与推送记录
 
-更新时间：2026年10月21日（Asia/Shanghai）。累计 20 套独立模板已推送源码并核对远端提交。各仓实际校验时点、完整 SHA 和历史验收状态保留在 [template-repositories.json](template-repositories.json)，并非此次重新验收所有模板。保留原有分支，不强制推送或覆盖远端历史。
+更新时间：2026年10月23日（Asia/Shanghai）。累计 22 套独立模板已推送源码并核对远端提交。各仓实际校验时点、完整 SHA 和历史验收状态保留在 [template-repositories.json](template-repositories.json)，并非此次重新验收所有模板。保留原有分支，不强制推送或覆盖远端历史。
 
 | 模板 | Git 地址 | 分支 | 已核对提交 |
 | --- | --- | --- | --- |
@@ -24,6 +24,7 @@
 | studiothink | [studiothink-template](https://github.com/weelume/studiothink-template) | `main` | [532b4173b98d](https://github.com/weelume/studiothink-template/commit/532b4173b98da1fe87ea2596ce15c5b1fd4b7585) |
 | tabfolio | [tabfolio-template](https://github.com/weelume/tabfolio-template) | `main` | [2055eb9ecbb6](https://github.com/weelume/tabfolio-template/commit/2055eb9ecbb630003a5b820b0e75351031888334) |
 | unseen | [unseen-template](https://github.com/weelume/unseen-template) | `main` | [c9f996f65538](https://github.com/weelume/unseen-template/commit/c9f996f65538d02d6722ceb64403785e64dea8b2) |
+| artemis | [artemis-template](https://github.com/weelume/artemis-template) | `main` | [baa54cb0733f](https://github.com/weelume/artemis-template/commit/baa54cb0733fb6888814bd080c8d11c6559f9ad1) |
 
 地址同步至各独立工程 .tpl/template.json 与主站 gitUrl。Lunera、Noirei 上一批完成独立 Linux 类型、lint、测试、构建以及 304 个双语视口组合、13 项交互验收；协议报告与源码摘要一致。上一批主站迁移验证见 [lunera-noirei.md](template-migrations/lunera-noirei.md)。
 
@@ -31,3 +32,14 @@
 
 
 本批剩余 7 套迁移与源码 ZIP 交付见 [remaining-seven.md](template-migrations/remaining-seven.md)。只验收本批新增接入，不回归历史 13 套页面；留白管理后台已删除。前述 Lunera、Noirei 记录为上一批结果。
+
+## Tomasfolio（2026-10-23 新增）
+
+| 模板 | Git 地址 | 分支 | 已核对提交 |
+| --- | --- | --- | --- |
+| tomasfolio | [tomasfolio-template](https://github.com/weelume/tomasfolio-template) | main | [3dc2514a3b53](https://github.com/weelume/tomasfolio-template/commit/3dc2514a3b5385e3e7321b600a2789cdeb11ebd4) |
+
+源码已推送，远端 main 与本地完整 SHA 一致，工作区干净。独立模板类型、Lint、4 项测试、30 条生产路由、404、本地 WSL 构建及源码摘要严格验收通过。三端及 320px 双语页面检查见独立工程 .tpl/reports；主站增量验收见 tomasfolio-template-delivery.md。
+
+
+Artemis（2026-10-23）：独立模板 15 页、30 条语言路由，120 组视口组合、13 项交互及 12 张截图通过；本地 WSL 类型、lint、3 项合同测试和生产构建通过。完整交付见 [artemis-template-delivery.md](artemis-template-delivery.md)。未部署主站或公开市场上架。

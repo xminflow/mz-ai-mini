@@ -1,0 +1,8 @@
+{
+  "name": "artemis-template",
+  "version": "1.0.0",
+  "archive": "vendor/artemis-template-1.0.0-def4922ebed2.tgz",
+  "sha256": "def4922ebed202652c52f068604fabbc7fb7504a50eab6a90a72becea98f7735",
+  "sourceCommit": "baa54cb0733fb6888814bd080c8d11c6559f9ad1",
+  "sourceDirty": false
+}

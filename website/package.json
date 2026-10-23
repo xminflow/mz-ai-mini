@@ -40,7 +40,9 @@
     "unseen-template": "file:./vendor/unseen-template-1.0.0-46bda9ae0670.tgz",
     "nubo-template": "file:./vendor/nubo-template-1.0.0-6c34f152cd30.tgz",
     "recueil-template": "file:./vendor/recueil-template-1.0.0-cd550dcf0cda.tgz",
-    "tabfolio-template": "file:./vendor/tabfolio-template-1.0.0-5a720f7947e2.tgz"
+    "tabfolio-template": "file:./vendor/tabfolio-template-1.0.0-5a720f7947e2.tgz",
+    "tomasfolio-template": "file:./vendor/tomasfolio-template-1.0.0-34e83906080a.tgz",
+    "artemis-template": "file:./vendor/artemis-template-1.0.0-def4922ebed2.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

@@ -168,3 +168,11 @@ ua-agent/checkpoints/
 /website/public/templates/tabfolio/
 /website/unseen.local
 /website/public/templates/unseen/
+
+# Tomasfolio 本地源码映射与包生成素材
+/website/tomasfolio.local
+/website/public/templates/tomasfolio/
+
+# Artemis 本地源码映射与包生成素材
+/website/artemis.local
+/website/public/templates/artemis/

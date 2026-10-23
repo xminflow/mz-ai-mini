@@ -49,7 +49,6 @@ export function AccountProfileSection({ account, onClose }: AccountProfileSectio
   const [usernameDraft, setUsernameDraft] = useState(account.display_name)
   const [usernameSubmitting, setUsernameSubmitting] = useState(false)
   const [usernameError, setUsernameError] = useState<string | null>(null)
-  const [usernameMessage, setUsernameMessage] = useState<string | null>(null)
 
   const usernameFormatValid = DISPLAY_NAME_PATTERN.test(usernameDraft.trim())
   const usernameChanged = usernameDraft.trim() !== currentAccount.display_name
@@ -58,7 +57,6 @@ export function AccountProfileSection({ account, onClose }: AccountProfileSectio
   const handleUsernameSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setUsernameError(null)
-    setUsernameMessage(null)
     setUsernameSubmitting(true)
     try {
       const response = await fetch('/api/auth/me/profile', {
@@ -73,8 +71,8 @@ export function AccountProfileSection({ account, onClose }: AccountProfileSectio
       const payload = (await response.json()) as AccountSnapshotEnvelope
       setCurrentAccount(payload.account)
       setUsernameDraft(payload.account.display_name)
-      setUsernameMessage('用户名已更新')
       window.dispatchEvent(new Event('weelume:profile-updated'))
+      onClose()
       router.refresh()
     } catch {
       setUsernameError('请求失败，请稍后重试')
@@ -88,10 +86,9 @@ export function AccountProfileSection({ account, onClose }: AccountProfileSectio
     <form id={formId} onSubmit={handleUsernameSubmit} className="account-profile-field">
       <label htmlFor={`${formId}-name`} className="account-profile-label">{english ? 'Display name' : '用户名'}</label>
       <input id={`${formId}-name`} type="text" autoComplete="nickname" value={usernameDraft}
-        onChange={event => { setUsernameDraft(event.target.value); setUsernameMessage(null); setUsernameError(null) }}
+        onChange={event => { setUsernameDraft(event.target.value); setUsernameError(null) }}
         maxLength={64} placeholder={english ? 'Your name' : '怎么称呼你？'} className="account-profile-input" />
       <p className="account-profile-hint">{english ? '1–64 characters. Make it yours.' : '1–64 个字符，支持中文，不必与别人不同。'}</p>
-      {usernameMessage && <p role="status" className="account-profile-feedback">{usernameMessage}</p>}
       {usernameError && <p role="alert" className="account-profile-feedback">{usernameError}</p>}
     </form>
     <div className="account-profile-actions">
