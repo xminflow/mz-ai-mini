@@ -18,4 +18,12 @@
 
 ## 结果
 
-发布进行中，产物摘要、提交与切换结果完成后补记。过程记录保存在 `artifacts/releases/release-20261023-all/`。
+已完成发布。官网、后端和 AI 营均切换至 `release-20261023-all`，部署命令成功，切换结束时三个容器均为 `running`、重启策略 `always`。源码提交 `923b8817d3c74e8f66bdaa2d600713d9739acdaa` 已推送 `origin/dev`。
+
+本地 WSL 官网生产构建完成，构建内置类型、Lint 与固定模板发布检查完成；存在已有无效 eslint-disable 等警告。没有另行执行测试、接口回归、页面或浏览器交互验收，不据此声称业务已全面验证。
+
+三个服务合并归档大小 973,931,092 字节，SHA256：`35f641c6a2a878ca0bbc71cc042dc3c5d0080a2815481a972d9ad3b5b3b580ce`；服务器接收后传输摘要一致，加载同一份本地构建产物，未执行远端构建。
+
+保留旧容器 `website-previous-20261023-all`、`weelume-backend-previous-20261023-all`、`ai-camp-previous-20261023-all`。生产数据库、其他项目服务及共享网关配置均未修改。本地 3045 预览未在本次任务重启，仍为此前预览版本；本次上线地址为 <https://weelume.com>、<https://api.weelume.com>、<https://ai.weelume.com>。
+
+过程记录保存在 `artifacts/releases/release-20261023-all/`。
