@@ -37,6 +37,8 @@ class AgentAuthAccountResponse(BaseModel):
 
     account_id: str
     username: str
+    display_name: str
+    avatar_url: str | None
     email: str | None
     status: str
     created_at: datetime
@@ -46,6 +48,8 @@ class AgentAuthAccountResponse(BaseModel):
         return cls(
             account_id=_serialize_business_id(summary.account_id),
             username=summary.username,
+            display_name=summary.display_name,
+            avatar_url=summary.avatar_url,
             email=summary.email,
             status=summary.status.value,
             created_at=summary.created_at,

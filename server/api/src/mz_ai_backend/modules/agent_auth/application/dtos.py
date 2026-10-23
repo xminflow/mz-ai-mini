@@ -6,6 +6,7 @@ from datetime import UTC, datetime, timedelta
 from pydantic import BaseModel, ConfigDict, field_validator
 
 from ..domain import (
+    AgentAccount,
     AgentAccountStatus,
     AgentWechatLoginSessionStatus,
     AgentWechatSubscribeStatus,
@@ -65,9 +66,19 @@ class AgentAccountSummary(BaseModel):
 
     account_id: int
     username: str
+    display_name: str = "weelume"
+    avatar_url: str | None = None
     email: str | None
     status: AgentAccountStatus
     created_at: datetime
+
+
+    @classmethod
+    def from_account(cls, account: AgentAccount) -> "AgentAccountSummary":
+        # 旧账号未设置展示名时保留原用户名，不改写内部唯一标识。
+        return cls(account_id=account.account_id, username=account.username,
+                   display_name=account.display_name or account.username, avatar_url=account.avatar_url,
+                   email=account.email, status=account.status, created_at=account.created_at)
 
 
 class RefreshAgentSessionCommand(BaseModel):
@@ -113,6 +124,7 @@ class AgentAccountRegistration(BaseModel):
 
     account_id: int
     username: str
+    display_name: str = "weelume"
     email: str | None = None
     password_hash: str | None = None
     password_salt: str | None = None

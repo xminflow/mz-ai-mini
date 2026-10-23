@@ -2,18 +2,18 @@
 
 import { useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 import { useSiteLocale } from '@/features/site-i18n/SiteLocaleProvider'
 import { Button } from '@/components/ui'
+import type { AuthAccount } from '@/features/auth/types'
 import { NavAuthControls } from '@/features/auth/components/NavAuthControls'
 import '@/features/site-navigation/mobile-navigation.css'
 
 const LINK_CLASS = 'rounded-btn px-3 py-2 text-[14px] transition-colors focus-visible:outline-2 focus-visible:outline-blue sm:px-4'
 
-export const LightNav = ({ onOpenCommunity }: { onOpenCommunity: () => void }) => {
+export const LightNav = ({ onOpenCommunity, onOpenProfile }: { onOpenCommunity: () => void; onOpenProfile: (account: AuthAccount) => void }) => {
   const pathname = usePathname()
-  const router = useRouter()
   const { locale, copy } = useSiteLocale()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -21,8 +21,7 @@ export const LightNav = ({ onOpenCommunity }: { onOpenCommunity: () => void }) =
   const menuButtonRef = useRef<HTMLButtonElement>(null)
   const menuId = useId()
   const navItems = [
-    { label: copy.navHome, href: locale === 'en' ? '/en' : '/' },
-    { label: copy.navTemplates, href: '/templates' },
+    { label: copy.navHome, href: '/' },
   ]
 
   useEffect(() => {
@@ -70,7 +69,7 @@ export const LightNav = ({ onOpenCommunity }: { onOpenCommunity: () => void }) =
         style={scrolled ? { borderTopWidth: 0, borderLeftWidth: 0, borderRightWidth: 0 } : undefined}
       >
         <div className="home-nav-inner mx-auto flex min-h-16 w-full max-w-6xl flex-wrap items-center justify-between gap-x-3 px-4 sm:px-6 md:h-16 md:flex-nowrap">
-          <Link href={locale === 'en' ? '/en' : '/'} onClick={() => setMenuOpen(false)} className="home-nav-brand flex items-center gap-2">
+          <Link href="/" onClick={() => setMenuOpen(false)} className="home-nav-brand flex items-center gap-2">
             <img src="/logo/weiyu-logo-web-dark.svg" alt={copy.brand} className="h-9 w-9" />
             <span className="text-[15px] font-semibold tracking-tight text-graphite">{copy.brand}</span>
           </Link>
@@ -97,9 +96,9 @@ export const LightNav = ({ onOpenCommunity }: { onOpenCommunity: () => void }) =
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                aria-current={pathname === item.href ? 'page' : undefined}
+                aria-current={pathname === item.href || (item.href === '/' && pathname === '/templates') ? 'page' : undefined}
                 className={`${LINK_CLASS} ${
-                  pathname === item.href
+                  (pathname === item.href || (item.href === '/' && pathname === '/templates'))
                     ? 'bg-blue/10 font-medium text-blue'
                     : 'text-graphite-soft hover:text-graphite'
                 }`}
@@ -114,27 +113,10 @@ export const LightNav = ({ onOpenCommunity }: { onOpenCommunity: () => void }) =
           </nav>
 
           <div className="home-nav-actions flex h-16 items-center gap-2 sm:gap-3">
-            {(pathname === '/' || pathname === '/en') && (
-              <Link
-                href={locale === 'en' ? '/' : '/en'}
-                onNavigate={(event) => {
-                  event.preventDefault()
-                  setMenuOpen(false)
-                  const path = locale === 'en' ? '/' : '/en'
-                  router.push(`${path}${window.location.search}${window.location.hash}`, { scroll: false })
-                }}
-                hrefLang={locale === 'en' ? 'zh-CN' : 'en'}
-                lang={locale === 'en' ? 'zh-CN' : 'en'}
-                aria-label={locale === 'en' ? '切换到中文' : 'Switch to English'}
-                className="rounded-btn px-2 py-2.5 text-[13px] text-graphite-soft transition-colors hover:text-blue focus-visible:outline-2 focus-visible:outline-blue"
-              >
-                {locale === 'en' ? '中文' : 'EN'}
-              </Link>
-            )}
             <Button variant="outline" aria-haspopup="dialog" onClick={() => { setMenuOpen(false); onOpenCommunity() }}>
               {copy.navAiCommunity}
             </Button>
-            <NavAuthControls />
+            <NavAuthControls onOpenProfile={onOpenProfile} />
             <button
               ref={menuButtonRef}
               type="button"

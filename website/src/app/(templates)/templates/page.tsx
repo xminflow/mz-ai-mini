@@ -1,19 +1,12 @@
 import type { Metadata } from 'next'
-import { getTemplatesNewestFirst } from '@/features/site-templates/registry'
-import { MarketplaceShell } from '@/features/site-templates/workbench/MarketplaceShell'
-import { TemplateCatalog } from '@/features/site-templates/workbench/TemplateCatalog'
-import { toTemplatePresentation } from '@/features/site-templates/workbench/presentation'
+import { TemplateMarketHome } from '@/features/site-templates/workbench/TemplateMarketHome'
 
 export const metadata: Metadata = {
   title: { absolute: '探索模板 · 微域生光' },
+  description: '探索完整的网站模板与真实交互，从喜欢的设计开始你的项目。',
+  alternates: { canonical: '/' },
 }
 
 export default function TemplatesWorkbenchPage() {
-  return (
-    <MarketplaceShell>
-      <div className="market-container">
-        <TemplateCatalog templates={getTemplatesNewestFirst().map(toTemplatePresentation)} />
-      </div>
-    </MarketplaceShell>
-  )
+  return <TemplateMarketHome />
 }

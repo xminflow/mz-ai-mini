@@ -41,6 +41,8 @@ def _to_account(model: AgentAccountModel) -> AgentAccount:
     return AgentAccount(
         account_id=model.account_id,
         username=model.username,
+        display_name=model.display_name,
+        avatar_url=model.avatar_url,
         email=model.email,
         password_hash=model.password_hash,
         password_salt=model.password_salt,
@@ -176,6 +178,7 @@ class SqlAlchemyAgentAccountRepository:
         model = AgentAccountModel(
             account_id=registration.account_id,
             username=registration.username,
+            display_name=registration.display_name,
             email=registration.email,
             password_hash=registration.password_hash,
             password_salt=registration.password_salt,
@@ -189,6 +192,25 @@ class SqlAlchemyAgentAccountRepository:
         except IntegrityError as exc:
             await self._session.rollback()
             raise AgentUsernameTakenException() from exc
+        await self._session.refresh(model)
+        return _to_account(model)
+
+    async def update_account_profile(
+        self, *, account_id: int, display_name: str | None = None, avatar_url: str | None = None,
+    ) -> AgentAccount | None:
+        result = await self._session.execute(select(AgentAccountModel).where(
+            AgentAccountModel.account_id == account_id, AgentAccountModel.is_deleted.is_(False),
+            AgentAccountModel.status == AgentAccountStatus.ACTIVE.value,
+        ))
+        model = result.scalar_one_or_none()
+        if model is None:
+            return None
+        # 只写请求携带的字段，展示名与头像分别更新时互不覆盖。
+        if display_name is not None:
+            model.display_name = display_name
+        if avatar_url is not None:
+            model.avatar_url = avatar_url
+        await self._session.commit()
         await self._session.refresh(model)
         return _to_account(model)
 

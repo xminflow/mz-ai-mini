@@ -42,6 +42,11 @@ class AgentAccountRepository(Protocol):
     async def create_account(self, registration: AgentAccountRegistration) -> AgentAccount:
         """Create one account and return the persisted entity."""
 
+    async def update_account_profile(
+        self, *, account_id: int, display_name: str | None = None, avatar_url: str | None = None,
+    ) -> AgentAccount | None:
+        """更新当前账号展示名或头像；不修改内部唯一用户名。"""
+
     async def update_account_email(
         self,
         *,

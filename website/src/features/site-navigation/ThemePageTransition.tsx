@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 
 function pageTheme(pathname: string): 'light' | 'dark' | undefined {
-  if (pathname === '/' || pathname === '/en') return 'light'
+  if (pathname === '/' || pathname === '/en') return 'dark'
   if (/^\/templates(?:\/[^/]+)?\/?$/.test(pathname)) return 'dark'
   return undefined
 }

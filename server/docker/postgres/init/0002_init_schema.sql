@@ -297,7 +297,7 @@ CREATE TABLE IF NOT EXISTS agent_email_login_challenges (
 CREATE INDEX IF NOT EXISTS idx_agent_email_login_challenges_email_created_at
     ON agent_email_login_challenges (email, created_at DESC);
 
--- 新库直接建立截至 0030 的最终结构，不执行历史删除或存量会员回填。
+-- 新库直接建立截至 0031 的最终结构，不执行历史删除或存量会员回填。
 
 ALTER TABLE agent_accounts
     ADD COLUMN IF NOT EXISTS membership_tier VARCHAR(16) NOT NULL DEFAULT 'none',
@@ -613,6 +613,11 @@ BEGIN
 END
 $$;
 
+-- 0031：个人资料新增列；不回填存量数据。
+ALTER TABLE agent_accounts
+    ADD COLUMN IF NOT EXISTS display_name VARCHAR(64),
+    ADD COLUMN IF NOT EXISTS avatar_url VARCHAR(1024);
+
 INSERT INTO schema_migrations (filename)
 VALUES
     ('0001_create_users.sql'),
@@ -644,7 +649,8 @@ VALUES
     ('0027_upgrade_normal_members_to_premium.sql'),
     ('0028_grant_member_submissions.sql'),
     ('0029_create_camp_auth_tables.sql'),
-    ('0030_add_camp_membership.sql')
+    ('0030_add_camp_membership.sql'),
+    ('0031_add_agent_account_profile.sql')
 ON CONFLICT (filename) DO NOTHING;
 
 COMMIT;

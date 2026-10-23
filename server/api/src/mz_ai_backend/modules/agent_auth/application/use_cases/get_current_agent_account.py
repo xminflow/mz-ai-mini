@@ -40,10 +40,4 @@ class GetCurrentAgentAccountUseCase:
         account = await self._account_repository.get_account_by_id(session.account_id)
         if account is None or account.status != AgentAccountStatus.ACTIVE:
             raise AgentAccountDisabledException()
-        return AgentAccountSummary(
-            account_id=account.account_id,
-            username=account.username,
-            email=account.email,
-            status=account.status,
-            created_at=account.created_at,
-        )
+        return AgentAccountSummary.from_account(account)

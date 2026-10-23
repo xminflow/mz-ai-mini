@@ -14,6 +14,8 @@ type UpstreamEnvelope<T> = {
 type UpstreamAuthAccount = {
   account_id?: unknown
   username?: unknown
+  display_name?: unknown
+  avatar_url?: unknown
   email?: unknown
   status?: unknown
   created_at?: unknown
@@ -67,6 +69,8 @@ function normalizeAccount(raw: UpstreamAuthAccount): AuthAccount {
   return {
     account_id: asString(raw.account_id),
     username: asString(raw.username),
+    display_name: asString(raw.display_name) || asString(raw.username) || "weelume",
+    avatar_url: asString(raw.avatar_url) || null,
     email: asString(raw.email) || null,
     status: raw.status === 'disabled' ? 'disabled' : 'active',
     created_at: asString(raw.created_at),

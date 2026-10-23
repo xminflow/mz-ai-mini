@@ -41,13 +41,7 @@ async def issue_agent_auth_tokens(
         )
     )
     return AgentAuthenticationResult(
-        account=AgentAccountSummary(
-            account_id=account.account_id,
-            username=account.username,
-            email=account.email,
-            status=account.status,
-            created_at=account.created_at,
-        ),
+        account=AgentAccountSummary.from_account(account),
         tokens=AgentTokenPair(
             access_token=access_token,
             access_token_expires_at=access_token_expires_at,

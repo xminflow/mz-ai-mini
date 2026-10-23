@@ -36,6 +36,8 @@ class AgentAccount(BaseModel):
 
     account_id: int
     username: str
+    display_name: str | None = None
+    avatar_url: str | None = None
     email: str | None
     password_hash: str | None
     password_salt: str | None

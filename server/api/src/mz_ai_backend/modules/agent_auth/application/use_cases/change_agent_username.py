@@ -52,11 +52,5 @@ class ChangeAgentUsernameUseCase:
             command.new_username,
         )
         return ChangeAgentUsernameResult(
-            account=AgentAccountSummary(
-                account_id=updated.account_id,
-                username=updated.username,
-                email=updated.email,
-                status=updated.status,
-                created_at=updated.created_at,
-            )
+            account=AgentAccountSummary.from_account(updated)
         )

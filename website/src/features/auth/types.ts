@@ -1,6 +1,8 @@
 export type AuthAccount = {
   account_id: string
   username: string
+  display_name: string
+  avatar_url: string | null
   email: string | null
   status: 'active' | 'disabled'
   created_at: string

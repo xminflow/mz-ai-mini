@@ -237,3 +237,7 @@ async def dev_fake_login(
     return success_response(data=AgentAuthenticationResponse.from_result(result))
 
 
+
+# 个人资料沿用官网账号鉴权，独立文件维护资料接口。
+from .profile import router as profile_router
+router.include_router(profile_router)

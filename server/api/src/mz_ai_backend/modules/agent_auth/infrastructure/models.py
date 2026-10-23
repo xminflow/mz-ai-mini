@@ -16,6 +16,8 @@ class AgentAccountModel(Base):
     id: Mapped[int] = mapped_column(BigInteger, Identity(), primary_key=True)
     account_id: Mapped[int] = mapped_column(BigInteger, unique=True, nullable=False, index=True)
     username: Mapped[str] = mapped_column(String(32), unique=True, nullable=False, index=True)
+    display_name: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    avatar_url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
     email: Mapped[str | None] = mapped_column(String(256), unique=True, nullable=True, index=True)
     password_hash: Mapped[str | None] = mapped_column(String(512), nullable=True)
     password_salt: Mapped[str | None] = mapped_column(String(128), nullable=True)

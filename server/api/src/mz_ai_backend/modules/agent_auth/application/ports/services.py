@@ -107,3 +107,8 @@ class OfficialWechatGateway(Protocol):
         official_openid: str,
     ) -> OfficialWechatUserProfile:
         """Return the current official account user profile."""
+
+
+class AgentAvatarStorage(Protocol):
+    async def upload(self, *, account_id: int, content: bytes, content_type: str) -> str:
+        """将头像保存至对象存储并返回公开地址。"""

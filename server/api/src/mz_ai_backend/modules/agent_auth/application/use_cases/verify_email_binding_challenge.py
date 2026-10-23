@@ -86,11 +86,5 @@ class VerifyEmailBindingChallengeUseCase:
             challenge.login_challenge_id,
         )
         return VerifyEmailBindingChallengeResult(
-            account=AgentAccountSummary(
-                account_id=updated_account.account_id,
-                username=updated_account.username,
-                email=updated_account.email,
-                status=updated_account.status,
-                created_at=updated_account.created_at,
-            )
+            account=AgentAccountSummary.from_account(updated_account)
         )

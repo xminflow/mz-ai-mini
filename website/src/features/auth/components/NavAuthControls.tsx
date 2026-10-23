@@ -2,14 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
+import { AccountAvatar } from '@/features/account/AccountAvatar'
 import { usePathname } from 'next/navigation'
 import { Button, buttonClassName } from '@/components/ui'
 import { useSiteLocale } from '@/features/site-i18n/SiteLocaleProvider'
-import type { AuthState } from '../types'
+import type { AuthState, AuthAccount } from '../types'
 
 type NavSession = { phase: 'loading' } | { phase: 'ready'; state: AuthState } | { phase: 'error' }
 
-export function NavAuthControls() {
+export function NavAuthControls({ onOpenProfile }: { onOpenProfile: (account: AuthAccount) => void }) {
   const pathname = usePathname()
   const { locale, copy } = useSiteLocale()
   const [session, setSession] = useState<NavSession>({ phase: 'loading' })
@@ -17,6 +18,7 @@ export function NavAuthControls() {
   const [loggingOut, setLoggingOut] = useState(false)
   const [logoutError, setLogoutError] = useState('')
   const requestRef = useRef<AbortController | null>(null)
+  const menuRef = useRef<HTMLDetailsElement>(null)
   const english = locale === 'en'
 
   useEffect(() => {
@@ -37,6 +39,21 @@ export function NavAuthControls() {
     })()
     return () => controller.abort()
   }, [pathname, requestKey])
+
+  useEffect(() => {
+    const update = () => setRequestKey(key => key + 1)
+    window.addEventListener('weelume:profile-updated', update)
+    return () => window.removeEventListener('weelume:profile-updated', update)
+  }, [])
+
+  useEffect(() => {
+    if (session.phase !== 'ready' || !session.state.authenticated) return
+    const url = new URL(window.location.href)
+    if (url.searchParams.get('settings') !== 'profile') return
+    url.searchParams.delete('settings')
+    window.history.replaceState(window.history.state, '', `${url.pathname}${url.search}${url.hash}`)
+    onOpenProfile(session.state.account)
+  }, [session, onOpenProfile])
 
   async function logout() {
     if (loggingOut) return
@@ -69,13 +86,21 @@ export function NavAuthControls() {
   }
 
   const account = session.state.account
-  const label = account.username || account.email || (english ? 'Signed in' : '已登录')
-  return <details className="nav-account relative">
+  const label = account.display_name || 'weelume'
+  return <details ref={menuRef} className="nav-account relative">
     <summary data-button-variant="outline" className={buttonClassName('outline')} title={label} aria-label={`${english ? 'Signed in as' : '已登录：'} ${label}`}>
+      <AccountAvatar avatarUrl={account.avatar_url} />
       <span className="nav-account-label">{label}</span><span aria-hidden="true">⌄</span>
     </summary>
     <div className="nav-account-panel absolute right-0 top-full z-40 mt-2 min-w-44 rounded-card border border-rule bg-paper-raised p-4 shadow-soft">
       <p className="break-all text-sm text-graphite">{label}</p>
+      <button type="button" aria-haspopup="dialog" className="mt-3 block w-full rounded-btn border border-rule px-3 py-2 text-left text-sm text-graphite transition-colors hover:bg-graphite/[0.04]" onClick={() => {
+        if (menuRef.current) {
+          menuRef.current.open = false
+          menuRef.current.querySelector('summary')?.focus()
+        }
+        onOpenProfile(account)
+      }}>{english ? 'Personal information' : '个人信息'}</button>
       {account.email && <p className="mt-1 break-all text-xs text-graphite-soft">{account.email}</p>}
       <Button variant="outline" className="mt-3 w-full disabled:opacity-50" onClick={logout} disabled={loggingOut}>{loggingOut ? (english ? 'Signing out…' : '退出中…') : (english ? 'Sign out' : '退出登录')}</Button>
       {logoutError && <p role="alert" className="mt-2 text-xs text-red-700">{logoutError}</p>}
