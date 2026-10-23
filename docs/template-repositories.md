@@ -1,9 +1,10 @@
 # 新版独立模板 Git 地址与推送记录
 
-更新时间：2026年10月23日（Asia/Shanghai）。累计 22 套独立模板已推送源码并核对远端提交。各仓实际校验时点、完整 SHA 和历史验收状态保留在 [template-repositories.json](template-repositories.json)，并非此次重新验收所有模板。保留原有分支，不强制推送或覆盖远端历史。
+更新时间：2026年10月23日（Asia/Shanghai）。累计 23 套独立模板已推送源码并核对远端提交。各仓实际校验时点、完整 SHA 和历史验收状态保留在 [template-repositories.json](template-repositories.json)，并非此次重新验收所有模板。保留原有分支，不强制推送或覆盖远端历史。
 
 | 模板 | Git 地址 | 分支 | 已核对提交 |
 | --- | --- | --- | --- |
+| drip | [drip-template](https://github.com/weelume/drip-template) | `main` | [c1a48e1f3f66](https://github.com/weelume/drip-template/commit/c1a48e1f3f66723944a6578f834303a60bba33ed) |
 | cerno | [cerno-template](https://github.com/weelume/cerno-template) | `main` | [c33f4ef5b300](https://github.com/weelume/cerno-template/commit/c33f4ef5b3009df38c5f6d68a6223f67f4c0997f) |
 | conicorn | [conicorn-template](https://github.com/weelume/conicorn-template) | `main` | [071ec137aad0](https://github.com/weelume/conicorn-template/commit/071ec137aad0575cc3ec6159697462d4c65f6a00) |
 | deformo | [deformo-template](https://github.com/weelume/deformo-template) | `main` | [814a874794b8](https://github.com/weelume/deformo-template/commit/814a874794b899df1f1d6c3f92f76e8fd9765817) |
@@ -24,7 +25,7 @@
 | studiothink | [studiothink-template](https://github.com/weelume/studiothink-template) | `main` | [532b4173b98d](https://github.com/weelume/studiothink-template/commit/532b4173b98da1fe87ea2596ce15c5b1fd4b7585) |
 | tabfolio | [tabfolio-template](https://github.com/weelume/tabfolio-template) | `main` | [2055eb9ecbb6](https://github.com/weelume/tabfolio-template/commit/2055eb9ecbb630003a5b820b0e75351031888334) |
 | unseen | [unseen-template](https://github.com/weelume/unseen-template) | `main` | [c9f996f65538](https://github.com/weelume/unseen-template/commit/c9f996f65538d02d6722ceb64403785e64dea8b2) |
-| artemis | [artemis-template](https://github.com/weelume/artemis-template) | `main` | [baa54cb0733f](https://github.com/weelume/artemis-template/commit/baa54cb0733fb6888814bd080c8d11c6559f9ad1) |
+| artemis | [artemis-template](https://github.com/weelume/artemis-template) | `main` | [f7af36aa6e11](https://github.com/weelume/artemis-template/commit/f7af36aa6e11296fee433d2910a0dc209be6e77d) |
 
 地址同步至各独立工程 .tpl/template.json 与主站 gitUrl。Lunera、Noirei 上一批完成独立 Linux 类型、lint、测试、构建以及 304 个双语视口组合、13 项交互验收；协议报告与源码摘要一致。上一批主站迁移验证见 [lunera-noirei.md](template-migrations/lunera-noirei.md)。
 
@@ -43,3 +44,12 @@
 
 
 Artemis（2026-10-23）：独立模板 15 页、30 条语言路由，120 组视口组合、13 项交互及 12 张截图通过；本地 WSL 类型、lint、3 项合同测试和生产构建通过。完整交付见 [artemis-template-delivery.md](artemis-template-delivery.md)。未部署主站或公开市场上架。
+
+
+## Graybeam（2026-10-23 新增）
+
+| 模板 | Git 地址 | 分支 | 已核对提交 |
+| --- | --- | --- | --- |
+| graybeam | [graybeam-template](https://github.com/weelume/graybeam-template) | main | [cfde40260b7c](https://github.com/weelume/graybeam-template/commit/cfde40260b7c2c9428baebd0a455bd44a8ad3e3b) |
+
+已推送且远端 main 与本地 SHA 一致。独立类型、ESLint、2 项合同测试、本地 WSL 生产构建、58 条生产路由、232 组浏览器视口及严格协议验收通过，源码摘要匹配。详见 [graybeam-template-delivery.md](graybeam-template-delivery.md)。主站未部署，模板未公开上架，图片商业授权未核实。

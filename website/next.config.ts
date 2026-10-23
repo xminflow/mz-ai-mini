@@ -27,7 +27,7 @@ const config: NextConfig = {
   distDir: process.env.WEBSITE_BUILD_DIR ?? '.next',
   output: 'standalone',
   outputFileTracingRoot: resolve(process.cwd()),
-  transpilePackages: ['deformo-template', 'uiuxfolio-template', 'latte-template', 'cerno-template', 'foldex-template', 'souma-template', 'conicorn-template', 'grovia-template', 'furnexa-template', 'mondragon-template', 'lunera-template', 'noirei-template', 'hellomonday-template', 'liubai-template', 'nubo-template', 'recueil-template', 'studiothink-template', 'tabfolio-template', 'unseen-template', 'tomasfolio-template', 'artemis-template'],
+  transpilePackages: ['deformo-template', 'uiuxfolio-template', 'latte-template', 'cerno-template', 'foldex-template', 'souma-template', 'conicorn-template', 'grovia-template', 'furnexa-template', 'mondragon-template', 'lunera-template', 'noirei-template', 'hellomonday-template', 'liubai-template', 'nubo-template', 'recueil-template', 'studiothink-template', 'tabfolio-template', 'unseen-template', 'tomasfolio-template', 'artemis-template', 'graybeam-template', 'drip-template'],
   env: {
     NEXT_PUBLIC_API_BASE_URL: API_PREFIX,
   },
@@ -58,7 +58,7 @@ export default function nextConfig(phase: string): NextConfig {
   // 本地路径仅用于 dev；生产构建一律读取锁定的随仓模板运行包。
   if (phase !== PHASE_DEVELOPMENT_SERVER) return config
   const aliases: Record<string, string> = {}
-  for (const id of ['deformo', 'uiuxfolio', 'latte', 'cerno', 'foldex', 'souma', 'furnexa', 'mondragon', 'conicorn', 'grovia', 'lunera', 'noirei', 'hellomonday', 'liubai', 'nubo', 'recueil', 'studiothink', 'tabfolio', 'unseen', 'tomasfolio', 'artemis']) {
+  for (const id of ['deformo', 'uiuxfolio', 'latte', 'cerno', 'foldex', 'souma', 'furnexa', 'mondragon', 'conicorn', 'grovia', 'lunera', 'noirei', 'hellomonday', 'liubai', 'nubo', 'recueil', 'studiothink', 'tabfolio', 'unseen', 'tomasfolio', 'artemis', 'graybeam', 'drip']) {
     const localFile = resolve(id + '.local')
     if (!existsSync(localFile)) continue
     const { source } = JSON.parse(readFileSync(localFile, 'utf8')) as { source: string }

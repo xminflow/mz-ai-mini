@@ -1,0 +1,8 @@
+{
+  "name": "drip-template",
+  "version": "1.0.0",
+  "archive": "vendor/drip-template-1.0.0-00a0704bb381.tgz",
+  "sha256": "00a0704bb3815efab799e6af78f5222d731a7a58c579be88ca768f03e58d18e0",
+  "sourceCommit": "c1a48e1f3f66723944a6578f834303a60bba33ed",
+  "sourceDirty": false
+}

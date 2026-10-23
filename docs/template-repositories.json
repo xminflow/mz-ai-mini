@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-23T02:18:01.823Z",
+  "updatedAt": "2026-10-23T05:06:49.587Z",
   "scope": "全部新版独立模板；不含协议工具工程和主站仓库",
   "repositories": [
     {
@@ -864,11 +864,11 @@
       "id": "artemis",
       "gitUrl": "https://github.com/weelume/artemis-template",
       "branch": "main",
-      "commit": "baa54cb0733fb6888814bd080c8d11c6559f9ad1",
-      "remoteCommit": "baa54cb0733fb6888814bd080c8d11c6559f9ad1",
+      "commit": "f7af36aa6e11296fee433d2910a0dc209be6e77d",
+      "remoteCommit": "f7af36aa6e11296fee433d2910a0dc209be6e77d",
       "pushed": true,
       "clean": true,
-      "verifiedAt": "2026-10-23T02:18:01.823Z",
+      "verifiedAt": "2026-10-23T05:06:49.587Z",
       "localPath": "D:/code/code-tpl/artemis-template",
       "metadataPath": ".tpl/template.json",
       "hostMetadataPath": "website/src/features/site-templates/catalog/artemis/weelume.tsx",
@@ -903,10 +903,110 @@
         }
       ],
       "browserVerification": {
-        "pageCombinations": 120,
-        "interactions": 13,
+        "pageCombinations": 29,
+        "interactions": 9,
         "errors": 0,
-        "scope": "15 页 × 中英文 × 1440/834/390/320；12 张精确尺寸真实截图。"
+        "scope": "1.0.2 补齐原站动效与 4 段视频；29 组页面检查与时间采样、拖拽、FAQ、手机滚动验证；12 张截图更新。",
+        "hostRoutes": 30,
+        "hostBuild": "passed (local WSL Linux filesystem)"
+      }
+    },
+    {
+      "id": "drip",
+      "gitUrl": "https://github.com/weelume/drip-template",
+      "branch": "main",
+      "commit": "c1a48e1f3f66723944a6578f834303a60bba33ed",
+      "remoteCommit": "c1a48e1f3f66723944a6578f834303a60bba33ed",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-23T04:29:56.570Z",
+      "localPath": "D:/code/code-tpl/drip-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/drip/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ],
+      "browserVerification": {
+        "pageCombinations": 8,
+        "interactions": 4,
+        "errors": 0,
+        "scope": "九章节；双语 × 1440/834/390/320；三端四章节截图；语言、菜单与展示下载。"
+      }
+    },
+    {
+      "id": "graybeam",
+      "gitUrl": "https://github.com/weelume/graybeam-template",
+      "branch": "main",
+      "commit": "cfde40260b7c2c9428baebd0a455bd44a8ad3e3b",
+      "remoteCommit": "cfde40260b7c2c9428baebd0a455bd44a8ad3e3b",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-23T05:02:59.819Z",
+      "localPath": "D:/code/code-tpl/graybeam-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/graybeam/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ],
+      "browserVerification": {
+        "pageCombinations": 232,
+        "interactions": 11,
+        "errors": 0,
+        "scope": "29 页 × 中英文 × 1440/834/390/320；三端各四张真实截图；语言、筛选、表单、FAQ、图片对比与弹窗。"
       }
     }
   ],

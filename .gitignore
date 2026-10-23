@@ -176,3 +176,11 @@ ua-agent/checkpoints/
 # Artemis 本地源码映射与包生成素材
 /website/artemis.local
 /website/public/templates/artemis/
+
+# Drip 本地源码映射与包生成素材
+/website/drip.local
+/website/public/templates/drip/
+
+# Graybeam 本地源码映射与包生成素材
+/website/graybeam.local
+/website/public/templates/graybeam/

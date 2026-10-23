@@ -189,12 +189,30 @@
     "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/tomasfolio/1.0.0-3dc2514a3b5385e3e7321b600a2789cdeb11ebd4/cdf7287965dcf2cf31b4d0258a09c719319e05f2532bae42dcf4c89654f71905.zip"
   },
   "artemis": {
+    "version": "1.0.2",
+    "sourceCommit": "f7af36aa6e11296fee433d2910a0dc209be6e77d",
+    "sha256": "d29e009ff3e03f3f41912abf9cef78b7bdd656d91f75c804e3c38592ab280a04",
+    "size": 21551447,
+    "file": "artemis-1.0.2-f7af36aa6e11296fee433d2910a0dc209be6e77d.zip",
+    "snapshotSha256": "0e514c0f817689bee08be1cf52238b82bd721630f67e5538c97ff2565b766c2d",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/artemis/1.0.2-f7af36aa6e11296fee433d2910a0dc209be6e77d/d29e009ff3e03f3f41912abf9cef78b7bdd656d91f75c804e3c38592ab280a04.zip"
+  },
+  "drip": {
     "version": "1.0.0",
-    "sourceCommit": "baa54cb0733fb6888814bd080c8d11c6559f9ad1",
-    "sha256": "c87b47ac486813390a366cc286a064e2cc8b79c4ca63c3e80ae0c5ac46fa448e",
-    "size": 20464663,
-    "file": "artemis-1.0.0-baa54cb0733fb6888814bd080c8d11c6559f9ad1.zip",
-    "snapshotSha256": "def4922ebed202652c52f068604fabbc7fb7504a50eab6a90a72becea98f7735",
-    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/artemis/1.0.0-baa54cb0733fb6888814bd080c8d11c6559f9ad1/c87b47ac486813390a366cc286a064e2cc8b79c4ca63c3e80ae0c5ac46fa448e.zip"
+    "sourceCommit": "c1a48e1f3f66723944a6578f834303a60bba33ed",
+    "sha256": "a2623a25f57927166806f1cdcbd80f401f1c8d449826454c102dde5d0f621cd4",
+    "size": 14666136,
+    "file": "drip-1.0.0-c1a48e1f3f66723944a6578f834303a60bba33ed.zip",
+    "snapshotSha256": "00a0704bb3815efab799e6af78f5222d731a7a58c579be88ca768f03e58d18e0",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/drip/1.0.0-c1a48e1f3f66723944a6578f834303a60bba33ed/a2623a25f57927166806f1cdcbd80f401f1c8d449826454c102dde5d0f621cd4.zip"
+  },
+  "graybeam": {
+    "version": "1.0.0",
+    "sourceCommit": "cfde40260b7c2c9428baebd0a455bd44a8ad3e3b",
+    "sha256": "f8b14003322856ea10c0f6b74e4cd7897368e71230d2171075bf1b52be5d1649",
+    "size": 28107386,
+    "file": "graybeam-1.0.0-cfde40260b7c2c9428baebd0a455bd44a8ad3e3b.zip",
+    "snapshotSha256": "67813fb3b4e8902825f90bc70ac68bfe495ece37cb556510df2fa2047f7c3ee5",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/graybeam/1.0.0-cfde40260b7c2c9428baebd0a455bd44a8ad3e3b/f8b14003322856ea10c0f6b74e4cd7897368e71230d2171075bf1b52be5d1649.zip"
   }
 }
