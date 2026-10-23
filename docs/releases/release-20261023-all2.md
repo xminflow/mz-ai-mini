@@ -14,4 +14,10 @@
 
 ## 结果
 
-发布进行中，完成后补记源码提交、产物摘要与命令结果。过程记录保存在 `artifacts/releases/release-20261023-all2/`。
+源码已提交并推送 `origin/dev`，提交 `2ebb93b7749fb1d03813612cc5e41e5d3f3cbf84`。本地 WSL 已完成生产编译与构建内置检查，但 Docker 在复制 standalone 产物阶段停滞，尚未生成最终镜像或发布包，尚未上传新镜像、切换生产服务；生产仍为 `release-20261023-all`。
+
+排查发现 Windows D 盘只剩约 18 MB。删除已完成解包、可从 Git 重建的两份临时 source.tar，并将本代理此前生成的 all/profile/full 三份旧 images.tar.gz 移到 `%TEMP%/weelume-release-archives-20261023/` 保留，释放约 4.5 GB。没有删除业务源码、镜像、数据库或生产备份。
+
+释放空间后 WSL 仍无响应，正常 terminate、shutdown 及新启动命令均未返回；重启 WslService 被 Windows 权限拒绝，需要用户在管理员 PowerShell 恢复该服务，必要时重启电脑。没有改为服务器构建。恢复后继续使用已冻结并解包的同一源码目录构建，最终产物就绪后才切换线上。
+
+本次未执行额外测试、接口或交互验收。过程记录保存在 `artifacts/releases/release-20261023-all2/`。
