@@ -29,6 +29,9 @@ importers:
       foldex-template:
         specifier: file:./vendor/foldex-template-1.0.0-515096413b7f.tgz
         version: file:vendor/foldex-template-1.0.0-515096413b7f.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      folioxa-template:
+        specifier: file:./vendor/folioxa-template-1.0.0-70add1d628ad.tgz
+        version: file:vendor/folioxa-template-1.0.0-70add1d628ad.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       framer-motion:
         specifier: ^12.38.0
         version: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -44,6 +47,9 @@ importers:
       hellomonday-template:
         specifier: file:./vendor/hellomonday-template-1.0.0-63ae27038145.tgz
         version: file:vendor/hellomonday-template-1.0.0-63ae27038145.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      ilse-moreno-template:
+        specifier: file:./vendor/ilse-moreno-template-1.0.0-6e658f76f40f.tgz
+        version: file:vendor/ilse-moreno-template-1.0.0-6e658f76f40f.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       latte-template:
         specifier: file:./vendor/latte-template-1.0.0-0e9917ea1f70.tgz
         version: file:vendor/latte-template-1.0.0-0e9917ea1f70.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -1170,6 +1176,7 @@ packages:
   eslint@9.39.4:
     resolution: {integrity: sha512-XoMjdBOwe/esVgEvLmNsD3IRHkm7fbKIUGvrleloJXUZgDHig2IPWNniv+GwjyJXzuNqVjlr5+4yVUZjycJwfQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -1243,6 +1250,15 @@ packages:
 
   foldex-template@file:vendor/foldex-template-1.0.0-515096413b7f.tgz:
     resolution: {integrity: sha512-4VNCPkdeTlDbQaC5948Y5ZqezWTuX/jRpIX9MjLkf/wzFWG1CduXA5oLyU9g6KxHzKSlXS+mUHu7btWUFZDsmA==, tarball: file:vendor/foldex-template-1.0.0-515096413b7f.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
+  folioxa-template@file:vendor/folioxa-template-1.0.0-70add1d628ad.tgz:
+    resolution: {integrity: sha512-IiAgNWelwkMxrWp0USPB2Csh++R6hgTxYb+2vXzU6LILjuQI14ndV6VEfcyHjBbl3ol27YsYvTqAVboVddILrQ==, tarball: file:vendor/folioxa-template-1.0.0-70add1d628ad.tgz}
     version: 1.0.0
     peerDependencies:
       framer-motion: ^12.38.0
@@ -1404,6 +1420,15 @@ packages:
   ignore@7.0.5:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
+
+  ilse-moreno-template@file:vendor/ilse-moreno-template-1.0.0-6e658f76f40f.tgz:
+    resolution: {integrity: sha512-N6uOQPxPTN2JHTQLv5VTwHxCmOCKseJmGsxcF3u6C9v+i3J/B3Fs+9u5o94c6v50JTI8oPl2VjyZ5DbpOnrX/g==, tarball: file:vendor/ilse-moreno-template-1.0.0-6e658f76f40f.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
@@ -3487,6 +3512,13 @@ snapshots:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
+  folioxa-template@file:vendor/folioxa-template-1.0.0-70add1d628ad.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   for-each@0.3.5:
     dependencies:
       is-callable: 1.2.7
@@ -3625,6 +3657,13 @@ snapshots:
   ignore@5.3.2: {}
 
   ignore@7.0.5: {}
+
+  ilse-moreno-template@file:vendor/ilse-moreno-template-1.0.0-6e658f76f40f.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
 
   import-fresh@3.3.1:
     dependencies:

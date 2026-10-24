@@ -214,5 +214,23 @@
     "file": "graybeam-1.0.0-cfde40260b7c2c9428baebd0a455bd44a8ad3e3b.zip",
     "snapshotSha256": "67813fb3b4e8902825f90bc70ac68bfe495ece37cb556510df2fa2047f7c3ee5",
     "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/graybeam/1.0.0-cfde40260b7c2c9428baebd0a455bd44a8ad3e3b/f8b14003322856ea10c0f6b74e4cd7897368e71230d2171075bf1b52be5d1649.zip"
+  },
+  "folioxa": {
+    "version": "1.0.0",
+    "sourceCommit": "242e687dd2b7b18c96579aaaccfb3b8adf88d57f",
+    "sha256": "1d701dcfb2a9660338903a7240a89a4d308725d6ddf44880dc5c149a3d4f3167",
+    "size": 10311157,
+    "file": "folioxa-1.0.0-242e687dd2b7b18c96579aaaccfb3b8adf88d57f.zip",
+    "snapshotSha256": "70add1d628adcf385ed20eb5d2d75183dfaa4e77c00d5b1dc91523e9be7b5649",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/folioxa/1.0.0-242e687dd2b7b18c96579aaaccfb3b8adf88d57f/1d701dcfb2a9660338903a7240a89a4d308725d6ddf44880dc5c149a3d4f3167.zip"
+  },
+  "ilse-moreno": {
+    "version": "1.0.0",
+    "sourceCommit": "eed5b7ee8fcfccf9a2ef1af8c4202bf3a39bfa94",
+    "sha256": "ffdcbecb12e11077cd8c9f9438ab84d310111e4770179eb35c869f3254f006a8",
+    "size": 17119641,
+    "file": "ilse-moreno-1.0.0-eed5b7ee8fcfccf9a2ef1af8c4202bf3a39bfa94.zip",
+    "snapshotSha256": "6e658f76f40f2a1c13d3b285a4f3e2538f5f5463b99e7f67deb67bbec67747dc",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/ilse-moreno/1.0.0-eed5b7ee8fcfccf9a2ef1af8c4202bf3a39bfa94/ffdcbecb12e11077cd8c9f9438ab84d310111e4770179eb35c869f3254f006a8.zip"
   }
 }

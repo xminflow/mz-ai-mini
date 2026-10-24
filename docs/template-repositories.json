@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-23T05:06:49.587Z",
+  "updatedAt": "2026-10-23T13:00:31.193Z",
   "scope": "全部新版独立模板；不含协议工具工程和主站仓库",
   "repositories": [
     {
@@ -1007,6 +1007,104 @@
         "interactions": 11,
         "errors": 0,
         "scope": "29 页 × 中英文 × 1440/834/390/320；三端各四张真实截图；语言、筛选、表单、FAQ、图片对比与弹窗。"
+      }
+    },
+    {
+      "id": "folioxa",
+      "gitUrl": "https://github.com/weelume/folioxa-template",
+      "branch": "main",
+      "commit": "242e687dd2b7b18c96579aaaccfb3b8adf88d57f",
+      "remoteCommit": "242e687dd2b7b18c96579aaaccfb3b8adf88d57f",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-23T13:48:05.484Z",
+      "localPath": "D:/code/code-tpl/folioxa-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/folioxa/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ],
+      "limitations": [
+        "完整原站动效逐项对照未完成；图片中的英文未全部汉化；素材商业再分发授权待确认。"
+      ]
+    },
+    {
+      "id": "ilse-moreno",
+      "gitUrl": "https://github.com/weelume/ilse-moreno-template",
+      "branch": "main",
+      "commit": "eed5b7ee8fcfccf9a2ef1af8c4202bf3a39bfa94",
+      "remoteCommit": "eed5b7ee8fcfccf9a2ef1af8c4202bf3a39bfa94",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-23T17:18:29.252Z",
+      "localPath": "D:/code/code-tpl/ilse-moreno-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/ilse-moreno/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "publicationStatus": "source-zip-published",
+      "limitations": [
+        "原站全页面三端动效逐帧对照及系统减少动态效果设置切换未完成。",
+        "原站素材商业与再分发许可未确认；listed=false。"
+      ],
+      "sourceZipUrl": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/ilse-moreno/1.0.0-eed5b7ee8fcfccf9a2ef1af8c4202bf3a39bfa94/ffdcbecb12e11077cd8c9f9438ab84d310111e4770179eb35c869f3254f006a8.zip",
+      "sourceZipSha256": "ffdcbecb12e11077cd8c9f9438ab84d310111e4770179eb35c869f3254f006a8",
+      "hostBuild": {
+        "status": "passed",
+        "location": "/home/xmin/workspace/ilse-moreno-20261023/website",
+        "buildId": "NWdccSq9uLOGxYPIbHCGB",
+        "checkedAt": "2026-10-23T17:21:15.706Z"
       }
     }
   ],

@@ -44,7 +44,9 @@
     "tomasfolio-template": "file:./vendor/tomasfolio-template-1.0.0-34e83906080a.tgz",
     "artemis-template": "file:./vendor/artemis-template-1.0.2-0e514c0f8176.tgz",
     "drip-template": "file:./vendor/drip-template-1.0.0-00a0704bb381.tgz",
-    "graybeam-template": "file:./vendor/graybeam-template-1.0.0-67813fb3b4e8.tgz"
+    "graybeam-template": "file:./vendor/graybeam-template-1.0.0-67813fb3b4e8.tgz",
+    "ilse-moreno-template": "file:./vendor/ilse-moreno-template-1.0.0-6e658f76f40f.tgz",
+    "folioxa-template": "file:./vendor/folioxa-template-1.0.0-70add1d628ad.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

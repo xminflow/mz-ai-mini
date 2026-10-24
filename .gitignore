@@ -184,3 +184,9 @@ ua-agent/checkpoints/
 # Graybeam 本地源码映射与包生成素材
 /website/graybeam.local
 /website/public/templates/graybeam/
+
+# Folioxa / Ilse Moreno 本地映射与共享包生成素材
+/website/folioxa.local
+/website/ilse-moreno.local
+/website/public/templates/folioxa/
+/website/public/templates/ilse-moreno/

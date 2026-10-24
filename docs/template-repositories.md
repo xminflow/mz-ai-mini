@@ -1,9 +1,10 @@
 # 新版独立模板 Git 地址与推送记录
 
-更新时间：2026年10月23日（Asia/Shanghai）。累计 23 套独立模板已推送源码并核对远端提交。各仓实际校验时点、完整 SHA 和历史验收状态保留在 [template-repositories.json](template-repositories.json)，并非此次重新验收所有模板。保留原有分支，不强制推送或覆盖远端历史。
+更新时间：2026年10月23日（Asia/Shanghai）。累计 25 套独立模板已推送源码并核对远端提交。各仓实际校验时点、完整 SHA 和历史验收状态保留在 [template-repositories.json](template-repositories.json)，并非此次重新验收所有模板。保留原有分支，不强制推送或覆盖远端历史。
 
 | 模板 | Git 地址 | 分支 | 已核对提交 |
 | --- | --- | --- | --- |
+| folioxa | [folioxa-template](https://github.com/weelume/folioxa-template) | `main` | [242e687dd2b7](https://github.com/weelume/folioxa-template/commit/242e687dd2b7b18c96579aaaccfb3b8adf88d57f) |
 | drip | [drip-template](https://github.com/weelume/drip-template) | `main` | [c1a48e1f3f66](https://github.com/weelume/drip-template/commit/c1a48e1f3f66723944a6578f834303a60bba33ed) |
 | cerno | [cerno-template](https://github.com/weelume/cerno-template) | `main` | [c33f4ef5b300](https://github.com/weelume/cerno-template/commit/c33f4ef5b3009df38c5f6d68a6223f67f4c0997f) |
 | conicorn | [conicorn-template](https://github.com/weelume/conicorn-template) | `main` | [071ec137aad0](https://github.com/weelume/conicorn-template/commit/071ec137aad0575cc3ec6159697462d4c65f6a00) |
@@ -53,3 +54,9 @@ Artemis（2026-10-23）：独立模板 15 页、30 条语言路由，120 组视�
 | graybeam | [graybeam-template](https://github.com/weelume/graybeam-template) | main | [cfde40260b7c](https://github.com/weelume/graybeam-template/commit/cfde40260b7c2c9428baebd0a455bd44a8ad3e3b) |
 
 已推送且远端 main 与本地 SHA 一致。独立类型、ESLint、2 项合同测试、本地 WSL 生产构建、58 条生产路由、232 组浏览器视口及严格协议验收通过，源码摘要匹配。详见 [graybeam-template-delivery.md](graybeam-template-delivery.md)。主站未部署，模板未公开上架，图片商业授权未核实。
+
+## Ilse Moreno（2026-10-24 公开源码交付）
+
+源码：[ilse-moreno-template](https://github.com/weelume/ilse-moreno-template)，分支 main，提交 `eed5b7ee8fcfccf9a2ef1af8c4202bf3a39bfa94`。已正常推送并核对远端 SHA，工作区干净。用户已明确授权公开仓库、源码推送和 COS ZIP。
+
+独立工程类型、Lint、4 项测试、本地 WSL 构建、18 条生产路径与 404、严格协议及源码摘要检查通过。完整动效对照未完成，素材权利未确认，保持未上架。源码 ZIP 和主站构建最终结果见 [交付记录](ilse-moreno-template-delivery.md)。
