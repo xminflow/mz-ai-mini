@@ -1,9 +1,10 @@
 # 新版独立模板 Git 地址与推送记录
 
-更新时间：2026年10月23日（Asia/Shanghai）。累计 25 套独立模板已推送源码并核对远端提交。各仓实际校验时点、完整 SHA 和历史验收状态保留在 [template-repositories.json](template-repositories.json)，并非此次重新验收所有模板。保留原有分支，不强制推送或覆盖远端历史。
+更新时间：2026年10月24日（Asia/Shanghai）。累计 28 套独立模板已推送源码并核对远端提交。各仓实际校验时点、完整 SHA 和历史验收状态保留在 [template-repositories.json](template-repositories.json)，并非此次重新验收所有模板。保留原有分支，不强制推送或覆盖远端历史。
 
 | 模板 | Git 地址 | 分支 | 已核对提交 |
 | --- | --- | --- | --- |
+| offersuite | [offersuite-template](https://github.com/weelume/offersuite-template) | `codex/offersuite` | [97c6acee40ed](https://github.com/weelume/offersuite-template/commit/97c6acee40ed5d10198c21ed8f5ac9f556667b81) |
 | folioxa | [folioxa-template](https://github.com/weelume/folioxa-template) | `main` | [242e687dd2b7](https://github.com/weelume/folioxa-template/commit/242e687dd2b7b18c96579aaaccfb3b8adf88d57f) |
 | drip | [drip-template](https://github.com/weelume/drip-template) | `main` | [c1a48e1f3f66](https://github.com/weelume/drip-template/commit/c1a48e1f3f66723944a6578f834303a60bba33ed) |
 | cerno | [cerno-template](https://github.com/weelume/cerno-template) | `main` | [c33f4ef5b300](https://github.com/weelume/cerno-template/commit/c33f4ef5b3009df38c5f6d68a6223f67f4c0997f) |
@@ -60,3 +61,30 @@ Artemis（2026-10-23）：独立模板 15 页、30 条语言路由，120 组视�
 源码：[ilse-moreno-template](https://github.com/weelume/ilse-moreno-template)，分支 main，提交 `eed5b7ee8fcfccf9a2ef1af8c4202bf3a39bfa94`。已正常推送并核对远端 SHA，工作区干净。用户已明确授权公开仓库、源码推送和 COS ZIP。
 
 独立工程类型、Lint、4 项测试、本地 WSL 构建、18 条生产路径与 404、严格协议及源码摘要检查通过。完整动效对照未完成，素材权利未确认，保持未上架。源码 ZIP 和主站构建最终结果见 [交付记录](ilse-moreno-template-delivery.md)。
+
+
+## Rescale（2026-10-24 新增）
+
+源码：[rescale-template](https://github.com/weelume/rescale-template)，main，提交 `42189255ab22f070794a25ddb48d089c1cda58e1`。已正常推送并核对远端 SHA；独立 WSL 类型、ESLint、3 项合同测试、生产构建和 20 条路由 / 404 / 90 项素材检查通过。80 组双语视口检查通过，12 张实际三端截图；完整原站动效精确对照尚未完成。交付记录见 [rescale-template-delivery.md](rescale-template-delivery.md)。
+
+## 2026-10-24 Portfolica 增量交付
+
+仅新增本模板记录，其他仓库状态未重验。
+
+| 模板 | Git 地址 | 分支 | 已核对提交 |
+| --- | --- | --- | --- |
+| portfolica | [portfolica-template](https://github.com/weelume/portfolica-template) | `main` | [36be1597cec7](https://github.com/weelume/portfolica-template/commit/36be1597cec7e3f00ccb56840411bd60eead8ef6) |
+
+独立合同检查与源码摘要一致；完整原站动效三端逐项验收未完成。固定包、主站接入及实际验证见 [交付记录](portfolica-template-delivery.md)。
+
+
+## Shelta（2026-10-24 新增）
+
+源码：[shelta-template](https://github.com/weelume/shelta-template)，main，提交 `39429e01130c34a588f85e260cf6df736edd959a`。已正常推送并核对远端 SHA，工作区干净。独立 WSL 类型、ESLint、3 项合同测试、生产构建和 66 条路由 / 404 / 182 项原件与网页素材巡检通过；12 张真实三端截图，补测 320px。完整动效精确比对未完成；未上架。后续结果见 [交付记录](shelta-template-delivery.md)。
+
+Shelta 最终源码 ZIP 已发布并通过匿名完整下载、SHA256 与 ZIP CRC 校验；主站已提交基线加 Shelta 增量的本地 WSL 生产构建及 66 条生产路径通过。当前完整工作区另受 Noter 未发布 ZIP 门禁影响。详见上述交付记录。
+
+
+## Noter（2026-10-25 补齐源码交付）
+
+源码：[noter-template](https://github.com/weelume/noter-template)，分支 `codex/noter`，提交 `5cbccf1bd2bf9acbf7bc875ef309f8eb7e74125a`。已推送并核对远端 SHA。补齐真实 Git 地址后，本地 WSL 类型、lint、3 项合同测试、生产构建和协议格式检查通过；stage 保持 scaffold，不声明完整视觉或动效验收通过。后续 ZIP 与主站发布结果见 [交付记录](noter-template-delivery.md) 和 [本次发布记录](releases/release-20261025-full.md)。

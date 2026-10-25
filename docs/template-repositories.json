@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-23T13:00:31.193Z",
+  "updatedAt": "2026-10-25T01:42:20.003Z",
   "scope": "全部新版独立模板；不含协议工具工程和主站仓库",
   "repositories": [
     {
@@ -1105,6 +1105,282 @@
         "location": "/home/xmin/workspace/ilse-moreno-20261023/website",
         "buildId": "NWdccSq9uLOGxYPIbHCGB",
         "checkedAt": "2026-10-23T17:21:15.706Z"
+      }
+    },
+    {
+      "id": "rescale",
+      "gitUrl": "https://github.com/weelume/rescale-template",
+      "branch": "main",
+      "commit": "42189255ab22f070794a25ddb48d089c1cda58e1",
+      "remoteCommit": "42189255ab22f070794a25ddb48d089c1cda58e1",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-24T11:23:26.320Z",
+      "localPath": "D:/code/code-tpl/rescale-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/rescale/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "limitations": [
+        "整站原站动效三端逐项逐时刻精确对照尚未完成",
+        "素材商用与再分发许可未确认，listed=false"
+      ],
+      "sourceZip": {
+        "version": "1.0.0",
+        "sourceCommit": "42189255ab22f070794a25ddb48d089c1cda58e1",
+        "sha256": "15a32034362e96cb64afaafbfa151183759bba26dcf64dab964686223cd758eb",
+        "size": 18075038,
+        "file": "rescale-1.0.0-42189255ab22f070794a25ddb48d089c1cda58e1.zip",
+        "snapshotSha256": "05698db9bc3eb32fee1dd045fc86bd9ab81a39a7c7ec11d1e5b7ff0f6e77489d",
+        "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/rescale/1.0.0-42189255ab22f070794a25ddb48d089c1cda58e1/15a32034362e96cb64afaafbfa151183759bba26dcf64dab964686223cd758eb.zip"
+      }
+    },
+    {
+      "id": "offersuite",
+      "gitUrl": "https://github.com/weelume/offersuite-template",
+      "branch": "codex/offersuite",
+      "commit": "97c6acee40ed5d10198c21ed8f5ac9f556667b81",
+      "remoteCommit": "97c6acee40ed5d10198c21ed8f5ac9f556667b81",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-24T12:03:23.584Z",
+      "localPath": "D:/code/code-tpl/offersuite-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/offersuite/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "sourceDigest": "e3d34e302ec72855871cf1ebeaf45741a559de05788a3c7c71ed00e34708c251",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "limitations": [
+        "原站动效逐项比对尚未完成",
+        "后续浏览器导航被安全策略中止，详见独立模板报告",
+        "源码素材商业与再分发许可尚未核实"
+      ],
+      "sourceZip": {
+        "version": "1.0.0",
+        "sourceCommit": "97c6acee40ed5d10198c21ed8f5ac9f556667b81",
+        "sha256": "d5febec103f768ff47775fb2f5cec8a1da887271e509e39af295e69bafca9f89",
+        "size": 69416682,
+        "file": "offersuite-1.0.0-97c6acee40ed5d10198c21ed8f5ac9f556667b81.zip",
+        "snapshotSha256": "dc905948e73337e5bf18b789b7cbeccf2f48faa9242b47172436ca2e241b1157",
+        "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/offersuite/1.0.0-97c6acee40ed5d10198c21ed8f5ac9f556667b81/d5febec103f768ff47775fb2f5cec8a1da887271e509e39af295e69bafca9f89.zip"
+      }
+    },
+    {
+      "id": "portfolica",
+      "gitUrl": "https://github.com/weelume/portfolica-template",
+      "branch": "main",
+      "commit": "36be1597cec7e3f00ccb56840411bd60eead8ef6",
+      "remoteCommit": "36be1597cec7e3f00ccb56840411bd60eead8ef6",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-24T11:15:15.542Z",
+      "localPath": "D:/code/code-tpl/portfolica-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/portfolica/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true,
+        "scope": "合同检查；完整原站动效三端对照未完成"
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "limitations": [
+        "完整原站动效逐项逐时刻三端对照尚未完成",
+        "原站惯性滚动尚未接入，新增依赖批准待用户回复",
+        "素材商业再分发权未确认，listed=false",
+        "源码ZIP未发布，主站正式构建被发布门禁阻止"
+      ],
+      "sourceZip": {
+        "version": "1.0.0",
+        "sourceCommit": "36be1597cec7e3f00ccb56840411bd60eead8ef6",
+        "sha256": "1bec2d270fe2b54be3868012e68513ec58a6b2a6970c266b84a01ee95729cd4d",
+        "size": 13101604,
+        "file": "portfolica-1.0.0-36be1597cec7e3f00ccb56840411bd60eead8ef6.zip",
+        "snapshotSha256": "761c0087e4cb9fd8232c9cf324ce1f0e70e7c595a5ec414316f58b97c5e08095",
+        "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/portfolica/1.0.0-36be1597cec7e3f00ccb56840411bd60eead8ef6/1bec2d270fe2b54be3868012e68513ec58a6b2a6970c266b84a01ee95729cd4d.zip"
+      }
+    },
+    {
+      "id": "shelta",
+      "gitUrl": "https://github.com/weelume/shelta-template",
+      "branch": "main",
+      "commit": "39429e01130c34a588f85e260cf6df736edd959a",
+      "remoteCommit": "39429e01130c34a588f85e260cf6df736edd959a",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-24T11:54:26.145Z",
+      "localPath": "D:/code/code-tpl/shelta-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/shelta/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true,
+        "scope": "自动检查及已记录交互抽查通过；全站三端逐帧动效对照尚未完成"
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "publicationStatus": "source-git-and-zip-published",
+      "limitations": [
+        "原站全部页面三端逐帧动效比对与减少动态效果实测未完成。",
+        "参考素材再分发许可未逐项核实；listed=false。"
+      ],
+      "snapshotSha256": "78e3129ff581772865bfe1c0a190d839b7cf992d95c29280d529e34650f86d2b",
+      "sourceZip": {
+        "version": "1.0.0",
+        "sourceCommit": "39429e01130c34a588f85e260cf6df736edd959a",
+        "sha256": "885a87c44a176d5156270baacdda51eccc48c908a45c19f8b4306b660117d19e",
+        "size": 86125168,
+        "file": "shelta-1.0.0-39429e01130c34a588f85e260cf6df736edd959a.zip",
+        "snapshotSha256": "78e3129ff581772865bfe1c0a190d839b7cf992d95c29280d529e34650f86d2b",
+        "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/shelta/1.0.0-39429e01130c34a588f85e260cf6df736edd959a/885a87c44a176d5156270baacdda51eccc48c908a45c19f8b4306b660117d19e.zip"
+      },
+      "hostVerification": {
+        "state": "passed",
+        "scope": "已提交主站基线加 Shelta 增量；不包含其他任务未提交模板",
+        "buildLocation": "/home/xmin/workspace/shelta-20261024/baseline/website",
+        "buildId": "KrRS6FRK-8Yrlgrg-LDsE",
+        "routes": 66,
+        "unknownStatus": 404
+      }
+    },
+    {
+      "id": "noter",
+      "gitUrl": "https://github.com/weelume/noter-template",
+      "branch": "codex/noter",
+      "commit": "5cbccf1bd2bf9acbf7bc875ef309f8eb7e74125a",
+      "remoteCommit": "5cbccf1bd2bf9acbf7bc875ef309f8eb7e74125a",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-25T01:42:19.998Z",
+      "localPath": "D:/code/code-tpl/noter-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/noter/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "scaffold",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "incomplete",
+        "claimedStatus": null,
+        "sourceMatches": false
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "limitations": [
+        "完整原站三端逐帧动效对照未完成",
+        "素材商业再分发许可未确认，保持未上架"
+      ],
+      "sourceZip": {
+        "version": "1.0.0",
+        "sourceCommit": "5cbccf1bd2bf9acbf7bc875ef309f8eb7e74125a",
+        "sha256": "5ef939d01e8bd51278d161f357ca555e643e3d0e18a83efbdccc13e67c1e3878",
+        "size": 8565626,
+        "file": "noter-1.0.0-5cbccf1bd2bf9acbf7bc875ef309f8eb7e74125a.zip",
+        "snapshotSha256": "1ddab3502752e8e264f514f4cbf25108c628dbc04ccdf323e5491a2c5399eed4",
+        "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/noter/1.0.0-5cbccf1bd2bf9acbf7bc875ef309f8eb7e74125a/5ef939d01e8bd51278d161f357ca555e643e3d0e18a83efbdccc13e67c1e3878.zip"
       }
     }
   ],

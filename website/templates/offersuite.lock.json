@@ -1,0 +1,8 @@
+{
+  "name": "offersuite-template",
+  "version": "1.0.0",
+  "archive": "vendor/offersuite-template-1.0.0-dc905948e733.tgz",
+  "sha256": "dc905948e73337e5bf18b789b7cbeccf2f48faa9242b47172436ca2e241b1157",
+  "sourceCommit": "97c6acee40ed5d10198c21ed8f5ac9f556667b81",
+  "sourceDirty": false
+}

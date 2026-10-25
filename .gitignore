@@ -190,3 +190,24 @@ ua-agent/checkpoints/
 /website/ilse-moreno.local
 /website/public/templates/folioxa/
 /website/public/templates/ilse-moreno/
+
+# Shelta 本地源码映射与共享包生成素材
+/website/shelta.local
+/website/public/templates/shelta/
+/.work/shelta/
+
+# Rescale 独立源码映射与共享包生成素材
+/website/rescale.local
+/website/public/templates/rescale/
+
+/website/noter.local
+
+/website/public/templates/noter/
+
+/website/offersuite.local
+
+/website/public/templates/offersuite/
+
+/website/portfolica.local
+
+/website/public/templates/portfolica/

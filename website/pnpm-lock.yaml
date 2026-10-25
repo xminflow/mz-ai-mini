@@ -68,9 +68,18 @@ importers:
       noirei-template:
         specifier: file:./vendor/noirei-template-1.0.0-12aa379d6f21.tgz
         version: file:vendor/noirei-template-1.0.0-12aa379d6f21.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      noter-template:
+        specifier: file:./vendor/noter-template-1.0.0-1ddab3502752.tgz
+        version: file:vendor/noter-template-1.0.0-1ddab3502752.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       nubo-template:
         specifier: file:./vendor/nubo-template-1.0.0-6c34f152cd30.tgz
         version: file:vendor/nubo-template-1.0.0-6c34f152cd30.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      offersuite-template:
+        specifier: file:./vendor/offersuite-template-1.0.0-dc905948e733.tgz
+        version: file:vendor/offersuite-template-1.0.0-dc905948e733.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      portfolica-template:
+        specifier: file:./vendor/portfolica-template-1.0.0-761c0087e4cb.tgz
+        version: file:vendor/portfolica-template-1.0.0-761c0087e4cb.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       qrcode.react:
         specifier: ^4.2.0
         version: 4.2.0(react@19.2.5)
@@ -83,6 +92,12 @@ importers:
       recueil-template:
         specifier: file:./vendor/recueil-template-1.0.0-cd550dcf0cda.tgz
         version: file:vendor/recueil-template-1.0.0-cd550dcf0cda.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      rescale-template:
+        specifier: file:./vendor/rescale-template-1.0.0-05698db9bc3e.tgz
+        version: file:vendor/rescale-template-1.0.0-05698db9bc3e.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      shelta-template:
+        specifier: file:./vendor/shelta-template-1.0.0-78e3129ff581.tgz
+        version: file:vendor/shelta-template-1.0.0-78e3129ff581.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       souma-template:
         specifier: file:./vendor/souma-template-1.0.0-833f12922252.tgz
         version: file:vendor/souma-template-1.0.0-833f12922252.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -1811,6 +1826,15 @@ packages:
       react: ^19.2.4
       react-dom: ^19.2.4
 
+  noter-template@file:vendor/noter-template-1.0.0-1ddab3502752.tgz:
+    resolution: {integrity: sha512-RL0tn7a1w0dPwShf9u5/R1POg/PnLgmGmF/cr4yZUocbAFgXdf/mW9Pnsi8bo5yc9yfUJEqNaMuoAy5H71sMKg==, tarball: file:vendor/noter-template-1.0.0-1ddab3502752.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   nubo-template@file:vendor/nubo-template-1.0.0-6c34f152cd30.tgz:
     resolution: {integrity: sha512-YjU2bOMat/YgC4R6rkSygiaozKoW7E540Rx9FenlKL4nTE8WHVhKFCRkY5qoxEb8qsA1y2n0tjmgzbqZK1cLkg==, tarball: file:vendor/nubo-template-1.0.0-6c34f152cd30.tgz}
     version: 1.0.0
@@ -1851,6 +1875,15 @@ packages:
   object.values@1.2.1:
     resolution: {integrity: sha512-gXah6aZrcUxjWg2zR2MwouP2eHlCBzdV4pygudehaKXSGW4v2AsRQUK+lwwXhii6KFZcunEnmSUoYp5CXibxtA==}
     engines: {node: '>= 0.4'}
+
+  offersuite-template@file:vendor/offersuite-template-1.0.0-dc905948e733.tgz:
+    resolution: {integrity: sha512-MJ66pyd+ozvQ5w8SDWTE5hWQNjVEERjhKJUIOP3DbnbMM2IqtLAaBkCrYA3/tTNOQR4Y+Na0zy9KdidE1cBP5Q==, tarball: file:vendor/offersuite-template-1.0.0-dc905948e733.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -1893,6 +1926,15 @@ packages:
   picomatch@4.0.4:
     resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
     engines: {node: '>=12'}
+
+  portfolica-template@file:vendor/portfolica-template-1.0.0-761c0087e4cb.tgz:
+    resolution: {integrity: sha512-ZYjd3EzlsAHMTdT1uHaX+ce3X2Sb3cegGJ7gszyPvaROmUrTmI9y6QBEERjxTQzOKBrkX4IbwceTTkn6J6XgTQ==, tarball: file:vendor/portfolica-template-1.0.0-761c0087e4cb.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
@@ -1953,6 +1995,15 @@ packages:
   regexp.prototype.flags@1.5.4:
     resolution: {integrity: sha512-dYqgNSZbDwkaJ2ceRd9ojCGjBq+mOm9LmtXnAnEGyHhN/5R7iDW2TRw3h+o/jCFxus3P2LfWIIiwowAjANm7IA==}
     engines: {node: '>= 0.4'}
+
+  rescale-template@file:vendor/rescale-template-1.0.0-05698db9bc3e.tgz:
+    resolution: {integrity: sha512-rBgxivLaLxe/6GYMcdERZPjc5FcMUTa+b+8LzAZNzsA6CgZLtwWOUavD+BdoPGEVwCkUbkjCf30ZCwMYGQuY3Q==, tarball: file:vendor/rescale-template-1.0.0-05698db9bc3e.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
@@ -2020,6 +2071,15 @@ packages:
   shebang-regex@3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
+
+  shelta-template@file:vendor/shelta-template-1.0.0-78e3129ff581.tgz:
+    resolution: {integrity: sha512-aIEpv0LNMBABKafkQcPH6o5awd/R9dGjQ4nXQm6mzF2fiUU14Ep11S3cn7ZeDz/yD1P1aWpGCGNWO5fUyRE30Q==, tarball: file:vendor/shelta-template-1.0.0-78e3129ff581.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   side-channel-list@1.0.1:
     resolution: {integrity: sha512-mjn/0bi/oUURjc5Xl7IaWi/OJJJumuoJFQJfDDyO46+hBWsfaVM65TBHq2eoZBhzl9EchxOijpkbRC8SVBQU0w==}
@@ -4014,6 +4074,13 @@ snapshots:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
+  noter-template@file:vendor/noter-template-1.0.0-1ddab3502752.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   nubo-template@file:vendor/nubo-template-1.0.0-6c34f152cd30.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -4063,6 +4130,13 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
 
+  offersuite-template@file:vendor/offersuite-template-1.0.0-dc905948e733.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   optionator@0.9.4:
     dependencies:
       deep-is: 0.1.4
@@ -4101,6 +4175,13 @@ snapshots:
   picomatch@2.3.2: {}
 
   picomatch@4.0.4: {}
+
+  portfolica-template@file:vendor/portfolica-template-1.0.0-761c0087e4cb.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
 
   possible-typed-array-names@1.1.0: {}
 
@@ -4167,6 +4248,13 @@ snapshots:
       get-proto: 1.0.1
       gopd: 1.2.0
       set-function-name: 2.0.2
+
+  rescale-template@file:vendor/rescale-template-1.0.0-05698db9bc3e.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
 
   resolve-from@4.0.0: {}
 
@@ -4271,6 +4359,13 @@ snapshots:
       shebang-regex: 3.0.0
 
   shebang-regex@3.0.0: {}
+
+  shelta-template@file:vendor/shelta-template-1.0.0-78e3129ff581.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
 
   side-channel-list@1.0.1:
     dependencies:

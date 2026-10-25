@@ -46,7 +46,12 @@
     "drip-template": "file:./vendor/drip-template-1.0.0-00a0704bb381.tgz",
     "graybeam-template": "file:./vendor/graybeam-template-1.0.0-67813fb3b4e8.tgz",
     "ilse-moreno-template": "file:./vendor/ilse-moreno-template-1.0.0-6e658f76f40f.tgz",
-    "folioxa-template": "file:./vendor/folioxa-template-1.0.0-70add1d628ad.tgz"
+    "folioxa-template": "file:./vendor/folioxa-template-1.0.0-70add1d628ad.tgz",
+    "rescale-template": "file:./vendor/rescale-template-1.0.0-05698db9bc3e.tgz",
+    "portfolica-template": "file:./vendor/portfolica-template-1.0.0-761c0087e4cb.tgz",
+    "offersuite-template": "file:./vendor/offersuite-template-1.0.0-dc905948e733.tgz",
+    "shelta-template": "file:./vendor/shelta-template-1.0.0-78e3129ff581.tgz",
+    "noter-template": "file:./vendor/noter-template-1.0.0-1ddab3502752.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
