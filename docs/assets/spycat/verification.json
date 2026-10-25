@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-10-25T10:19:28.602Z",
+  "buildId": "Wb55jPsr6iGAHim2NAI2h",
+  "manifestSha256": "c308da3ac0ed5ad5d0bc0470476b8b9e60ce184843478a7d9b5144428ab35969",
+  "paths": [
+    "/templates/spycat/site",
+    "/templates/spycat/site/en",
+    "/templates/spycat/site/feeding-guide",
+    "/templates/spycat/site/en/feeding-guide",
+    "/templates/spycat/site/contact",
+    "/templates/spycat/site/en/contact",
+    "/templates/spycat/site/privacy",
+    "/templates/spycat/site/en/privacy",
+    "/templates/spycat/site/terms",
+    "/templates/spycat/site/en/terms"
+  ],
+  "devices": [
+    "tablet",
+    "mobile"
+  ],
+  "detail": "/templates/spycat",
+  "assets": 238,
+  "unknownStatus": 404,
+  "status": "passed",
+  "scope": "已提交主站基线加Spycat；完整工作区另有未完成Vetala依赖"
+}

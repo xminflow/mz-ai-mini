@@ -277,5 +277,113 @@
     "file": "noter-1.0.0-5cbccf1bd2bf9acbf7bc875ef309f8eb7e74125a.zip",
     "snapshotSha256": "1ddab3502752e8e264f514f4cbf25108c628dbc04ccdf323e5491a2c5399eed4",
     "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/noter/1.0.0-5cbccf1bd2bf9acbf7bc875ef309f8eb7e74125a/5ef939d01e8bd51278d161f357ca555e643e3d0e18a83efbdccc13e67c1e3878.zip"
+  },
+  "jironews": {
+    "version": "1.0.0",
+    "sourceCommit": "eb0c78deaa0799fbffa0a25032df90979ded4426",
+    "sha256": "54b700e8a7309499efce03a14f640b1be5c95aa7bfe830a915d0403a3362825f",
+    "size": 23624189,
+    "file": "jironews-1.0.0-eb0c78deaa0799fbffa0a25032df90979ded4426.zip",
+    "snapshotSha256": "d82d3829c96793eb44cb66923eb72fe03ecf7e1f387a6e7c30a1db47263f91bf",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/jironews/1.0.0-eb0c78deaa0799fbffa0a25032df90979ded4426/54b700e8a7309499efce03a14f640b1be5c95aa7bfe830a915d0403a3362825f.zip"
+  },
+  "ospey": {
+    "version": "1.0.0",
+    "sourceCommit": "7b3a395982232b06382b292b572019581467607a",
+    "sha256": "f99f48eeab67f641c7216e3040fc7a9e963479a2c231976ed17510d73dfc5ec2",
+    "size": 26583153,
+    "file": "ospey-1.0.0-7b3a395982232b06382b292b572019581467607a.zip",
+    "snapshotSha256": "648d4f58c95517a44034684b3fae52a4c568f8e4da27a275728e43324fc3259e",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/ospey/1.0.0-7b3a395982232b06382b292b572019581467607a/f99f48eeab67f641c7216e3040fc7a9e963479a2c231976ed17510d73dfc5ec2.zip"
+  },
+  "spycat": {
+    "version": "1.0.0",
+    "sourceCommit": "125199709fcf3c8f73387558a3f0fcae765f7869",
+    "sha256": "e77bb8fc787a28106489adf44364a5717b31684d4dd29ab8b9a472772fb39f12",
+    "size": 7398173,
+    "file": "spycat-1.0.0-125199709fcf3c8f73387558a3f0fcae765f7869.zip",
+    "snapshotSha256": "7ea0a42eafe983f6116fb269ae6cfc9ba4e07a7d4e05339ed9707632018d09ca",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/spycat/1.0.0-125199709fcf3c8f73387558a3f0fcae765f7869/e77bb8fc787a28106489adf44364a5717b31684d4dd29ab8b9a472772fb39f12.zip"
+  },
+  "consutech": {
+    "version": "1.0.2",
+    "sourceCommit": "b2b8afd9aea300a353c64f3c94ad051579e56181",
+    "sha256": "98b36ce37944a61a8514bfe10a6344534b29be4092592a4316cb838b7541179b",
+    "size": 20294211,
+    "file": "consutech-1.0.2-b2b8afd9aea300a353c64f3c94ad051579e56181.zip",
+    "snapshotSha256": "8ad68b3c5eba18939f5a5b97bc50e3ba92bdebe74457e9c0e2b1489a03ff3395",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/consutech/1.0.2-b2b8afd9aea300a353c64f3c94ad051579e56181/98b36ce37944a61a8514bfe10a6344534b29be4092592a4316cb838b7541179b.zip"
+  },
+  "vetala": {
+    "version": "1.0.1",
+    "sourceCommit": "16ca0042f3b49f452d66cc0dd8a17cbeeb26e55e",
+    "sha256": "c91639f7d8b755b49cde06a117ae27bd0cd9569b5b09a4ff678a4fe71633d24a",
+    "size": 12569445,
+    "file": "vetala-1.0.1-16ca0042f3b49f452d66cc0dd8a17cbeeb26e55e.zip",
+    "snapshotSha256": "1ddd1c5d70b37bbe55f9b582cf01b73f65af746721be6e884c17300537c4931d",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/vetala/1.0.1-16ca0042f3b49f452d66cc0dd8a17cbeeb26e55e/c91639f7d8b755b49cde06a117ae27bd0cd9569b5b09a4ff678a4fe71633d24a.zip"
+  },
+  "estaymart": {
+    "version": "1.0.0",
+    "sourceCommit": "72ab44326559ca80eb3d94b51156c6977d5f984b",
+    "sha256": "f76ddba35d42a3c2f4b85fa4b12caddc02bb9eb7287d598fb120ba2f660009d4",
+    "size": 23758883,
+    "file": "estaymart-1.0.0-72ab44326559ca80eb3d94b51156c6977d5f984b.zip",
+    "snapshotSha256": "8ec68802470161659a9509e5c5797e936f29839d6c6150dd52b546aa8e30460e",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/estaymart/1.0.0-72ab44326559ca80eb3d94b51156c6977d5f984b/f76ddba35d42a3c2f4b85fa4b12caddc02bb9eb7287d598fb120ba2f660009d4.zip"
+  },
+  "zenpanda": {
+    "version": "1.0.0",
+    "sourceCommit": "118500c32448fd9a4b5c1136f0bcf4c64a3c41d9",
+    "sha256": "5faf4915e7e4e5909b168a806b874a2435fe3e5568b6ec65a0d2d27a069fcc04",
+    "size": 6845137,
+    "file": "zenpanda-1.0.0-118500c32448fd9a4b5c1136f0bcf4c64a3c41d9.zip",
+    "snapshotSha256": "42dd4aabfc3a86fae334f243c1572a230806c7397289a128fb2c733c9b1f2e25",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/zenpanda/1.0.0-118500c32448fd9a4b5c1136f0bcf4c64a3c41d9/5faf4915e7e4e5909b168a806b874a2435fe3e5568b6ec65a0d2d27a069fcc04.zip"
+  },
+  "velara": {
+    "version": "1.0.1",
+    "sourceCommit": "9f60097d3fbea6d43af2a990b08506cfbaaafcd3",
+    "sha256": "563f0dcb9d10ca766d4d04852abb7b97cf673bffe42a4754219dadbf90ca8e41",
+    "size": 7447690,
+    "file": "velara-1.0.1-9f60097d3fbea6d43af2a990b08506cfbaaafcd3.zip",
+    "snapshotSha256": "6e3e393ead8d96bf621400a8a771411b9e45142e83c6c81f1d791d18c66ef2f7",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/velara/1.0.1-9f60097d3fbea6d43af2a990b08506cfbaaafcd3/563f0dcb9d10ca766d4d04852abb7b97cf673bffe42a4754219dadbf90ca8e41.zip"
+  },
+  "kittypaw": {
+    "version": "1.0.1",
+    "sourceCommit": "743e1d77b29f9e0c94dced1fa89a063c6d1df400",
+    "sha256": "3fa2e74aad06d07b28f39aac35de28000da18a5fcca6053270e20f427977a693",
+    "size": 9784975,
+    "file": "kittypaw-1.0.1-743e1d77b29f9e0c94dced1fa89a063c6d1df400.zip",
+    "snapshotSha256": "b26ec8376cdbc5e41b73fe0f2def545746db587a44405088ef9ea91c4e5ab7ab",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/kittypaw/1.0.1-743e1d77b29f9e0c94dced1fa89a063c6d1df400/3fa2e74aad06d07b28f39aac35de28000da18a5fcca6053270e20f427977a693.zip"
+  },
+  "kelo": {
+    "version": "1.0.0",
+    "sourceCommit": "1a4cb0e05fe31ed25987c9d5fae77a2b24f4a821",
+    "sha256": "aae1e26be4a92e929554f0e03e6086f817a03ee35826bae3ad5d8aeb06ce0567",
+    "size": 11895864,
+    "file": "kelo-1.0.0-1a4cb0e05fe31ed25987c9d5fae77a2b24f4a821.zip",
+    "snapshotSha256": "8d175e24b69beb13b36f793c966969bcd3f3dd8aeb09a535d11c43e4caac4366",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/kelo/1.0.0-1a4cb0e05fe31ed25987c9d5fae77a2b24f4a821/aae1e26be4a92e929554f0e03e6086f817a03ee35826bae3ad5d8aeb06ce0567.zip"
+  },
+  "benjamen": {
+    "version": "1.0.0",
+    "sourceCommit": "a64fc9062051a585d2f672a76f704e3b97207185",
+    "sha256": "da2423597955df0ba7da72c9206b596976372eb0f491f5f7d60cb75859f432df",
+    "size": 20910882,
+    "file": "benjamen-1.0.0-a64fc9062051a585d2f672a76f704e3b97207185.zip",
+    "snapshotSha256": "8ecb99a19935cf59aff56821233f7ea08ceeaaf776f64c9c03d7ef8fe409242b",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/benjamen/1.0.0-a64fc9062051a585d2f672a76f704e3b97207185/da2423597955df0ba7da72c9206b596976372eb0f491f5f7d60cb75859f432df.zip"
+  },
+  "pawlio": {
+    "version": "1.0.0",
+    "sourceCommit": "73eff1efec0f659c39e1785d0fb20a19d3368159",
+    "sha256": "5430a164c69a0387751d3f73d706cc26616f4afee7d4b2edf10bfeb9ee119e96",
+    "size": 10896696,
+    "file": "pawlio-1.0.0-73eff1efec0f659c39e1785d0fb20a19d3368159.zip",
+    "snapshotSha256": "9b11e58f056cb82a472584033927819328ffd3113d1f62fb4593b85147ddc480",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/pawlio/1.0.0-73eff1efec0f659c39e1785d0fb20a19d3368159/5430a164c69a0387751d3f73d706cc26616f4afee7d4b2edf10bfeb9ee119e96.zip"
   }
 }

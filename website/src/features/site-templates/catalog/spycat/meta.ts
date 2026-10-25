@@ -1,0 +1,1 @@
+export { spycatTemplate } from './weelume'

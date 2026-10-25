@@ -1,0 +1,8 @@
+{
+  "name": "spycat-template",
+  "version": "1.0.0",
+  "archive": "vendor/spycat-template-1.0.0-7ea0a42eafe9.tgz",
+  "sha256": "7ea0a42eafe983f6116fb269ae6cfc9ba4e07a7d4e05339ed9707632018d09ca",
+  "sourceCommit": "125199709fcf3c8f73387558a3f0fcae765f7869",
+  "sourceDirty": false
+}

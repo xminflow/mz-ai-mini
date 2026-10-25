@@ -4,6 +4,8 @@
 
 | 模板 | Git 地址 | 分支 | 已核对提交 |
 | --- | --- | --- | --- |
+| kelo | [kelo-template](https://github.com/weelume/kelo-template) | `codex/kelo` | [1a4cb0e05fe3](https://github.com/weelume/kelo-template/commit/1a4cb0e05fe31ed25987c9d5fae77a2b24f4a821) |
+| benjamen | [benjamen-template](https://github.com/weelume/benjamen-template) | `main` | [a64fc9062051](https://github.com/weelume/benjamen-template/commit/a64fc9062051a585d2f672a76f704e3b97207185) |
 | offersuite | [offersuite-template](https://github.com/weelume/offersuite-template) | `codex/offersuite` | [97c6acee40ed](https://github.com/weelume/offersuite-template/commit/97c6acee40ed5d10198c21ed8f5ac9f556667b81) |
 | folioxa | [folioxa-template](https://github.com/weelume/folioxa-template) | `main` | [242e687dd2b7](https://github.com/weelume/folioxa-template/commit/242e687dd2b7b18c96579aaaccfb3b8adf88d57f) |
 | drip | [drip-template](https://github.com/weelume/drip-template) | `main` | [c1a48e1f3f66](https://github.com/weelume/drip-template/commit/c1a48e1f3f66723944a6578f834303a60bba33ed) |
@@ -88,3 +90,83 @@ Shelta 最终源码 ZIP 已发布并通过匿名完整下载、SHA256 与 ZIP CR
 ## Noter（2026-10-25 补齐源码交付）
 
 源码：[noter-template](https://github.com/weelume/noter-template)，分支 `codex/noter`，提交 `5cbccf1bd2bf9acbf7bc875ef309f8eb7e74125a`。已推送并核对远端 SHA。补齐真实 Git 地址后，本地 WSL 类型、lint、3 项合同测试、生产构建和协议格式检查通过；stage 保持 scaffold，不声明完整视觉或动效验收通过。后续 ZIP 与主站发布结果见 [交付记录](noter-template-delivery.md) 和 [本次发布记录](releases/release-20261025-full.md)。
+
+
+## JiroNews（2026-10-25 新增）
+
+源码：[jironews-template](https://github.com/weelume/jironews-template)，分支 `codex/jironews`，提交 `eb0c78deaa0799fbffa0a25032df90979ded4426`。已推送并通过 ls-remote 核对远端 SHA；工作区干净。独立工程在本机 WSL Linux 文件系统完成类型、lint、4项合同测试、生产构建及服务健康检查；协议 --require-verified 通过且源码摘要匹配。52页、104条双语路由 HTTP 检查通过，12张真实三端截图已核验尺寸。完整动效对照与商业素材许可尚未完成，保持未上架。主站与源码ZIP结果见 [交付记录](jironews-template-delivery.md)。
+
+
+## Ospey（2026-10-25 新增）
+
+源码：[ospey-template](https://github.com/weelume/ospey-template)，分支 `codex/ospey-template`，提交 `7b3a395982232b06382b292b572019581467607a`。已推送并核对远端 SHA，工作区干净。独立 WSL 类型、lint、3项合同测试、生产构建、双语路由/404/229项本地素材检查及协议 --require-verified 通过。12张真实三端区块截图，补测320px。完整动效与商业素材许可尚未完成，保持未上架。主站及ZIP结果见 [交付记录](ospey-template-delivery.md)。
+
+Ospey 源码 ZIP 已上传既有 COS 并通过匿名 SHA256/CRC 校验；主站固定包、依赖锁、发布检查、本地 WSL 标准生产构建和实际路由/241项素材检查通过。没有主站部署或市场上架。
+
+
+## Spycat（2026-10-25 新增）
+
+源码：[spycat-template](https://github.com/weelume/spycat-template)，main，提交 `125199709fcf3c8f73387558a3f0fcae765f7869`。已推送并通过 ls-remote 核对远端 SHA，独立工作区干净。独立工程在本地 WSL 完成类型、ESLint、3 项合同测试、生产构建、十条双语路由、226 项素材摘要和未知路由 404 验证，协议 --require-verified 通过。四种视口共40次页面巡检与十二张实际三端截图已完成；三端口味公转暂停/恢复和评价分页已实测。尚未宣称完整逐帧动效及商业素材许可验收通过，保持未上架。主站及 ZIP 结果见 [交付记录](spycat-template-delivery.md)。
+
+| consutech | [consutech-template](https://github.com/weelume/consutech-template) | `codex/consutech` | [a36d9f625063](https://github.com/weelume/consutech-template/commit/a36d9f6250636d1a9a997a241a23d0b550d19302) |
+
+ConsuTech 于2026年10月25日完成独立源码推送及远端 SHA 核对。应用检查与源码摘要一致；完整三端逐时刻动效对照未完成，未上架。
+
+## EstayMart 自然理想居所
+
+- Git：[estaymart-template](https://github.com/weelume/estaymart-template)，分支 `codex/estaymart`。
+- 提交：`193a8e7b80476a2b5428143539dbba981e541bda`；已正常推送并通过 `ls-remote` 核对远端一致。
+- 独立源码：`D:/code/code-tpl/estaymart-template`；22 页面、44 双语路由。
+- 本地 WSL 干净克隆冻结安装、类型、ESLint、4 项测试、构建及服务健康通过；严格协议报告摘要匹配。
+- 12 张三端原始截图、320px、菜单、语言参数、表单、FAQ 和图片探索器已有运行记录；完整逐时刻动效对照与商业素材权利未完成，不上架。
+- 主站快照、ZIP 与运行验证详见 [交付记录](estaymart-template-delivery.md)。
+
+## Vetala AI 营销员工
+
+- Git：https://github.com/weelume/vetala-template，分支 codex/vetala。
+- 提交：16ca0042f3b49f452d66cc0dd8a17cbeeb26e55e；远端一致性：已通过 ls-remote 验证。
+- 独立源码：D:/code/code-tpl/vetala-template；9 页面、18 双语路由。
+- WSL Linux 冻结安装、类型、Lint、6项测试、构建、18路由200及未知路由404通过；严格协议摘要匹配。
+- 全量三端逐帧动效、指针拖拽释放和系统减少动态效果未完整验收，详见 docs/vetala-template-delivery.md。
+
+## Zenpanda 禅意慢生活
+
+- Git：https://github.com/weelume/zenpanda-template，分支 codex/zenpanda。
+- 提交：118500c32448fd9a4b5c1136f0bcf4c64a3c41d9；远端 SHA 经 ls-remote 核对一致。
+- 独立工程：D:/code/code-tpl/zenpanda-template；12 页、24 条双语路径。
+- 本机 WSL 干净克隆冻结离线安装、类型、Lint、3项测试、构建、24路由200和未知路由404通过；严格协议报告摘要匹配。
+- 三端页面、视频播放与暂停、手机菜单、语言参数、表单、呼吸计时及320px已有实际运行记录。原站三端亚秒级逐帧、水波持续轨迹和减少动态设置尚未完整验收；素材商业再分发权未核实，保持未上架。
+- 主站接入、包与源码 ZIP 详见 docs/zenpanda-template-delivery.md。
+
+Benjamen 于 2026-10-25（Asia/Shanghai）完成源码推送及远端 SHA 一致性核对；其验收范围和未完成项见 [benjamen-template-delivery.md](benjamen-template-delivery.md)。本条不代表其他模板重新验收或主站部署。
+
+
+## Pawlio 本地交付待公开授权
+
+- 独立工程：`D:/code/code-tpl/pawlio-template`，分支 `codex/pawlio`。
+- 本地提交：`e08e07430644850f783a434aedd2ed4c6879ae23`；无真实公开远端、未推送，不填写虚构Git地址。
+- 公开仓库创建被自动审批拒绝，等待对`weelume/pawlio-template`的明确公开授权。源码ZIP尚未发布。
+- 类型、Lint、8项测试、独立构建、主站本地编译与运行验证已执行；完整动效逐帧对照尚未完成。详见[交付记录](pawlio-template-delivery.md)。
+
+## Velara AI
+
+- 源码：[velara-template](https://github.com/weelume/velara-template/tree/codex/velara)，分支 `codex/velara`。
+- 提交与远端一致：`360b0ed3372a018a011c9e12749d179eaeea1b94`。
+- 独立工程 `D:/code/code-tpl/velara-template`；主站共享包接入中，截图与完整动效矩阵未完成，不能标记完整复刻验收通过。
+
+Velara 接入更新：固定包 `71599a07d102`，源码 ZIP 已发布并匿名校验；主站类型、适配 lint 与 27 项 HTTP 检查通过。全站构建受 kittypaw 发布门禁阻塞；三端截图和完整动效矩阵未验收。
+
+## Kittypaw 猫咪生活
+
+- Git：https://github.com/weelume/kittypaw-template，分支codex/kittypaw，1.0.1提交743e1d77b29f9e0c94dced1fa89a063c6d1df400，远端SHA已核对一致。
+- 独立工程D:/code/code-tpl/kittypaw-template；15页、30条中英文路径。
+- Windows已有Chrome采集三端四页共12张真实网页截图，替换原视频帧占位；标准尺寸、字体、入场完成及可视范围无溢出/破图/脚本异常已检查。
+- WSL类型、lint、4项测试、生产构建、30路由及源码绑定报告通过；stage=ready。完整交互与动效逐时刻对照仍未完成，未上架。
+- 固定包、源码ZIP、主站3000目录实际验证详见[交付记录](kittypaw-template-delivery.md)。
+
+
+## 2026-10-25 完整追加发布
+
+estaymart：[源码](https://github.com/weelume/estaymart-template)，分支 codex/estaymart，提交 72ab44326559ca80eb3d94b51156c6977d5f984b。已正常推送并核对远端 SHA；本地 WSL 类型、lint、合同测试、生产构建与真实路由检查通过，报告源码摘要一致。既有视觉、动效和素材权利限制继续保留，未上架。
+
+pawlio：[源码](https://github.com/weelume/pawlio-template)，分支 codex/pawlio，提交 73eff1efec0f659c39e1785d0fb20a19d3368159。已正常推送并核对远端 SHA；本地 WSL 类型、lint、合同测试、生产构建与真实路由检查通过，报告源码摘要一致。既有视觉、动效和素材权利限制继续保留，未上架。

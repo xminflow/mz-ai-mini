@@ -1,0 +1,8 @@
+{
+  "name": "kelo-template",
+  "version": "1.0.0",
+  "archive": "vendor/kelo-template-1.0.0-8d175e24b69b.tgz",
+  "sha256": "8d175e24b69beb13b36f793c966969bcd3f3dd8aeb09a535d11c43e4caac4366",
+  "sourceCommit": "1a4cb0e05fe31ed25987c9d5fae77a2b24f4a821",
+  "sourceDirty": false
+}

@@ -1,0 +1,8 @@
+{
+  "name": "zenpanda-template",
+  "version": "1.0.0",
+  "archive": "vendor/zenpanda-template-1.0.0-42dd4aabfc3a.tgz",
+  "sha256": "42dd4aabfc3a86fae334f243c1572a230806c7397289a128fb2c733c9b1f2e25",
+  "sourceCommit": "118500c32448fd9a4b5c1136f0bcf4c64a3c41d9",
+  "sourceDirty": false
+}

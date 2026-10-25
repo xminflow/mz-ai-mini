@@ -51,7 +51,19 @@
     "portfolica-template": "file:./vendor/portfolica-template-1.0.0-761c0087e4cb.tgz",
     "offersuite-template": "file:./vendor/offersuite-template-1.0.0-dc905948e733.tgz",
     "shelta-template": "file:./vendor/shelta-template-1.0.0-78e3129ff581.tgz",
-    "noter-template": "file:./vendor/noter-template-1.0.0-1ddab3502752.tgz"
+    "noter-template": "file:./vendor/noter-template-1.0.0-1ddab3502752.tgz",
+    "jironews-template": "file:./vendor/jironews-template-1.0.0-d82d3829c967.tgz",
+    "ospey-template": "file:./vendor/ospey-template-1.0.0-648d4f58c955.tgz",
+    "spycat-template": "file:./vendor/spycat-template-1.0.0-7ea0a42eafe9.tgz",
+    "vetala-template": "file:./vendor/vetala-template-1.0.1-1ddd1c5d70b3.tgz",
+    "consutech-template": "file:./vendor/consutech-template-1.0.2-8ad68b3c5eba.tgz",
+    "estaymart-template": "file:./vendor/estaymart-template-1.0.0-8ec688024701.tgz",
+    "pawlio-template": "file:./vendor/pawlio-template-1.0.0-9b11e58f056c.tgz",
+    "zenpanda-template": "file:./vendor/zenpanda-template-1.0.0-42dd4aabfc3a.tgz",
+    "benjamen-template": "file:./vendor/benjamen-template-1.0.0-8ecb99a19935.tgz",
+    "kittypaw-template": "file:./vendor/kittypaw-template-1.0.1-b26ec8376cdb.tgz",
+    "velara-template": "file:./vendor/velara-template-1.0.1-6e3e393ead8d.tgz",
+    "kelo-template": "file:./vendor/kelo-template-1.0.0-8d175e24b69b.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

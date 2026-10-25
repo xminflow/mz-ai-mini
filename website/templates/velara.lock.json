@@ -1,0 +1,8 @@
+{
+  "name": "velara-template",
+  "version": "1.0.1",
+  "archive": "vendor/velara-template-1.0.1-6e3e393ead8d.tgz",
+  "sha256": "6e3e393ead8d96bf621400a8a771411b9e45142e83c6c81f1d791d18c66ef2f7",
+  "sourceCommit": "9f60097d3fbea6d43af2a990b08506cfbaaafcd3",
+  "sourceDirty": false
+}

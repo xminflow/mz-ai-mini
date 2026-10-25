@@ -11,12 +11,18 @@ importers:
       artemis-template:
         specifier: file:./vendor/artemis-template-1.0.2-0e514c0f8176.tgz
         version: file:vendor/artemis-template-1.0.2-0e514c0f8176.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      benjamen-template:
+        specifier: file:./vendor/benjamen-template-1.0.0-8ecb99a19935.tgz
+        version: file:vendor/benjamen-template-1.0.0-8ecb99a19935.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       cerno-template:
         specifier: file:./vendor/cerno-template-1.0.0-21fabe392fd3.tgz
         version: file:vendor/cerno-template-1.0.0-21fabe392fd3.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       conicorn-template:
         specifier: file:./vendor/conicorn-template-1.0.0-1e2d2a634d32.tgz
         version: file:vendor/conicorn-template-1.0.0-1e2d2a634d32.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      consutech-template:
+        specifier: file:./vendor/consutech-template-1.0.2-8ad68b3c5eba.tgz
+        version: file:vendor/consutech-template-1.0.2-8ad68b3c5eba.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       deformo-template:
         specifier: file:./vendor/deformo-template-1.2.0-b47eb1d90968.tgz
         version: file:vendor/deformo-template-1.2.0-b47eb1d90968.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -26,6 +32,9 @@ importers:
       echarts:
         specifier: ^6.1.0
         version: 6.1.0
+      estaymart-template:
+        specifier: file:./vendor/estaymart-template-1.0.0-8ec688024701.tgz
+        version: file:vendor/estaymart-template-1.0.0-8ec688024701.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       foldex-template:
         specifier: file:./vendor/foldex-template-1.0.0-515096413b7f.tgz
         version: file:vendor/foldex-template-1.0.0-515096413b7f.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -50,6 +59,15 @@ importers:
       ilse-moreno-template:
         specifier: file:./vendor/ilse-moreno-template-1.0.0-6e658f76f40f.tgz
         version: file:vendor/ilse-moreno-template-1.0.0-6e658f76f40f.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      jironews-template:
+        specifier: file:./vendor/jironews-template-1.0.0-d82d3829c967.tgz
+        version: file:vendor/jironews-template-1.0.0-d82d3829c967.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      kelo-template:
+        specifier: file:./vendor/kelo-template-1.0.0-8d175e24b69b.tgz
+        version: file:vendor/kelo-template-1.0.0-8d175e24b69b.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      kittypaw-template:
+        specifier: file:./vendor/kittypaw-template-1.0.1-b26ec8376cdb.tgz
+        version: file:vendor/kittypaw-template-1.0.1-b26ec8376cdb.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       latte-template:
         specifier: file:./vendor/latte-template-1.0.0-0e9917ea1f70.tgz
         version: file:vendor/latte-template-1.0.0-0e9917ea1f70.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -77,6 +95,12 @@ importers:
       offersuite-template:
         specifier: file:./vendor/offersuite-template-1.0.0-dc905948e733.tgz
         version: file:vendor/offersuite-template-1.0.0-dc905948e733.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      ospey-template:
+        specifier: file:./vendor/ospey-template-1.0.0-648d4f58c955.tgz
+        version: file:vendor/ospey-template-1.0.0-648d4f58c955.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      pawlio-template:
+        specifier: file:./vendor/pawlio-template-1.0.0-9b11e58f056c.tgz
+        version: file:vendor/pawlio-template-1.0.0-9b11e58f056c.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       portfolica-template:
         specifier: file:./vendor/portfolica-template-1.0.0-761c0087e4cb.tgz
         version: file:vendor/portfolica-template-1.0.0-761c0087e4cb.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -101,6 +125,9 @@ importers:
       souma-template:
         specifier: file:./vendor/souma-template-1.0.0-833f12922252.tgz
         version: file:vendor/souma-template-1.0.0-833f12922252.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      spycat-template:
+        specifier: file:./vendor/spycat-template-1.0.0-7ea0a42eafe9.tgz
+        version: file:vendor/spycat-template-1.0.0-7ea0a42eafe9.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       studiothink-template:
         specifier: file:./vendor/studiothink-template-1.0.0-4a8d22d6efcc.tgz
         version: file:vendor/studiothink-template-1.0.0-4a8d22d6efcc.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -116,6 +143,15 @@ importers:
       unseen-template:
         specifier: file:./vendor/unseen-template-1.0.0-46bda9ae0670.tgz
         version: file:vendor/unseen-template-1.0.0-46bda9ae0670.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      velara-template:
+        specifier: file:./vendor/velara-template-1.0.1-6e3e393ead8d.tgz
+        version: file:vendor/velara-template-1.0.1-6e3e393ead8d.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      vetala-template:
+        specifier: file:./vendor/vetala-template-1.0.1-1ddd1c5d70b3.tgz
+        version: file:vendor/vetala-template-1.0.1-1ddd1c5d70b3.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      zenpanda-template:
+        specifier: file:./vendor/zenpanda-template-1.0.0-42dd4aabfc3a.tgz
+        version: file:vendor/zenpanda-template-1.0.0-42dd4aabfc3a.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.4
@@ -886,6 +922,15 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
+  benjamen-template@file:vendor/benjamen-template-1.0.0-8ecb99a19935.tgz:
+    resolution: {integrity: sha512-0gIRc2ncW/kagCVkwG7c7uFUv4ARhR/EN763aNgxPy/q+ozRchpuJU/MFrPj1eaeIby6HV0oImBL9+9R32X8sw==, tarball: file:vendor/benjamen-template-1.0.0-8ecb99a19935.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   brace-expansion@1.1.14:
     resolution: {integrity: sha512-MWPGfDxnyzKU7rNOW9SP/c50vi3xrmrua/+6hfPbCS2ABNWfx24vPidzvC7krjU/RTo235sV776ymlsMtGKj8g==}
 
@@ -950,6 +995,15 @@ packages:
   conicorn-template@file:vendor/conicorn-template-1.0.0-1e2d2a634d32.tgz:
     resolution: {integrity: sha512-8YhWEDYKCRE91Nc2wratuVeY6PfSvkroJ6gvMH8AH2yag7b7tlv0ymd9v4L1kckokFajFXX4MNYXwYSbHkRglA==, tarball: file:vendor/conicorn-template-1.0.0-1e2d2a634d32.tgz}
     version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
+  consutech-template@file:vendor/consutech-template-1.0.2-8ad68b3c5eba.tgz:
+    resolution: {integrity: sha512-KgZlDaxH69eJ4RPkwsTlztlVbaTnyKTDIWq/XVodPA4ZXN+qoL6IDwsu9pjVGY9zESmfmPHHoY+X1paJdf8ocw==, tarball: file:vendor/consutech-template-1.0.2-8ad68b3c5eba.tgz}
+    version: 1.0.2
     peerDependencies:
       framer-motion: ^12.38.0
       next: ^15.3.3
@@ -1210,6 +1264,15 @@ packages:
   esrecurse@4.3.0:
     resolution: {integrity: sha512-KmfKL3b6G+RXvP8N1vr3Tq1kL/oCFgn2NYXEtqP8/L3pKapUA4G8cFVaoF3SU323CD4XypR/ffioHmkti6/Tag==}
     engines: {node: '>=4.0'}
+
+  estaymart-template@file:vendor/estaymart-template-1.0.0-8ec688024701.tgz:
+    resolution: {integrity: sha512-zek5VEJiuA73wUL37PAKHWvMCtOQkGqZMni6aqIg9fCxPoNmQabz1PzUX89t05xeQ7WkiH9xn9deYS4+mewkvA==, tarball: file:vendor/estaymart-template-1.0.0-8ec688024701.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   estraverse@5.3.0:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
@@ -1570,6 +1633,15 @@ packages:
     resolution: {integrity: sha512-H0dkQoCa3b2VEeKQBOxFph+JAbcrQdE7KC0UkqwpLmv2EC4P41QXP+rqo9wYodACiG5/WM5s9oDApTU8utwj9g==}
     engines: {node: '>= 0.4'}
 
+  jironews-template@file:vendor/jironews-template-1.0.0-d82d3829c967.tgz:
+    resolution: {integrity: sha512-P51M3kEKWQSqzhBMk0fc0iKWDSFkfvdqmwObAGeK4KWnPQOFS6Aom0XaTiSbXlvYAP7n3/3zTmfgOMfwjT7klw==, tarball: file:vendor/jironews-template-1.0.0-d82d3829c967.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   jiti@2.6.1:
     resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
     hasBin: true
@@ -1608,8 +1680,26 @@ packages:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
     engines: {node: '>=4.0'}
 
+  kelo-template@file:vendor/kelo-template-1.0.0-8d175e24b69b.tgz:
+    resolution: {integrity: sha512-PSdrLefBzz0z5+BML8GiSeRNhX77Fucj1sKva7mATX6uTrn/aLgO4DDY93peuoBegtJYmc36Cv7uZogDS8djQA==, tarball: file:vendor/kelo-template-1.0.0-8d175e24b69b.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
+
+  kittypaw-template@file:vendor/kittypaw-template-1.0.1-b26ec8376cdb.tgz:
+    resolution: {integrity: sha512-cUtES7H6y6ajUviNGB6mzr9y52CVY11V0E0m5sRxZYTdwg27NZsLbvoQQIGj0ndE7NoSSN6sQTFem9EvuHI7EQ==, tarball: file:vendor/kittypaw-template-1.0.1-b26ec8376cdb.tgz}
+    version: 1.0.1
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   language-subtag-registry@0.3.23:
     resolution: {integrity: sha512-0K65Lea881pHotoGEa5gDlMxt3pctLi2RplBb7Ezh4rRdLEOtgi7n4EwK9lamnUCkKBqaeKRVebTq6BAxSkpXQ==}
@@ -1889,6 +1979,15 @@ packages:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
     engines: {node: '>= 0.8.0'}
 
+  ospey-template@file:vendor/ospey-template-1.0.0-648d4f58c955.tgz:
+    resolution: {integrity: sha512-vktJHa3I7hmolhrJo+g8GutmSZu8TyVkEKBLo9NOJDN4xuR+Zi0YkKt8BTqtOvhpF5bYRNJ4cvAi23HJacWydw==, tarball: file:vendor/ospey-template-1.0.0-648d4f58c955.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   own-keys@1.0.1:
     resolution: {integrity: sha512-qFOyK5PjiWZd+QQIh+1jhdb9LpxTF0qs7Pm8o5QHYZ0M3vKqSqzsZaEB6oWlxZ+q2sJBMI/Ktgd2N5ZwQoRHfg==}
     engines: {node: '>= 0.4'}
@@ -1915,6 +2014,15 @@ packages:
 
   path-parse@1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
+
+  pawlio-template@file:vendor/pawlio-template-1.0.0-9b11e58f056c.tgz:
+    resolution: {integrity: sha512-p0Jzvmlt29npOMc6V98X9DDJcIlxrqqtD5dV2IhUJj+DN8A/J38t7QM53vJyLGJy+WkGjzq9z6dOWQpGGVIQ2Q==, tarball: file:vendor/pawlio-template-1.0.0-9b11e58f056c.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -2110,6 +2218,15 @@ packages:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
 
+  spycat-template@file:vendor/spycat-template-1.0.0-7ea0a42eafe9.tgz:
+    resolution: {integrity: sha512-/uBk7Gs+E79K7KaZAKhEUGyd0W6xCVfIZfGKXNH/zhzvLJpjgmS/s+nlwOuoqhVG6DpwYKGorm0nJ6gdoHalgg==, tarball: file:vendor/spycat-template-1.0.0-7ea0a42eafe9.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   stable-hash@0.0.5:
     resolution: {integrity: sha512-+L3ccpzibovGXFK+Ap/f8LOS0ahMrHTf3xu7mMLSpEGU0EO9ucaysSylKo9eRDFNhWve/y275iPmIZ4z39a9iA==}
 
@@ -2295,6 +2412,24 @@ packages:
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
+  velara-template@file:vendor/velara-template-1.0.1-6e3e393ead8d.tgz:
+    resolution: {integrity: sha512-Isf2/xIhaQS2ITbKeh0hymmb97wy0d5APktyg1YqjnEspo+TMT+aCHbYvayG3m7vBmcQQrwfCXuKQaH0FB7r5Q==, tarball: file:vendor/velara-template-1.0.1-6e3e393ead8d.tgz}
+    version: 1.0.1
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
+  vetala-template@file:vendor/vetala-template-1.0.1-1ddd1c5d70b3.tgz:
+    resolution: {integrity: sha512-MzaRhCZIglCXFL5Shqra3bplucCpLfHLpC6vkQrR17emLEuW1IbkDESJTq8xg/hMjn8XW86K5+tu5r2xNRMgQw==, tarball: file:vendor/vetala-template-1.0.1-1ddd1c5d70b3.tgz}
+    version: 1.0.1
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   which-boxed-primitive@1.1.1:
     resolution: {integrity: sha512-TbX3mj8n0odCBFVlY8AxkqcHASw3L60jIuF8jFP78az3C2YhmGvqbHBpAjTRH2/xqYunrJ9g1jSyjCjpoWzIAA==}
     engines: {node: '>= 0.4'}
@@ -2326,6 +2461,15 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  zenpanda-template@file:vendor/zenpanda-template-1.0.0-42dd4aabfc3a.tgz:
+    resolution: {integrity: sha512-VQFnc7zvIwHxAg6ZCHpRYofN9Fan3/03ZLpoxKOx4kFT3MDx2+tmgYFV+AOOeVyg773tCLUTewl8pYDH4pzrGQ==, tarball: file:vendor/zenpanda-template-1.0.0-42dd4aabfc3a.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   zod-validation-error@4.0.2:
     resolution: {integrity: sha512-Q6/nZLe6jxuU80qb/4uJ4t5v2VEZ44lzQjPDhYJNztRQ4wyWc6VF3D3Kb/fAuPetZQnhS3hnajCf9CsWesghLQ==}
@@ -3046,6 +3190,13 @@ snapshots:
 
   baseline-browser-mapping@2.10.19: {}
 
+  benjamen-template@file:vendor/benjamen-template-1.0.0-8ecb99a19935.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   brace-expansion@1.1.14:
     dependencies:
       balanced-match: 1.0.2
@@ -3111,6 +3262,13 @@ snapshots:
   concat-map@0.0.1: {}
 
   conicorn-template@file:vendor/conicorn-template-1.0.0-1e2d2a634d32.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
+  consutech-template@file:vendor/consutech-template-1.0.2-8ad68b3c5eba.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -3519,6 +3677,13 @@ snapshots:
     dependencies:
       estraverse: 5.3.0
 
+  estaymart-template@file:vendor/estaymart-template-1.0.0-8ec688024701.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   estraverse@5.3.0: {}
 
   esutils@2.0.3: {}
@@ -3863,6 +4028,13 @@ snapshots:
       has-symbols: 1.1.0
       set-function-name: 2.0.2
 
+  jironews-template@file:vendor/jironews-template-1.0.0-d82d3829c967.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   jiti@2.6.1: {}
 
   js-tokens@4.0.0: {}
@@ -3892,9 +4064,23 @@ snapshots:
       object.assign: 4.1.7
       object.values: 1.2.1
 
+  kelo-template@file:vendor/kelo-template-1.0.0-8d175e24b69b.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
+
+  kittypaw-template@file:vendor/kittypaw-template-1.0.1-b26ec8376cdb.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
 
   language-subtag-registry@0.3.23: {}
 
@@ -4146,6 +4332,13 @@ snapshots:
       type-check: 0.4.0
       word-wrap: 1.2.5
 
+  ospey-template@file:vendor/ospey-template-1.0.0-648d4f58c955.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   own-keys@1.0.1:
     dependencies:
       get-intrinsic: 1.3.0
@@ -4169,6 +4362,13 @@ snapshots:
   path-key@3.1.1: {}
 
   path-parse@1.0.7: {}
+
+  pawlio-template@file:vendor/pawlio-template-1.0.0-9b11e58f056c.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
 
   picocolors@1.1.1: {}
 
@@ -4404,6 +4604,13 @@ snapshots:
 
   source-map-js@1.2.1: {}
 
+  spycat-template@file:vendor/spycat-template-1.0.0-7ea0a42eafe9.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   stable-hash@0.0.5: {}
 
   stop-iteration-iterator@1.1.0:
@@ -4634,6 +4841,20 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
+  velara-template@file:vendor/velara-template-1.0.1-6e3e393ead8d.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
+  vetala-template@file:vendor/vetala-template-1.0.1-1ddd1c5d70b3.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   which-boxed-primitive@1.1.1:
     dependencies:
       is-bigint: 1.1.0
@@ -4684,6 +4905,13 @@ snapshots:
   yallist@3.1.1: {}
 
   yocto-queue@0.1.0: {}
+
+  zenpanda-template@file:vendor/zenpanda-template-1.0.0-42dd4aabfc3a.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
 
   zod-validation-error@4.0.2(zod@4.3.6):
     dependencies:

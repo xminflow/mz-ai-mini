@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-25T01:42:20.003Z",
+  "updatedAt": "2026-10-25T14:56:09.321Z",
   "scope": "全部新版独立模板；不含协议工具工程和主站仓库",
   "repositories": [
     {
@@ -150,7 +150,7 @@
       "remoteCommit": "e51b2433ba4c41f3c7b82ad42d73d081bfb1dede",
       "pushed": true,
       "clean": true,
-      "verifiedAt": "2026-10-20T11:18:20.930Z",
+      "verifiedAt": "2026-10-20T11:18:20.93Z",
       "localPath": "D:/code/code-tpl/furnexa-template",
       "metadataPath": ".tpl/template.json",
       "hostMetadataPath": "website/src/features/site-templates/catalog/furnexa/weelume.tsx",
@@ -676,7 +676,7 @@
       "remoteCommit": "532b4173b98da1fe87ea2596ce15c5b1fd4b7585",
       "pushed": true,
       "clean": true,
-      "verifiedAt": "2026-10-21T03:13:21.170Z",
+      "verifiedAt": "2026-10-21T03:13:21.17Z",
       "localPath": "D:/code/code-tpl/studiothink-template",
       "metadataPath": ".tpl/template.json",
       "hostMetadataPath": "website/src/features/site-templates/catalog/studiothink/weelume.tsx",
@@ -919,7 +919,7 @@
       "remoteCommit": "c1a48e1f3f66723944a6578f834303a60bba33ed",
       "pushed": true,
       "clean": true,
-      "verifiedAt": "2026-10-23T04:29:56.570Z",
+      "verifiedAt": "2026-10-23T04:29:56.57Z",
       "localPath": "D:/code/code-tpl/drip-template",
       "metadataPath": ".tpl/template.json",
       "hostMetadataPath": "website/src/features/site-templates/catalog/drip/weelume.tsx",
@@ -1115,7 +1115,7 @@
       "remoteCommit": "42189255ab22f070794a25ddb48d089c1cda58e1",
       "pushed": true,
       "clean": true,
-      "verifiedAt": "2026-10-24T11:23:26.320Z",
+      "verifiedAt": "2026-10-24T11:23:26.32Z",
       "localPath": "D:/code/code-tpl/rescale-template",
       "metadataPath": ".tpl/template.json",
       "hostMetadataPath": "website/src/features/site-templates/catalog/rescale/weelume.tsx",
@@ -1382,6 +1382,555 @@
         "snapshotSha256": "1ddab3502752e8e264f514f4cbf25108c628dbc04ccdf323e5491a2c5399eed4",
         "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/noter/1.0.0-5cbccf1bd2bf9acbf7bc875ef309f8eb7e74125a/5ef939d01e8bd51278d161f357ca555e643e3d0e18a83efbdccc13e67c1e3878.zip"
       }
+    },
+    {
+      "id": "jironews",
+      "gitUrl": "https://github.com/weelume/jironews-template",
+      "branch": "codex/jironews",
+      "commit": "eb0c78deaa0799fbffa0a25032df90979ded4426",
+      "remoteCommit": "eb0c78deaa0799fbffa0a25032df90979ded4426",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-25T08:21:44.365Z",
+      "localPath": "D:/code/code-tpl/jironews-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/jironews/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ],
+      "limitations": [
+        "完整原站三端动效逐时刻对照未完成",
+        "两张原站404素材有明确替换记录",
+        "参考设计与素材商业再分发许可未完整核实，未上架"
+      ]
+    },
+    {
+      "id": "ospey",
+      "gitUrl": "https://github.com/weelume/ospey-template",
+      "branch": "codex/ospey-template",
+      "commit": "7b3a395982232b06382b292b572019581467607a",
+      "remoteCommit": "7b3a395982232b06382b292b572019581467607a",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-25T09:47:03.462Z",
+      "localPath": "D:/code/code-tpl/ospey-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/ospey/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true,
+        "sourceDigest": "f00f1d68780d31c9bb9a4511e06e168d640a4842ea7e7fc6fc1e35eeaff4be7a"
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ],
+      "limitations": [
+        "完整原站三端逐帧动效对照未完成",
+        "商业素材与字体许可尚未完整核实，保持未上架"
+      ]
+    },
+    {
+      "id": "spycat",
+      "gitUrl": "https://github.com/weelume/spycat-template",
+      "branch": "main",
+      "commit": "125199709fcf3c8f73387558a3f0fcae765f7869",
+      "remoteCommit": "125199709fcf3c8f73387558a3f0fcae765f7869",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-25T10:07:31.843Z",
+      "localPath": "D:/code/code-tpl/spycat-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/spycat/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true,
+        "sourceDigest": "57a1b0965de1fad4b731bf2b4b00d4176f1c6f2f20573571eeae9bc290b3990b"
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "consutech",
+      "gitUrl": "https://github.com/weelume/consutech-template",
+      "branch": "codex/consutech",
+      "commit": "b2b8afd9aea300a353c64f3c94ad051579e56181",
+      "remoteCommit": "b2b8afd9aea300a353c64f3c94ad051579e56181",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-25T10:50:31.968Z",
+      "localPath": "D:/code/code-tpl/consutech-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/consutech/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "vetala",
+      "gitUrl": "https://github.com/weelume/vetala-template",
+      "branch": "codex/vetala",
+      "commit": "16ca0042f3b49f452d66cc0dd8a17cbeeb26e55e",
+      "remoteCommit": "16ca0042f3b49f452d66cc0dd8a17cbeeb26e55e",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-25T10:55:11.506Z",
+      "localPath": "D:/code/code-tpl/vetala-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/vetala/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true,
+        "sourceDigest": "8c032225ea163217eb9e544ef4d498f87a1c5d6c9d9f7c668373b90500108238"
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "estaymart",
+      "gitUrl": "https://github.com/weelume/estaymart-template",
+      "branch": "codex/estaymart",
+      "commit": "72ab44326559ca80eb3d94b51156c6977d5f984b",
+      "remoteCommit": "72ab44326559ca80eb3d94b51156c6977d5f984b",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-25T14:53:48.438Z",
+      "localPath": "D:/code/code-tpl/estaymart-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/estaymart/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ],
+      "limitations": [
+        "本次在本地 WSL Git 克隆中叠加明确待交付修改进行检查，未重复完整浏览器交互矩阵。",
+        "原站三端逐帧动效、系统减少动态效果及商业素材再分发权利尚未完整核实，保持未上架。"
+      ],
+      "sourceZip": {
+        "version": "1.0.0",
+        "sourceCommit": "72ab44326559ca80eb3d94b51156c6977d5f984b",
+        "sha256": "f76ddba35d42a3c2f4b85fa4b12caddc02bb9eb7287d598fb120ba2f660009d4",
+        "size": 23758883,
+        "file": "estaymart-1.0.0-72ab44326559ca80eb3d94b51156c6977d5f984b.zip",
+        "snapshotSha256": "8ec68802470161659a9509e5c5797e936f29839d6c6150dd52b546aa8e30460e",
+        "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/estaymart/1.0.0-72ab44326559ca80eb3d94b51156c6977d5f984b/f76ddba35d42a3c2f4b85fa4b12caddc02bb9eb7287d598fb120ba2f660009d4.zip"
+      }
+    },
+    {
+      "id": "zenpanda",
+      "gitUrl": "https://github.com/weelume/zenpanda-template",
+      "branch": "codex/zenpanda",
+      "commit": "118500c32448fd9a4b5c1136f0bcf4c64a3c41d9",
+      "remoteCommit": "118500c32448fd9a4b5c1136f0bcf4c64a3c41d9",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-25T11:35:58.044Z",
+      "localPath": "D:/code/code-tpl/zenpanda-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/zenpanda/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true,
+        "sourceDigest": "6f253ba1de98642ba1f824f936cc65f68ae6386d52f80fcc6605bb248af045b2"
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "benjamen",
+      "gitUrl": "https://github.com/weelume/benjamen-template",
+      "branch": "main",
+      "commit": "a64fc9062051a585d2f672a76f704e3b97207185",
+      "remoteCommit": "a64fc9062051a585d2f672a76f704e3b97207185",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-25T12:10:37.3211532Z",
+      "localPath": "D:/code/code-tpl/benjamen-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/benjamen/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        }
+      ],
+      "sourceZip": {
+        "version": "1.0.0",
+        "sourceCommit": "a64fc9062051a585d2f672a76f704e3b97207185",
+        "sha256": "da2423597955df0ba7da72c9206b596976372eb0f491f5f7d60cb75859f432df",
+        "size": 20910882,
+        "file": "benjamen-1.0.0-a64fc9062051a585d2f672a76f704e3b97207185.zip",
+        "snapshotSha256": "8ecb99a19935cf59aff56821233f7ea08ceeaaf776f64c9c03d7ef8fe409242b",
+        "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/benjamen/1.0.0-a64fc9062051a585d2f672a76f704e3b97207185/da2423597955df0ba7da72c9206b596976372eb0f491f5f7d60cb75859f432df.zip"
+      }
+    },
+    {
+      "id": "pawlio",
+      "gitUrl": "https://github.com/weelume/pawlio-template",
+      "branch": "codex/pawlio",
+      "commit": "73eff1efec0f659c39e1785d0fb20a19d3368159",
+      "remoteCommit": "73eff1efec0f659c39e1785d0fb20a19d3368159",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-25T14:53:48.668Z",
+      "localPath": "D:/code/code-tpl/pawlio-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/pawlio/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "scaffold",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "blocker": "自动审批拒绝公开仓库创建，尚无真实远端；源码ZIP未发布；完整动效逐帧对照待完成",
+      "limitations": [
+        "本次在本地 WSL Git 克隆中叠加明确待交付修改进行检查，未重复完整浏览器交互矩阵。",
+        "原站三端逐帧动效、系统减少动态效果及商业素材再分发权利尚未完整核实，保持未上架。"
+      ],
+      "sourceZip": {
+        "version": "1.0.0",
+        "sourceCommit": "73eff1efec0f659c39e1785d0fb20a19d3368159",
+        "sha256": "5430a164c69a0387751d3f73d706cc26616f4afee7d4b2edf10bfeb9ee119e96",
+        "size": 10896696,
+        "file": "pawlio-1.0.0-73eff1efec0f659c39e1785d0fb20a19d3368159.zip",
+        "snapshotSha256": "9b11e58f056cb82a472584033927819328ffd3113d1f62fb4593b85147ddc480",
+        "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/pawlio/1.0.0-73eff1efec0f659c39e1785d0fb20a19d3368159/5430a164c69a0387751d3f73d706cc26616f4afee7d4b2edf10bfeb9ee119e96.zip"
+      }
+    },
+    {
+      "id": "velara",
+      "gitUrl": "https://github.com/weelume/velara-template",
+      "branch": "codex/velara",
+      "commit": "9f60097d3fbea6d43af2a990b08506cfbaaafcd3",
+      "remoteCommit": "9f60097d3fbea6d43af2a990b08506cfbaaafcd3",
+      "pushed": true,
+      "verifiedAt": "2026-10-25T14:37:08.013Z",
+      "localPath": "D:/code/code-tpl/velara-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/velara/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "limitations": [
+        "12张真实三端截图已在Windows采集并在实际3000主站验证；完整原站动效矩阵仍未完成。",
+        "正式全站build受benjamen源码ZIP未发布门禁阻塞。"
+      ],
+      "hostIntegration": {
+        "state": "integrated-in-main-3000",
+        "typecheck": "passed",
+        "lint": "passed",
+        "snapshot": "passed",
+        "routeChecks": 27,
+        "sourceZip": "1.0.1-published-and-anonymous-download-verified",
+        "fullBuild": "blocked-by-benjamen-unreleased-zip",
+        "screenshots": "12-real-Windows-captures-verified-in-main-gallery",
+        "motionMatrix": "not-fully-verified"
+      }
+    },
+    {
+      "id": "kittypaw",
+      "gitUrl": "https://github.com/weelume/kittypaw-template",
+      "branch": "codex/kittypaw",
+      "commit": "743e1d77b29f9e0c94dced1fa89a063c6d1df400",
+      "remoteCommit": "743e1d77b29f9e0c94dced1fa89a063c6d1df400",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-25T14:38:56.642Z",
+      "localPath": "D:/code/code-tpl/kittypaw-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/kittypaw/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "limitations": [
+        "12张三端真实网页截图已采集并检查可视范围；不代表完整交互和逐时刻动效对照通过。",
+        "原参考素材商业再分发许可未核实，保持listed=false。"
+      ],
+      "version": "1.0.1"
+    },
+    {
+      "id": "kelo",
+      "gitUrl": "https://github.com/weelume/kelo-template",
+      "branch": "codex/kelo",
+      "commit": "1a4cb0e05fe31ed25987c9d5fae77a2b24f4a821",
+      "remoteCommit": "1a4cb0e05fe31ed25987c9d5fae77a2b24f4a821",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-25T14:00:17.578Z",
+      "localPath": "D:/code/code-tpl/kelo-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/kelo/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "sourceDigest": "fb4b5cb6a8ccedcb86d9ad2a8fb1255897b597f40bd9dc951aa9940145ce37a7",
+      "limitations": [
+        "系统减少动态效果未进行真实设置切换验收。",
+        "原参考与实现的全部三端逐帧时序、悬停/按压和长时间循环矩阵未完整对照；应用检查通过不代表完整复刻逐帧验收。",
+        "使用既有本地 Linux 验收目录，不是独立干净 Git 克隆。",
+        "参考素材商业再分发许可尚未完整核实，未市场上架。"
+      ]
     }
   ],
   "limitations": [

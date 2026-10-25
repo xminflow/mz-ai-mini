@@ -1,0 +1,1 @@
+export {zenpandaTemplate} from './weelume'

@@ -1,0 +1,1 @@
+export {pawlioTemplate} from './weelume'

@@ -1,10 +1,50 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui'
 import type { TemplatePresentation } from '../types'
 import { TemplateCard } from './TemplateCard'
 import { WorkBuddyIntro } from './WorkBuddyIntro'
+
+const TEMPLATE_BATCH_SIZE = 9
+
+function TemplateResults({ templates }: { templates: TemplatePresentation[] }) {
+  const [visibleCount, setVisibleCount] = useState(TEMPLATE_BATCH_SIZE)
+  const sentinelRef = useRef<HTMLDivElement>(null)
+  const hasMore = visibleCount < templates.length
+  const loadMore = () => setVisibleCount(count => Math.min(count + TEMPLATE_BATCH_SIZE, templates.length))
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current
+    if (!hasMore || !sentinel) return
+
+    // 每批追加后重新观察新位置，避免底部连续通知重复追加同一批。
+    let active = true
+    const observer = new IntersectionObserver(entries => {
+      if (!active || !entries.some(entry => entry.isIntersecting)) return
+      active = false
+      observer.disconnect()
+      setVisibleCount(count => Math.min(count + TEMPLATE_BATCH_SIZE, templates.length))
+    }, { rootMargin: '300px 0px' })
+    observer.observe(sentinel)
+    return () => {
+      active = false
+      observer.disconnect()
+    }
+  }, [hasMore, visibleCount, templates.length])
+
+  return <>
+    <div className="market-card-grid" id="market-template-results">
+      {templates.slice(0, visibleCount).map(template => <TemplateCard key={template.id} template={template} />)}
+    </div>
+    <div ref={sentinelRef} className="mt-10 text-center">
+      <p role="status" className="text-sm text-muted">
+        已显示 {Math.min(visibleCount, templates.length)} / {templates.length} 个模板
+      </p>
+      {hasMore && <Button className="market-secondary mt-4" aria-controls="market-template-results" onClick={loadMore}>加载更多模板</Button>}
+    </div>
+  </>
+}
 
 export function TemplateCatalog({ templates }: { templates: TemplatePresentation[] }) {
   const [scene, setScene] = useState('all')
@@ -30,9 +70,8 @@ export function TemplateCatalog({ templates }: { templates: TemplatePresentation
           </div>
         </div>
         {visible.length > 0 ? (
-          <div className="market-card-grid">
-            {visible.map((template) => <TemplateCard key={template.id} template={template} />)}
-          </div>
+          // 分类变化时重建列表，让新分类始终从首批开始。
+          <TemplateResults key={scene} templates={visible} />
         ) : (
           <div className="py-24 text-center">
             <h2 className="text-xl">没有匹配的模板</h2>

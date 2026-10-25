@@ -1,0 +1,8 @@
+{
+  "name": "vetala-template",
+  "version": "1.0.1",
+  "archive": "vendor/vetala-template-1.0.1-1ddd1c5d70b3.tgz",
+  "sha256": "1ddd1c5d70b37bbe55f9b582cf01b73f65af746721be6e884c17300537c4931d",
+  "sourceCommit": "16ca0042f3b49f452d66cc0dd8a17cbeeb26e55e",
+  "sourceDirty": false
+}

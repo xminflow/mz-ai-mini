@@ -1,0 +1,8 @@
+{
+  "name": "pawlio-template",
+  "version": "1.0.0",
+  "archive": "vendor/pawlio-template-1.0.0-9b11e58f056c.tgz",
+  "sha256": "9b11e58f056cb82a472584033927819328ffd3113d1f62fb4593b85147ddc480",
+  "sourceCommit": "73eff1efec0f659c39e1785d0fb20a19d3368159",
+  "sourceDirty": false
+}

@@ -1,0 +1,8 @@
+{
+  "name": "kittypaw-template",
+  "version": "1.0.1",
+  "archive": "vendor/kittypaw-template-1.0.1-b26ec8376cdb.tgz",
+  "sha256": "b26ec8376cdbc5e41b73fe0f2def545746db587a44405088ef9ea91c4e5ab7ab",
+  "sourceCommit": "743e1d77b29f9e0c94dced1fa89a063c6d1df400",
+  "sourceDirty": false
+}

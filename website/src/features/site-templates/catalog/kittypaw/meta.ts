@@ -1,0 +1,1 @@
+export { kittypawTemplate } from './weelume'

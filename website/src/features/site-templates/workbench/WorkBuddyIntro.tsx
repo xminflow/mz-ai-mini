@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 const prefix = '你可以在 '
 const brand = 'WorkBuddy'
-const suffix = ' 中使用这些网站模板搭建你自己的网站'
+const suffix = '，豆包等智能体中使用这些网站模板搭建你自己的网站'
 const message = `${prefix}${brand}${suffix}`
 
 export function WorkBuddyIntro() {
