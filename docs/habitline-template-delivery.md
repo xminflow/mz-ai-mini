@@ -2,75 +2,52 @@
 
 ## 当前状态
 
-最终独立版本 **1.0.3**。已实现参考站九个页面、18 条双语路径，并接入主站共享模板体系。用户追加的原生滚动条优化已实现并在内置浏览器检查。**不能标记“完整复刻验收通过”**：原站全站三端的动效逐帧轨迹、精确速度、拖拽回弹及视频轮播尚未完成完整对照，部分视觉和内容仍有差异。
+当前独立版本 **1.0.5**。九个页面、18 条双语路径已经接入主站共享模板。根据用户选择，页面改为6px暖橙滑块、透明轨道，内部区域4px；悬停和按压加深颜色，保留原生滚动。
 
-参考站：<https://habitline-wbs.framer.website/>；依据 `docs/template-replication-guide.md`。原站没有博客，12 张核心截图使用首页、第二版首页、关于、联系四类页面，没有虚构参考站博客。
+本次根因是主站 body 全局灰色滚动条规则仍在生效。之前只覆盖和读取 html 伪元素，导致样式读数与截图不一致。1.0.5 同时覆盖 html/body，全部受 Shell 挂载的模板专属根标记控制，卸载后恢复主站样式。未修改主站全局滚动条。
 
-## 源码与页面
+## 源码及交付
 
-- 独立主维护工程：`D:/code/code-tpl/habitline-template`。
-- Git：<https://github.com/weelume/habitline-template/tree/codex/habitline>。
-- 分支 `codex/habitline`，最终提交 `f7d006c50b2e5347c301b6fd0f1c6071f22c3177`，普通推送后已核对远端一致。
-- 页面：首页、`home-2`、`about`、`waitlist`、`changelog`、`faqs`、`contact`、`legal-pages/privacy-policy`、`legal-pages/terms-conditions`；英文位于 `/en`。
-- 采用品牌配置、内容数据、主题变量、共享组件、页面组合与路由分层；主站 `catalog/habitline` 只有 `meta.ts`、`weelume.tsx` 宿主适配。
-- 主站注入微域生光品牌、模板市场入口与 `TemplateFiling` 示例备案；独立工程保留 Habitline 自身品牌。
-- 194 个公开媒体文件本地托管，包含 8 段视频。来源和权利边界记录于独立工程 `.tpl/docs/ASSETS.json`、`LICENSE.md`；MiSans 400/700 和 Poppins 400/600/700 使用既有字体。
-- 表单仅做浏览器校验，不发送、不保存。账户、真实提醒、AI、离线同步、下载和价格均为演示。
+- 参考站：https://habitline-wbs.framer.website/；依据 docs/template-replication-guide.md。
+- 独立主维护工程：D:/code/code-tpl/habitline-template。
+- Git：https://github.com/weelume/habitline-template/tree/codex/habitline。
+- 分支 codex/habitline，提交 `9c11596f1a19ebd3de5e1c24a5e5739f6bd08285`，已普通推送并读取远端核对一致，未强制推送。
+- 主站只保留 catalog/habitline/meta.ts、weelume.tsx 宿主适配；通用源码由固定共享包提供。
+- 固定运行包：website/vendor/habitline-template-1.0.5-aae5e65f42f2.tgz。
+- 包 SHA256：`aae5e65f42f27da2c86d65e1e4cf6b98067e8eaaf8d3a3dd83b859d72a82bf5b`；sourceDirty=false。
+- 配套 templates/habitline.lock.json、package.json、pnpm 生成的依赖锁一并更新。
+- [完整已提交源码 ZIP](https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/habitline/1.0.5-9c11596f1a19ebd3de5e1c24a5e5739f6bd08285/64fcd3cba765913f33a2e998bb5d39df132330f2cb9a0839ba0f04b64d58a7fb.zip)，50967835字节，SHA256：`64fcd3cba765913f33a2e998bb5d39df132330f2cb9a0839ba0f04b64d58a7fb`。
+- 按既有用户授权复用 COS SDK 上传，匿名完整下载、SHA256及ZIP完整性检查均通过，随后更新 releases.json。旧对象保留。
 
-## 滚动条与交互
+页面：首页、home-2、about、waitlist、changelog、faqs、contact、legal-pages/privacy-policy、legal-pages/terms-conditions；英文位于 /en。原站无博客，没有虚构博客截图。
 
-- 页面滚动条 8px，内部区域 6px，圆角灰绿滑块、浅色轨道、橙色悬停与按压色；保留原生滚动机制。
-- 主题位于 `scrollbars.css`。`Shell` 挂载时为文档根节点添加专属标记，卸载时恢复之前的状态；避免将根滚动条样式遗留在宿主其他页面。
-- Chromium 显式协调标准属性与 WebKit 伪元素，避免标准 `scrollbar-width` 覆盖 8px 自定义尺寸。支持其他浏览器的标准细滚动条；强制颜色模式恢复系统颜色。
-- 内置浏览器三端四类页面均读取到 8px，12 个状态无横向溢出；键盘和滚轮已实际操作。原生滑块拖拽尝试未获得可靠验证证据，不能标记为通过。
-- 修复滚动条 CSS 展开后的字体导入顺序，避免 MiSans 的 `@import` 排在普通规则之后被丢弃；刷新后的截图均等待字体加载完成。
-- 修复宿主全局标题规则覆盖模板字体及字重的问题：在模板主题中显式设置标题继承字体并使用700字重；最终主站实测为 `HabitlinePoppins, MiSans`、700，字体加载完成。
-- 已抽样操作手机菜单与切页关闭、场景标签、FAQ、本地表单、月付/年付、语言切换参数与锚点、视频打开/关闭与实际时间推进。
-- 页面含首屏错峰入场、浮动玻璃面板、双向习惯带、日程循环、SVG 环形进度、数字滚轮、云层、手机视差等。完整差异和待验收项见独立工程 `.tpl/docs/MOTION.md`。
+194个公开媒体文件本地托管，包含8段视频；来源见独立工程 .tpl/docs/ASSETS.json、LICENSE.md。MiSans 400/700和Poppins 400/600/700本地托管。主站注入微域生光品牌、市场入口、示例备案。表单只做本地校验，不发送或保存；账户、真实提醒、AI、离线同步、下载及价格为演示。
 
-## 固定包与源码 ZIP
+## 实际验证
 
-- 固定运行包：`website/vendor/habitline-template-1.0.3-b6f4864f1a27.tgz`。
-- SHA256：`b6f4864f1a278eb3e9be8d45c007f3935ddd099bf2210e6fd1bb360e47736b96`。
-- 快照提交为上述最终提交，`sourceDirty=false`。配套 `templates/habitline.lock.json`、`package.json`、pnpm 生成的依赖锁一起交付。
-- [完整源码 ZIP](https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/habitline/1.0.3-f7d006c50b2e5347c301b6fd0f1c6071f22c3177/64715912f6656499837f9bf9ea52c85b5b385ed2be0485b873faff441f5f438c.zip)。
-- ZIP 为 50,966,852 字节，SHA256 `64715912f6656499837f9bf9ea52c85b5b385ed2be0485b873faff441f5f438c`。
-- 已取得用户对 GitHub 公开仓库和既有 COS 专用目录公开下载的明确授权。使用既有 COS SDK 上传，匿名完整下载后通过 SHA256 与 ZIP 完整性校验，再切换发布清单；旧对象保留。
-- 修正复用的 bundle 脚本误取历史归档风险：改为按当前 `package.json` 精确选择版本；已在同时存在历史 1.0.0/1.0.1 包时生成正确 1.0.3 包。
+所有安装、编译、运行包及ZIP打包均在本机WSL Ubuntu Linux文件系统执行，没有服务器构建或部署；Node 24.16.0、pnpm 9.15.4，未新增或升级第三方依赖。
 
-## 构建与验证
+- 独立源码：/home/xmin/workspace/habitline-20261026/source。
+- 主站隔离目录：/home/xmin/workspace/habitline-20261026/host/website。
+- 独立 pnpm typecheck、lint、build、test 和协议严格源码验收均通过。生产测试覆盖18条双语路径、404与媒体。
+- 最新源码摘要：fc698c38ce82ac1b1151b08ee0f8ac49111e1c11af15a32a8f99d3963d2fa233。
+- 主站 pnpm template:check --id habitline、pnpm exec tsc --noEmit、pnpm template:release:check 均通过。
+- WEBSITE_BUILD_DIR=.next-habitline-105 pnpm build 通过；存在既有无关页面 lint 与 webpack 缓存性能警告。
+- 构建标识：`1vusy9Q899y_m0uXMpP-b`；清单 .next-habitline-105/build-manifest.json SHA256：`47e52a587130a43f4107cc100daaf0a69572966aeb48db241c9f3b1ae6523f83`。
+- 43570预览运行该同一产物。18条双语页面、详情、手机/iPad预览入口共21项200，未知页面404，共22项HTTP检查通过。
+- 内置浏览器生产截图已目视确认暖橙色。实际窗口1367×1244，html/body均6px、rgba(222,105,47,.78)、透明轨道，内部4px，无横向溢出。
+- 点击市场入口后根标记移除，html/body恢复主站10px；客户端返回模板后标记恢复，body为6px。
+- Ctrl+Home已实际操作返回顶部。旧阶段键盘/滚轮及菜单、FAQ、价格、表单、语言、视频等抽样检查保留；本次未重新逐项执行。
+- 本次viewport override未改变实际innerWidth，四次重复读数不计为最终响应式矩阵。此前尺寸记录缺少实际视口读数，最终多尺寸浏览器验证保留待确认。
 
-所有依赖安装、编译、运行包构建和 ZIP 打包均在本机 WSL Ubuntu 的 Linux 文件系统执行，没有远端构建或服务器部署。
+最终证据：artifacts/habitline/host-warm-final.jpg、host-warm-final-state.json、host-http.json、host-build-105.log、warm-body-release.log。12张历史展示截图使用实际解码尺寸，没有放大伪造标准视口。既有字体导入顺序和主站标题字体/700字重修复保留。
 
-- 独立源码与验收：`/home/xmin/workspace/habitline-20261026/source`。
-- 主站隔离验收：`/home/xmin/workspace/habitline-20261026/host/website`。
-- Node 24.16.0、pnpm 9.15.4，复用现有库与离线缓存，没有新增第三方库或升级依赖。
-
-| 检查 | 实际结果 |
-| --- | --- |
-| 独立冻结离线安装 | 通过 |
-| 独立 `pnpm typecheck`、`pnpm lint`、`pnpm build` | 通过 |
-| 独立 `pnpm test` | 真实生产服务的18条双语路径、404和本地媒体检查通过，测试进程已停止 |
-| 协议 `check --require-verified` | 通过；源码摘要 `075ec79078f5316b03bed453fcf64a3336b0f5e27bfb78b5457082eb89ee83b1` |
-| 初始三端全部九页双语 | 54个页面状态无横向溢出或损坏图片；滚动条修改后核心12个状态另行复查 |
-| 320px 联系页 | 无横向溢出 |
-| 滚动条最终三端四页 | 12个状态为8px、字体加载完成、无横向溢出 |
-| 独立原视频 | 实际播放，播放时间从0.15秒推进至10.68秒；关闭正常 |
-| 主站1.0.3固定包检查、完整类型检查 | 通过 |
-| 主站宿主适配 ESLint | 通过 |
-| 源码 ZIP 匿名验证、发布清单检查 | 通过 |
-| 主站最终1.0.3完整生产构建 | 通过，字体导入顺序警告已消除 |
-| 主站实际HTTP | 18条双语路径、详情与手机/iPad预览均200，未知页面404，共22项检查通过 |
-| 主站浏览器 | 微域生光品牌、示例备案、8px滚动条、模板字体与700字重正常，无损坏图片或横向溢出；新标签控制台无错误或警告 |
-| 样式作用域 | 点击市场入口后专属标记移除，恢复主站10px滚动条；客户端返回模板后恢复8px |
-| 设备预览 | 手机iframe为390×844、iPad为834×1180；框内菜单可打开并跳转联系页 |
-
-运行截图、浏览器矩阵及命令日志保存在 `artifacts/habitline/`。12张展示截图按真实像素记录尺寸，没有将截图放大伪造为标准视口；标准 CSS 视口为1440×1000、834×1180、390×844。
-
-主站构建标识为 `Zo5D1cyOLkIpXHVQAm4VV`；构建清单 `.next/build-manifest.json` 的 SHA256 为 `dfc6e8fe83fc608979fb533be5a20c9f293d20dd94dcd0396613b68c8d6b6439`（仅为该清单摘要）。最终本地生产预览：<http://localhost:43570/templates/habitline/site>。既有 `pnpm start` 脚本打印 standalone 启动方式提示，实际页面与资源检查通过；没有据此执行远端部署。
+本地预览：http://localhost:43570/templates/habitline/site 。既有start脚本有standalone启动提示，页面及资源可正常服务，未修改无关脚本。
 
 ## 限制与回滚
 
-原站全站逐帧动效、自动视频轮播、完整拖拽回弹和系统减少动态效果矩阵仍未验收；部分示意、团队、法律文案及场景内容作了演示适配。公开可访问或已获上传授权不等于素材商业许可，保持 `listed=false`、`redistributionAllowed=false`，未市场上架。
+不能标记完整复刻验收通过：原站全站逐帧动效、精确轨迹速度、自动视频轮播、拖拽回弹和系统减少动态矩阵仍未完整对照。页面含错峰入场、浮动面板、习惯带、日程循环、SVG进度、数字滚轮、云层和手机视差，具体差异见独立 .tpl/docs/MOTION.md。原生滑块拖拽未获得可靠验证证据；其他浏览器和系统强制颜色模式本轮未实测。
 
-未推送主站仓库、未部署服务器。回滚时一起恢复 Habitline 固定包、快照锁、依赖声明/锁和发布记录，再在本机 WSL 构建；不删除既有 COS 对象。
+部分示意、团队、法律文案及场景为演示适配。参考素材商业再分发许可未完整核实；公开Git/COS授权不等于商业许可，未执行市场上架。保留listed=false、redistributionAllowed=false的既有发布边界。
+
+本模板独立交付时未推送主站或部署。后续完整发布任务已将1.0.5纳入 `release-20261026-full2`，主站冻结提交3020a622e4f4048ab6434eeda0f41f0576c9b0a4已推送，生产切换和正式域名验收通过，见 `docs/releases/release-20261026-full2.md`。回滚时一并恢复固定包、快照锁、依赖声明/锁和发布记录，再在本机WSL构建；不删除旧COS对象。

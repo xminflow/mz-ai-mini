@@ -2193,11 +2193,11 @@
       "id": "habitline",
       "gitUrl": "https://github.com/weelume/habitline-template",
       "branch": "codex/habitline",
-      "commit": "8c32370f938487fa27341871fe9999579b76fa2b",
-      "remoteCommit": "8c32370f938487fa27341871fe9999579b76fa2b",
+      "commit": "9c11596f1a19ebd3de5e1c24a5e5739f6bd08285",
+      "remoteCommit": "9c11596f1a19ebd3de5e1c24a5e5739f6bd08285",
       "pushed": true,
       "clean": true,
-      "verifiedAt": "2026-10-26T03:22:06.0238951Z",
+      "verifiedAt": "2026-10-26T03:51:05.373Z",
       "localPath": "D:/code/code-tpl/habitline-template",
       "metadataPath": ".tpl/template.json",
       "hostMetadataPath": "website/src/features/site-templates/catalog/habitline/weelume.tsx",
@@ -2229,22 +2229,24 @@
       ],
       "hostIntegration": {
         "state": "integrated-local-WSL",
-        "version": "1.0.3",
+        "version": "1.0.5",
         "snapshot": "passed",
         "typecheck": "passed",
         "lint": "passed",
         "fullBuild": "passed-local-WSL",
         "routeChecks": 22,
-        "sourceZip": "1.0.3-published-and-anonymous-download-verified",
-        "scrollbar": "8px-template-10px-host-restoration-verified",
+        "sourceZip": "1.0.5-published-and-anonymous-download-verified",
+        "scrollbar": "html-body-6px-warm-orange-transparent-4px-internal-host-10px-restoration-verified",
         "headingTypography": "MiSans-Poppins-700-verified-in-host",
         "motionMatrix": "not-fully-verified",
-        "previewUrl": "http://localhost:43570/templates/habitline/site"
+        "previewUrl": "http://localhost:43570/templates/habitline/site",
+        "buildId": "1vusy9Q899y_m0uXMpP-b"
       },
       "limitations": [
         "完整原站视觉/动效逐帧、自动视频轮播、拖拽回弹和减少动态矩阵尚未完成；不标记完整复刻通过。",
         "参考素材商业再分发许可未完整核实，保持未上架；公开Git和COS已获用户明确授权。"
-      ]
+      ],
+      "sourceDigest": "fc698c38ce82ac1b1151b08ee0f8ac49111e1c11af15a32a8f99d3963d2fa233"
     }
   ],
   "limitations": [

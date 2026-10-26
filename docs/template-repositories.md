@@ -212,3 +212,5 @@ alex：https://github.com/weelume/alex-template，分支 main，提交 484e32640
 creationai：https://github.com/weelume/creationai-template，分支 codex/creationai，提交 1872381385dbfc51b8e2c157dc73ae81c9f07a00，已正常推送并核对远端一致。主站固定包同步当前源码，既有视觉、动效和素材权利限制保留。
 
 learnai：https://github.com/weelume/learnai-template，分支 codex/learnai，提交 e97fc8db0fa81a4fd8deae3b0f73741280819c5e，已正常推送并核对远端一致。主站固定包同步当前源码，既有视觉、动效和素材权利限制保留。
+
+Habitline 1.0.5：修复主站 body 全局灰色滚动条覆盖，html/body 同时按模板标记应用6px暖橙滑块和透明轨道。提交 9c11596f1a19ebd3de5e1c24a5e5739f6bd08285 已推送且远端一致；源码 ZIP 匿名校验通过。
