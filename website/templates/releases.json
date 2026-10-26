@@ -342,13 +342,13 @@
     "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/zenpanda/1.0.0-118500c32448fd9a4b5c1136f0bcf4c64a3c41d9/5faf4915e7e4e5909b168a806b874a2435fe3e5568b6ec65a0d2d27a069fcc04.zip"
   },
   "velara": {
-    "version": "1.0.1",
-    "sourceCommit": "9f60097d3fbea6d43af2a990b08506cfbaaafcd3",
-    "sha256": "563f0dcb9d10ca766d4d04852abb7b97cf673bffe42a4754219dadbf90ca8e41",
-    "size": 7447690,
-    "file": "velara-1.0.1-9f60097d3fbea6d43af2a990b08506cfbaaafcd3.zip",
-    "snapshotSha256": "6e3e393ead8d96bf621400a8a771411b9e45142e83c6c81f1d791d18c66ef2f7",
-    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/velara/1.0.1-9f60097d3fbea6d43af2a990b08506cfbaaafcd3/563f0dcb9d10ca766d4d04852abb7b97cf673bffe42a4754219dadbf90ca8e41.zip"
+    "version": "1.0.2",
+    "sourceCommit": "f89ac86092e9443f440a41633e6e97d6b2d3b790",
+    "sha256": "49baf3727eacd5e30dcffc7f453e6f3c9943991c21d15349b2cc52c72c5a4c53",
+    "size": 7450350,
+    "file": "velara-1.0.2-f89ac86092e9443f440a41633e6e97d6b2d3b790.zip",
+    "snapshotSha256": "fdfa97bd6c5fe93292f4bb14fb840968e96d82dda1e2a9be3a2814009a528da8",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/velara/1.0.2-f89ac86092e9443f440a41633e6e97d6b2d3b790/49baf3727eacd5e30dcffc7f453e6f3c9943991c21d15349b2cc52c72c5a4c53.zip"
   },
   "kittypaw": {
     "version": "1.0.1",
@@ -385,5 +385,77 @@
     "file": "pawlio-1.0.0-73eff1efec0f659c39e1785d0fb20a19d3368159.zip",
     "snapshotSha256": "9b11e58f056cb82a472584033927819328ffd3113d1f62fb4593b85147ddc480",
     "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/pawlio/1.0.0-73eff1efec0f659c39e1785d0fb20a19d3368159/5430a164c69a0387751d3f73d706cc26616f4afee7d4b2edf10bfeb9ee119e96.zip"
+  },
+  "cryptocalc": {
+    "version": "1.1.0",
+    "sourceCommit": "4ffaf7503bd06ff22013bb8530db036d234e998b",
+    "sha256": "f451ec643076816141c8b65ccb936c1f8b7e552a301430f21968d87bc8c1d484",
+    "size": 4885060,
+    "file": "cryptocalc-1.1.0-4ffaf7503bd06ff22013bb8530db036d234e998b.zip",
+    "snapshotSha256": "d35a609a1e1bd29bee5b8d143192c387ff9a66fde2d523ab7c1a27d4f4270eca",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/cryptocalc/1.1.0-4ffaf7503bd06ff22013bb8530db036d234e998b/f451ec643076816141c8b65ccb936c1f8b7e552a301430f21968d87bc8c1d484.zip"
+  },
+  "creationai": {
+    "version": "1.0.0",
+    "sourceCommit": "1872381385dbfc51b8e2c157dc73ae81c9f07a00",
+    "sha256": "a1529d17364fd071ba4076e60ac370fdac072a8b78a030a1450b196a3b654606",
+    "size": 19501826,
+    "file": "creationai-1.0.0-1872381385dbfc51b8e2c157dc73ae81c9f07a00.zip",
+    "snapshotSha256": "e31436eab2f24d2213cd97ff06d6687588613a37a3130819d6c4b51345055571",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/creationai/1.0.0-1872381385dbfc51b8e2c157dc73ae81c9f07a00/a1529d17364fd071ba4076e60ac370fdac072a8b78a030a1450b196a3b654606.zip"
+  },
+  "stocklens": {
+    "version": "1.2.0",
+    "sourceCommit": "e4030078a2be3b47d614ea74fde6d28028857790",
+    "sha256": "840a301e69e2c65a8d8e95dbe7eef3f1011ef8f9f6041ec88e6a147454f15bae",
+    "size": 4884247,
+    "file": "stocklens-1.2.0-e4030078a2be3b47d614ea74fde6d28028857790.zip",
+    "snapshotSha256": "16739793796e3ea7a7945c2a499281a6c271edcfb29561ce353e4cec6cbeac5f",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/stocklens/1.2.0-e4030078a2be3b47d614ea74fde6d28028857790/840a301e69e2c65a8d8e95dbe7eef3f1011ef8f9f6041ec88e6a147454f15bae.zip"
+  },
+  "kelo-marketing": {
+    "version": "1.0.0",
+    "sourceCommit": "1a9701db76cdf1a573a5ffd4b12079953e2f55a4",
+    "sha256": "39ccabc10f0349f1007b650a82c818ddb81b0c41331c87de7221027f21245f09",
+    "size": 9934898,
+    "file": "kelo-marketing-1.0.0-1a9701db76cdf1a573a5ffd4b12079953e2f55a4.zip",
+    "snapshotSha256": "9f9c768be7dd518b05ec7f0fcee50d9c87c3ca679614ed3a3a5bbd1c0299ac8b",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/kelo-marketing/1.0.0-1a9701db76cdf1a573a5ffd4b12079953e2f55a4/39ccabc10f0349f1007b650a82c818ddb81b0c41331c87de7221027f21245f09.zip"
+  },
+  "learnai": {
+    "version": "1.0.1",
+    "sourceCommit": "e97fc8db0fa81a4fd8deae3b0f73741280819c5e",
+    "sha256": "bbd78b5025f9891ae072a3bfb2aab4256379a01af1a0319dcb344f66290efbf4",
+    "size": 19658424,
+    "file": "learnai-1.0.1-e97fc8db0fa81a4fd8deae3b0f73741280819c5e.zip",
+    "snapshotSha256": "0f5919413936d9f49c76ec2138ca64a89a37f2d48b1d45f99079b325e11904e8",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/learnai/1.0.1-e97fc8db0fa81a4fd8deae3b0f73741280819c5e/bbd78b5025f9891ae072a3bfb2aab4256379a01af1a0319dcb344f66290efbf4.zip"
+  },
+  "playora": {
+    "version": "1.0.1",
+    "sourceCommit": "94a6ea8177edc23f08dfeabfb0632d00dc4657a3",
+    "sha256": "50aadc251f3985a1cbc637c47cab7bcda81a0ffa35a8ef430f7ec7df76472590",
+    "size": 28033246,
+    "file": "playora-1.0.1-94a6ea8177edc23f08dfeabfb0632d00dc4657a3.zip",
+    "snapshotSha256": "30629aeb30f40933b07f5afeb3a78bec39fe74d3a2bd3bcfcd031ce0b7bef94c",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/playora/1.0.1-94a6ea8177edc23f08dfeabfb0632d00dc4657a3/50aadc251f3985a1cbc637c47cab7bcda81a0ffa35a8ef430f7ec7df76472590.zip"
+  },
+  "alex": {
+    "version": "1.0.1",
+    "sourceCommit": "484e32640c5ba9a34a67daaf7b11e348884a5ebf",
+    "sha256": "8e3f6ce619812dae1996bd164e40a45031e4c9505622e689725f47fe36711dc6",
+    "size": 11977292,
+    "file": "alex-1.0.1-484e32640c5ba9a34a67daaf7b11e348884a5ebf.zip",
+    "snapshotSha256": "07eb9cb845c0c0a8a0da7f89bfcc26c2adde9760e9e83d82592ac149e630df52",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/alex/1.0.1-484e32640c5ba9a34a67daaf7b11e348884a5ebf/8e3f6ce619812dae1996bd164e40a45031e4c9505622e689725f47fe36711dc6.zip"
+  },
+  "habitline": {
+    "version": "1.0.4",
+    "sourceCommit": "8c32370f938487fa27341871fe9999579b76fa2b",
+    "sha256": "a9238e0c2791443568f90e82eea005891626cf50be0bd368f64428c4ae90ba62",
+    "size": 50967548,
+    "file": "habitline-1.0.4-8c32370f938487fa27341871fe9999579b76fa2b.zip",
+    "snapshotSha256": "ca14a44cb304d8bf64f897842146232e35dfab3a64c3a6160dacc5c001ab3fd8",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/habitline/1.0.4-8c32370f938487fa27341871fe9999579b76fa2b/a9238e0c2791443568f90e82eea005891626cf50be0bd368f64428c4ae90ba62.zip"
   }
 }

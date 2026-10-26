@@ -1,0 +1,1 @@
+export {creationaiTemplate} from './weelume'

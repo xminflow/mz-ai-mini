@@ -2,6 +2,24 @@
 
 **主站3000的封面和三端截图已修复并实际验证。完整原站动效逐帧矩阵仍未完成，不声明全部复刻验收通过。**
 
+## 最新版本 1.0.2：Velara 整站滚动条
+
+用户确认本次范围为 Velara 整站页面。此前模板继承宿主浅色背景使用的全局滑块，缺少自己的文档滚动条主题；本次在独立模板 `theme.css` 中以 `html:has(.va-root)` 限定主题，用深色轨道、8px 圆角紫色滑块和悬停高亮。仍使用原生滚动，不创建额外滚动容器；保留滚轮、键盘、拖拽及移动端滚动。文本域采用相同主题，高对比度模式使用系统颜色。
+
+Windows 本机实测独立页面与实际3000主站：轨道 `rgb(8, 6, 13)`、滑块 `rgb(115, 81, 142)`、宽度8px；滚轮移动700px、End到9071px、拖拽到3624px，Home可回顶部；390px视口无横向溢出。通过站内 Next Link 返回模板市场后恢复宿主10px滚动条，确认样式不会留在市场页。未发现页面脚本异常。证据：`artifacts/velara/scrollbar/verification.json`、`main-verification.json` 及前后截图。
+
+类型、lint、3项现有测试、独立生产构建和22条双语HTTP路径通过。12张三端截图已在Windows本机更新，包含实际原生滚动条。独立协议严格验收通过，源码摘要为 `c93859a8c270a36116c0e1e9fddab875bb1ac05fb1cd8d660ebf14fabe7d80b3`。
+
+- 已推送提交：`f89ac86092e9443f440a41633e6e97d6b2d3b790`，分支 `codex/velara`，已核对远端一致。
+- 固定包：`website/vendor/velara-template-1.0.2-fdfa97bd6c5f.tgz`。
+- 包SHA256：`fdfa97bd6c5fe93292f4bb14fb840968e96d82dda1e2a9be3a2814009a528da8`，快照 `sourceDirty=false`；依赖锁由本地WSL pnpm生成。
+- 源码ZIP：[1.0.2完整源码](https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/velara/1.0.2-f89ac86092e9443f440a41633e6e97d6b2d3b790/49baf3727eacd5e30dcffc7f453e6f3c9943991c21d15349b2cc52c72c5a4c53.zip)。7,450,350字节，SHA256 `49baf3727eacd5e30dcffc7f453e6f3c9943991c21d15349b2cc52c72c5a4c53`。
+- 用户明确授权本次新版上传后执行COS上传、匿名下载、SHA256和ZIP完整性核验，全部通过；全站源码ZIP清单检查也已通过。旧对象保留。
+- 仓库与实际3000主站均已同步版本、截图、固定包、依赖锁及源码ZIP记录；主站副本类型与快照检查通过。
+- 其他模板发布门禁解除后，本机WSL隔离主站副本的正式 `pnpm build` 已完整通过，未绕过检查。日志为 `.work/velara/host-build-1.0.2.log`。下文1.0.1阶段的构建阻塞只作为历史记录。
+
+本次截图、滚动交互和视觉验证在Windows本机完成；安装、编译、运行包及源码ZIP打包在本地WSL Linux文件系统完成。没有部署服务器。下文保留1.0.1截图修复阶段的交付历史，最新版本以上述1.0.2记录为准。
+
 ## 问题根因及修复
 
 首次接入时截图元数据只有待采集路径，.tpl/assets 没有真实截图文件，导致封面和详情画廊为空。之前因浏览器工具失败而将截图留作待办，未完成此项验收，不能将当时的接入状态视为完整交付。

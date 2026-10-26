@@ -1,0 +1,8 @@
+{
+  "name": "playora-template",
+  "version": "1.0.1",
+  "archive": "vendor/playora-template-1.0.1-30629aeb30f4.tgz",
+  "sha256": "30629aeb30f40933b07f5afeb3a78bec39fe74d3a2bd3bcfcd031ce0b7bef94c",
+  "sourceCommit": "94a6ea8177edc23f08dfeabfb0632d00dc4657a3",
+  "sourceDirty": false
+}

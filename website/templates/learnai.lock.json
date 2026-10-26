@@ -1,0 +1,8 @@
+{
+  "name": "learnai-template",
+  "version": "1.0.1",
+  "archive": "vendor/learnai-template-1.0.1-0f5919413936.tgz",
+  "sha256": "0f5919413936d9f49c76ec2138ca64a89a37f2d48b1d45f99079b325e11904e8",
+  "sourceCommit": "e97fc8db0fa81a4fd8deae3b0f73741280819c5e",
+  "sourceDirty": false
+}

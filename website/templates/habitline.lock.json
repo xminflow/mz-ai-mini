@@ -1,0 +1,8 @@
+{
+  "name": "habitline-template",
+  "version": "1.0.4",
+  "archive": "vendor/habitline-template-1.0.4-ca14a44cb304.tgz",
+  "sha256": "ca14a44cb304d8bf64f897842146232e35dfab3a64c3a6160dacc5c001ab3fd8",
+  "sourceCommit": "8c32370f938487fa27341871fe9999579b76fa2b",
+  "sourceDirty": false
+}

@@ -4,7 +4,13 @@
 
 | 模板 | Git 地址 | 分支 | 已核对提交 |
 | --- | --- | --- | --- |
+| playora | [playora-template](https://github.com/weelume/playora-template) | `codex/playora` | [94a6ea8177ed](https://github.com/weelume/playora-template/commit/94a6ea8177edc23f08dfeabfb0632d00dc4657a3) |
+| learnai | [learnai-template](https://github.com/weelume/learnai-template) | `codex/learnai` | [43b4fde106e3](https://github.com/weelume/learnai-template/commit/43b4fde106e32faf2650be793caf65e3fa491c85) |
+| alex | [alex-template](https://github.com/weelume/alex-template) | `main` | [484e32640c5b](https://github.com/weelume/alex-template/commit/484e32640c5ba9a34a67daaf7b11e348884a5ebf) |
+| creationai | [creationai-template](https://github.com/weelume/creationai-template) | `codex/creationai` | [a56b0b8b7400](https://github.com/weelume/creationai-template/commit/a56b0b8b74004d26f96580b40850c5d99d519998) |
+| stocklens | [stocklens-template](https://github.com/weelume/stocklens-template) | `codex/stocklens` | [e4030078a2be](https://github.com/weelume/stocklens-template/commit/e4030078a2be3b47d614ea74fde6d28028857790) |
 | kelo | [kelo-template](https://github.com/weelume/kelo-template) | `codex/kelo` | [1a4cb0e05fe3](https://github.com/weelume/kelo-template/commit/1a4cb0e05fe31ed25987c9d5fae77a2b24f4a821) |
+| kelo-marketing | [kelo-marketing-template](https://github.com/weelume/kelo-marketing-template) | `codex/kelo-marketing` | [1a9701db76cd](https://github.com/weelume/kelo-marketing-template/commit/1a9701db76cdf1a573a5ffd4b12079953e2f55a4) |
 | benjamen | [benjamen-template](https://github.com/weelume/benjamen-template) | `main` | [a64fc9062051](https://github.com/weelume/benjamen-template/commit/a64fc9062051a585d2f672a76f704e3b97207185) |
 | offersuite | [offersuite-template](https://github.com/weelume/offersuite-template) | `codex/offersuite` | [97c6acee40ed](https://github.com/weelume/offersuite-template/commit/97c6acee40ed5d10198c21ed8f5ac9f556667b81) |
 | folioxa | [folioxa-template](https://github.com/weelume/folioxa-template) | `main` | [242e687dd2b7](https://github.com/weelume/folioxa-template/commit/242e687dd2b7b18c96579aaaccfb3b8adf88d57f) |
@@ -170,3 +176,39 @@ Velara 接入更新：固定包 `71599a07d102`，源码 ZIP 已发布并匿名�
 estaymart：[源码](https://github.com/weelume/estaymart-template)，分支 codex/estaymart，提交 72ab44326559ca80eb3d94b51156c6977d5f984b。已正常推送并核对远端 SHA；本地 WSL 类型、lint、合同测试、生产构建与真实路由检查通过，报告源码摘要一致。既有视觉、动效和素材权利限制继续保留，未上架。
 
 pawlio：[源码](https://github.com/weelume/pawlio-template)，分支 codex/pawlio，提交 73eff1efec0f659c39e1785d0fb20a19d3368159。已正常推送并核对远端 SHA；本地 WSL 类型、lint、合同测试、生产构建与真实路由检查通过，报告源码摘要一致。既有视觉、动效和素材权利限制继续保留，未上架。
+
+### Velara 1.0.2 滚动条优化
+
+提交 `f89ac86092e9443f440a41633e6e97d6b2d3b790` 已推送并核对远端。8px深色/紫色原生滚动条已同步实际3000主站，Windows实测滚轮、键盘、拖拽和Next站内跳转后的样式恢复通过。12张三端截图已刷新，固定包、依赖锁与源码ZIP已同步。本机WSL主站正式构建通过。
+
+CryptoCalc 于2026年10月26日完成独立源码推送与远端SHA核对。独立类型、lint、换算测试、构建和32条双语生产路径通过；完整动效逐帧矩阵未全部完成。其他模板的既有记录未重新验收。
+
+Alex 于 2026-10-26（Asia/Shanghai）完成独立源码推送与远端 SHA 核对，主站接入及未完成项见 [alex-template-delivery.md](alex-template-delivery.md)。本记录不代表部署或其他模板重新验收。
+
+StockLens 1.1.0：2026年10月26日按用户要求将原模板改为美股分析，保留cryptocalc包名、ID及URL；独立6项测试、类型、lint、生产构建和32条双语路径通过，提交4ffaf7503bd06ff22013bb8530db036d234e998b已推送核对。
+
+2026年10月26日：用户要求统一名称，StockLens 1.2.0将模板ID、包名、工程目录和GitHub仓库统一为stocklens；原仓库保留历史，GitHub旧地址自动重定向，主站旧模板路径永久跳转至stocklens。
+
+
+### Habitline
+
+2026年10月26日：独立仓库 https://github.com/weelume/habitline-template ，分支 codex/habitline，提交 d9a1b598c926d9096029d59ac93a9dce805847ab 已推送且远端一致。九页18条双语生产路径、类型、lint、构建及三端54个页面状态检查通过；完整视觉/动效逐帧对照尚未通过，详见 habitline-template-delivery.md。
+
+
+Habitline 1.0.1：原生滚动条优化、三端截图刷新，提交 692a5da2161df9ada398a983b45ff39beefa5832 已推送核对。页面 8px、内部 6px，作用域随模板挂载/卸载管理；完整动效对照的既有未完成项仍保留。
+
+
+Habitline 最终交付版本1.0.2：修复滚动条样式展开后的本地字体导入顺序，提交8a9ccf6835314ad1bd0409613236563c3665e00e已推送并核对；实际交付与验证详情见 habitline-template-delivery.md。
+
+Habitline 最终版本1.0.3：宿主标题显式继承模板字体和700字重，避免主站重置样式覆盖，提交f7d006c50b2e5347c301b6fd0f1c6071f22c3177已推送核对。
+
+Habitline 1.0.4：按用户选择改为6px暖橙色页面滑块、4px内部滑块及透明轨道，提交8c32370f938487fa27341871fe9999579b76fa2b已推送且远端一致。
+
+
+## 2026-10-26 完整版本同步
+
+alex：https://github.com/weelume/alex-template，分支 main，提交 484e32640c5ba9a34a67daaf7b11e348884a5ebf，已正常推送并核对远端一致。主站固定包同步当前源码，既有视觉、动效和素材权利限制保留。
+
+creationai：https://github.com/weelume/creationai-template，分支 codex/creationai，提交 1872381385dbfc51b8e2c157dc73ae81c9f07a00，已正常推送并核对远端一致。主站固定包同步当前源码，既有视觉、动效和素材权利限制保留。
+
+learnai：https://github.com/weelume/learnai-template，分支 codex/learnai，提交 e97fc8db0fa81a4fd8deae3b0f73741280819c5e，已正常推送并核对远端一致。主站固定包同步当前源码，既有视觉、动效和素材权利限制保留。

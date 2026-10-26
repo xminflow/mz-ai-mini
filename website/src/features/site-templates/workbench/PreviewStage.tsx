@@ -63,7 +63,8 @@ export function PreviewStage({ templateId, src, title, accentColor, surfaces, ac
       <div className="stage-beam" style={{ width: active.width + 560 }} aria-hidden />
       {available && <div className="stage-device-holder" style={{ width: frameWidth * scale, height: frameHeight * scale }}>
         <div className={`stage-screen stage-device-${viewport}`} style={{ width: frameWidth, height: frameHeight, borderWidth: bezel, transform: `scale(${scale})` }}>
-          <iframe src={src} title={title} width={active.width} height={active.height} className="block size-full border-0" />
+          {/* 高 DPI 下边框会取整，100% 尺寸可能多出一个像素；明确固定 iframe 的真实 CSS 视口。 */}
+          <iframe src={src} title={title} width={active.width} height={active.height} style={{ width: active.width, height: active.height }} className="block border-0" />
         </div>
       </div>}
     </div>

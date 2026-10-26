@@ -1,0 +1,9 @@
+/* 滚动条属于主站适配：覆盖文档原生预留槽，不改变模板的 document 滚动来源。 */
+[data-template='kelo-marketing'] {
+  --template-scroll-thumb: rgba(15, 118, 86, .65);
+  --template-scroll-active: #087653;
+}
+
+[data-template='kelo-marketing'] .template-scrollbar-thumb {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .2), 0 1px 4px rgba(0, 0, 0, .18);
+}

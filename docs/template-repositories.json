@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-25T14:56:09.321Z",
+  "updatedAt": "2026-10-26T03:30:04.017Z",
   "scope": "全部新版独立模板；不含协议工具工程和主站仓库",
   "repositories": [
     {
@@ -1811,10 +1811,10 @@
       "id": "velara",
       "gitUrl": "https://github.com/weelume/velara-template",
       "branch": "codex/velara",
-      "commit": "9f60097d3fbea6d43af2a990b08506cfbaaafcd3",
-      "remoteCommit": "9f60097d3fbea6d43af2a990b08506cfbaaafcd3",
+      "commit": "f89ac86092e9443f440a41633e6e97d6b2d3b790",
+      "remoteCommit": "f89ac86092e9443f440a41633e6e97d6b2d3b790",
       "pushed": true,
-      "verifiedAt": "2026-10-25T14:37:08.013Z",
+      "verifiedAt": "2026-10-25T15:30:49.126Z",
       "localPath": "D:/code/code-tpl/velara-template",
       "metadataPath": ".tpl/template.json",
       "hostMetadataPath": "website/src/features/site-templates/catalog/velara/weelume.tsx",
@@ -1827,8 +1827,7 @@
         "sourceMatches": true
       },
       "limitations": [
-        "12张真实三端截图已在Windows采集并在实际3000主站验证；完整原站动效矩阵仍未完成。",
-        "正式全站build受benjamen源码ZIP未发布门禁阻塞。"
+        "完整原站动效逐帧矩阵仍未完成；滚动条、滚轮、键盘、拖拽、移动端布局与离开模板后的样式恢复已实测通过。"
       ],
       "hostIntegration": {
         "state": "integrated-in-main-3000",
@@ -1836,10 +1835,11 @@
         "lint": "passed",
         "snapshot": "passed",
         "routeChecks": 27,
-        "sourceZip": "1.0.1-published-and-anonymous-download-verified",
-        "fullBuild": "blocked-by-benjamen-unreleased-zip",
-        "screenshots": "12-real-Windows-captures-verified-in-main-gallery",
-        "motionMatrix": "not-fully-verified"
+        "sourceZip": "1.0.2-published-and-anonymous-download-verified",
+        "fullBuild": "passed-local-WSL",
+        "screenshots": "12-updated-Windows-captures",
+        "motionMatrix": "not-fully-verified",
+        "scrollbar": "8px-native-purple-theme-verified-in-main-3000"
       }
     },
     {
@@ -1930,6 +1930,320 @@
         "原参考与实现的全部三端逐帧时序、悬停/按压和长时间循环矩阵未完整对照；应用检查通过不代表完整复刻逐帧验收。",
         "使用既有本地 Linux 验收目录，不是独立干净 Git 克隆。",
         "参考素材商业再分发许可尚未完整核实，未市场上架。"
+      ]
+    },
+    {
+      "id": "stocklens",
+      "gitUrl": "https://github.com/weelume/stocklens-template",
+      "branch": "codex/stocklens",
+      "commit": "e4030078a2be3b47d614ea74fde6d28028857790",
+      "remoteCommit": "e4030078a2be3b47d614ea74fde6d28028857790",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T00:42:34.399Z",
+      "localPath": "D:/code/code-tpl/stocklens-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/stocklens/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "format",
+          "status": "passed"
+        },
+        {
+          "operation": "32 bilingual HTTP paths",
+          "status": "passed"
+        }
+      ],
+      "limitations": [
+        "完整三端逐帧动效矩阵、悬停暂停/恢复及系统减少动态设置实际触发验收未完成。",
+        "小图曲线和部分排版存在差异；不声明完整逐帧复刻。"
+      ],
+      "displayName": "StockLens · 美股分析",
+      "version": "1.2.0"
+    },
+    {
+      "id": "creationai",
+      "gitUrl": "https://github.com/weelume/creationai-template",
+      "branch": "codex/creationai",
+      "commit": "1872381385dbfc51b8e2c157dc73ae81c9f07a00",
+      "remoteCommit": "1872381385dbfc51b8e2c157dc73ae81c9f07a00",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T03:30:03.732Z",
+      "localPath": "D:/code/code-tpl/creationai-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/creationai/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "sourceDigest": "6adefffb0d8b23a0a47332638a5f07c4f8f15c87f4ff731cbb4b5d955efc35fc",
+      "limitations": [
+        "完整原站与本地三端逐帧、拖拽、循环暂停恢复和全部悬浮轨迹尚未对照；不能宣称完整动效复刻验收通过。",
+        "系统减少动态效果未进行实际偏好切换。",
+        "当前验收不是独立干净Git克隆。",
+        "截图工具缩小视口输出，元数据记录1425×990、819×1159、375×812真实尺寸，未放大。",
+        "参考设计与素材商业再分发权利尚未完整核实，listed=false。"
+      ]
+    },
+    {
+      "id": "alex",
+      "gitUrl": "https://github.com/weelume/alex-template",
+      "branch": "main",
+      "commit": "484e32640c5ba9a34a67daaf7b11e348884a5ebf",
+      "remoteCommit": "484e32640c5ba9a34a67daaf7b11e348884a5ebf",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T03:30:03.343Z",
+      "localPath": "D:/code/code-tpl/alex-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/alex/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "version": "1.0.1"
+    },
+    {
+      "id": "kelo-marketing",
+      "gitUrl": "https://github.com/weelume/kelo-marketing-template",
+      "branch": "codex/kelo-marketing",
+      "commit": "1a9701db76cdf1a573a5ffd4b12079953e2f55a4",
+      "remoteCommit": "1a9701db76cdf1a573a5ffd4b12079953e2f55a4",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T01:25:20.966Z",
+      "localPath": "D:/code/code-tpl/kelo-marketing-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/kelo-marketing/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "sourceDigest": "5155657ad4e98fae4d3ed511418d0088e50ac7859781a3a96e7949a2d6a8cbd7",
+      "limitations": [
+        "系统减少动态效果未进行真实设置切换验收。",
+        "原参考与实现的全部三端逐帧时序、悬停/按压和长时间循环矩阵未完整对照；应用检查通过不代表完整复刻逐帧验收。",
+        "使用既有本地 Linux 验收目录，不是独立干净 Git 克隆。",
+        "参考素材商业再分发许可尚未完整核实，未市场上架。"
+      ]
+    },
+    {
+      "id": "learnai",
+      "gitUrl": "https://github.com/weelume/learnai-template",
+      "branch": "codex/learnai",
+      "commit": "e97fc8db0fa81a4fd8deae3b0f73741280819c5e",
+      "remoteCommit": "e97fc8db0fa81a4fd8deae3b0f73741280819c5e",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T03:30:04.016Z",
+      "localPath": "D:/code/code-tpl/learnai-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/learnai/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "sourceDigest": "fe59492cbd6047c132e2454596c9a5c31333f4eae36029322cd3e1585515c7bb",
+      "limitations": [
+        "完整原站三端逐帧及每项hover/滚动轨迹尚未全部对照，不能宣称全量视觉动效一致。",
+        "浏览器语音识别、朗读与系统减少动态效果未实际授权/切换验证。",
+        "截图实际像素小于配置视口，已按解码真实尺寸登记，未放大。",
+        "非独立干净Git克隆验收。",
+        "素材商业再分发授权未核实，listed=false、redistributionAllowed=false。"
+      ]
+    },
+    {
+      "id": "playora",
+      "gitUrl": "https://github.com/weelume/playora-template",
+      "branch": "codex/playora",
+      "commit": "94a6ea8177edc23f08dfeabfb0632d00dc4657a3",
+      "remoteCommit": "94a6ea8177edc23f08dfeabfb0632d00dc4657a3",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T01:53:07.186Z",
+      "localPath": "D:/code/code-tpl/playora-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/playora/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "limitations": [
+        "原站精确时序、全部悬浮轨迹与减少动态偏好未完整对照，不宣称完整动效验收通过。"
+      ]
+    },
+    {
+      "id": "habitline",
+      "gitUrl": "https://github.com/weelume/habitline-template",
+      "branch": "codex/habitline",
+      "commit": "8c32370f938487fa27341871fe9999579b76fa2b",
+      "remoteCommit": "8c32370f938487fa27341871fe9999579b76fa2b",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T03:22:06.0238951Z",
+      "localPath": "D:/code/code-tpl/habitline-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/habitline/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "claimedStatus": "passed",
+        "state": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "status": "passed",
+          "operation": "typecheck"
+        },
+        {
+          "status": "passed",
+          "operation": "lint"
+        },
+        {
+          "status": "passed",
+          "operation": "build"
+        },
+        {
+          "status": "passed",
+          "operation": "test"
+        }
+      ],
+      "hostIntegration": {
+        "state": "integrated-local-WSL",
+        "version": "1.0.3",
+        "snapshot": "passed",
+        "typecheck": "passed",
+        "lint": "passed",
+        "fullBuild": "passed-local-WSL",
+        "routeChecks": 22,
+        "sourceZip": "1.0.3-published-and-anonymous-download-verified",
+        "scrollbar": "8px-template-10px-host-restoration-verified",
+        "headingTypography": "MiSans-Poppins-700-verified-in-host",
+        "motionMatrix": "not-fully-verified",
+        "previewUrl": "http://localhost:43570/templates/habitline/site"
+      },
+      "limitations": [
+        "完整原站视觉/动效逐帧、自动视频轮播、拖拽回弹和减少动态矩阵尚未完成；不标记完整复刻通过。",
+        "参考素材商业再分发许可未完整核实，保持未上架；公开Git和COS已获用户明确授权。"
       ]
     }
   ],

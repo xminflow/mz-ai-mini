@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      alex-template:
+        specifier: file:./vendor/alex-template-1.0.1-07eb9cb845c0.tgz
+        version: file:vendor/alex-template-1.0.1-07eb9cb845c0.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       artemis-template:
         specifier: file:./vendor/artemis-template-1.0.2-0e514c0f8176.tgz
         version: file:vendor/artemis-template-1.0.2-0e514c0f8176.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -23,6 +26,9 @@ importers:
       consutech-template:
         specifier: file:./vendor/consutech-template-1.0.2-8ad68b3c5eba.tgz
         version: file:vendor/consutech-template-1.0.2-8ad68b3c5eba.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      creationai-template:
+        specifier: file:./vendor/creationai-template-1.0.0-e31436eab2f2.tgz
+        version: file:vendor/creationai-template-1.0.0-e31436eab2f2.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       deformo-template:
         specifier: file:./vendor/deformo-template-1.2.0-b47eb1d90968.tgz
         version: file:vendor/deformo-template-1.2.0-b47eb1d90968.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -53,6 +59,9 @@ importers:
       grovia-template:
         specifier: file:./vendor/grovia-template-1.0.0-18cd7e1f4e07.tgz
         version: file:vendor/grovia-template-1.0.0-18cd7e1f4e07.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      habitline-template:
+        specifier: file:./vendor/habitline-template-1.0.4-ca14a44cb304.tgz
+        version: file:vendor/habitline-template-1.0.4-ca14a44cb304.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       hellomonday-template:
         specifier: file:./vendor/hellomonday-template-1.0.0-63ae27038145.tgz
         version: file:vendor/hellomonday-template-1.0.0-63ae27038145.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -62,6 +71,9 @@ importers:
       jironews-template:
         specifier: file:./vendor/jironews-template-1.0.0-d82d3829c967.tgz
         version: file:vendor/jironews-template-1.0.0-d82d3829c967.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      kelo-marketing-template:
+        specifier: file:./vendor/kelo-marketing-template-1.0.0-9f9c768be7dd.tgz
+        version: file:vendor/kelo-marketing-template-1.0.0-9f9c768be7dd.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       kelo-template:
         specifier: file:./vendor/kelo-template-1.0.0-8d175e24b69b.tgz
         version: file:vendor/kelo-template-1.0.0-8d175e24b69b.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -71,6 +83,9 @@ importers:
       latte-template:
         specifier: file:./vendor/latte-template-1.0.0-0e9917ea1f70.tgz
         version: file:vendor/latte-template-1.0.0-0e9917ea1f70.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      learnai-template:
+        specifier: file:./vendor/learnai-template-1.0.1-0f5919413936.tgz
+        version: file:vendor/learnai-template-1.0.1-0f5919413936.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       liubai-template:
         specifier: file:./vendor/liubai-template-1.0.0-af57c354ecd6.tgz
         version: file:vendor/liubai-template-1.0.0-af57c354ecd6.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -101,6 +116,9 @@ importers:
       pawlio-template:
         specifier: file:./vendor/pawlio-template-1.0.0-9b11e58f056c.tgz
         version: file:vendor/pawlio-template-1.0.0-9b11e58f056c.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      playora-template:
+        specifier: file:./vendor/playora-template-1.0.1-30629aeb30f4.tgz
+        version: file:vendor/playora-template-1.0.1-30629aeb30f4.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       portfolica-template:
         specifier: file:./vendor/portfolica-template-1.0.0-761c0087e4cb.tgz
         version: file:vendor/portfolica-template-1.0.0-761c0087e4cb.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -128,6 +146,9 @@ importers:
       spycat-template:
         specifier: file:./vendor/spycat-template-1.0.0-7ea0a42eafe9.tgz
         version: file:vendor/spycat-template-1.0.0-7ea0a42eafe9.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      stocklens-template:
+        specifier: file:./vendor/stocklens-template-1.2.0-16739793796e.tgz
+        version: file:vendor/stocklens-template-1.2.0-16739793796e.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       studiothink-template:
         specifier: file:./vendor/studiothink-template-1.0.0-4a8d22d6efcc.tgz
         version: file:vendor/studiothink-template-1.0.0-4a8d22d6efcc.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -144,8 +165,8 @@ importers:
         specifier: file:./vendor/unseen-template-1.0.0-46bda9ae0670.tgz
         version: file:vendor/unseen-template-1.0.0-46bda9ae0670.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       velara-template:
-        specifier: file:./vendor/velara-template-1.0.1-6e3e393ead8d.tgz
-        version: file:vendor/velara-template-1.0.1-6e3e393ead8d.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: file:./vendor/velara-template-1.0.2-fdfa97bd6c5f.tgz
+        version: file:vendor/velara-template-1.0.2-fdfa97bd6c5f.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       vetala-template:
         specifier: file:./vendor/vetala-template-1.0.1-1ddd1c5d70b3.tgz
         version: file:vendor/vetala-template-1.0.1-1ddd1c5d70b3.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -839,6 +860,15 @@ packages:
   ajv@6.14.0:
     resolution: {integrity: sha512-IWrosm/yrn43eiKqkfkHis7QioDleaXQHdDVPKg0FSwwd/DuvyX79TZnFOnYpB7dcsFAMmtFztZuXPDvSePkFw==}
 
+  alex-template@file:vendor/alex-template-1.0.1-07eb9cb845c0.tgz:
+    resolution: {integrity: sha512-Xz1pCJOHjzmTowEz08hKJGbXXQRrY523SnWjprSY8cBD+LBnBYsukYQqdq9SXSEAsuw2aEL2vuho/NQXHffMeg==, tarball: file:vendor/alex-template-1.0.1-07eb9cb845c0.tgz}
+    version: 1.0.1
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   ansi-styles@4.3.0:
     resolution: {integrity: sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==}
     engines: {node: '>=8'}
@@ -1012,6 +1042,15 @@ packages:
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
+
+  creationai-template@file:vendor/creationai-template-1.0.0-e31436eab2f2.tgz:
+    resolution: {integrity: sha512-OwJE0TfCYSRD++Oy7BRMv7Nddc91pQ+Jh/sdj1WBQmr5jjE+MFZFhCDVZPy5L6R8+9PLMSLmd8i6/OehWlgXUQ==, tarball: file:vendor/creationai-template-1.0.0-e31436eab2f2.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -1449,6 +1488,15 @@ packages:
       react: ^19.2.4
       react-dom: ^19.2.4
 
+  habitline-template@file:vendor/habitline-template-1.0.4-ca14a44cb304.tgz:
+    resolution: {integrity: sha512-VxPspzixh9xtJzveHa5rRQR9RNGEN09H2LaX/e8+ISTsaXN3TeiMqhw4M1p/LSZALbdn7Jb5w7bggrdP5d3QCA==, tarball: file:vendor/habitline-template-1.0.4-ca14a44cb304.tgz}
+    version: 1.0.4
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   has-bigints@1.1.0:
     resolution: {integrity: sha512-R3pbpkcIqv2Pm3dUwgjclDRVmWpTJW2DcMzcIhEXEx1oh/CEMObMm3KLmRJOdvhM7o4uQBnwr8pzRK2sJWIqfg==}
     engines: {node: '>= 0.4'}
@@ -1680,6 +1728,15 @@ packages:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
     engines: {node: '>=4.0'}
 
+  kelo-marketing-template@file:vendor/kelo-marketing-template-1.0.0-9f9c768be7dd.tgz:
+    resolution: {integrity: sha512-EBgXzCknHwG5Ux+kAPx7ol/KmfHHxfRAs5r9OSHe1bK1G/J9B9KYFqXz4i2hPZFcTegY+9PGbEJU0C53oib1OA==, tarball: file:vendor/kelo-marketing-template-1.0.0-9f9c768be7dd.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   kelo-template@file:vendor/kelo-template-1.0.0-8d175e24b69b.tgz:
     resolution: {integrity: sha512-PSdrLefBzz0z5+BML8GiSeRNhX77Fucj1sKva7mATX6uTrn/aLgO4DDY93peuoBegtJYmc36Cv7uZogDS8djQA==, tarball: file:vendor/kelo-template-1.0.0-8d175e24b69b.tgz}
     version: 1.0.0
@@ -1711,6 +1768,15 @@ packages:
   latte-template@file:vendor/latte-template-1.0.0-0e9917ea1f70.tgz:
     resolution: {integrity: sha512-6HBI7NyrMKqWgEO/SanpbKwtmr061ITHpT3JaGSmtNurs9IL096keXv/CqeL/VAJvzzFN3kOyiROtGlvUiGIVA==, tarball: file:vendor/latte-template-1.0.0-0e9917ea1f70.tgz}
     version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
+  learnai-template@file:vendor/learnai-template-1.0.1-0f5919413936.tgz:
+    resolution: {integrity: sha512-VxsyX3rIsYxSIVxRGvzBNhMbpffZtMgMtRu8/XoLxPe/o6A3iI7fkkC6lq1jStHLOFtjmmskijrVvF6a9xKElw==, tarball: file:vendor/learnai-template-1.0.1-0f5919413936.tgz}
+    version: 1.0.1
     peerDependencies:
       framer-motion: ^12.38.0
       next: ^15.3.3
@@ -2035,6 +2101,15 @@ packages:
     resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
     engines: {node: '>=12'}
 
+  playora-template@file:vendor/playora-template-1.0.1-30629aeb30f4.tgz:
+    resolution: {integrity: sha512-sY/VW7dF9UzLTHS672F6BHxCd6gQH5pH4pphec8tjM6alUaiBt0AyNuPytpYRsYyiBMDUwobOMm+UtbmMKKW6A==, tarball: file:vendor/playora-template-1.0.1-30629aeb30f4.tgz}
+    version: 1.0.1
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   portfolica-template@file:vendor/portfolica-template-1.0.0-761c0087e4cb.tgz:
     resolution: {integrity: sha512-ZYjd3EzlsAHMTdT1uHaX+ce3X2Sb3cegGJ7gszyPvaROmUrTmI9y6QBEERjxTQzOKBrkX4IbwceTTkn6J6XgTQ==, tarball: file:vendor/portfolica-template-1.0.0-761c0087e4cb.tgz}
     version: 1.0.0
@@ -2230,6 +2305,15 @@ packages:
   stable-hash@0.0.5:
     resolution: {integrity: sha512-+L3ccpzibovGXFK+Ap/f8LOS0ahMrHTf3xu7mMLSpEGU0EO9ucaysSylKo9eRDFNhWve/y275iPmIZ4z39a9iA==}
 
+  stocklens-template@file:vendor/stocklens-template-1.2.0-16739793796e.tgz:
+    resolution: {integrity: sha512-G0ctXTtOqcYwUXxSCp7nFmNv7nAenX5CPgBRbd/P9xlB0A/+iuJejv/PFv4yX/xUWMLPIDfon+vC7p+GdUWJdQ==, tarball: file:vendor/stocklens-template-1.2.0-16739793796e.tgz}
+    version: 1.2.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   stop-iteration-iterator@1.1.0:
     resolution: {integrity: sha512-eLoXW/DHyl62zxY4SCaIgnRhuMr6ri4juEYARS8E6sCEqzKpOiE521Ucofdx+KnDZl5xmvGYaaKCk5FEOxJCoQ==}
     engines: {node: '>= 0.4'}
@@ -2412,9 +2496,9 @@ packages:
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
-  velara-template@file:vendor/velara-template-1.0.1-6e3e393ead8d.tgz:
-    resolution: {integrity: sha512-Isf2/xIhaQS2ITbKeh0hymmb97wy0d5APktyg1YqjnEspo+TMT+aCHbYvayG3m7vBmcQQrwfCXuKQaH0FB7r5Q==, tarball: file:vendor/velara-template-1.0.1-6e3e393ead8d.tgz}
-    version: 1.0.1
+  velara-template@file:vendor/velara-template-1.0.2-fdfa97bd6c5f.tgz:
+    resolution: {integrity: sha512-k6EyDXo9/sROPyDkvwKCypPGyafSs1zODAtpA+suzQ3n4g53/gkidvLc4xaciffpUTq081US6ic53Xy9EIgIkQ==, tarball: file:vendor/velara-template-1.0.2-fdfa97bd6c5f.tgz}
+    version: 1.0.2
     peerDependencies:
       framer-motion: ^12.38.0
       next: ^15.3.3
@@ -3090,6 +3174,13 @@ snapshots:
       json-schema-traverse: 0.4.1
       uri-js: 4.4.1
 
+  alex-template@file:vendor/alex-template-1.0.1-07eb9cb845c0.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   ansi-styles@4.3.0:
     dependencies:
       color-convert: 2.0.1
@@ -3276,6 +3367,13 @@ snapshots:
       react-dom: 19.2.5(react@19.2.5)
 
   convert-source-map@2.0.0: {}
+
+  creationai-template@file:vendor/creationai-template-1.0.0-e31436eab2f2.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
 
   cross-spawn@7.0.6:
     dependencies:
@@ -3844,6 +3942,13 @@ snapshots:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
+  habitline-template@file:vendor/habitline-template-1.0.4-ca14a44cb304.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   has-bigints@1.1.0: {}
 
   has-flag@4.0.0: {}
@@ -4064,6 +4169,13 @@ snapshots:
       object.assign: 4.1.7
       object.values: 1.2.1
 
+  kelo-marketing-template@file:vendor/kelo-marketing-template-1.0.0-9f9c768be7dd.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   kelo-template@file:vendor/kelo-template-1.0.0-8d175e24b69b.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -4089,6 +4201,13 @@ snapshots:
       language-subtag-registry: 0.3.23
 
   latte-template@file:vendor/latte-template-1.0.0-0e9917ea1f70.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
+  learnai-template@file:vendor/learnai-template-1.0.1-0f5919413936.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -4376,6 +4495,13 @@ snapshots:
 
   picomatch@4.0.4: {}
 
+  playora-template@file:vendor/playora-template-1.0.1-30629aeb30f4.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   portfolica-template@file:vendor/portfolica-template-1.0.0-761c0087e4cb.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -4613,6 +4739,13 @@ snapshots:
 
   stable-hash@0.0.5: {}
 
+  stocklens-template@file:vendor/stocklens-template-1.2.0-16739793796e.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   stop-iteration-iterator@1.1.0:
     dependencies:
       es-errors: 1.3.0
@@ -4841,7 +4974,7 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  velara-template@file:vendor/velara-template-1.0.1-6e3e393ead8d.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+  velara-template@file:vendor/velara-template-1.0.2-fdfa97bd6c5f.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)

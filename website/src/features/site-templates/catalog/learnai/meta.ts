@@ -1,0 +1,1 @@
+export {learnaiTemplate} from './weelume'

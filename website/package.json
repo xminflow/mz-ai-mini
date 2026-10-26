@@ -16,6 +16,7 @@
     "template:release:check": "node scripts/template-release-check.mjs"
   },
   "dependencies": {
+    "habitline-template": "file:./vendor/habitline-template-1.0.4-ca14a44cb304.tgz",
     "echarts": "^6.1.0",
     "framer-motion": "^12.38.0",
     "next": "^15.3.3",
@@ -62,8 +63,14 @@
     "zenpanda-template": "file:./vendor/zenpanda-template-1.0.0-42dd4aabfc3a.tgz",
     "benjamen-template": "file:./vendor/benjamen-template-1.0.0-8ecb99a19935.tgz",
     "kittypaw-template": "file:./vendor/kittypaw-template-1.0.1-b26ec8376cdb.tgz",
-    "velara-template": "file:./vendor/velara-template-1.0.1-6e3e393ead8d.tgz",
-    "kelo-template": "file:./vendor/kelo-template-1.0.0-8d175e24b69b.tgz"
+    "velara-template": "file:./vendor/velara-template-1.0.2-fdfa97bd6c5f.tgz",
+    "kelo-template": "file:./vendor/kelo-template-1.0.0-8d175e24b69b.tgz",
+    "alex-template": "file:./vendor/alex-template-1.0.1-07eb9cb845c0.tgz",
+    "creationai-template": "file:./vendor/creationai-template-1.0.0-e31436eab2f2.tgz",
+    "stocklens-template": "file:./vendor/stocklens-template-1.2.0-16739793796e.tgz",
+    "kelo-marketing-template": "file:./vendor/kelo-marketing-template-1.0.0-9f9c768be7dd.tgz",
+    "learnai-template": "file:./vendor/learnai-template-1.0.1-0f5919413936.tgz",
+    "playora-template": "file:./vendor/playora-template-1.0.1-30629aeb30f4.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

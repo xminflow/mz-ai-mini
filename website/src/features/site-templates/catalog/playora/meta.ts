@@ -1,0 +1,1 @@
+export {playoraTemplate} from './weelume'

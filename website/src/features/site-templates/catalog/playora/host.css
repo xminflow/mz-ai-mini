@@ -1,0 +1,9 @@
+/* 仅在 Playora 主站页面启用，不改变 document 滚动来源及设备模拟的真实视口。 */
+html:has(.po) {
+  --template-scroll-thumb: rgba(25, 23, 23, .48);
+  --template-scroll-active: #dc5e17;
+}
+
+html:has(.po) .template-scrollbar-thumb {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .4), 0 1px 4px rgba(0, 0, 0, .16);
+}

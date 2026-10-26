@@ -27,7 +27,7 @@ const config: NextConfig = {
   distDir: process.env.WEBSITE_BUILD_DIR ?? '.next',
   output: 'standalone',
   outputFileTracingRoot: resolve(process.cwd()),
-  transpilePackages: ['kelo-template', 'velara-template', 'kittypaw-template', 'benjamen-template', 'zenpanda-template', 'pawlio-template', 'estaymart-template', 'vetala-template', 'consutech-template', 'spycat-template', 'ospey-template', 'jironews-template', 'noter-template', 'deformo-template', 'uiuxfolio-template', 'latte-template', 'cerno-template', 'foldex-template', 'souma-template', 'conicorn-template', 'grovia-template', 'furnexa-template', 'mondragon-template', 'lunera-template', 'noirei-template', 'hellomonday-template', 'liubai-template', 'nubo-template', 'recueil-template', 'studiothink-template', 'tabfolio-template', 'unseen-template', 'tomasfolio-template', 'artemis-template', 'graybeam-template', 'drip-template', 'folioxa-template', 'ilse-moreno-template', 'offersuite-template', 'portfolica-template', 'shelta-template', 'rescale-template'],
+  transpilePackages: ['habitline-template', 'playora-template', 'learnai-template', 'kelo-marketing-template', 'creationai-template', 'stocklens-template', 'alex-template', 'kelo-template', 'velara-template', 'kittypaw-template', 'benjamen-template', 'zenpanda-template', 'pawlio-template', 'estaymart-template', 'vetala-template', 'consutech-template', 'spycat-template', 'ospey-template', 'jironews-template', 'noter-template', 'deformo-template', 'uiuxfolio-template', 'latte-template', 'cerno-template', 'foldex-template', 'souma-template', 'conicorn-template', 'grovia-template', 'furnexa-template', 'mondragon-template', 'lunera-template', 'noirei-template', 'hellomonday-template', 'liubai-template', 'nubo-template', 'recueil-template', 'studiothink-template', 'tabfolio-template', 'unseen-template', 'tomasfolio-template', 'artemis-template', 'graybeam-template', 'drip-template', 'folioxa-template', 'ilse-moreno-template', 'offersuite-template', 'portfolica-template', 'shelta-template', 'rescale-template'],
   env: {
     NEXT_PUBLIC_API_BASE_URL: API_PREFIX,
   },
@@ -44,6 +44,8 @@ const config: NextConfig = {
   // 这里作为应用层 safety net，避免 CDN 配置漏掉时两个域名同时被搜索引擎收录。
   async redirects() {
     return [
+      // 旧模板地址保留重定向，路径和查询参数由 Next.js 继续传递。
+      { source: '/templates/cryptocalc/:path*', destination: '/templates/stocklens/:path*', permanent: true },
       {
         source: '/:path*',
         has: [{ type: 'host', value: 'www.weelume.com' }],
@@ -58,7 +60,7 @@ export default function nextConfig(phase: string): NextConfig {
   // 本地路径仅用于 dev；生产构建一律读取锁定的随仓模板运行包。
   if (phase !== PHASE_DEVELOPMENT_SERVER) return config
   const aliases: Record<string, string> = {}
-  for (const id of ['kelo', 'velara', 'kittypaw', 'benjamen', 'zenpanda', 'pawlio', 'estaymart', 'vetala', 'consutech', 'spycat', 'ospey', 'jironews', 'noter', 'deformo', 'uiuxfolio', 'latte', 'cerno', 'foldex', 'souma', 'furnexa', 'mondragon', 'conicorn', 'grovia', 'lunera', 'noirei', 'hellomonday', 'liubai', 'nubo', 'recueil', 'studiothink', 'tabfolio', 'unseen', 'tomasfolio', 'artemis', 'graybeam', 'drip', 'folioxa', 'ilse-moreno', 'offersuite', 'portfolica', 'shelta', 'rescale']) {
+  for (const id of ['habitline', 'playora', 'learnai', 'kelo-marketing', 'creationai', 'stocklens', 'alex', 'kelo', 'velara', 'kittypaw', 'benjamen', 'zenpanda', 'pawlio', 'estaymart', 'vetala', 'consutech', 'spycat', 'ospey', 'jironews', 'noter', 'deformo', 'uiuxfolio', 'latte', 'cerno', 'foldex', 'souma', 'furnexa', 'mondragon', 'conicorn', 'grovia', 'lunera', 'noirei', 'hellomonday', 'liubai', 'nubo', 'recueil', 'studiothink', 'tabfolio', 'unseen', 'tomasfolio', 'artemis', 'graybeam', 'drip', 'folioxa', 'ilse-moreno', 'offersuite', 'portfolica', 'shelta', 'rescale']) {
     const localFile = resolve(id + '.local')
     if (!existsSync(localFile)) continue
     const { source } = JSON.parse(readFileSync(localFile, 'utf8')) as { source: string }
