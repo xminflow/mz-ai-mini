@@ -16,7 +16,7 @@
     "template:release:check": "node scripts/template-release-check.mjs"
   },
   "dependencies": {
-    "habitline-template": "file:./vendor/habitline-template-1.0.4-ca14a44cb304.tgz",
+    "habitline-template": "file:./vendor/habitline-template-1.0.5-aae5e65f42f2.tgz",
     "echarts": "^6.1.0",
     "framer-motion": "^12.38.0",
     "next": "^15.3.3",

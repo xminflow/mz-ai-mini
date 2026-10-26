@@ -60,8 +60,8 @@ importers:
         specifier: file:./vendor/grovia-template-1.0.0-18cd7e1f4e07.tgz
         version: file:vendor/grovia-template-1.0.0-18cd7e1f4e07.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       habitline-template:
-        specifier: file:./vendor/habitline-template-1.0.4-ca14a44cb304.tgz
-        version: file:vendor/habitline-template-1.0.4-ca14a44cb304.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: file:./vendor/habitline-template-1.0.5-aae5e65f42f2.tgz
+        version: file:vendor/habitline-template-1.0.5-aae5e65f42f2.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       hellomonday-template:
         specifier: file:./vendor/hellomonday-template-1.0.0-63ae27038145.tgz
         version: file:vendor/hellomonday-template-1.0.0-63ae27038145.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -1488,9 +1488,9 @@ packages:
       react: ^19.2.4
       react-dom: ^19.2.4
 
-  habitline-template@file:vendor/habitline-template-1.0.4-ca14a44cb304.tgz:
-    resolution: {integrity: sha512-VxPspzixh9xtJzveHa5rRQR9RNGEN09H2LaX/e8+ISTsaXN3TeiMqhw4M1p/LSZALbdn7Jb5w7bggrdP5d3QCA==, tarball: file:vendor/habitline-template-1.0.4-ca14a44cb304.tgz}
-    version: 1.0.4
+  habitline-template@file:vendor/habitline-template-1.0.5-aae5e65f42f2.tgz:
+    resolution: {integrity: sha512-J716fv5+HvXNvdgLbf+aoK7sbx0VTGza3y52G3awvxXCE1S6xn3AMrUTKFfy6ma99LB1DADPUGuL1Sp/q0h5jA==, tarball: file:vendor/habitline-template-1.0.5-aae5e65f42f2.tgz}
+    version: 1.0.5
     peerDependencies:
       framer-motion: ^12.38.0
       next: ^15.3.3
@@ -3942,7 +3942,7 @@ snapshots:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
-  habitline-template@file:vendor/habitline-template-1.0.4-ca14a44cb304.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+  habitline-template@file:vendor/habitline-template-1.0.5-aae5e65f42f2.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)

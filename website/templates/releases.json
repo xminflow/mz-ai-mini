@@ -450,12 +450,12 @@
     "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/alex/1.0.1-484e32640c5ba9a34a67daaf7b11e348884a5ebf/8e3f6ce619812dae1996bd164e40a45031e4c9505622e689725f47fe36711dc6.zip"
   },
   "habitline": {
-    "version": "1.0.4",
-    "sourceCommit": "8c32370f938487fa27341871fe9999579b76fa2b",
-    "sha256": "a9238e0c2791443568f90e82eea005891626cf50be0bd368f64428c4ae90ba62",
-    "size": 50967548,
-    "file": "habitline-1.0.4-8c32370f938487fa27341871fe9999579b76fa2b.zip",
-    "snapshotSha256": "ca14a44cb304d8bf64f897842146232e35dfab3a64c3a6160dacc5c001ab3fd8",
-    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/habitline/1.0.4-8c32370f938487fa27341871fe9999579b76fa2b/a9238e0c2791443568f90e82eea005891626cf50be0bd368f64428c4ae90ba62.zip"
+    "version": "1.0.5",
+    "sourceCommit": "9c11596f1a19ebd3de5e1c24a5e5739f6bd08285",
+    "sha256": "64fcd3cba765913f33a2e998bb5d39df132330f2cb9a0839ba0f04b64d58a7fb",
+    "size": 50967835,
+    "file": "habitline-1.0.5-9c11596f1a19ebd3de5e1c24a5e5739f6bd08285.zip",
+    "snapshotSha256": "aae5e65f42f27da2c86d65e1e4cf6b98067e8eaaf8d3a3dd83b859d72a82bf5b",
+    "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/habitline/1.0.5-9c11596f1a19ebd3de5e1c24a5e5739f6bd08285/64fcd3cba765913f33a2e998bb5d39df132330f2cb9a0839ba0f04b64d58a7fb.zip"
   }
 }
