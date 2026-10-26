@@ -1,0 +1,7 @@
+/* 宿主根滚动容器在水合前具备定位上下文；离开模板路由后自动失效。 */
+html:has([data-template='rhys']),
+html:has([data-template='rhys']) body {
+  position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: #aeb2b3 #f7f5f2;
+}

@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "template:catalog": "node ./scripts/template-catalog.mjs",
     "dev": "node scripts/next-with-templates.mjs dev",
     "build": "node scripts/next-with-templates.mjs build",
     "start": "node scripts/next-with-templates.mjs start",
@@ -48,7 +49,7 @@
     "graybeam-template": "file:./vendor/graybeam-template-1.0.0-67813fb3b4e8.tgz",
     "ilse-moreno-template": "file:./vendor/ilse-moreno-template-1.0.0-6e658f76f40f.tgz",
     "folioxa-template": "file:./vendor/folioxa-template-1.0.0-70add1d628ad.tgz",
-    "rescale-template": "file:./vendor/rescale-template-1.0.0-05698db9bc3e.tgz",
+    "rescale-template": "file:./vendor/rescale-template-1.0.1-16a130f94efa.tgz",
     "portfolica-template": "file:./vendor/portfolica-template-1.0.0-761c0087e4cb.tgz",
     "offersuite-template": "file:./vendor/offersuite-template-1.0.0-dc905948e733.tgz",
     "shelta-template": "file:./vendor/shelta-template-1.0.0-78e3129ff581.tgz",
@@ -70,7 +71,13 @@
     "stocklens-template": "file:./vendor/stocklens-template-1.2.0-16739793796e.tgz",
     "kelo-marketing-template": "file:./vendor/kelo-marketing-template-1.0.0-9f9c768be7dd.tgz",
     "learnai-template": "file:./vendor/learnai-template-1.0.1-0f5919413936.tgz",
-    "playora-template": "file:./vendor/playora-template-1.0.1-30629aeb30f4.tgz"
+    "playora-template": "file:./vendor/playora-template-1.0.1-30629aeb30f4.tgz",
+    "solaris-template": "file:./vendor/solaris-template-1.0.3-22387658309e.tgz",
+    "newcomer-template": "file:./vendor/newcomer-template-1.0.1-5e648ca799b8.tgz",
+    "rhys-template": "file:./vendor/rhys-template-1.0.2-071ad7177547.tgz",
+    "hydrowell-template": "file:./vendor/hydrowell-template-1.0.1-818d4064052f.tgz",
+    "goalz-template": "file:./vendor/goalz-template-1.0.2-c7cc461a0a02.tgz",
+    "designfast-template": "file:./vendor/designfast-template-1.0.0-215b412bd746.tgz"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

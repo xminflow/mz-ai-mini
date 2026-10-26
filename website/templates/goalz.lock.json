@@ -1,0 +1,8 @@
+{
+  "name": "goalz-template",
+  "version": "1.0.2",
+  "archive": "vendor/goalz-template-1.0.2-c7cc461a0a02.tgz",
+  "sha256": "c7cc461a0a02618d2313a7e65659f5124d99fecdf6efcec287fa337b02696176",
+  "sourceCommit": "fab23bd44014a3dc1d1e4f86cdb2f06802879e03",
+  "sourceDirty": false
+}

@@ -7,7 +7,7 @@ import { resolve, join, dirname, sep } from 'node:path'
 export const websiteRoot = resolve(import.meta.dirname, '../..')
 const require = createRequire(import.meta.url)
 export const localFile = join(websiteRoot, 'deformo.local')
-export const SHARED_TEMPLATE_IDS = ['habitline', 'playora', 'learnai', 'kelo-marketing', 'creationai', 'stocklens', 'alex', 'kelo', 'velara', 'kittypaw', 'benjamen', 'zenpanda', 'pawlio', 'estaymart', 'vetala', 'consutech', 'spycat', 'ospey', 'jironews', 'noter', 'deformo', 'uiuxfolio', 'latte', 'cerno', 'foldex', 'souma', 'furnexa', 'mondragon', 'conicorn', 'grovia', 'lunera', 'noirei', 'hellomonday', 'liubai', 'nubo', 'recueil', 'studiothink', 'tabfolio', 'unseen', 'tomasfolio', 'artemis', 'graybeam', 'drip', 'folioxa', 'ilse-moreno', 'offersuite', 'portfolica', 'shelta', 'rescale']
+export const SHARED_TEMPLATE_IDS = ['designfast', 'goalz', 'hydrowell', 'rhys', 'newcomer', 'solaris', 'habitline', 'playora', 'learnai', 'kelo-marketing', 'creationai', 'stocklens', 'alex', 'kelo', 'velara', 'kittypaw', 'benjamen', 'zenpanda', 'pawlio', 'estaymart', 'vetala', 'consutech', 'spycat', 'ospey', 'jironews', 'noter', 'deformo', 'uiuxfolio', 'latte', 'cerno', 'foldex', 'souma', 'furnexa', 'mondragon', 'conicorn', 'grovia', 'lunera', 'noirei', 'hellomonday', 'liubai', 'nubo', 'recueil', 'studiothink', 'tabfolio', 'unseen', 'tomasfolio', 'artemis', 'graybeam', 'drip', 'folioxa', 'ilse-moreno', 'offersuite', 'portfolica', 'shelta', 'rescale']
 export function templateLocalFile(id = 'deformo') {
   if (!SHARED_TEMPLATE_IDS.includes(id)) throw new Error('未登记的共享模板: ' + id)
   return join(websiteRoot, id + '.local')

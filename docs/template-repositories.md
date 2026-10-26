@@ -1,9 +1,13 @@
 # 新版独立模板 Git 地址与推送记录
 
-更新时间：2026年10月24日（Asia/Shanghai）。累计 28 套独立模板已推送源码并核对远端提交。各仓实际校验时点、完整 SHA 和历史验收状态保留在 [template-repositories.json](template-repositories.json)，并非此次重新验收所有模板。保留原有分支，不强制推送或覆盖远端历史。
+更新时间：2026年10月26日（Asia/Shanghai）。当前记录 56 套独立模板。各仓实际推送与校验时点、完整SHA和历史验收状态保留在 [template-repositories.json](template-repositories.json)，不代表此次重新验收所有模板。保留原有分支，不强制推送或覆盖远端历史。
 
 | 模板 | Git 地址 | 分支 | 已核对提交 |
 | --- | --- | --- | --- |
+| designfast | [designfast-template](https://github.com/weelume/designfast-template) | `main` | [15decf989c0c](https://github.com/weelume/designfast-template/commit/15decf989c0c0d0cafb4f49c2235a61289c5064a) |
+| goalz | [goalz-template](https://github.com/weelume/goalz-template) | codex/goalz | [fab23bd44014](https://github.com/weelume/goalz-template/commit/fab23bd44014a3dc1d1e4f86cdb2f06802879e03) |
+| hydrowell | [hydrowell-template](https://github.com/weelume/hydrowell-template) | `main` | [14f42dbe25dc](https://github.com/weelume/hydrowell-template/commit/14f42dbe25dc6796de8cd8d2c1ed00fb8d5a3891) |
+| newcomer | [newcomer-template](https://github.com/weelume/newcomer-template) | `codex/newcomer` | [e15b0e49342c](https://github.com/weelume/newcomer-template/commit/e15b0e49342c829e038000081cfaa9c226f18114) |
 | playora | [playora-template](https://github.com/weelume/playora-template) | `codex/playora` | [94a6ea8177ed](https://github.com/weelume/playora-template/commit/94a6ea8177edc23f08dfeabfb0632d00dc4657a3) |
 | learnai | [learnai-template](https://github.com/weelume/learnai-template) | `codex/learnai` | [43b4fde106e3](https://github.com/weelume/learnai-template/commit/43b4fde106e32faf2650be793caf65e3fa491c85) |
 | alex | [alex-template](https://github.com/weelume/alex-template) | `main` | [484e32640c5b](https://github.com/weelume/alex-template/commit/484e32640c5ba9a34a67daaf7b11e348884a5ebf) |
@@ -73,7 +77,7 @@ Artemis（2026-10-23）：独立模板 15 页、30 条语言路由，120 组视�
 
 ## Rescale（2026-10-24 新增）
 
-源码：[rescale-template](https://github.com/weelume/rescale-template)，main，提交 `42189255ab22f070794a25ddb48d089c1cda58e1`。已正常推送并核对远端 SHA；独立 WSL 类型、ESLint、3 项合同测试、生产构建和 20 条路由 / 404 / 90 项素材检查通过。80 组双语视口检查通过，12 张实际三端截图；完整原站动效精确对照尚未完成。交付记录见 [rescale-template-delivery.md](rescale-template-delivery.md)。
+源码：[rescale-template](https://github.com/weelume/rescale-template)，main，提交 `06bd7fb6a9a580a05198d05a7351f00eb0351f7d`。1.0.1 已推送并核对远端；本地 WSL 干净克隆类型、ESLint、4 项测试、构建、20 条双语路由 / 404 / 90 项素材检查通过，报告匹配最终源码摘要。使用内置浏览器复核年付价格、团队布局与手机评价轮播；完整动效精确对照尚未完成。交付记录见 [rescale-template-delivery.md](rescale-template-delivery.md)。
 
 ## 2026-10-24 Portfolica 增量交付
 
@@ -214,3 +218,19 @@ creationai：https://github.com/weelume/creationai-template，分支 codex/creat
 learnai：https://github.com/weelume/learnai-template，分支 codex/learnai，提交 e97fc8db0fa81a4fd8deae3b0f73741280819c5e，已正常推送并核对远端一致。主站固定包同步当前源码，既有视觉、动效和素材权利限制保留。
 
 Habitline 1.0.5：修复主站 body 全局灰色滚动条覆盖，html/body 同时按模板标记应用6px暖橙滑块和透明轨道。提交 9c11596f1a19ebd3de5e1c24a5e5739f6bd08285 已推送且远端一致；源码 ZIP 匿名校验通过。
+
+## 2026-10-26 Solaris 独立模板
+
+Solaris：[solaris-template](https://github.com/weelume/solaris-template)，分支 main，提交 `911133a1a73b31531e6dcd178e224cebfa14e905`，已正常推送且远端一致。独立 1.0.1 类型、lint、素材测试、构建、18 条生产健康路由和严格源码摘要检查通过；72 组双语视口与三端交互证据随工程交付。主站集成状态见 Solaris 交付文档。
+
+## 2026-10-26 Rhys 独立模板
+
+Rhys：[rhys-template](https://github.com/weelume/rhys-template)，分支 `main`，提交 `d7a544b84b46a25aeeeb8e24a863ff99b15f0b81`，正常推送并核对远端一致。独立 1.0.2 类型、lint、素材与路由合同测试、构建、42 条生产路由、168 组双语视口检查及严格源码摘要验收通过；三端截图及动效采样随工程交付。原站全部动效逐帧对照、系统减少动态效果及素材商业授权等限制保留，主站集成状态见 Rhys 交付文档。
+
+### Solaris 1.0.2 播放恢复回归
+
+独立 main 提交 `17cf25c63e171954391171c534418a547b3fbe3c`，已正常追加推送且远端一致；源码摘要 `dc0c2e0af9c65f5e771d7bd5d99c75daa830b20c4778a6d4df6dea50485b94df`。修正指针焦点导致播放按钮显示运行但进度停住的问题。5 项测试、类型、lint、独立构建、18 条独立路由通过；隔离主站构建及 18 条双语路由、三端代表布局和原生指针恢复检查通过。源码 ZIP 已匿名下载校验，主站当前全量发布检查受并行 Rhys 缺少 ZIP 阻断，不能扩展声明并行主站验收通过。详见 Solaris 交付文档。
+
+### Solaris 1.0.3 滚动条与展示图
+
+提交 a647481884cf3812f630aaef99e0d5097a8bc6ad，main 已推送且一致；新增 10px/8px 原生滚动条主题、稳定 gutter 与 12 张新展示图。独立及隔离主站构建/类型/lint、18 条双语生产路由通过；实际 3000 主站已更新，截图按源文件与 HTTP SHA256 一致性验收。源码 ZIP 已匿名下载校验，当前主站全量发布检查受并行 Goalz 记录不一致阻断。详细边界见 Solaris 交付记录。

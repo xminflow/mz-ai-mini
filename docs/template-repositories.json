@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-26T03:30:04.017Z",
+  "updatedAt": "2026-10-26T12:59:23.626Z",
   "scope": "全部新版独立模板；不含协议工具工程和主站仓库",
   "repositories": [
     {
@@ -1111,11 +1111,11 @@
       "id": "rescale",
       "gitUrl": "https://github.com/weelume/rescale-template",
       "branch": "main",
-      "commit": "42189255ab22f070794a25ddb48d089c1cda58e1",
-      "remoteCommit": "42189255ab22f070794a25ddb48d089c1cda58e1",
+      "commit": "06bd7fb6a9a580a05198d05a7351f00eb0351f7d",
+      "remoteCommit": "06bd7fb6a9a580a05198d05a7351f00eb0351f7d",
       "pushed": true,
       "clean": true,
-      "verifiedAt": "2026-10-24T11:23:26.32Z",
+      "verifiedAt": "2026-10-26T09:39:09.312Z",
       "localPath": "D:/code/code-tpl/rescale-template",
       "metadataPath": ".tpl/template.json",
       "hostMetadataPath": "website/src/features/site-templates/catalog/rescale/weelume.tsx",
@@ -1146,17 +1146,17 @@
         }
       ],
       "limitations": [
-        "整站原站动效三端逐项逐时刻精确对照尚未完成",
+        "整站原站动效三端逐项逐时刻精确对照尚未完成；手机真实拖拽换人结果未确认",
         "素材商用与再分发许可未确认，listed=false"
       ],
       "sourceZip": {
-        "version": "1.0.0",
-        "sourceCommit": "42189255ab22f070794a25ddb48d089c1cda58e1",
-        "sha256": "15a32034362e96cb64afaafbfa151183759bba26dcf64dab964686223cd758eb",
-        "size": 18075038,
-        "file": "rescale-1.0.0-42189255ab22f070794a25ddb48d089c1cda58e1.zip",
-        "snapshotSha256": "05698db9bc3eb32fee1dd045fc86bd9ab81a39a7c7ec11d1e5b7ff0f6e77489d",
-        "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/rescale/1.0.0-42189255ab22f070794a25ddb48d089c1cda58e1/15a32034362e96cb64afaafbfa151183759bba26dcf64dab964686223cd758eb.zip"
+        "version": "1.0.1",
+        "sourceCommit": "06bd7fb6a9a580a05198d05a7351f00eb0351f7d",
+        "sha256": "435e2fadefd114c5cc4baca2a358bb977303ec08814db19de06e41fd2aa86523",
+        "size": 18078174,
+        "file": "rescale-1.0.1-06bd7fb6a9a580a05198d05a7351f00eb0351f7d.zip",
+        "snapshotSha256": "16a130f94efa51380c5ee5507da10f138ac5aa4647f7e5775a48fee975df6d65",
+        "url": "https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/rescale/1.0.1-06bd7fb6a9a580a05198d05a7351f00eb0351f7d/435e2fadefd114c5cc4baca2a358bb977303ec08814db19de06e41fd2aa86523.zip"
       }
     },
     {
@@ -2247,6 +2247,267 @@
         "参考素材商业再分发许可未完整核实，保持未上架；公开Git和COS已获用户明确授权。"
       ],
       "sourceDigest": "fc698c38ce82ac1b1151b08ee0f8ac49111e1c11af15a32a8f99d3963d2fa233"
+    },
+    {
+      "id": "solaris",
+      "gitUrl": "https://github.com/weelume/solaris-template",
+      "branch": "main",
+      "commit": "a647481884cf3812f630aaef99e0d5097a8bc6ad",
+      "remoteCommit": "a647481884cf3812f630aaef99e0d5097a8bc6ad",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T12:46:40.586Z",
+      "localPath": "D:/code/code-tpl/solaris-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/solaris/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "claimedStatus": "passed",
+        "state": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "status": "passed",
+          "operation": "install"
+        },
+        {
+          "status": "passed",
+          "operation": "typecheck"
+        },
+        {
+          "status": "passed",
+          "operation": "lint"
+        },
+        {
+          "status": "passed",
+          "operation": "test"
+        },
+        {
+          "status": "passed",
+          "operation": "build"
+        }
+      ],
+      "hostIntegration": {
+        "state": "integrated-actual-main-and-isolated-production-WSL",
+        "version": "1.0.3",
+        "snapshot": "passed",
+        "typecheck": "passed",
+        "lint": "passed",
+        "fullBuild": "passed-local-WSL-isolated-host",
+        "routeChecks": 18,
+        "sourceZip": "1.0.3-published-anonymous-download-verified",
+        "screenshots": "12-refreshed-SHA256-matched-live-main",
+        "scrollbar": "native-rounded-track-gutter-menu-cleanup-verified",
+        "motionMatrix": "partially-verified",
+        "previewUrl": "http://127.0.0.1:3000/templates/solaris/site",
+        "productionPreviewUrl": "http://127.0.0.1:43421/templates/solaris/site",
+        "buildId": "XjwmQ-VtwfguTnWJ58KID",
+        "rootFullReleaseCheck": "blocked-by-concurrent-goalz-zip-snapshot-mismatch"
+      },
+      "limitations": [
+        "原站图片商业再分发许可尚未确认，保持 listed=false。",
+        "系统减少动态效果的实际模拟尚未验证。",
+        "浏览器截图按真实编码尺寸登记，CSS 视口与图像尺寸有所不同。",
+        "页面切换过渡、滚动条滑块鼠标拖动及触摸惯性未做完整交互对照；不声称所有动效逐像素一致。"
+      ],
+      "sourceDigest": "1467bbb58499f4459bc1108f0d8d166f47d917a453675579cc944e90c462c5b5"
+    },
+    {
+      "id": "newcomer",
+      "gitUrl": "https://github.com/weelume/newcomer-template",
+      "branch": "codex/newcomer",
+      "commit": "e15b0e49342c829e038000081cfaa9c226f18114",
+      "remoteCommit": "e15b0e49342c829e038000081cfaa9c226f18114",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T09:15:09.542Z",
+      "localPath": "D:/code/code-tpl/newcomer-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/newcomer/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ],
+      "sourceDigest": "95778bdf829885eca36ec800b3bbfbb621c14433a60a47fb859eed70b102864e",
+      "limitations": [
+        "未完成所有页面、语言与三端动效的逐帧完整对照；不声明像素级或完整逐帧复刻验收通过。",
+        "PC 已实测循环位移、暂停、280px 拖拽及续播；移动菜单、Escape、表单错误与本地成功、文章语言切换已实测。悬停减速和系统减少动态效果设置尚未逐项实际切换验收。",
+        "使用原生滚动与 CSS 平滑滚动；未引入参考站 Lenis 滚动引擎。滚动视差阈值和拖拽释放惯性仍需进一步对照。",
+        "参考站设计与图片素材商业再分发许可未核实；listed=false，不代表已取得商业授权。"
+      ]
+    },
+    {
+      "id": "rhys",
+      "gitUrl": "https://github.com/weelume/rhys-template",
+      "branch": "main",
+      "commit": "d7a544b84b46a25aeeeb8e24a863ff99b15f0b81",
+      "remoteCommit": "d7a544b84b46a25aeeeb8e24a863ff99b15f0b81",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T10:44:57.047Z",
+      "localPath": "D:/code/code-tpl/rhys-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/rhys/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "name": "独立类型、lint、测试、构建与 42 条生产路由",
+          "status": "passed"
+        },
+        {
+          "name": "168 组双语浏览器视口与三端截图",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "hydrowell",
+      "gitUrl": "https://github.com/weelume/hydrowell-template",
+      "branch": "main",
+      "commit": "14f42dbe25dc6796de8cd8d2c1ed00fb8d5a3891",
+      "remoteCommit": "14f42dbe25dc6796de8cd8d2c1ed00fb8d5a3891",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T11:27:48.265Z",
+      "localPath": "D:/code/code-tpl/hydrowell-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/hydrowell/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "name": "本地WSL类型、lint、构建与18条生产路由",
+          "status": "passed"
+        },
+        {
+          "name": "72组双语视口、三端交互与12张截图",
+          "status": "passed"
+        },
+        {
+          "name": "干净克隆严格协议检查及固定包",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "goalz",
+      "gitUrl": "https://github.com/weelume/goalz-template",
+      "branch": "codex/goalz",
+      "commit": "fab23bd44014a3dc1d1e4f86cdb2f06802879e03",
+      "remoteCommit": "fab23bd44014a3dc1d1e4f86cdb2f06802879e03",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T12:44:40.099Z",
+      "localPath": "D:/code/code-tpl/goalz-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/goalz/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        },
+        {
+          "operation": "http90",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "id": "designfast",
+      "gitUrl": "https://github.com/weelume/designfast-template",
+      "branch": "main",
+      "commit": "15decf989c0c0d0cafb4f49c2235a61289c5064a",
+      "remoteCommit": "15decf989c0c0d0cafb4f49c2235a61289c5064a",
+      "pushed": true,
+      "clean": true,
+      "verifiedAt": "2026-10-26T11:47:15.835Z",
+      "localPath": "D:/code/code-tpl/designfast-template",
+      "metadataPath": ".tpl/template.json",
+      "hostMetadataPath": "website/src/features/site-templates/catalog/designfast/weelume.tsx",
+      "formatVersion": "0.2.0",
+      "stage": "ready",
+      "formatCheck": "passed",
+      "applicationVerification": {
+        "state": "passed",
+        "claimedStatus": "passed",
+        "sourceMatches": true
+      },
+      "checks": [
+        {
+          "operation": "typecheck",
+          "status": "passed"
+        },
+        {
+          "operation": "lint",
+          "status": "passed"
+        },
+        {
+          "operation": "test",
+          "status": "passed"
+        },
+        {
+          "operation": "build",
+          "status": "passed"
+        }
+      ]
     }
   ],
   "limitations": [

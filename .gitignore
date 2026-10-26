@@ -288,3 +288,13 @@ ua-agent/checkpoints/
 /website/learnai.local
 
 /website/public/templates/learnai/
+# 模板市场纯数据由 dev/build 自动从注册表生成。
+website/src/features/site-templates/catalog.generated.json
+
+/website/public/templates/newcomer/
+
+/website/goalz.local
+/website/public/templates/goalz/
+
+/website/designfast.local
+/website/public/templates/designfast/

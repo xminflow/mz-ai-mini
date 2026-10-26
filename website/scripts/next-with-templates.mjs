@@ -1,5 +1,5 @@
 import { createRequire } from 'node:module'
-import { spawn } from 'node:child_process'
+import { spawn, execFileSync } from 'node:child_process'
 import { watch } from 'node:fs'
 import { join } from 'node:path'
 import { verifyTemplateReleases } from './lib/template-release.mjs'
@@ -7,6 +7,10 @@ import { websiteRoot, localRoot, installedRoot, syncAssets, verifySnapshot, SHAR
 
 const command = process.argv[2]
 if (!['dev', 'build', 'start'].includes(command)) throw new Error('使用 dev、build 或 start')
+const generateCatalog = () => execFileSync(process.execPath, ['./scripts/template-catalog.mjs'], {
+  cwd: websiteRoot, stdio: 'inherit', windowsHide: true, env: { ...process.env, TEMPLATE_CATALOG_MODE: command },
+})
+if (command !== 'start') generateCatalog()
 if (command === 'build') await verifyTemplateReleases()
 const watchers = []
 const timers = new Map()
@@ -38,6 +42,20 @@ if (command === 'dev') {
 const child = spawn(process.execPath, [require.resolve('next/dist/bin/next'), command, ...process.argv.slice(3)], {
   cwd: websiteRoot, stdio: 'inherit', windowsHide: true, env: childEnvironment,
 })
+if (command === 'dev') {
+  // 元数据及本地模板编辑后重建目录，Next 通过 JSON 变化刷新市场，不复制模板源码。
+  const localSources = (await Promise.all(SHARED_TEMPLATE_IDS.map(id => localRoot(id))))
+    .filter(Boolean).map(root => join(root, 'src/features/site-templates'))
+  for (const root of [join(websiteRoot, 'src/features/site-templates'), ...localSources]) {
+    watchers.push(watch(root, { recursive: true }, (_event, filename) => {
+      if (!filename || !/\.(ts|tsx|json)$/.test(filename) || filename.endsWith('catalog.generated.json')) return
+      clearTimeout(timers.get('catalog'))
+      timers.set('catalog', setTimeout(() => {
+        queue = queue.then(generateCatalog).catch(error => { console.error('[template:catalog] 生成失败', error); child.kill(); process.exitCode = 1 })
+      }, 150))
+    }))
+  }
+}
 for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => child.kill(signal))
 child.on('error', error => { console.error(error); process.exitCode = 1 })
 child.on('close', code => {

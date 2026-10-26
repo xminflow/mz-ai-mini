@@ -32,6 +32,9 @@ importers:
       deformo-template:
         specifier: file:./vendor/deformo-template-1.2.0-b47eb1d90968.tgz
         version: file:vendor/deformo-template-1.2.0-b47eb1d90968.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      designfast-template:
+        specifier: file:./vendor/designfast-template-1.0.0-215b412bd746.tgz
+        version: file:vendor/designfast-template-1.0.0-215b412bd746.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       drip-template:
         specifier: file:./vendor/drip-template-1.0.0-00a0704bb381.tgz
         version: file:vendor/drip-template-1.0.0-00a0704bb381.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -53,6 +56,9 @@ importers:
       furnexa-template:
         specifier: file:./vendor/furnexa-template-1.0.0-ab4268e4976b.tgz
         version: file:vendor/furnexa-template-1.0.0-ab4268e4976b.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      goalz-template:
+        specifier: file:./vendor/goalz-template-1.0.2-c7cc461a0a02.tgz
+        version: file:vendor/goalz-template-1.0.2-c7cc461a0a02.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       graybeam-template:
         specifier: file:./vendor/graybeam-template-1.0.0-67813fb3b4e8.tgz
         version: file:vendor/graybeam-template-1.0.0-67813fb3b4e8.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -65,6 +71,9 @@ importers:
       hellomonday-template:
         specifier: file:./vendor/hellomonday-template-1.0.0-63ae27038145.tgz
         version: file:vendor/hellomonday-template-1.0.0-63ae27038145.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      hydrowell-template:
+        specifier: file:./vendor/hydrowell-template-1.0.1-818d4064052f.tgz
+        version: file:vendor/hydrowell-template-1.0.1-818d4064052f.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       ilse-moreno-template:
         specifier: file:./vendor/ilse-moreno-template-1.0.0-6e658f76f40f.tgz
         version: file:vendor/ilse-moreno-template-1.0.0-6e658f76f40f.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -95,6 +104,9 @@ importers:
       mondragon-template:
         specifier: file:./vendor/mondragon-template-1.0.0-e1dcfa698f85.tgz
         version: file:vendor/mondragon-template-1.0.0-e1dcfa698f85.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      newcomer-template:
+        specifier: file:./vendor/newcomer-template-1.0.1-5e648ca799b8.tgz
+        version: file:vendor/newcomer-template-1.0.1-5e648ca799b8.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       next:
         specifier: ^15.3.3
         version: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -135,11 +147,17 @@ importers:
         specifier: file:./vendor/recueil-template-1.0.0-cd550dcf0cda.tgz
         version: file:vendor/recueil-template-1.0.0-cd550dcf0cda.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       rescale-template:
-        specifier: file:./vendor/rescale-template-1.0.0-05698db9bc3e.tgz
-        version: file:vendor/rescale-template-1.0.0-05698db9bc3e.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        specifier: file:./vendor/rescale-template-1.0.1-16a130f94efa.tgz
+        version: file:vendor/rescale-template-1.0.1-16a130f94efa.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      rhys-template:
+        specifier: file:./vendor/rhys-template-1.0.2-071ad7177547.tgz
+        version: file:vendor/rhys-template-1.0.2-071ad7177547.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       shelta-template:
         specifier: file:./vendor/shelta-template-1.0.0-78e3129ff581.tgz
         version: file:vendor/shelta-template-1.0.0-78e3129ff581.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      solaris-template:
+        specifier: file:./vendor/solaris-template-1.0.3-22387658309e.tgz
+        version: file:vendor/solaris-template-1.0.3-22387658309e.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       souma-template:
         specifier: file:./vendor/souma-template-1.0.0-833f12922252.tgz
         version: file:vendor/souma-template-1.0.0-833f12922252.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -1111,6 +1129,15 @@ packages:
       react: ^19.2.4
       react-dom: ^19.2.4
 
+  designfast-template@file:vendor/designfast-template-1.0.0-215b412bd746.tgz:
+    resolution: {integrity: sha512-sgdxUA+mAfBfPLrmoa8brZqk+A6AkGwAW0SqAQWBJ/0gN0+BLB15MLfatTHT6ozxi6YS4eWaLoz9rjJ8f6G2fQ==, tarball: file:vendor/designfast-template-1.0.0-215b412bd746.tgz}
+    version: 1.0.0
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   detect-libc@2.1.2:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
@@ -1463,6 +1490,15 @@ packages:
     resolution: {integrity: sha512-DpLKbNU4WylpxJykQujfCcwYWiV/Jhm50Goo0wrVILAv5jOr9d+H+UR3PhSCD2rCCEIg0uc+G+muBTwD54JhDQ==}
     engines: {node: '>= 0.4'}
 
+  goalz-template@file:vendor/goalz-template-1.0.2-c7cc461a0a02.tgz:
+    resolution: {integrity: sha512-p0wgQnfQ6gU7aoKzkDWIIUGH1S8Ko4HQhyD7jsHn+AL6l+PUubhhjiDqr82XFJByMBgKYS+N5AODBjKLkMeTzw==, tarball: file:vendor/goalz-template-1.0.2-c7cc461a0a02.tgz}
+    version: 1.0.2
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
@@ -1538,6 +1574,15 @@ packages:
 
   hermes-parser@0.25.1:
     resolution: {integrity: sha512-6pEjquH3rqaI6cYAXYPcz9MS4rY6R4ngRgrgfDshRptUZIc3lw0MCIJIGDj9++mfySOuPTHB4nrSW99BCvOPIA==}
+
+  hydrowell-template@file:vendor/hydrowell-template-1.0.1-818d4064052f.tgz:
+    resolution: {integrity: sha512-4H/VQt9bsaIOZF/ul5wWkPC+hrgt+COMLK8/zmk4CdN3Ah+QexLGOe4StivosJNn0KF3mjIS8APAowJwcpQCrA==, tarball: file:vendor/hydrowell-template-1.0.1-818d4064052f.tgz}
+    version: 1.0.1
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
@@ -1945,6 +1990,15 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
+  newcomer-template@file:vendor/newcomer-template-1.0.1-5e648ca799b8.tgz:
+    resolution: {integrity: sha512-KwbCYdJskO3HuZS896eM5utsy/1XebMkVIq7Y1OU+I/Jq/U5g8KcxG1REd1WaSXgy3qYfUNiVTV6de9FA9a+wQ==, tarball: file:vendor/newcomer-template-1.0.1-5e648ca799b8.tgz}
+    version: 1.0.1
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
+
   next@15.5.15:
     resolution: {integrity: sha512-VSqCrJwtLVGwAVE0Sb/yikrQfkwkZW9p+lL/J4+xe+G3ZA+QnWPqgcfH1tDUEuk9y+pthzzVFp4L/U8JerMfMQ==}
     engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
@@ -2179,9 +2233,9 @@ packages:
     resolution: {integrity: sha512-dYqgNSZbDwkaJ2ceRd9ojCGjBq+mOm9LmtXnAnEGyHhN/5R7iDW2TRw3h+o/jCFxus3P2LfWIIiwowAjANm7IA==}
     engines: {node: '>= 0.4'}
 
-  rescale-template@file:vendor/rescale-template-1.0.0-05698db9bc3e.tgz:
-    resolution: {integrity: sha512-rBgxivLaLxe/6GYMcdERZPjc5FcMUTa+b+8LzAZNzsA6CgZLtwWOUavD+BdoPGEVwCkUbkjCf30ZCwMYGQuY3Q==, tarball: file:vendor/rescale-template-1.0.0-05698db9bc3e.tgz}
-    version: 1.0.0
+  rescale-template@file:vendor/rescale-template-1.0.1-16a130f94efa.tgz:
+    resolution: {integrity: sha512-eqDi66B+zEqS8FhIQmzjPmb8fULsCLPR6hlapz6KBLABqvK+kY09QKn9WVB9o6VjZPePiY1nbIQlnObjSqkPMw==, tarball: file:vendor/rescale-template-1.0.1-16a130f94efa.tgz}
+    version: 1.0.1
     peerDependencies:
       framer-motion: ^12.38.0
       next: ^15.3.3
@@ -2203,6 +2257,15 @@ packages:
   reusify@1.1.0:
     resolution: {integrity: sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
+
+  rhys-template@file:vendor/rhys-template-1.0.2-071ad7177547.tgz:
+    resolution: {integrity: sha512-knr56oskWyZLG6PWgpqfM02+D61C4T32tAh8WAONYSg0fgqYFPoav39HJ59T5bdwHvZa9WR4RkN3r4/CWrYRSQ==, tarball: file:vendor/rhys-template-1.0.2-071ad7177547.tgz}
+    version: 1.0.2
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
@@ -2279,6 +2342,15 @@ packages:
   side-channel@1.1.0:
     resolution: {integrity: sha512-ZX99e6tRweoUXqR+VBrslhda51Nh5MTQwou5tnUDgbtyM0dBgmhEDtWGP/xbKn6hqfPRHujUNwz5fy/wbbhnpw==}
     engines: {node: '>= 0.4'}
+
+  solaris-template@file:vendor/solaris-template-1.0.3-22387658309e.tgz:
+    resolution: {integrity: sha512-PH6aWlXTkhNecE73s2qQ8qnFqs4xn5eE7Mgpo1hO7RdL9FCAQGA9jMVrRz0ELr7DFeHa9vaZzYYPEPXN05kUtA==, tarball: file:vendor/solaris-template-1.0.3-22387658309e.tgz}
+    version: 1.0.3
+    peerDependencies:
+      framer-motion: ^12.38.0
+      next: ^15.3.3
+      react: ^19.2.4
+      react-dom: ^19.2.4
 
   souma-template@file:vendor/souma-template-1.0.0-833f12922252.tgz:
     resolution: {integrity: sha512-DjzQlGEJ6cSbGpmVO38ZTc6TEDMeswFev7NwE4UR14sBHvjba6mX1z+9MKiM6IyhNfh8x+E+52gL6neDJbX5bg==, tarball: file:vendor/souma-template-1.0.0-833f12922252.tgz}
@@ -3432,6 +3504,13 @@ snapshots:
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
 
+  designfast-template@file:vendor/designfast-template-1.0.0-215b412bd746.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   detect-libc@2.1.2: {}
 
   doctrine@2.1.0:
@@ -3924,6 +4003,13 @@ snapshots:
       define-properties: 1.2.1
       gopd: 1.2.0
 
+  goalz-template@file:vendor/goalz-template-1.0.2-c7cc461a0a02.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   gopd@1.2.0: {}
 
   graceful-fs@4.2.11: {}
@@ -3983,6 +4069,13 @@ snapshots:
   hermes-parser@0.25.1:
     dependencies:
       hermes-estree: 0.25.1
+
+  hydrowell-template@file:vendor/hydrowell-template-1.0.1-818d4064052f.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
 
   ignore@5.3.2: {}
 
@@ -4340,6 +4433,13 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
+  newcomer-template@file:vendor/newcomer-template-1.0.1-5e648ca799b8.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+
   next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       '@next/env': 15.5.15
@@ -4575,7 +4675,7 @@ snapshots:
       gopd: 1.2.0
       set-function-name: 2.0.2
 
-  rescale-template@file:vendor/rescale-template-1.0.0-05698db9bc3e.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+  rescale-template@file:vendor/rescale-template-1.0.1-16a130f94efa.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
@@ -4596,6 +4696,13 @@ snapshots:
       supports-preserve-symlinks-flag: 1.0.0
 
   reusify@1.1.0: {}
+
+  rhys-template@file:vendor/rhys-template-1.0.2-071ad7177547.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
 
   run-parallel@1.2.0:
     dependencies:
@@ -4720,6 +4827,13 @@ snapshots:
       side-channel-list: 1.0.1
       side-channel-map: 1.0.1
       side-channel-weakmap: 1.0.2
+
+  solaris-template@file:vendor/solaris-template-1.0.3-22387658309e.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+    dependencies:
+      framer-motion: 12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      next: 15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
 
   souma-template@file:vendor/souma-template-1.0.0-833f12922252.tgz(framer-motion@12.38.0(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(next@15.5.15(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5))(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:

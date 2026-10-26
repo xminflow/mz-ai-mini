@@ -1,0 +1,8 @@
+{
+  "name": "rhys-template",
+  "version": "1.0.2",
+  "archive": "vendor/rhys-template-1.0.2-071ad7177547.tgz",
+  "sha256": "071ad717754766c919d879488e31ae9b06cd03fd077635aab657a79202a5752e",
+  "sourceCommit": "d7a544b84b46a25aeeeb8e24a863ff99b15f0b81",
+  "sourceDirty": false
+}

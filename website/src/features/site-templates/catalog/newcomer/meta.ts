@@ -1,0 +1,1 @@
+export {newcomerTemplate} from './weelume'

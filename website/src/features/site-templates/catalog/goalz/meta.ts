@@ -1,0 +1,1 @@
+export {goalzTemplate} from './weelume'

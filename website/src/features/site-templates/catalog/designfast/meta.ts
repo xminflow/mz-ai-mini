@@ -1,0 +1,1 @@
+export { designfastTemplate } from './weelume'

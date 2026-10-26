@@ -1,0 +1,8 @@
+{
+  "name": "solaris-template",
+  "version": "1.0.3",
+  "archive": "vendor/solaris-template-1.0.3-22387658309e.tgz",
+  "sha256": "22387658309e2247090ad08919a950ed25f7f25cf6a950c0e082d64e5f7ab4d5",
+  "sourceCommit": "a647481884cf3812f630aaef99e0d5097a8bc6ad",
+  "sourceDirty": false
+}

@@ -1,3 +1,9 @@
+import { designfastTemplate } from './catalog/designfast/meta'
+import { goalzTemplate } from './catalog/goalz/meta'
+import { hydrowellTemplate } from './catalog/hydrowell/meta'
+import { rhysTemplate } from './catalog/rhys/meta'
+import {newcomerTemplate} from './catalog/newcomer/meta'
+import { solarisTemplate } from './catalog/solaris/meta'
 import { habitlineTemplate } from './catalog/habitline/meta'
 import {playoraTemplate} from './catalog/playora/meta'
 import {learnaiTemplate} from './catalog/learnai/meta'
@@ -67,7 +73,10 @@ const KEBAB_CASE_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const KEBAB_CASE_SLUG = /^[a-z0-9]+(?:[-/][a-z0-9]+)*$/
 
 /** 新增模板的唯一注册入口：建好 catalog/<id>/ 目录后在这里加一行。 */
-export const SITE_TEMPLATES: SiteTemplate[] = [pawlioTemplate, consutechTemplate, liubaiTemplate, luneraTemplate, groviaTemplate, nuboTemplate, studiothinkTemplate, conicornTemplate, deformoTemplate, unseenTemplate, viralTemplate, tabfolioTemplate, hellomondayTemplate, noireiTemplate, recueilTemplate, uiuxfolioTemplate, latteTemplate, cernoTemplate, foldexTemplate, soumaTemplate, furnexaTemplate, mondragonTemplate, tomasfolioTemplate, artemisTemplate, dripTemplate, graybeamTemplate, folioxaTemplate, ilseMorenoTemplate, offersuiteTemplate, portfolicaTemplate, sheltaTemplate, rescaleTemplate, noterTemplate, jironewsTemplate, ospeyTemplate, spycatTemplate, vetalaTemplate, estaymartTemplate, zenpandaTemplate, benjamenTemplate, kittypawTemplate, velaraTemplate, keloTemplate, alexTemplate, stocklensTemplate, creationaiTemplate, keloMarketingTemplate, learnaiTemplate, playoraTemplate, habitlineTemplate]
+export const SITE_TEMPLATES: SiteTemplate[] = [
+  goalzTemplate,
+  pawlioTemplate, consutechTemplate, liubaiTemplate, luneraTemplate, groviaTemplate, nuboTemplate, studiothinkTemplate, conicornTemplate, deformoTemplate, unseenTemplate, viralTemplate, tabfolioTemplate, hellomondayTemplate, noireiTemplate, recueilTemplate, uiuxfolioTemplate, latteTemplate, cernoTemplate, foldexTemplate, soumaTemplate, furnexaTemplate, mondragonTemplate, tomasfolioTemplate, artemisTemplate, dripTemplate, graybeamTemplate, folioxaTemplate, ilseMorenoTemplate, offersuiteTemplate, portfolicaTemplate, sheltaTemplate, rescaleTemplate, noterTemplate, jironewsTemplate, ospeyTemplate, spycatTemplate, vetalaTemplate, estaymartTemplate, zenpandaTemplate, benjamenTemplate, kittypawTemplate, velaraTemplate, keloTemplate, alexTemplate, stocklensTemplate, creationaiTemplate, keloMarketingTemplate, learnaiTemplate, playoraTemplate, habitlineTemplate, solarisTemplate, newcomerTemplate, hydrowellTemplate, designfastTemplate, rhysTemplate
+]
 
 /** 注册表按添加顺序追加；陈列使用倒序副本，避免就地反转影响其他调用方。 */
 export function getTemplatesNewestFirst(): SiteTemplate[] {

@@ -1,0 +1,8 @@
+{
+  "name": "hydrowell-template",
+  "version": "1.0.1",
+  "archive": "vendor/hydrowell-template-1.0.1-818d4064052f.tgz",
+  "sha256": "818d4064052fa70fdc9702bbf510bd60afc553153fd09134c6cdfbb4de7407bf",
+  "sourceCommit": "14f42dbe25dc6796de8cd8d2c1ed00fb8d5a3891",
+  "sourceDirty": false
+}

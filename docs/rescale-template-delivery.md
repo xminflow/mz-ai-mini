@@ -80,3 +80,39 @@
 3. 未验证登录后教程提示词复制链路；演示表单不连接真实服务。并行模板的未完成状态不由本任务修复。
 
 回滚时同时恢复 Rescale vendor、模板锁、依赖声明、pnpm 锁和发布清单至同一已验收版本，使用相同本地构建产物流程；不删除旧 COS 对象，不覆盖其他模板或用户改动。
+
+## 2026-10-26：内置浏览器复核与 1.0.1 更新
+
+本轮按用户要求使用内置浏览器查看参考站，并在已有实现上修正实际差异；上文 1.0.0 的记录保留为历史，不作为本轮源码的验收结果。
+
+### 修正内容及根因
+
+- 原站年付价格实际为 `$21 / $57 / $145`，旧实现从“Save 20%”推算价格，造成数值错误。改为内容模块明确声明年付月均价，年付总额由该数据计算，保留数字切换过渡。
+- 团队区旧实现使用大图和渐变文字覆盖，与参考站下置姓名、职位不符。桌面恢复 160×240 窄幅肖像，iPad 自适应，手机保留单张大图；拖拽期间暂停自动换人。
+- 旧手机断点沿用视频与评价并排布局，遗漏原站横向评价轮播。改为单列视频与横向单卡评价，包含两秒自动切换、暂停、翻页、拖拽及减少动态效果分支；桌面双列反向循环保留。
+- 上次实现和验收没有以实际手机状态完整覆盖这些分支，因此不能依靠旧的路由、静态布局检查认定动效一致。
+
+### 本轮验收
+
+- 独立工程：本地 WSL Linux 干净 Git 克隆、冻结安装、`pnpm typecheck`、`pnpm lint`、`pnpm test`（4 项）、`pnpm build`、`.tpl/tools/check.mjs . --require-verified` 通过。源码摘要为 `f34ab9484b95bd28057e5227730061006654b6258119cade71a93b3e3e2354a0`；20 条双语页面、未知路由 404、90 项素材检查通过。
+- 独立浏览器：查看原站桌面与手机团队、客户区和年付切换；检查修正后桌面 / iPad / 手机团队布局，以及手机视频整列展示、评价自动切换及暂停保持当前内容。手机真实拖拽换人未得到可确认结果，不标记通过。
+- 主站原样完整构建失败：无关 `catalog/goalz/weelume.tsx` 引用了未安装的 `goalz-template`。原工作区及其已有修改完整保留。首次单独类型检查还缺少构建时生成的 `catalog.generated.json`；正式构建已生成该文件，剩余阻塞为 Goalz 缺包。
+- 仅在 WSL 验收副本隔离未登记 Goalz 草稿后，`template:check --id rescale`、全量 `tsc --noEmit`、Rescale 适配 ESLint、`template:release:check` 与主站构建通过。这不代表原工作区整仓构建通过；没有新增 Goalz 依赖或修改其源码。
+- 最终主站生产预览：20 条双语路径、未知路由 404、90 项素材通过；内置浏览器完成 10 页 × 双语 × 1440 / 834 / 390 / 320 共 80 组检查，无横向溢出或已加载图片损坏，市场入口均为 `/templates`。另验证 FAQ 展开、语言切换保留 query/hash、菜单展开、Escape 关闭并恢复焦点，以及年付价格。
+- 日志与证据：`artifacts/rescale/20261026/`。原样失败日志为 `host-build.log`，隔离成功日志为 `host-isolated-build.log`，产物位置和摘要见 `build.json`；浏览器 80 组结果见 `host-browser-matrix.json`。未在服务器构建或部署。
+
+### 源码与配套产物
+
+- Git：<https://github.com/weelume/rescale-template>，`main`，提交及已核对远端 SHA：`06bd7fb6a9a580a05198d05a7351f00eb0351f7d`。
+- 固定包：`website/vendor/rescale-template-1.0.1-16a130f94efa.tgz`，SHA256：`16a130f94efa51380c5ee5507da10f138ac5aa4647f7e5775a48fee975df6d65`，`sourceDirty=false`。
+- [1.0.1 完整源码 ZIP](https://weelume-pro-1420922170.cos.ap-shanghai.myqcloud.com/website/template-packages/rescale/1.0.1-06bd7fb6a9a580a05198d05a7351f00eb0351f7d/435e2fadefd114c5cc4baca2a358bb977303ec08814db19de06e41fd2aa86523.zip)，18078174 字节，SHA256：`435e2fadefd114c5cc4baca2a358bb977303ec08814db19de06e41fd2aa86523`。本地 WSL 打包、既有 COS SDK 上传、匿名下载 SHA256 与 ZIP 完整性验证通过，旧对象保留。
+- 已同步模板锁、包声明、pnpm 生成的依赖锁、发布清单及 Git 索引文档；依赖锁本轮只改变 Rescale 包。主站未提交、推送、部署或上架。
+- 最新本机预览：<http://localhost:43414/templates/rescale/site>，详情：<http://localhost:43414/templates/rescale>。地址依赖本地保留的预览进程；43413 为历史版本，不作为本轮交付入口。
+
+完整原站三端动效逐项逐时刻精确对照、手机真实拖拽换人及系统减少动态效果偏好仍未完成实际验收；图形素材英文标签和商业、再分发许可限制仍保留，维持 `listed=false`。本轮不能标记为“完整原站动效精确复刻验收通过”。
+
+### 主站接入入口复核
+
+用户补充要求接入主站后，使用内置浏览器从主站首页 `/` 选择“企业官网”，确认存在“Rescale · 微域生光智能增长”卡片，并实际点击进入 `/templates/rescale`。详情页显示 10 个页面、PC / H5 / iPad 入口及当前设备 4 张截图；三个设备预览链接均使用 `_blank`，整站入口为 `/templates/rescale/site`。主站品牌、市场返回入口和示例备案沿用宿主适配；固定包、模板锁、依赖锁和源码 ZIP 已在主站工作区接入，本轮无需重复实现注册或复制模板源码。
+
+详情页已在内置浏览器保留，入口证据为 `artifacts/rescale/20261026/host-integration-detail.png`。上述结论针对本地主站代码及生产验收预览，不代表线上主站已部署新版本；源码许可和动效验收限制仍按上文保留。

@@ -1,8 +1,8 @@
 {
   "name": "rescale-template",
-  "version": "1.0.0",
-  "archive": "vendor/rescale-template-1.0.0-05698db9bc3e.tgz",
-  "sha256": "05698db9bc3eb32fee1dd045fc86bd9ab81a39a7c7ec11d1e5b7ff0f6e77489d",
-  "sourceCommit": "42189255ab22f070794a25ddb48d089c1cda58e1",
+  "version": "1.0.1",
+  "archive": "vendor/rescale-template-1.0.1-16a130f94efa.tgz",
+  "sha256": "16a130f94efa51380c5ee5507da10f138ac5aa4647f7e5775a48fee975df6d65",
+  "sourceCommit": "06bd7fb6a9a580a05198d05a7351f00eb0351f7d",
   "sourceDirty": false
 }
